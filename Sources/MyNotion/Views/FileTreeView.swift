@@ -16,8 +16,8 @@ struct FileTreeView: View {
         VStack(spacing: 0) {
             if let root = vault.root {
                 List {
-                    OutlineGroup(root.children ?? [], id: \.id, children: \.children) { node in
-                        FileRowView(app: app, node: node)
+                    ForEach(root.children ?? []) { node in
+                        FileTreeNodeView(app: app, vault: vault, node: node)
                     }
                 }
                 .listStyle(.sidebar)
@@ -60,6 +60,37 @@ struct FileTreeView: View {
     }
 }
 
+/// Ein Knoten im Dateibaum: Ordner als DisclosureGroup mit steuerbarem
+/// Expansionszustand (damit Links den Baum aufklappen können), Dateien als Zeile.
+struct FileTreeNodeView: View {
+    @ObservedObject var app: AppState
+    @ObservedObject var vault: VaultStore
+    let node: FileNode
+
+    var body: some View {
+        if node.isDirectory {
+            DisclosureGroup(isExpanded: Binding(
+                get: { vault.expandedFolders.contains(node.url.path) },
+                set: { expanded in
+                    if expanded {
+                        vault.expandedFolders.insert(node.url.path)
+                    } else {
+                        vault.expandedFolders.remove(node.url.path)
+                    }
+                }
+            )) {
+                ForEach(node.children ?? []) { child in
+                    FileTreeNodeView(app: app, vault: vault, node: child)
+                }
+            } label: {
+                FileRowView(app: app, node: node)
+            }
+        } else {
+            FileRowView(app: app, node: node)
+        }
+    }
+}
+
 /// Eine Zeile im Dateibaum inkl. Kontextmenü und Drag&Drop.
 struct FileRowView: View {
     @ObservedObject var app: AppState
@@ -91,7 +122,14 @@ struct FileRowView: View {
         .padding(.vertical, 1)
         .background(isDropTarget ? Color.accentColor.opacity(0.2) : Color.clear)
         .onTapGesture {
-            if !node.isDirectory {
+            if node.isDirectory {
+                let path = node.url.path
+                if app.vault.expandedFolders.contains(path) {
+                    app.vault.expandedFolders.remove(path)
+                } else {
+                    app.vault.expandedFolders.insert(path)
+                }
+            } else {
                 app.open(node.url)
             }
         }
@@ -112,6 +150,8 @@ struct FileRowView: View {
         }
         .contextMenu {
             if node.isDirectory {
+                Button("Übersicht öffnen") { app.openFolder(node.url) }
+                Divider()
                 Button("Neue Notiz") { app.newNote(in: node.url) }
                 Button("Neuer Ordner") { app.newFolder(in: node.url) }
                 Divider()

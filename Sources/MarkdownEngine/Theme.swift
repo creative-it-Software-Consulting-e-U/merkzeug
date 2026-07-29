@@ -28,6 +28,8 @@ public extension NSAttributedString.Key {
     static let mnImageAlt = NSAttributedString.Key("mn.imageAlt")
     /// Absatz gehört zu einer nummerierten Liste (NSNumber bool).
     static let mnOrderedList = NSAttributedString.Key("mn.orderedList")
+    /// Mermaid-Quelltext eines gerenderten Diagramms (String), auf dem Attachment-Zeichen.
+    static let mnMermaidSource = NSAttributedString.Key("mn.mermaidSource")
 }
 
 /// Zentrale Typografie/Farben des Editors.
@@ -54,6 +56,7 @@ public enum Theme {
     public static let listIndentStep: CGFloat = 22
     public static let maxImageWidth: CGFloat = 480
     public static let maxImageHeight: CGFloat = 420
+    public static let maxMermaidWidth: CGFloat = 640
 
     public static func paragraphStyle(spacingBefore: CGFloat = 0, spacing: CGFloat = 7) -> NSMutableParagraphStyle {
         let p = NSMutableParagraphStyle()

@@ -11,6 +11,16 @@ final class MarkdownTextView: NSTextView {
     var onFocus: (() -> Void)?
     /// Öffnet das Link-Sheet (von der App gesetzt).
     var onRequestLinkSheet: (() -> Void)?
+    /// Verhindert Collapse-Reentranz beim Umschalten Mermaid-Diagramm ⇄ Code.
+    var isTogglingMermaid = false
+    /// Mermaid-Attachments, für die bereits ein Rendering angestoßen wurde.
+    var renderedMermaidAttachments = Set<ObjectIdentifier>()
+    /// Hover-Lupe zum Öffnen der Mermaid-Zoom-Vorschau.
+    var mermaidLensButton: NSButton?
+    /// Zeichenindex des Diagramms, über dem die Lupe gerade schwebt.
+    var mermaidLensIndex: Int = -1
+    /// Lokaler Event-Monitor, der Mouse-Moved-Events für die Hover-Lupe liefert.
+    var mermaidLensMonitor: Any?
 
     // MARK: - Grundlagen
 
@@ -125,6 +135,39 @@ final class MarkdownTextView: NSTextView {
     override func becomeFirstResponder() -> Bool {
         onFocus?()
         return super.becomeFirstResponder()
+    }
+
+    // MARK: - Maus (Mermaid-Diagramme anklicken)
+
+    override func mouseDown(with event: NSEvent) {
+        if event.clickCount == 1,
+           let hit = mermaidHit(at: convert(event.locationInWindow, from: nil)) {
+            if event.modifierFlags.contains(.command) {
+                zoomMermaidBlock(at: hit.index)
+            } else {
+                expandMermaidBlock(at: hit.index)
+            }
+            return
+        }
+        super.mouseDown(with: event)
+    }
+
+    // Mouse-Moved-Events kommen im SwiftUI-Fenster nicht über die
+    // Tracking-Area an; stattdessen liefert ein lokaler Event-Monitor
+    // die Hover-Position (siehe MarkdownTextView+MermaidZoom).
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        if window != nil {
+            window?.acceptsMouseMovedEvents = true
+            installMermaidLensMonitor()
+        } else {
+            removeMermaidLensMonitor()
+            hideMermaidLens()
+        }
+    }
+
+    deinit {
+        removeMermaidLensMonitor()
     }
 
     // MARK: - Enter-Taste
@@ -436,6 +479,14 @@ final class MarkdownTextView: NSTextView {
                 menu.insertItem(NSMenuItem.separator(), at: 0)
                 menu.insertItem(withTitle: "Link bearbeiten…", action: #selector(editLinkFromMenu(_:)), keyEquivalent: "", at: 0)
             }
+        }
+        if let hit = mermaidHit(at: convert(event.locationInWindow, from: nil)),
+           let source = mermaidSource(at: hit.index) {
+            menu.insertItem(NSMenuItem.separator(), at: 0)
+            let item = NSMenuItem(title: "Diagramm vergrößern…",
+                                  action: #selector(zoomMermaidFromMenu(_:)), keyEquivalent: "")
+            item.representedObject = source
+            menu.insertItem(item, at: 0)
         }
         return menu
     }

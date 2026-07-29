@@ -11,10 +11,15 @@ struct PaneView: View {
             tabBar
             Divider()
             if let tab = pane.selectedTab {
-                EditorToolbar(app: app, tab: tab)
-                Divider()
-                EditorRepresentable(controller: tab.controller)
-                    .id(tab.id)
+                if let controller = tab.controller {
+                    EditorToolbar(app: app, tab: tab)
+                    Divider()
+                    EditorRepresentable(controller: controller)
+                        .id(tab.id)
+                } else {
+                    FolderOverviewView(app: app, tab: tab)
+                        .id(tab.id)
+                }
             } else {
                 VStack(spacing: 8) {
                     Image(systemName: "doc.text")
@@ -69,7 +74,6 @@ struct TabItemView: View {
     @ObservedObject var app: AppState
     @ObservedObject var pane: Pane
     @ObservedObject var tab: EditorTab
-    @ObservedObject var document: MarkdownDocument
     let isSelected: Bool
 
     @State private var isHovering = false
@@ -78,19 +82,21 @@ struct TabItemView: View {
         self.app = app
         self.pane = pane
         self.tab = tab
-        self.document = tab.document
         self.isSelected = isSelected
     }
 
     var body: some View {
         HStack(spacing: 5) {
+            if tab.kind == .folder {
+                Image(systemName: "folder")
+                    .font(.system(size: 10))
+                    .foregroundStyle(Color.accentColor)
+            }
             Text(tab.title)
                 .lineLimit(1)
                 .font(.system(size: 12))
-            if document.isDirty {
-                Circle()
-                    .fill(Color.secondary)
-                    .frame(width: 6, height: 6)
+            if let document = tab.document {
+                DirtyIndicator(document: document)
             }
             Button {
                 app.close(tab)
@@ -134,5 +140,18 @@ struct TabItemView: View {
             }
         }
         .help(tab.url.path)
+    }
+}
+
+/// Zeigt den „ungespeichert“-Punkt eines Dokuments.
+struct DirtyIndicator: View {
+    @ObservedObject var document: MarkdownDocument
+
+    var body: some View {
+        if document.isDirty {
+            Circle()
+                .fill(Color.secondary)
+                .frame(width: 6, height: 6)
+        }
     }
 }

@@ -2,7 +2,13 @@ import SwiftUI
 import AppKit
 
 struct ContentView: View {
-    @ObservedObject var app = AppState.shared
+    @ObservedObject var app: AppState
+    @ObservedObject var vault: VaultStore
+
+    init(app: AppState) {
+        self.app = app
+        self.vault = app.vault
+    }
 
     var body: some View {
         NavigationSplitView {
@@ -11,7 +17,9 @@ struct ContentView: View {
         } detail: {
             detailView
         }
-        .navigationTitle(app.vault.vaultURL?.lastPathComponent ?? "MyNotion")
+        .navigationTitle(vault.root != nil
+                         ? (vault.vaultURL?.lastPathComponent ?? "MyNotion")
+                         : "MyNotion")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {

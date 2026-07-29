@@ -59,6 +59,11 @@ public struct AttributedBuilder {
             appendInlines(inlines, to: result, context: InlineContext(), baseAttributes: attrs)
             result.append(NSAttributedString(string: "\n", attributes: attrs))
 
+        case let .codeBlock(language, text)
+            where language.trimmingCharacters(in: .whitespaces).lowercased() == "mermaid":
+            result.append(Self.mermaidAttachment(source: text))
+            result.append(NSAttributedString(string: "\n", attributes: Theme.bodyAttributes()))
+
         case let .codeBlock(language, text):
             let id = UUID().uuidString
             let attrs: [NSAttributedString.Key: Any] = [
@@ -182,6 +187,52 @@ public struct AttributedBuilder {
             attrs[.strikethroughStyle] = NSNumber(value: NSUnderlineStyle.single.rawValue)
         }
         return attrs
+    }
+
+    /// Attachment-Zeichen für ein Mermaid-Diagramm; der Quelltext bleibt als
+    /// Attribut erhalten und wird als ```mermaid-Block serialisiert.
+    /// Ohne `image` wird ein Platzhalter gezeigt (Rendering erfolgt asynchron).
+    public static func mermaidAttachment(source: String, image: NSImage? = nil) -> NSAttributedString {
+        let attachment = NSTextAttachment()
+        if let image, image.size.width > 0, image.size.height > 0 {
+            attachment.image = image
+            var size = image.size
+            if size.width > Theme.maxMermaidWidth {
+                let scale = Theme.maxMermaidWidth / size.width
+                size = NSSize(width: size.width * scale, height: size.height * scale)
+            }
+            attachment.bounds = NSRect(x: 0, y: 0, width: size.width, height: size.height)
+        } else {
+            attachment.image = mermaidPlaceholder(text: "Mermaid-Diagramm wird gerendert…")
+            attachment.bounds = NSRect(x: 0, y: 0, width: 280, height: 44)
+        }
+        let s = NSMutableAttributedString(attachment: attachment)
+        var attrs = Theme.bodyAttributes()
+        attrs.removeValue(forKey: .font)
+        attrs[.mnMermaidSource] = source
+        s.addAttributes(attrs, range: NSRange(location: 0, length: s.length))
+        return s
+    }
+
+    /// Platzhalterbild für Mermaid-Blöcke (lädt/Fehler).
+    public static func mermaidPlaceholder(text: String, error: Bool = false) -> NSImage {
+        let size = NSSize(width: 280, height: 44)
+        return NSImage(size: size, flipped: false) { rect in
+            let path = NSBezierPath(roundedRect: rect.insetBy(dx: 1, dy: 1), xRadius: 8, yRadius: 8)
+            (error ? NSColor.systemRed.withAlphaComponent(0.08) : Theme.codeBackground).setFill()
+            path.fill()
+            (error ? NSColor.systemRed.withAlphaComponent(0.4) : NSColor.separatorColor).setStroke()
+            path.stroke()
+            let attrs: [NSAttributedString.Key: Any] = [
+                .font: NSFont.systemFont(ofSize: 12),
+                .foregroundColor: error ? NSColor.systemRed : NSColor.secondaryLabelColor,
+            ]
+            let s = NSAttributedString(string: text, attributes: attrs)
+            let textSize = s.size()
+            s.draw(at: NSPoint(x: max(6, (rect.width - textSize.width) / 2),
+                               y: (rect.height - textSize.height) / 2))
+            return true
+        }
     }
 
     /// Erzeugt das Attachment-Zeichen für ein Bild inkl. Pfad-Attributen.

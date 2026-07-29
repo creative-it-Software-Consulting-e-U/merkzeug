@@ -2,21 +2,34 @@ import AppKit
 import SwiftUI
 import MarkdownEngine
 
-/// Ein geöffneter Tab mit eigenem Editor.
+/// Ein geöffneter Tab: entweder ein Markdown-Editor oder eine Ordner-Übersicht.
 final class EditorTab: ObservableObject, Identifiable {
+    enum Kind { case markdown, folder }
+
     let id = UUID()
+    let kind: Kind
     @Published var url: URL
-    let document: MarkdownDocument
-    let controller: EditorController
+    let document: MarkdownDocument?
+    let controller: EditorController?
 
     init(url: URL) {
+        self.kind = .markdown
         self.url = url
         let document = MarkdownDocument(url: url)
         self.document = document
         self.controller = EditorController(document: document)
     }
 
-    var title: String { url.deletingPathExtension().lastPathComponent }
+    init(folder url: URL) {
+        self.kind = .folder
+        self.url = url
+        self.document = nil
+        self.controller = nil
+    }
+
+    var title: String {
+        kind == .folder ? url.lastPathComponent : url.deletingPathExtension().lastPathComponent
+    }
 }
 
 /// Eine Sektion (Split-Bereich) mit eigener Tab-Leiste.
@@ -44,11 +57,22 @@ struct RenameSheetState: Identifiable {
     var name: String
 }
 
+/// Zustand *eines* Fensters: eigener Vault, eigene Sektionen und Tabs.
 final class AppState: ObservableObject {
 
-    static let shared = AppState()
+    /// Alle lebenden Fenster-Instanzen (schwach), z. B. um beim Beenden
+    /// überall zu sichern.
+    private static let registry = NSHashTable<AppState>.weakObjects()
+
+    static func saveAllWindows() {
+        for state in registry.allObjects { state.saveAll() }
+    }
 
     let vault = VaultStore()
+
+    /// Vault, den dieses Fenster beim Start öffnen soll (vom Ursprungsfenster
+    /// übernommen); nil beim allerersten Fenster.
+    private let initialVaultPath: String?
 
     @Published var panes: [Pane] = [Pane()]
     @Published var activePaneID: UUID
@@ -56,7 +80,8 @@ final class AppState: ObservableObject {
     @Published var renameSheet: RenameSheetState?
     @Published var errorMessage: String?
 
-    private init() {
+    init(initialVaultPath: String? = nil) {
+        self.initialVaultPath = initialVaultPath
         let firstPane = Pane()
         panes = [firstPane]
         activePaneID = firstPane.id
@@ -66,6 +91,7 @@ final class AppState: ObservableObject {
         vault.onFileDeleted = { [weak self] url in
             self?.fileDeleted(url)
         }
+        Self.registry.add(self)
     }
 
     var activePane: Pane {
@@ -73,12 +99,17 @@ final class AppState: ObservableObject {
     }
 
     var activeTab: EditorTab? { activePane.selectedTab }
-    var activeTextView: MarkdownTextView? { activeTab?.controller.textView }
+    var activeTextView: MarkdownTextView? { activeTab?.controller?.textView }
     var isSplit: Bool { panes.count > 1 }
 
     // MARK: - Start
 
     func bootstrap() {
+        if let initialVaultPath,
+           FileManager.default.fileExists(atPath: initialVaultPath) {
+            vault.open(URL(fileURLWithPath: initialVaultPath))
+            return
+        }
         if let envPath = ProcessInfo.processInfo.environment["MYNOTION_VAULT"],
            FileManager.default.fileExists(atPath: envPath) {
             vault.open(URL(fileURLWithPath: envPath))
@@ -110,6 +141,12 @@ final class AppState: ObservableObject {
     // MARK: - Tabs öffnen / schließen
 
     func open(_ url: URL) {
+        var isDirectory: ObjCBool = false
+        if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory),
+           isDirectory.boolValue {
+            openFolder(url)
+            return
+        }
         if url.pathExtension.lowercased() != "md" {
             NSWorkspace.shared.open(url)
             return
@@ -130,25 +167,49 @@ final class AppState: ObservableObject {
         focusActiveEditor()
     }
 
+    /// Öffnet einen Vault-Ordner: klappt ihn in der Sidebar auf und zeigt
+    /// eine Übersicht in einem eigenen Tab. Ordner außerhalb des Vaults
+    /// gehen an den Finder.
+    func openFolder(_ url: URL) {
+        let target = url.mnCanonical
+        guard vault.isInVault(target) else {
+            NSWorkspace.shared.open(target)
+            return
+        }
+        vault.reveal(target)
+        for pane in panes {
+            if let tab = pane.tabs.first(where: { $0.kind == .folder && $0.url.path == target.path }) {
+                pane.selectedTabID = tab.id
+                activePaneID = pane.id
+                return
+            }
+        }
+        let tab = EditorTab(folder: target)
+        let pane = activePane
+        pane.tabs.append(tab)
+        pane.selectedTabID = tab.id
+    }
+
     private func wire(_ tab: EditorTab) {
-        tab.controller.onOpenLink = { [weak self, weak tab] link in
+        guard let controller = tab.controller else { return }
+        controller.onOpenLink = { [weak self, weak tab] link in
             guard let self, let tab else { return }
             self.handleLink(link, from: tab)
         }
-        tab.controller.textView.onFocus = { [weak self, weak tab] in
+        controller.textView.onFocus = { [weak self, weak tab] in
             guard let self, let tab else { return }
             if let pane = self.panes.first(where: { p in p.tabs.contains(where: { $0.id == tab.id }) }) {
                 if self.activePaneID != pane.id { self.activePaneID = pane.id }
             }
         }
-        tab.controller.textView.onRequestLinkSheet = { [weak self, weak tab] in
+        controller.textView.onRequestLinkSheet = { [weak self, weak tab] in
             guard let self, let tab else { return }
             self.showLinkSheet(for: tab)
         }
     }
 
     func close(_ tab: EditorTab) {
-        tab.document.save()
+        tab.document?.save()
         for pane in panes {
             if let idx = pane.tabs.firstIndex(where: { $0.id == tab.id }) {
                 pane.tabs.remove(at: idx)
@@ -170,7 +231,7 @@ final class AppState: ObservableObject {
     func closeOtherTabs(keeping tab: EditorTab) {
         guard let pane = panes.first(where: { p in p.tabs.contains(where: { $0.id == tab.id }) }) else { return }
         for other in pane.tabs where other.id != tab.id {
-            other.document.save()
+            other.document?.save()
         }
         pane.tabs.removeAll { $0.id != tab.id }
         pane.selectedTabID = tab.id
@@ -250,12 +311,12 @@ final class AppState: ObservableObject {
 
     // MARK: - Speichern
 
-    func saveActive() { activeTab?.document.save() }
+    func saveActive() { activeTab?.document?.save() }
 
     func saveAll() {
         for pane in panes {
             for tab in pane.tabs {
-                tab.document.save()
+                tab.document?.save()
             }
         }
     }
@@ -314,13 +375,13 @@ final class AppState: ObservableObject {
             for tab in pane.tabs {
                 if tab.url == old {
                     tab.url = new
-                    tab.controller.updateFileURL(new)
+                    tab.controller?.updateFileURL(new)
                 } else if tab.url.path.hasPrefix(oldPath + "/") {
                     // Datei lag in einem verschobenen/umbenannten Ordner
                     let suffix = String(tab.url.path.dropFirst(oldPath.count))
                     let newURL = URL(fileURLWithPath: new.path + suffix)
                     tab.url = newURL
-                    tab.controller.updateFileURL(newURL)
+                    tab.controller?.updateFileURL(newURL)
                 }
             }
             pane.objectWillChange.send()
@@ -353,9 +414,11 @@ final class AppState: ObservableObject {
             return
         }
         let decoded = link.removingPercentEncoding ?? link
-        let resolved = tab.url.deletingLastPathComponent()
-            .appendingPathComponent(decoded).standardizedFileURL
-        if FileManager.default.fileExists(atPath: resolved.path) {
+        if let resolved = Self.resolveLocalLink(
+            decoded,
+            baseDirectory: tab.url.deletingLastPathComponent(),
+            vaultRoot: vault.vaultURL
+        ) {
             open(resolved)
         } else if let url = URL(string: link), url.scheme != nil {
             NSWorkspace.shared.open(url)
@@ -364,16 +427,38 @@ final class AppState: ObservableObject {
         }
     }
 
+    /// Löst einen Datei-Link auf: absolute Pfade, `~`, Pfade relativ zur
+    /// aktuellen Datei und als Fallback relativ zum Vault-Wurzelordner.
+    /// Gibt nil zurück, wenn kein Ziel existiert.
+    static func resolveLocalLink(_ decoded: String, baseDirectory: URL, vaultRoot: URL?) -> URL? {
+        var candidates: [URL] = []
+        if decoded.hasPrefix("/") {
+            candidates.append(URL(fileURLWithPath: decoded))
+        } else if decoded.hasPrefix("~") {
+            candidates.append(URL(fileURLWithPath: (decoded as NSString).expandingTildeInPath))
+        } else {
+            candidates.append(baseDirectory.appendingPathComponent(decoded))
+            if let vaultRoot {
+                candidates.append(vaultRoot.appendingPathComponent(decoded))
+            }
+        }
+        for candidate in candidates {
+            let url = candidate.mnCanonical
+            if FileManager.default.fileExists(atPath: url.path) { return url }
+        }
+        return nil
+    }
+
     func showLinkSheet(for tab: EditorTab? = nil) {
-        guard let tab = tab ?? activeTab else { return }
+        guard let tab = tab ?? activeTab, let controller = tab.controller else { return }
         guard let pane = panes.first(where: { p in p.tabs.contains(where: { $0.id == tab.id }) }) else { return }
-        let ctx = tab.controller.textView.currentLinkContext()
+        let ctx = controller.textView.currentLinkContext()
         linkSheet = LinkSheetState(text: ctx.text, url: ctx.url, range: ctx.range, paneID: pane.id)
     }
 
     func applyLinkSheet(_ state: LinkSheetState, text: String, url: String) {
         guard let pane = panes.first(where: { $0.id == state.paneID }),
               let tab = pane.selectedTab else { return }
-        tab.controller.textView.applyLink(text: text, url: url, range: state.range)
+        tab.controller?.textView.applyLink(text: text, url: url, range: state.range)
     }
 }

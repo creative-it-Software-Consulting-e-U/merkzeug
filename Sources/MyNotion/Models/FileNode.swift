@@ -15,3 +15,11 @@ struct FileNode: Identifiable, Hashable {
         !isDirectory && url.pathExtension.lowercased() == "md"
     }
 }
+
+extension URL {
+    /// Kanonische Form des Pfads (löst Symlinks wie `/var` ↔ `/private/var` in
+    /// eine einheitliche Form auf), damit Pfadvergleiche im Vault zuverlässig sind.
+    var mnCanonical: URL {
+        URL(fileURLWithPath: (standardizedFileURL.path as NSString).resolvingSymlinksInPath)
+    }
+}

@@ -21,6 +21,7 @@ app: build Support/AppIcon.icns
 	rm -rf $(BUNDLE)
 	mkdir -p $(BUNDLE)/Contents/MacOS $(BUNDLE)/Contents/Resources
 	cp $(BINARY) $(BUNDLE)/Contents/MacOS/$(APP_NAME)
+	cp -R .build/release/$(APP_NAME)_$(APP_NAME).bundle $(BUNDLE)/Contents/Resources/
 	cp Support/Info.plist $(BUNDLE)/Contents/Info.plist
 	cp Support/AppIcon.icns $(BUNDLE)/Contents/Resources/AppIcon.icns
 	printf 'APPL????' > $(BUNDLE)/Contents/PkgInfo

@@ -9,6 +9,9 @@ final class VaultStore: ObservableObject {
         didSet { rescan() }
     }
 
+    /// Pfade der in der Sidebar aufgeklappten Ordner.
+    @Published var expandedFolders: Set<String> = []
+
     private(set) var vaultURL: URL?
     private var watcher: FSEventsWatcher?
     private var rescanScheduled = false
@@ -21,7 +24,8 @@ final class VaultStore: ObservableObject {
     // MARK: - Vault öffnen / scannen
 
     func open(_ url: URL) {
-        vaultURL = url
+        vaultURL = url.mnCanonical
+        expandedFolders = []
         UserDefaults.standard.set(url.path, forKey: "vaultPath")
         watcher?.stop()
         watcher = FSEventsWatcher(path: url.path) { [weak self] in
@@ -53,8 +57,11 @@ final class VaultStore: ObservableObject {
         )) ?? []
 
         var children: [FileNode] = []
-        for item in contents {
-            let isDir = (try? item.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory ?? false
+        for rawItem in contents {
+            let isDir = (try? rawItem.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory ?? false
+            // Kind-URL aus dem (kanonischen) Eltern-Pfad aufbauen, damit alle
+            // Knoten-URLs dieselbe Pfadform haben wie vaultURL.
+            let item = url.appendingPathComponent(rawItem.lastPathComponent, isDirectory: isDir)
             if isDir {
                 if AssetManager.isAssetsDirectory(item), !showResources { continue }
                 children.append(scan(item))
@@ -69,6 +76,43 @@ final class VaultStore: ObservableObject {
             return a.name.localizedStandardCompare(b.name) == .orderedAscending
         }
         return FileNode(url: url, isDirectory: true, children: children)
+    }
+
+    // MARK: - Sidebar-Navigation
+
+    /// Liegt die URL innerhalb des geöffneten Vaults?
+    func isInVault(_ url: URL) -> Bool {
+        guard let vaultURL else { return false }
+        let path = url.mnCanonical.path
+        return path == vaultURL.path || path.hasPrefix(vaultURL.path + "/")
+    }
+
+    /// Klappt in der Sidebar alle Ordner bis zur URL auf
+    /// (bei einem Ordner inklusive des Ordners selbst).
+    func reveal(_ url: URL) {
+        guard let vaultURL else { return }
+        var current = url.mnCanonical
+        let isDir = (try? current.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory ?? false
+        if !isDir { current = current.deletingLastPathComponent() }
+        while current.path.hasPrefix(vaultURL.path + "/") {
+            expandedFolders.insert(current.path)
+            current = current.deletingLastPathComponent()
+        }
+    }
+
+    /// Sucht den Baum-Knoten zu einer URL.
+    func node(for url: URL) -> FileNode? {
+        guard let root else { return nil }
+        return Self.findNode(path: url.mnCanonical.path, in: root)
+    }
+
+    private static func findNode(path: String, in node: FileNode) -> FileNode? {
+        if node.url.path == path { return node }
+        guard path.hasPrefix(node.url.path + "/") else { return nil }
+        for child in node.children ?? [] {
+            if let hit = findNode(path: path, in: child) { return hit }
+        }
+        return nil
     }
 
     // MARK: - Dateioperationen

@@ -12,7 +12,8 @@ let package = Package(
         .executableTarget(
             name: "MyNotion",
             dependencies: ["MarkdownEngine"],
-            path: "Sources/MyNotion"
+            path: "Sources/MyNotion",
+            resources: [.copy("Resources/mermaid.min.js")]
         ),
         .testTarget(
             name: "MarkdownEngineTests",

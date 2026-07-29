@@ -6,7 +6,8 @@ struct EditorToolbar: View {
     @ObservedObject var app: AppState
     let tab: EditorTab
 
-    private var textView: MarkdownTextView { tab.controller.textView }
+    // Die Toolbar wird nur für Markdown-Tabs angezeigt (siehe PaneView).
+    private var textView: MarkdownTextView { tab.controller!.textView }
 
     var body: some View {
         HStack(spacing: 2) {

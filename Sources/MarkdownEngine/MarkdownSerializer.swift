@@ -191,6 +191,14 @@ public enum MarkdownSerializer {
         var out = ""
 
         attributed.enumerateAttributes(in: range, options: []) { attrs, runRange, _ in
+            // Mermaid-Diagramm (gerenderter Block)
+            if attrs[.attachment] != nil, let source = attrs[.mnMermaidSource] as? String {
+                var body = source
+                while body.hasSuffix("\n") { body.removeLast() }
+                out += "```mermaid\n\(body)\n```"
+                return
+            }
+
             // Bild-Attachment
             if attrs[.attachment] != nil {
                 let path = (attrs[.mnImagePath] as? String) ?? ""

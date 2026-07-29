@@ -58,6 +58,7 @@ final class EditorController: NSObject, NSTextViewDelegate {
 
         super.init()
         textView.delegate = self
+        textView.renderMermaidAttachments()
     }
 
     func updateFileURL(_ url: URL) {
@@ -69,6 +70,10 @@ final class EditorController: NSObject, NSTextViewDelegate {
 
     func textDidChange(_ notification: Notification) {
         document.noteEdited()
+    }
+
+    func textViewDidChangeSelection(_ notification: Notification) {
+        textView.collapseInactiveMermaidBlocks()
     }
 
     func textView(_ textView: NSTextView, clickedOnLink link: Any, at charIndex: Int) -> Bool {

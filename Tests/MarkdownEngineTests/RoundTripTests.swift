@@ -78,6 +78,31 @@ final class RoundTripTests: XCTestCase {
         """)
     }
 
+    func testMermaidBlock() {
+        assertRoundTrip("""
+        Davor ein Absatz.
+
+        ```mermaid
+        flowchart TD
+            A[Start] --> B{Frage}
+            B -->|Ja| C[Ende]
+        ```
+
+        Danach ein Absatz.
+        """)
+    }
+
+    func testMermaidBlockIsAttachment() {
+        let blocks = MarkdownParser.parse("```mermaid\nflowchart TD\n    A --> B\n```\n")
+        let attributed = AttributedBuilder(baseURL: nil).build(blocks)
+        var found: String?
+        attributed.enumerateAttribute(.mnMermaidSource,
+                                      in: NSRange(location: 0, length: attributed.length)) { value, _, _ in
+            if let s = value as? String { found = s }
+        }
+        XCTAssertEqual(found, "flowchart TD\n    A --> B")
+    }
+
     func testThematicBreak() {
         assertRoundTrip("""
         Oben
