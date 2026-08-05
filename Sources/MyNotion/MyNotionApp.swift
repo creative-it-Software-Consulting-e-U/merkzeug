@@ -39,6 +39,11 @@ struct MyNotionApp: App {
         .commands {
             AppCommands()
         }
+
+        Window("MyNotion-Hilfe", id: "help") {
+            HelpView()
+        }
+        .defaultSize(width: 640, height: 720)
     }
 }
 
@@ -72,6 +77,7 @@ extension FocusedValues {
 struct AppCommands: Commands {
     @FocusedValue(\.appState) private var app: AppState?
     @Environment(\.openWindow) private var openWindow
+    @ObservedObject private var recentVaults = RecentVaults.shared
 
     var body: some Commands {
         CommandGroup(replacing: .newItem) {
@@ -89,6 +95,20 @@ struct AppCommands: Commands {
             Button("Vault öffnen…") { app?.chooseVault() }
                 .keyboardShortcut("o", modifiers: .command)
                 .disabled(app == nil)
+            Menu("Zuletzt geöffnete Vaults") {
+                ForEach(recentVaults.paths, id: \.self) { path in
+                    Button((path as NSString).abbreviatingWithTildeInPath) {
+                        app?.openVault(URL(fileURLWithPath: path))
+                    }
+                    .disabled(app == nil)
+                }
+                if recentVaults.paths.isEmpty {
+                    Button("Keine Einträge") {}.disabled(true)
+                } else {
+                    Divider()
+                    Button("Einträge löschen") { RecentVaults.shared.clear() }
+                }
+            }
             Divider()
             Button("Tab schließen") { app?.closeActiveTab() }
                 .keyboardShortcut("w", modifiers: .command)
@@ -136,7 +156,21 @@ struct AppCommands: Commands {
                 .keyboardShortcut("t", modifiers: [.command, .option])
             Button("Trennlinie") { app?.activeTextView?.insertHorizontalRule() }
         }
+        CommandGroup(replacing: .help) {
+            Button("MyNotion-Hilfe") { openWindow(id: "help") }
+                .keyboardShortcut("?", modifiers: .command)
+        }
         CommandMenu("Ansicht") {
+            Button("Navigationsmodus ein-/ausschalten") { app?.toggleNavigationMode() }
+                .keyboardShortcut("r", modifiers: .command)
+                .disabled(app == nil)
+            Button("Zurück") { app?.goBack() }
+                .keyboardShortcut("[", modifiers: .command)
+                .disabled(app == nil)
+            Button("Vorwärts") { app?.goForward() }
+                .keyboardShortcut("]", modifiers: .command)
+                .disabled(app == nil)
+            Divider()
             Button("Zweite Sektion ein-/ausblenden") { app?.toggleSplit() }
                 .keyboardShortcut("\\", modifiers: .command)
                 .disabled(app == nil)

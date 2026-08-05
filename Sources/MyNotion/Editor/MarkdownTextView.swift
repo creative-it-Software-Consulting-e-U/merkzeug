@@ -11,6 +11,30 @@ final class MarkdownTextView: NSTextView {
     var onFocus: (() -> Void)?
     /// Öffnet das Link-Sheet (von der App gesetzt).
     var onRequestLinkSheet: (() -> Void)?
+    /// Zurück/Vorwärts im Navigationsmodus (von der App gesetzt; die App
+    /// ignoriert die Aufrufe, wenn der Navigationsmodus inaktiv ist).
+    var onNavigateBack: (() -> Void)?
+    var onNavigateForward: (() -> Void)?
+
+    /// Drei-Finger-Wischen (je nach Systemeinstellung „Zwischen Seiten blättern“).
+    override func swipe(with event: NSEvent) {
+        if event.deltaX > 0 {
+            onNavigateBack?()
+        } else if event.deltaX < 0 {
+            onNavigateForward?()
+        } else {
+            super.swipe(with: event)
+        }
+    }
+
+    /// Maus-Zusatztasten 4/5 (Zurück/Vorwärts wie im Browser).
+    override func otherMouseUp(with event: NSEvent) {
+        switch event.buttonNumber {
+        case 3: onNavigateBack?()
+        case 4: onNavigateForward?()
+        default: super.otherMouseUp(with: event)
+        }
+    }
     /// Verhindert Collapse-Reentranz beim Umschalten Mermaid-Diagramm ⇄ Code.
     var isTogglingMermaid = false
     /// Mermaid-Attachments, für die bereits ein Rendering angestoßen wurde.

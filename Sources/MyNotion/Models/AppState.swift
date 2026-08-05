@@ -12,6 +12,12 @@ final class EditorTab: ObservableObject, Identifiable {
     let document: MarkdownDocument?
     let controller: EditorController?
 
+    /// Navigationsmodus: Editor ist read-only, Links laden im selben Tab.
+    @Published var isNavigationMode = false
+    /// Historie für Zurück/Vorwärts; bleibt beim Verlassen des Modus erhalten.
+    @Published var backStack: [URL] = []
+    @Published var forwardStack: [URL] = []
+
     init(url: URL) {
         self.kind = .markdown
         self.url = url
@@ -124,6 +130,18 @@ final class AppState: ObservableObject {
         chooseVault()
     }
 
+    /// Öffnet einen Vault direkt (z. B. aus der „Zuletzt geöffnet“-Liste).
+    func openVault(_ url: URL) {
+        guard FileManager.default.fileExists(atPath: url.path) else {
+            errorMessage = "Vault nicht gefunden: \(url.path)"
+            return
+        }
+        guard url.mnCanonical != vault.vaultURL else { return }
+        saveAll()
+        closeAllTabs()
+        vault.open(url)
+    }
+
     func chooseVault() {
         let panel = NSOpenPanel()
         panel.title = "Vault-Ordner auswählen"
@@ -206,6 +224,56 @@ final class AppState: ObservableObject {
         controller.textView.onRequestLinkSheet = { [weak self, weak tab] in
             guard let self, let tab else { return }
             self.showLinkSheet(for: tab)
+        }
+        controller.textView.onNavigateBack = { [weak self, weak tab] in
+            guard let self, let tab else { return }
+            self.goBack(tab)
+        }
+        controller.textView.onNavigateForward = { [weak self, weak tab] in
+            guard let self, let tab else { return }
+            self.goForward(tab)
+        }
+    }
+
+    // MARK: - Navigationsmodus
+
+    /// Schaltet den Navigationsmodus des aktiven Tabs um (⌘R).
+    func toggleNavigationMode() {
+        guard let tab = activeTab, tab.kind == .markdown, let controller = tab.controller else { return }
+        tab.isNavigationMode.toggle()
+        controller.setReadOnly(tab.isNavigationMode)
+    }
+
+    /// Lädt eine Datei im selben Tab und schreibt die Historie fort.
+    func navigate(_ tab: EditorTab, to url: URL) {
+        guard let controller = tab.controller, url != tab.url else { return }
+        tab.backStack.append(tab.url)
+        tab.forwardStack.removeAll()
+        controller.navigate(to: url)
+        tab.url = url
+    }
+
+    func goBack(_ tab: EditorTab? = nil) {
+        guard let tab = tab ?? activeTab,
+              tab.isNavigationMode, let controller = tab.controller else { return }
+        while let target = tab.backStack.popLast() {
+            guard FileManager.default.fileExists(atPath: target.path) else { continue }
+            tab.forwardStack.append(tab.url)
+            controller.navigate(to: target)
+            tab.url = target
+            return
+        }
+    }
+
+    func goForward(_ tab: EditorTab? = nil) {
+        guard let tab = tab ?? activeTab,
+              tab.isNavigationMode, let controller = tab.controller else { return }
+        while let target = tab.forwardStack.popLast() {
+            guard FileManager.default.fileExists(atPath: target.path) else { continue }
+            tab.backStack.append(tab.url)
+            controller.navigate(to: target)
+            tab.url = target
+            return
         }
     }
 
@@ -400,18 +468,23 @@ final class AppState: ObservableObject {
 
     private func fileMoved(from old: URL, to new: URL) {
         let oldPath = old.path
+        func remapped(_ url: URL) -> URL? {
+            if url == old { return new }
+            if url.path.hasPrefix(oldPath + "/") {
+                // Datei lag in einem verschobenen/umbenannten Ordner
+                let suffix = String(url.path.dropFirst(oldPath.count))
+                return URL(fileURLWithPath: new.path + suffix)
+            }
+            return nil
+        }
         for pane in panes {
             for tab in pane.tabs {
-                if tab.url == old {
-                    tab.url = new
-                    tab.controller?.updateFileURL(new)
-                } else if tab.url.path.hasPrefix(oldPath + "/") {
-                    // Datei lag in einem verschobenen/umbenannten Ordner
-                    let suffix = String(tab.url.path.dropFirst(oldPath.count))
-                    let newURL = URL(fileURLWithPath: new.path + suffix)
+                if let newURL = remapped(tab.url) {
                     tab.url = newURL
                     tab.controller?.updateFileURL(newURL)
                 }
+                tab.backStack = tab.backStack.map { remapped($0) ?? $0 }
+                tab.forwardStack = tab.forwardStack.map { remapped($0) ?? $0 }
             }
             pane.objectWillChange.send()
         }
@@ -420,6 +493,10 @@ final class AppState: ObservableObject {
     private func fileDeleted(_ url: URL) {
         let path = url.path
         for pane in panes {
+            for tab in pane.tabs {
+                tab.backStack.removeAll { $0 == url || $0.path.hasPrefix(path + "/") }
+                tab.forwardStack.removeAll { $0 == url || $0.path.hasPrefix(path + "/") }
+            }
             let doomed = pane.tabs.filter { $0.url == url || $0.url.path.hasPrefix(path + "/") }
             for tab in doomed {
                 if let idx = pane.tabs.firstIndex(where: { $0.id == tab.id }) {
@@ -448,7 +525,12 @@ final class AppState: ObservableObject {
             baseDirectory: tab.url.deletingLastPathComponent(),
             vaultRoot: vault.vaultURL
         ) {
-            open(resolved)
+            let isDirectory = (try? resolved.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory ?? false
+            if tab.isNavigationMode, !isDirectory, resolved.pathExtension.lowercased() == "md" {
+                navigate(tab, to: resolved)
+            } else {
+                open(resolved)
+            }
         } else if let url = URL(string: link), url.scheme != nil {
             NSWorkspace.shared.open(url)
         } else {

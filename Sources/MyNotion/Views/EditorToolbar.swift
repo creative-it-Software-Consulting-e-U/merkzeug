@@ -4,12 +4,56 @@ import AppKit
 /// Formatierungs-Toolbar über dem Editor einer Sektion.
 struct EditorToolbar: View {
     @ObservedObject var app: AppState
-    let tab: EditorTab
+    @ObservedObject var tab: EditorTab
 
     // Die Toolbar wird nur für Markdown-Tabs angezeigt (siehe PaneView).
     private var textView: MarkdownTextView { tab.controller!.textView }
 
     var body: some View {
+        HStack(spacing: 2) {
+            toolbarButton("chevron.left", "Zurück (⌘[)") { app.goBack(tab) }
+                .disabled(!tab.isNavigationMode || tab.backStack.isEmpty)
+            toolbarButton("chevron.right", "Vorwärts (⌘])") { app.goForward(tab) }
+                .disabled(!tab.isNavigationMode || tab.forwardStack.isEmpty)
+
+            divider
+
+            formatControls
+                .disabled(tab.isNavigationMode)
+
+            Spacer()
+
+            Button {
+                app.activePaneID = paneID()
+                pane_selectTab()
+                app.toggleNavigationMode()
+            } label: {
+                Image(systemName: tab.isNavigationMode ? "book.fill" : "book")
+                    .frame(width: 22, height: 20)
+                    .foregroundStyle(tab.isNavigationMode ? Color.accentColor : Color.primary)
+            }
+            .buttonStyle(.borderless)
+            .help(tab.isNavigationMode
+                  ? "Navigationsmodus verlassen (⌘R)"
+                  : "Navigationsmodus: read-only, Links öffnen im selben Tab (⌘R)")
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(Color(nsColor: .windowBackgroundColor))
+    }
+
+    /// Stellt sicher, dass der Toggle den *eigenen* Tab trifft, auch wenn
+    /// gerade eine andere Sektion aktiv ist.
+    private func paneID() -> UUID {
+        app.panes.first { p in p.tabs.contains { $0.id == tab.id } }?.id ?? app.activePaneID
+    }
+
+    private func pane_selectTab() {
+        app.panes.first { $0.id == paneID() }?.selectedTabID = tab.id
+    }
+
+    @ViewBuilder
+    private var formatControls: some View {
         HStack(spacing: 2) {
             Menu {
                 Button("Text") { textView.setHeadingLevel(0) }
@@ -64,12 +108,7 @@ struct EditorToolbar: View {
             .help("Tabelle")
 
             toolbarButton("minus", "Trennlinie") { textView.insertHorizontalRule() }
-
-            Spacer()
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 4)
-        .background(Color(nsColor: .windowBackgroundColor))
     }
 
     private var divider: some View {

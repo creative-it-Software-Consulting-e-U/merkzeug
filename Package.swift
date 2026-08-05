@@ -13,7 +13,11 @@ let package = Package(
             name: "MyNotion",
             dependencies: ["MarkdownEngine"],
             path: "Sources/MyNotion",
-            resources: [.copy("Resources/mermaid.min.js")]
+            resources: [
+                .copy("Resources/mermaid.min.js"),
+                .copy("Resources/Help.de.md"),
+                .copy("Resources/Help.en.md"),
+            ]
         ),
         .testTarget(
             name: "MarkdownEngineTests",

@@ -66,6 +66,24 @@ final class EditorController: NSObject, NSTextViewDelegate {
         textView.assetTargetURL = url
     }
 
+    /// Lädt eine andere Datei in denselben Editor (Navigationsmodus).
+    func navigate(to url: URL) {
+        document.save()
+        document.updateURL(url)
+        document.load()
+        textView.assetTargetURL = url
+        textView.setSelectedRange(NSRange(location: 0, length: 0))
+        textView.undoManager?.removeAllActions()
+        textView.renderMermaidAttachments()
+        textView.scroll(.zero)
+    }
+
+    /// Schaltet den Editor zwischen editierbar und read-only um.
+    func setReadOnly(_ readOnly: Bool) {
+        if readOnly { document.save() }
+        textView.isEditable = !readOnly
+    }
+
     // MARK: - NSTextViewDelegate
 
     func textDidChange(_ notification: Notification) {

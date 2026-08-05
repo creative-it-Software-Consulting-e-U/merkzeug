@@ -30,6 +30,7 @@ final class VaultStore: ObservableObject {
         vaultURL = url.mnCanonical
         expandedFolders = []
         UserDefaults.standard.set(url.path, forKey: "vaultPath")
+        RecentVaults.shared.noteOpened(url.mnCanonical)
         watcher?.stop()
         watcher = FSEventsWatcher(path: url.path) { [weak self] in
             self?.scheduleRescan()

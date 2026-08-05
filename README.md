@@ -12,7 +12,8 @@ make test       # Round-Trip-Tests der Markdown-Engine
 ```
 
 Beim ersten Start wählst du den Vault-Ordner (z. B. `SampleVault/` in diesem Repo).
-Die Auswahl wird gemerkt; über **Ablage → Vault öffnen…** (⌘O) wechselst du den Vault.
+Die Auswahl wird gemerkt; über **Ablage → Vault öffnen…** (⌘O) wechselst du den Vault,
+**Ablage → Zuletzt geöffnete Vaults** listet die letzten zehn Vaults zum schnellen Wechsel.
 Alternativ kann der Vault per Umgebungsvariable vorgegeben werden:
 
 ```bash
