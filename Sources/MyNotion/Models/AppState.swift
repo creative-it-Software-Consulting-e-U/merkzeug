@@ -14,6 +14,9 @@ final class EditorTab: ObservableObject, Identifiable {
 
     /// Navigationsmodus: Editor ist read-only, Links laden im selben Tab.
     @Published var isNavigationMode = false
+    /// Zeigt der Tab gerade eine Ordner-Übersicht statt des Editors?
+    /// (Nur im Navigationsmodus möglich, wenn ein Ordner-Link geladen wurde.)
+    @Published var showsFolder = false
     /// Historie für Zurück/Vorwärts; bleibt beim Verlassen des Modus erhalten.
     @Published var backStack: [URL] = []
     @Published var forwardStack: [URL] = []
@@ -34,7 +37,9 @@ final class EditorTab: ObservableObject, Identifiable {
     }
 
     var title: String {
-        kind == .folder ? url.lastPathComponent : url.deletingPathExtension().lastPathComponent
+        kind == .folder || showsFolder
+            ? url.lastPathComponent
+            : url.deletingPathExtension().lastPathComponent
     }
 }
 
@@ -242,38 +247,77 @@ final class AppState: ObservableObject {
         guard let tab = activeTab, tab.kind == .markdown, let controller = tab.controller else { return }
         tab.isNavigationMode.toggle()
         controller.setReadOnly(tab.isNavigationMode)
+        if !tab.isNavigationMode, tab.showsFolder {
+            // Beim Verlassen des Modus zeigt der Tab wieder die zuletzt
+            // geladene Notiz; der Ordner bleibt über „Zurück" erreichbar.
+            tab.backStack.append(tab.url)
+            tab.forwardStack.removeAll()
+            tab.showsFolder = false
+            tab.url = controller.document.fileURL
+        }
     }
 
-    /// Lädt eine Datei im selben Tab und schreibt die Historie fort.
+    /// Lädt eine Datei oder einen Vault-Ordner im selben Tab und schreibt
+    /// die Historie fort.
     func navigate(_ tab: EditorTab, to url: URL) {
-        guard let controller = tab.controller, url != tab.url else { return }
+        guard tab.controller != nil, url != tab.url else { return }
         tab.backStack.append(tab.url)
         tab.forwardStack.removeAll()
-        controller.navigate(to: url)
-        tab.url = url
+        show(url, in: tab)
+    }
+
+    /// Zeigt ein Historien-/Linkziel im Tab an: Ordner als Übersicht,
+    /// Markdown-Dateien im Editor.
+    private func show(_ target: URL, in tab: EditorTab) {
+        guard let controller = tab.controller else { return }
+        var isDirectory: ObjCBool = false
+        FileManager.default.fileExists(atPath: target.path, isDirectory: &isDirectory)
+        if isDirectory.boolValue {
+            controller.document.save()
+            tab.showsFolder = true
+            vault.reveal(target)
+        } else {
+            tab.showsFolder = false
+            controller.navigate(to: target)
+        }
+        tab.url = target
     }
 
     func goBack(_ tab: EditorTab? = nil) {
         guard let tab = tab ?? activeTab,
-              tab.isNavigationMode, let controller = tab.controller else { return }
+              tab.isNavigationMode, tab.controller != nil else { return }
         while let target = tab.backStack.popLast() {
             guard FileManager.default.fileExists(atPath: target.path) else { continue }
             tab.forwardStack.append(tab.url)
-            controller.navigate(to: target)
-            tab.url = target
+            show(target, in: tab)
             return
         }
     }
 
     func goForward(_ tab: EditorTab? = nil) {
         guard let tab = tab ?? activeTab,
-              tab.isNavigationMode, let controller = tab.controller else { return }
+              tab.isNavigationMode, tab.controller != nil else { return }
         while let target = tab.forwardStack.popLast() {
             guard FileManager.default.fileExists(atPath: target.path) else { continue }
             tab.backStack.append(tab.url)
-            controller.navigate(to: target)
-            tab.url = target
+            show(target, in: tab)
             return
+        }
+    }
+
+    /// Öffnet einen Eintrag aus der Ordner-Übersicht: im Navigationsmodus
+    /// im selben Tab, sonst wie ein normaler Sidebar-Klick.
+    func openFolderEntry(_ url: URL, from tab: EditorTab) {
+        var isDirectory: ObjCBool = false
+        FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory)
+        let inSameTab = tab.isNavigationMode && tab.kind == .markdown
+            && (isDirectory.boolValue
+                ? vault.isInVault(url.mnCanonical)
+                : url.pathExtension.lowercased() == "md")
+        if inSameTab {
+            navigate(tab, to: url.mnCanonical)
+        } else {
+            open(url)
         }
     }
 
@@ -481,7 +525,12 @@ final class AppState: ObservableObject {
             for tab in pane.tabs {
                 if let newURL = remapped(tab.url) {
                     tab.url = newURL
-                    tab.controller?.updateFileURL(newURL)
+                    if !tab.showsFolder { tab.controller?.updateFileURL(newURL) }
+                }
+                if tab.showsFolder, let document = tab.document,
+                   let newDocURL = remapped(document.fileURL) {
+                    // Die im Hintergrund geladene Notiz ist mitgewandert.
+                    tab.controller?.updateFileURL(newDocURL)
                 }
                 tab.backStack = tab.backStack.map { remapped($0) ?? $0 }
                 tab.forwardStack = tab.forwardStack.map { remapped($0) ?? $0 }
@@ -526,7 +575,10 @@ final class AppState: ObservableObject {
             vaultRoot: vault.vaultURL
         ) {
             let isDirectory = (try? resolved.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory ?? false
-            if tab.isNavigationMode, !isDirectory, resolved.pathExtension.lowercased() == "md" {
+            let navigable = isDirectory
+                ? vault.isInVault(resolved)
+                : resolved.pathExtension.lowercased() == "md"
+            if tab.isNavigationMode, tab.kind == .markdown, navigable {
                 navigate(tab, to: resolved)
             } else {
                 open(resolved)

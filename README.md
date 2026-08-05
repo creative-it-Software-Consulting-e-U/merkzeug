@@ -45,6 +45,7 @@ MYNOTION_VAULT=/pfad/zum/vault dist/MyNotion.app/Contents/MacOS/MyNotion
 - Hierarchischer Dateibaum mit Kontextmenü (neue Notiz, neuer Ordner, umbenennen, Papierkorb, im Finder zeigen) und Verschieben per Drag & Drop auf Ordner
 - Jede Datei öffnet in einem eigenen Tab; ⌘W schließt den aktiven Tab
 - **Zwei Sektionen** nebeneinander (⌘\), Tabs per Drag & Drop auf die andere Sektion oder per Kontextmenü/⇧⌘\ verschieben
+- **Navigationsmodus** pro Tab (⌘R, Menü „Ansicht“ oder Buch-Symbol in der Toolbar): Notiz ist schreibgeschützt, Vault-Links — auch Ordner-Links samt Klicks in der Ordnerübersicht — laden ihr Ziel im **selben Tab**; Zurück/Vorwärts über die Toolbar-Pfeile, ⌘[/⌘], Drei-Finger-Wischen oder Maus-Zusatztasten 4/5, Historie bleibt pro Tab erhalten
 - Änderungen im Dateisystem werden automatisch erkannt (FSEvents)
 
 ## Aufbau

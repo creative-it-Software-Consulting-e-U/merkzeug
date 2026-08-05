@@ -29,7 +29,7 @@ struct FolderOverviewView: View {
             if let children = node?.children, !children.isEmpty {
                 List {
                     ForEach(children) { child in
-                        FolderOverviewRow(app: app, child: child)
+                        FolderOverviewRow(app: app, tab: tab, child: child)
                     }
                 }
                 .listStyle(.inset)
@@ -75,6 +75,7 @@ struct FolderOverviewView: View {
 /// Eine Zeile in der Ordner-Übersicht.
 struct FolderOverviewRow: View {
     @ObservedObject var app: AppState
+    @ObservedObject var tab: EditorTab
     let child: FileNode
 
     private var icon: String {
@@ -111,10 +112,13 @@ struct FolderOverviewRow: View {
         .contentShape(Rectangle())
         .padding(.vertical, 2)
         .onTapGesture {
-            app.open(child.url)
+            app.openFolderEntry(child.url, from: tab)
         }
         .contextMenu {
-            Button("Öffnen") { app.open(child.url) }
+            Button("Öffnen") { app.openFolderEntry(child.url, from: tab) }
+            if tab.isNavigationMode {
+                Button("In neuem Tab öffnen") { app.open(child.url) }
+            }
             Divider()
             Button("Im Finder zeigen") {
                 NSWorkspace.shared.activateFileViewerSelecting([child.url])

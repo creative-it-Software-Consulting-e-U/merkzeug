@@ -77,6 +77,10 @@ editor toolbar.
 
 - In navigation mode the note is **read-only**; clicking vault links loads the
   target **in the same tab** (instead of opening a new tab).
+- **Folder links** stay in the same tab too: the tab shows the folder overview,
+  and clicking its entries also navigates within the same tab (the context menu
+  still offers “Open in new tab”). When you leave the mode, the tab shows the
+  most recently loaded note again.
 - **Back/Forward:** arrow buttons on the left of the toolbar, **⌘[** / **⌘]**,
   three-finger swipe (according to the system setting “Swipe between pages”), or
   mouse buttons 4/5.

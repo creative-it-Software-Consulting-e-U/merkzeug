@@ -14,7 +14,7 @@ struct PaneView: View {
                 if let controller = tab.controller {
                     EditorToolbar(app: app, tab: tab)
                     Divider()
-                    EditorRepresentable(controller: controller)
+                    MarkdownTabContentView(app: app, tab: tab, controller: controller)
                         .id(tab.id)
                 } else {
                     FolderOverviewView(app: app, tab: tab)
@@ -69,6 +69,22 @@ struct PaneView: View {
     }
 }
 
+/// Inhalt eines Markdown-Tabs: der Editor oder – im Navigationsmodus nach
+/// einem Ordner-Link – die Ordner-Übersicht.
+struct MarkdownTabContentView: View {
+    @ObservedObject var app: AppState
+    @ObservedObject var tab: EditorTab
+    let controller: EditorController
+
+    var body: some View {
+        if tab.showsFolder {
+            FolderOverviewView(app: app, tab: tab)
+        } else {
+            EditorRepresentable(controller: controller)
+        }
+    }
+}
+
 /// Ein einzelner Tab in der Tab-Leiste.
 struct TabItemView: View {
     @ObservedObject var app: AppState
@@ -87,7 +103,7 @@ struct TabItemView: View {
 
     var body: some View {
         HStack(spacing: 5) {
-            if tab.kind == .folder {
+            if tab.kind == .folder || tab.showsFolder {
                 Image(systemName: "folder")
                     .font(.system(size: 10))
                     .foregroundStyle(Color.accentColor)

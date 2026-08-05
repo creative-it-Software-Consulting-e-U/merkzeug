@@ -76,6 +76,10 @@ rechts in der Editor-Toolbar.
 
 - Im Navigationsmodus ist die Notiz **schreibgeschützt**; Klicks auf Vault-Links
   laden das Ziel **im selben Tab** (statt einen neuen Tab zu öffnen).
+- Auch **Ordner-Links** bleiben im selben Tab: Der Tab zeigt die Ordnerübersicht,
+  und Klicks auf deren Einträge navigieren ebenfalls im selben Tab weiter
+  (über das Kontextmenü lässt sich ein Eintrag weiterhin „In neuem Tab öffnen“).
+  Beim Verlassen des Modus zeigt der Tab wieder die zuletzt geladene Notiz.
 - **Zurück/Vorwärts:** Pfeil-Buttons links in der Toolbar, **⌘[** / **⌘]**,
   Drei-Finger-Wischen (gemäß Systemeinstellung „Zwischen Seiten blättern“) oder die
   Maus-Zusatztasten 4/5.
