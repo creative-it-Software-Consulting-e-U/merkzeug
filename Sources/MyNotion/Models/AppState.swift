@@ -79,6 +79,7 @@ final class AppState: ObservableObject {
     @Published var linkSheet: LinkSheetState?
     @Published var renameSheet: RenameSheetState?
     @Published var errorMessage: String?
+    @Published var infoMessage: String?
 
     init(initialVaultPath: String? = nil) {
         self.initialVaultPath = initialVaultPath
@@ -317,6 +318,34 @@ final class AppState: ObservableObject {
         for pane in panes {
             for tab in pane.tabs {
                 tab.document?.save()
+            }
+        }
+    }
+
+    // MARK: - Git
+
+    /// Sichert alle offenen Tabs und führt dann Commit & Push im Vault aus.
+    func commitAndPush(message: String) {
+        saveAll()
+        vault.git.commitAndPush(message: message) { [weak self] result in
+            switch result {
+            case .success(let note):
+                if let note { self?.infoMessage = note }
+            case .failure(let error):
+                self?.errorMessage = error.localizedDescription
+            }
+        }
+    }
+
+    /// Sichert alle offenen Tabs und holt dann Änderungen vom Remote.
+    func pull() {
+        saveAll()
+        vault.git.pull { [weak self] result in
+            switch result {
+            case .success(let note):
+                if let note { self?.infoMessage = note }
+            case .failure(let error):
+                self?.errorMessage = error.localizedDescription
             }
         }
     }

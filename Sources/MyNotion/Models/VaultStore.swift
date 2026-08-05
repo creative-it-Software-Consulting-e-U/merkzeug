@@ -12,6 +12,9 @@ final class VaultStore: ObservableObject {
     /// Pfade der in der Sidebar aufgeklappten Ordner.
     @Published var expandedFolders: Set<String> = []
 
+    /// Git-Status des Vault-Ordners.
+    let git = GitStatusModel()
+
     private(set) var vaultURL: URL?
     private var watcher: FSEventsWatcher?
     private var rescanScheduled = false
@@ -31,6 +34,7 @@ final class VaultStore: ObservableObject {
         watcher = FSEventsWatcher(path: url.path) { [weak self] in
             self?.scheduleRescan()
         }
+        git.vaultChanged(vaultURL)
         rescan()
     }
 
@@ -46,6 +50,8 @@ final class VaultStore: ObservableObject {
     func rescan() {
         guard let vaultURL else { root = nil; return }
         root = scan(vaultURL)
+        // FSEvents meldet auch Änderungen unter .git (Commits, Pulls von außen).
+        git.refresh()
     }
 
     private func scan(_ url: URL) -> FileNode {

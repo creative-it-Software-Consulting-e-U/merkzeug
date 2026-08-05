@@ -6,10 +6,12 @@ import UniformTypeIdentifiers
 struct FileTreeView: View {
     @ObservedObject var app: AppState
     @ObservedObject var vault: VaultStore
+    @ObservedObject var git: GitStatusModel
 
     init(app: AppState) {
         self.app = app
         self.vault = app.vault
+        self.git = app.vault.git
     }
 
     var body: some View {
@@ -32,6 +34,10 @@ struct FileTreeView: View {
                     Button("Vault öffnen…") { app.chooseVault() }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            if git.status != nil {
+                Divider()
+                GitStatusBar(app: app, git: git)
             }
             Divider()
             HStack(spacing: 10) {

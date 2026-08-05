@@ -14,6 +14,14 @@ struct ContentView: View {
         NavigationSplitView {
             FileTreeView(app: app)
                 .navigationSplitViewColumnWidth(min: 180, ideal: 240)
+                .alert("Git", isPresented: Binding(
+                    get: { app.infoMessage != nil },
+                    set: { if !$0 { app.infoMessage = nil } }
+                )) {
+                    Button("OK", role: .cancel) {}
+                } message: {
+                    Text(app.infoMessage ?? "")
+                }
         } detail: {
             detailView
         }
