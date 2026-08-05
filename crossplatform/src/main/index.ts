@@ -1,0 +1,263 @@
+import { app, BrowserWindow, dialog, ipcMain, net, protocol, shell } from 'electron'
+import { pathToFileURL } from 'node:url'
+import { existsSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { electronApp, is, optimizer } from '@electron-toolkit/utils'
+import {
+  createFolder,
+  createNote,
+  movePath,
+  readTextFile,
+  readTree,
+  renamePath,
+  saveImage,
+  trashPath,
+  writeTextFile
+} from './vaultOps'
+import { gitCommitPush, gitPull, gitStatus } from './git'
+import { addRecentVault, getLastVault, getRecentVaults } from './settings'
+import { buildMenu } from './menu'
+import {
+  createMainWindow,
+  getWindowVault,
+  openHelpWindow,
+  openMermaidZoom,
+  setWindowVault
+} from './windows'
+import { watchVault } from './watcher'
+
+protocol.registerSchemesAsPrivileged([
+  { scheme: 'vault-file', privileges: { stream: true, supportFetchAPI: true, bypassCSP: true } }
+])
+
+function winFromEvent(event: Electron.IpcMainInvokeEvent): BrowserWindow | null {
+  return BrowserWindow.fromWebContents(event.sender)
+}
+
+async function pickVault(win?: BrowserWindow): Promise<string | null> {
+  const options: Electron.OpenDialogOptions = {
+    title: 'Vault-Ordner auswählen',
+    properties: ['openDirectory', 'createDirectory']
+  }
+  const result = win
+    ? await dialog.showOpenDialog(win, options)
+    : await dialog.showOpenDialog(options)
+  if (result.canceled || result.filePaths.length === 0) return null
+  return result.filePaths[0]
+}
+
+function assignVault(win: BrowserWindow, vault: string): void {
+  setWindowVault(win.id, vault)
+  addRecentVault(vault)
+  watchVault(win, vault)
+  rebuildMenu()
+  win.webContents.send('vault:set', { vault })
+}
+
+async function openVaultViaDialog(win?: BrowserWindow): Promise<void> {
+  const vault = await pickVault(win)
+  if (!vault) return
+  if (win) assignVault(win, vault)
+  else assignVault(createMainWindow(vault), vault)
+}
+
+function newWindow(): void {
+  const focused = BrowserWindow.getFocusedWindow()
+  const vault = focused ? getWindowVault(focused.id) : getLastVault() ?? null
+  createMainWindow(vault)
+}
+
+function rebuildMenu(): void {
+  buildMenu({
+    newWindow,
+    openVault: (win) => void openVaultViaDialog(win),
+    openRecent: (win, path) => {
+      if (!existsSync(path)) {
+        dialog.showErrorBox('Vault nicht gefunden', `Der Ordner existiert nicht mehr:\n${path}`)
+        return
+      }
+      if (win) assignVault(win, path)
+      else assignVault(createMainWindow(path), path)
+    },
+    openHelp: openHelpWindow
+  })
+}
+
+function registerIpc(): void {
+  ipcMain.handle('app:getInitialVault', (event) => {
+    const win = winFromEvent(event)
+    if (!win) return null
+    let vault = getWindowVault(win.id)
+    if (!vault && process.env.MYNOTION_VAULT && existsSync(process.env.MYNOTION_VAULT)) {
+      vault = process.env.MYNOTION_VAULT
+    }
+    if (!vault) {
+      const last = getLastVault()
+      if (last && existsSync(last)) vault = last
+    }
+    if (vault) {
+      // Vault aus der Umgebung (Debug-/Testläufe) nicht in den Einstellungen speichern
+      const fromEnv = vault === process.env.MYNOTION_VAULT
+      setWindowVault(win.id, vault)
+      if (!fromEnv) addRecentVault(vault)
+      watchVault(win, vault)
+      rebuildMenu()
+    }
+    return vault
+  })
+
+  ipcMain.handle('dialog:pickVault', async (event) => {
+    const win = winFromEvent(event) ?? undefined
+    const vault = await pickVault(win)
+    if (vault && win) assignVault(win, vault)
+    return vault
+  })
+
+  ipcMain.handle('vault:tree', (_e, vault: string) => readTree(vault))
+  ipcMain.handle('file:read', (_e, path: string) => readTextFile(path))
+  ipcMain.handle('file:write', (_e, path: string, content: string) => writeTextFile(path, content))
+  ipcMain.handle('file:createNote', (_e, dir: string) => createNote(dir))
+  ipcMain.handle('file:createFolder', (_e, dir: string) => createFolder(dir))
+  ipcMain.handle('file:rename', (_e, path: string, newName: string) => renamePath(path, newName))
+  ipcMain.handle('file:move', (_e, src: string, destDir: string) => movePath(src, destDir))
+  ipcMain.handle('file:trash', (_e, path: string) => trashPath(path))
+  ipcMain.handle('file:exists', (_e, path: string) => existsSync(path))
+  ipcMain.handle('file:showInFolder', (_e, path: string) => shell.showItemInFolder(path))
+  ipcMain.handle('assets:saveImage', (_e, notePath: string, base64: string, ext: string) =>
+    saveImage(notePath, base64, ext)
+  )
+  ipcMain.handle('git:status', (_e, vault: string) => gitStatus(vault))
+  ipcMain.handle('git:commitPush', (_e, vault: string, message: string) =>
+    gitCommitPush(vault, message)
+  )
+  ipcMain.handle('git:pull', (_e, vault: string) => gitPull(vault))
+  ipcMain.handle('recents:get', () => getRecentVaults())
+  ipcMain.handle('shell:openExternal', (_e, url: string) => shell.openExternal(url))
+  ipcMain.handle('window:new', () => newWindow())
+  ipcMain.handle('window:close', (event) => winFromEvent(event)?.close())
+  ipcMain.handle('window:setTitle', (event, title: string) => winFromEvent(event)?.setTitle(title))
+  ipcMain.handle('help:read', (_e, lang: string) => {
+    const file = lang === 'en' ? 'Help.en.md' : 'Help.de.md'
+    const base = app.isPackaged
+      ? join(process.resourcesPath, 'help')
+      : join(app.getAppPath(), 'resources', 'help')
+    return readFileSync(join(base, file), 'utf8')
+  })
+  ipcMain.handle('help:open', () => openHelpWindow())
+  ipcMain.handle('zoom:openMermaid', (_e, svg: string) => openMermaidZoom(svg))
+
+  // Synchrones Speichern für beforeunload (Fenster-/App-Schluss)
+  ipcMain.on('file:writeSync', (event, path: string, content: string) => {
+    try {
+      writeTextFile(path, content)
+      event.returnValue = true
+    } catch {
+      event.returnValue = false
+    }
+  })
+}
+
+app.whenReady().then(() => {
+  electronApp.setAppUserModelId('com.creativeit.mynotion')
+
+  protocol.handle('vault-file', (request) => {
+    const url = new URL(request.url)
+    const path = decodeURIComponent(url.pathname)
+    if (!/\.(png|jpe?g|gif|webp|svg|bmp|tiff?|avif|heic)$/i.test(path)) {
+      return new Response('Forbidden', { status: 403 })
+    }
+    return net.fetch(pathToFileURL(path).toString())
+  })
+
+  app.on('browser-window-created', (_, window) => {
+    // Nur im Dev-Modus (F12 für DevTools): im Release-Build blockiert
+    // watchWindowShortcuts sonst ⌘R und damit den Navigationsmodus-Shortcut.
+    if (is.dev) optimizer.watchWindowShortcuts(window)
+  })
+
+  registerIpc()
+  rebuildMenu()
+
+  const envVault =
+    process.env.MYNOTION_VAULT && existsSync(process.env.MYNOTION_VAULT)
+      ? process.env.MYNOTION_VAULT
+      : null
+  const mainWin = createMainWindow(envVault)
+
+  // Debug-Hook: Screenshot aufnehmen und beenden (MYNOTION_SCREENSHOT=/pfad.png).
+  // MYNOTION_CLICK="Schritt1,Schritt2": "menu:<aktion>" schickt eine Menü-Aktion,
+  // "js:<code>" führt JS im Renderer aus, alles andere klickt den Baum-Eintrag an.
+  if (process.env.MYNOTION_SCREENSHOT) {
+    const target = process.env.MYNOTION_SCREENSHOT
+    setTimeout(async () => {
+      try {
+        // warten, bis der Dateibaum gerendert ist
+        for (let i = 0; i < 20; i++) {
+          const ready = await mainWin.webContents.executeJavaScript(
+            `document.querySelectorAll('.tree-row').length > 0`
+          )
+          if (ready) break
+          await new Promise((r) => setTimeout(r, 1000))
+        }
+        for (const step of (process.env.MYNOTION_CLICK ?? '').split(';;').filter(Boolean)) {
+          if (step === 'helpwindow') {
+            openHelpWindow()
+            await new Promise((r) => setTimeout(r, 5000))
+            const helpWin = BrowserWindow.getAllWindows().find((w) => w !== mainWin)
+            if (helpWin) {
+              const image = await helpWin.webContents.capturePage()
+              const { writeFileSync } = await import('node:fs')
+              writeFileSync(target.replace('.png', '-help.png'), image.toPNG())
+              helpWin.close()
+            }
+          } else if (step === 'windows') {
+            console.log(
+              '[windows]',
+              BrowserWindow.getAllWindows()
+                .map((w) => w.getTitle())
+                .join(' | ')
+            )
+          } else if (step.startsWith('menu:')) {
+            mainWin.webContents.send('menu:action', { action: step.slice(5) })
+          } else if (step.startsWith('js:')) {
+            const result = await mainWin.webContents.executeJavaScript(step.slice(3))
+            if (result !== undefined) console.log('[js]', JSON.stringify(result))
+          } else {
+            await mainWin.webContents.executeJavaScript(
+              `[...document.querySelectorAll('.tree-row .tree-label')]
+                 .find(el => el.textContent === ${JSON.stringify(step)})
+                 ?.closest('.tree-row')
+                 ?.dispatchEvent(new MouseEvent('click', { bubbles: true }))`
+            )
+          }
+          await new Promise((r) => setTimeout(r, 2500))
+        }
+        mainWin.show()
+        mainWin.focus()
+        const { writeFileSync } = await import('node:fs')
+        for (let attempt = 0; attempt < 5; attempt++) {
+          try {
+            const image = await mainWin.webContents.capturePage()
+            if (image.toPNG().length > 20_000) {
+              writeFileSync(target, image.toPNG())
+              break
+            }
+          } catch {
+            // erneut versuchen
+          }
+          await new Promise((r) => setTimeout(r, 1500))
+        }
+      } finally {
+        app.exit(0)
+      }
+    }, 8000)
+  }
+
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) createMainWindow(null)
+  })
+})
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') app.quit()
+})

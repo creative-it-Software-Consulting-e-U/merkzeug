@@ -1,0 +1,62 @@
+import { contextBridge, ipcRenderer } from 'electron'
+import type { FileNode, GitResult, GitStatus, MenuAction } from '../shared/types'
+
+const api = {
+  getInitialVault: (): Promise<string | null> => ipcRenderer.invoke('app:getInitialVault'),
+  pickVault: (): Promise<string | null> => ipcRenderer.invoke('dialog:pickVault'),
+  readTree: (vault: string): Promise<FileNode> => ipcRenderer.invoke('vault:tree', vault),
+  readFile: (path: string): Promise<string> => ipcRenderer.invoke('file:read', path),
+  writeFile: (path: string, content: string): Promise<void> =>
+    ipcRenderer.invoke('file:write', path, content),
+  createNote: (dir: string): Promise<string> => ipcRenderer.invoke('file:createNote', dir),
+  createFolder: (dir: string): Promise<string> => ipcRenderer.invoke('file:createFolder', dir),
+  renamePath: (path: string, newName: string): Promise<string> =>
+    ipcRenderer.invoke('file:rename', path, newName),
+  movePath: (src: string, destDir: string): Promise<string> =>
+    ipcRenderer.invoke('file:move', src, destDir),
+  trashPath: (path: string): Promise<void> => ipcRenderer.invoke('file:trash', path),
+  fileExists: (path: string): Promise<boolean> => ipcRenderer.invoke('file:exists', path),
+  showInFolder: (path: string): Promise<void> => ipcRenderer.invoke('file:showInFolder', path),
+  saveImage: (notePath: string, base64: string, ext: string): Promise<string> =>
+    ipcRenderer.invoke('assets:saveImage', notePath, base64, ext),
+  gitStatus: (vault: string): Promise<GitStatus> => ipcRenderer.invoke('git:status', vault),
+  gitCommitPush: (vault: string, message: string): Promise<GitResult> =>
+    ipcRenderer.invoke('git:commitPush', vault, message),
+  gitPull: (vault: string): Promise<GitResult> => ipcRenderer.invoke('git:pull', vault),
+  getRecentVaults: (): Promise<string[]> => ipcRenderer.invoke('recents:get'),
+  openExternal: (url: string): Promise<void> => ipcRenderer.invoke('shell:openExternal', url),
+  newWindow: (): Promise<void> => ipcRenderer.invoke('window:new'),
+  closeWindow: (): Promise<void> => ipcRenderer.invoke('window:close'),
+  setTitle: (title: string): Promise<void> => ipcRenderer.invoke('window:setTitle', title),
+  readHelp: (lang: string): Promise<string> => ipcRenderer.invoke('help:read', lang),
+  openHelp: (): Promise<void> => ipcRenderer.invoke('help:open'),
+  writeFileSync: (path: string, content: string): boolean =>
+    ipcRenderer.sendSync('file:writeSync', path, content),
+  openMermaidZoom: (svg: string): Promise<void> => ipcRenderer.invoke('zoom:openMermaid', svg),
+
+  onMenuAction: (handler: (action: MenuAction) => void): (() => void) => {
+    const listener = (_e: unknown, payload: { action: MenuAction }): void => handler(payload.action)
+    ipcRenderer.on('menu:action', listener)
+    return () => ipcRenderer.removeListener('menu:action', listener)
+  },
+  onVaultSet: (handler: (vault: string) => void): (() => void) => {
+    const listener = (_e: unknown, payload: { vault: string }): void => handler(payload.vault)
+    ipcRenderer.on('vault:set', listener)
+    return () => ipcRenderer.removeListener('vault:set', listener)
+  },
+  onVaultChanged: (handler: (vault: string) => void): (() => void) => {
+    const listener = (_e: unknown, payload: { vault: string }): void => handler(payload.vault)
+    ipcRenderer.on('vault:changed', listener)
+    return () => ipcRenderer.removeListener('vault:changed', listener)
+  },
+  onZoomSvg: (handler: (svg: string) => void): (() => void) => {
+    const listener = (_e: unknown, payload: string): void =>
+      handler(decodeURIComponent(payload))
+    ipcRenderer.on('zoom:svg', listener)
+    return () => ipcRenderer.removeListener('zoom:svg', listener)
+  }
+}
+
+export type MyNotionApi = typeof api
+
+contextBridge.exposeInMainWorld('mynotion', api)

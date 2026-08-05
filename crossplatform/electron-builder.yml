@@ -1,0 +1,30 @@
+appId: com.creativeit.mynotion
+productName: MyNotion
+directories:
+  buildResources: build
+  output: dist
+files:
+  - out/**
+  - package.json
+extraResources:
+  - from: resources/help
+    to: help
+mac:
+  category: public.app-category.productivity
+  icon: build/icon.icns
+  identity: null
+win:
+  icon: build/icon.png
+  target:
+    - nsis
+linux:
+  icon: build/icon.png
+  category: Office
+  syncDesktopName: true
+  target:
+    - AppImage
+    - deb
+    - rpm
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true

@@ -1,0 +1,51 @@
+{
+  "name": "mynotion",
+  "version": "0.1.0",
+  "description": "MyNotion – WYSIWYG-Markdown-Editor (Cross-Platform)",
+  "main": "out/main/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "start": "electron-vite preview",
+    "package:mac": "electron-vite build && electron-builder --mac dir",
+    "package:mac:dmg": "electron-vite build && electron-builder --mac dmg",
+    "package:win": "electron-vite build && electron-builder --win --x64 --arm64",
+    "package:linux": "electron-vite build && electron-builder --linux --x64"
+  },
+  "keywords": [],
+  "author": "Günther Wieser <guenther.wieser@creative-it.com>",
+  "homepage": "https://www.creative-it.com",
+  "desktopName": "mynotion.desktop",
+  "license": "MIT",
+  "type": "commonjs",
+  "devDependencies": {
+    "@milkdown/crepe": "^7.22.0",
+    "@milkdown/kit": "^7.22.0",
+    "@milkdown/react": "^7.22.0",
+    "@types/node": "^26.1.2",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^5.2.0",
+    "electron": "^43.3.0",
+    "electron-builder": "^26.15.3",
+    "electron-vite": "^5.0.0",
+    "mermaid": "^11.16.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "typescript": "^7.0.2",
+    "vite": "^7.3.6"
+  },
+  "dependencies": {
+    "@electron-toolkit/utils": "^4.0.0",
+    "chokidar": "^5.0.0"
+  },
+  "allowScripts": {
+    "electron@43.3.0": true,
+    "esbuild@0.25.12": true,
+    "esbuild@0.28.1": true,
+    "fsevents@2.3.3": true,
+    "electron-winstaller@5.4.0": true
+  },
+  "productName": "MyNotion"
+}

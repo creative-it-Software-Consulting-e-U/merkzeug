@@ -1,0 +1,166 @@
+# MyNotion – Help
+
+MyNotion is a Notion-style editor for Markdown notes – this edition runs on
+**macOS and Windows**. You edit your notes **WYSIWYG** (formatted, without
+visible Markdown syntax), but everything is always saved as clean, portable
+Markdown. All notes live as `.md` files in an ordinary folder – the **vault**.
+
+All shortcuts use **⌘** on the Mac; on Windows, ⌘ corresponds to the **Ctrl**
+key and ⌥ to the **Alt** key.
+
+---
+
+## 1. Getting started
+
+- On first launch you pick a **vault folder** (any folder containing Markdown
+  files). Your choice is remembered.
+- Use **File → Open Vault…** (⌘O) to switch the vault of the current window.
+- **File → Recent Vaults** lists the last ten vaults for quick switching.
+- **Autosave:** changes are saved automatically one second after the last edit,
+  as well as when closing tabs and when quitting the app.
+  Manually: **⌘S** (active note) or **⌥⌘S** (all open notes).
+- The vault can also be preset via the `MYNOTION_VAULT` environment variable.
+
+## 2. Sidebar & file tree
+
+The sidebar on the left shows the vault as a hierarchical tree.
+
+- **Clicking a note** opens it in a tab; clicking a folder expands/collapses it.
+  **Double-clicking a folder** opens the folder overview.
+- **Context menu** (right-click): new note, new folder, rename, move to trash,
+  show in Finder/Explorer.
+- **Moving:** simply drag files and folders onto a folder.
+- **Folder overview:** shows the contents of a folder as cards in its own tab;
+  clicking notes and subfolders navigates onward.
+- **Sidebar footer:** buttons for a new note and a new folder (left) plus a
+  reload button for re-reading the vault; the eye icon shows/hides
+  **asset folders** (⇧⌘R).
+- Changes made to the vault outside the app (Finder/Explorer, terminal, sync)
+  are detected automatically.
+
+## 3. Tabs, sections & windows
+
+- Every note opens in its own **tab**; **⌘W** closes the active tab,
+  **⇧⌘W** closes the window.
+- **Two sections** side by side: **⌘\** splits the editor area. Drag tabs onto
+  the other tab bar or move them with **⇧⌘\**.
+- **Multiple windows:** **⌥⌘N** opens a new window (initially inheriting the
+  current window's vault; each window can show a different vault via ⌘O).
+
+## 4. Editor & formatting
+
+The editor shows the note formatted; what is saved is Markdown.
+
+- **Toolbar:** the bar above the editor offers paragraph format, bold/italic/
+  strikethrough/inline code, lists, quote, code block, link, image, table and
+  divider — plus back/forward as well as, on the right, the help button
+  (question mark, opens this help) and navigation mode (book icon).
+- **Slash menu:** type **"/"** on an empty line for all block types (headings,
+  lists, quote, code block, table, image …).
+- **Selection toolbar:** selecting text shows a floating bar for bold, italic,
+  strikethrough, inline code and links.
+- **Character formats:** bold (⌘B), italic (⌘I), inline code (⌘E),
+  strikethrough (⌥⌘X).
+- **Paragraph formats:** plain text (⌥⌘0), headings 1–6 (⌥⌘1–⌥⌘6),
+  quote (⇧⌘B), code block (⌥⌘C).
+- **Lists:** bullet list (⌥⌘8), numbered list (⌥⌘7) and task lists; nest with
+  Tab/⇧Tab, automatic continuation on Enter and automatic renumbering.
+- **Auto-formatting while typing:** `# `, `## `, `- `, `1. `, `> ` at the start
+  of a line and ` ``` ` immediately create the corresponding format.
+- **Tables:** insert via ⌥⌘T, the slash menu or the Edit menu. Jump from cell to
+  cell with Tab; add and delete rows/columns via the table controls right at the
+  table or the **Table** menu.
+- **Images:** paste from the clipboard, drag & drop, slash menu or
+  **Edit → Insert Image…**.
+- **Undo/redo** as usual (⌘Z / ⇧⌘Z).
+- **Moving blocks:** the handle to the left of a block (appears on hover)
+  allows drag & drop reordering.
+
+## 5. Links
+
+- **⌘K** opens the link dialog for inserting a formatted link; edit existing
+  links via the tooltip that appears when clicking a link.
+- Possible addresses: `https://…` URLs, paths **relative to the current file**,
+  paths **relative to the vault root** (leading "/") and absolute paths.
+- **Links to `.md` files** open the note in a tab. **Links to folders** expand
+  the folder in the sidebar and open the folder overview. External links open
+  in the browser or default application.
+
+## 6. Navigation mode (reading & browsing)
+
+For browsing linked notes there is a per-tab **navigation mode** – toggled with
+**⌘R**, via **View → Navigation Mode** or the book icon in the toolbar.
+
+- In navigation mode the note is **read-only**; clicking vault links loads the
+  target **in the same tab** (instead of opening a new tab).
+- **Folder links** also stay in the same tab: the tab shows the folder overview,
+  and clicks on its entries continue navigating in the same tab.
+- **Back/forward:** arrow buttons in the toolbar or **⌘[** / **⌘]**.
+- The **history is kept per tab**, even if you leave the mode, edit the note and
+  re-enable the mode later.
+
+## 7. Mermaid diagrams
+
+- Code blocks with the language `mermaid` are rendered **as diagrams** directly
+  in the editor (offline, mermaid.js is bundled with the app).
+- The **"Edit"** button on the diagram shows the source; **"Diagram"** switches
+  back to the rendered view. The file always keeps the ` ```mermaid ` block.
+- **Zoom preview:** the magnifier (appears when hovering the diagram) or
+  ⌘-click opens a separate window – zoom with ⌘+scroll or pinch or the
+  **+/−/0** keys, close with **Esc**.
+
+## 8. Image assets
+
+- Every note has its own asset folder **`NoteName.assets/`** next to the file;
+  inserted images are stored there.
+- When **renaming** the note the folder is renamed too (including updating the
+  image paths inside the note), when **moving** it moves along, when
+  **deleting** it goes to the trash as well.
+- Asset folders are hidden in the file tree by default (⇧⌘R shows them).
+
+## 9. Git integration
+
+If the vault is a **Git repository**, a status line appears at the bottom of
+the sidebar:
+
+- **Branch name**, number of changed files, **n↑** = local commits not yet
+  pushed, **n↓** = new commits on the server, check mark = everything committed
+  and pushed.
+- The status refreshes automatically – even when you commit or pull outside the
+  app.
+- **Clicking the status line** expands the details: list of changed files, an
+  input field for the commit message and the **Commit & Push** and **Pull**
+  buttons.
+- **Commit & Push** first saves all open notes, then runs `git add`, commit and
+  push. Without a configured upstream it is set automatically; without a remote
+  only a local commit is created (with a note).
+- **Pull** fetches changes from the server; merge conflicts are resolved outside
+  the app.
+- The app uses your system's Git credentials (SSH keys or credential helper).
+  If an interactive login were required, the operation aborts with an error
+  message instead of hanging.
+
+## 10. Keyboard shortcuts
+
+| Shortcut | Function |
+| --- | --- |
+| ⌘N | New note |
+| ⇧⌘N | New folder |
+| ⌥⌘N | New window |
+| ⌘O | Open vault |
+| ⌘W / ⇧⌘W | Close tab / Close window |
+| ⌘S / ⌥⌘S | Save / Save all |
+| ⌘B / ⌘I / ⌥⌘X / ⌘E | Bold / Italic / Strikethrough / Inline code |
+| ⌥⌘0 … ⌥⌘6 | Text / Heading 1–6 |
+| ⌥⌘8 / ⌥⌘7 | Bullet list / Numbered list |
+| ⇧⌘B / ⌥⌘C | Quote / Code block |
+| ⌘K | Insert link |
+| ⌥⌘T | Insert table |
+| ⌘R | Toggle navigation mode |
+| ⌘[ / ⌘] | Back / Forward |
+| ⌘\ | Toggle second section |
+| ⇧⌘\ | Move tab to other section |
+| ⇧⌘R | Show/hide assets |
+| ⌘? | This help |
+
+*(Windows: ⌘ = Ctrl, ⌥ = Alt, ⇧ = Shift)*

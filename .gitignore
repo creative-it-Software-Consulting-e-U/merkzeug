@@ -1,4 +1,4 @@
 .build/
 dist/
-Support/AppIcon.icns
+legacy/Support/AppIcon.icns
 .DS_Store
