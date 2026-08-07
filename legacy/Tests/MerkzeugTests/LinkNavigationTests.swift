@@ -1,5 +1,5 @@
 import XCTest
-@testable import MyNotion
+@testable import Merkzeug
 
 /// Tests für vault-interne Links (Dateien, Ordner) und das Aufklappen der Sidebar.
 final class LinkNavigationTests: XCTestCase {
@@ -8,7 +8,7 @@ final class LinkNavigationTests: XCTestCase {
 
     override func setUpWithError() throws {
         vaultDir = FileManager.default.temporaryDirectory
-            .appendingPathComponent("MyNotionLinkTests-\(UUID().uuidString)")
+            .appendingPathComponent("MerkzeugLinkTests-\(UUID().uuidString)")
         try FileManager.default.createDirectory(
             at: vaultDir.appendingPathComponent("docs/unterordner"),
             withIntermediateDirectories: true

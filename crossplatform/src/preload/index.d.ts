@@ -1,8 +1,8 @@
-import type { MyNotionApi } from './index'
+import type { MerkzeugApi } from './index'
 
 declare global {
   interface Window {
-    mynotion: MyNotionApi
+    merkzeug: MerkzeugApi
   }
 }
 

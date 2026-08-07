@@ -1,6 +1,6 @@
 import XCTest
 import AppKit
-@testable import MyNotion
+@testable import Merkzeug
 @testable import MarkdownEngine
 
 /// Headless-Tests für den Zoom-Einstieg an Mermaid-Diagrammen
@@ -22,7 +22,7 @@ final class MermaidZoomTests: XCTestCase {
 
     override func setUpWithError() throws {
         tempDir = FileManager.default.temporaryDirectory
-            .appendingPathComponent("MyNotionTests-\(UUID().uuidString)")
+            .appendingPathComponent("MerkzeugTests-\(UUID().uuidString)")
         try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
     }
 

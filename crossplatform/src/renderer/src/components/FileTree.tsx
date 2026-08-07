@@ -90,12 +90,12 @@ export function FileTree(props: FileTreeProps): React.JSX.Element {
           style={{ paddingLeft: `${10 + depth * 14}px` }}
           draggable={!isRenaming}
           onDragStart={(e) => {
-            e.dataTransfer.setData('application/x-mynotion-path', node.path)
+            e.dataTransfer.setData('application/x-merkzeug-path', node.path)
             e.dataTransfer.effectAllowed = 'move'
           }}
           onDragOver={(e) => {
             if (!node.isDirectory) return
-            if (e.dataTransfer.types.includes('application/x-mynotion-path')) {
+            if (e.dataTransfer.types.includes('application/x-merkzeug-path')) {
               e.preventDefault()
               setDropTarget(node.path)
             }
@@ -103,7 +103,7 @@ export function FileTree(props: FileTreeProps): React.JSX.Element {
           onDragLeave={() => setDropTarget((t) => (t === node.path ? null : t))}
           onDrop={(e) => {
             setDropTarget(null)
-            const src = e.dataTransfer.getData('application/x-mynotion-path')
+            const src = e.dataTransfer.getData('application/x-merkzeug-path')
             if (src && node.isDirectory && src !== node.path) {
               e.preventDefault()
               props.onMove(src, node.path)
@@ -160,10 +160,10 @@ export function FileTree(props: FileTreeProps): React.JSX.Element {
     <div
       className="file-tree"
       onDragOver={(e) => {
-        if (e.dataTransfer.types.includes('application/x-mynotion-path')) e.preventDefault()
+        if (e.dataTransfer.types.includes('application/x-merkzeug-path')) e.preventDefault()
       }}
       onDrop={(e) => {
-        const src = e.dataTransfer.getData('application/x-mynotion-path')
+        const src = e.dataTransfer.getData('application/x-merkzeug-path')
         if (src && e.target === e.currentTarget) props.onMove(src, props.root.path)
       }}
       onContextMenu={(e) => {

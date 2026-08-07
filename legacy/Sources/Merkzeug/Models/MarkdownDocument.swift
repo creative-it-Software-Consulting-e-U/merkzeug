@@ -45,7 +45,7 @@ final class MarkdownDocument: ObservableObject {
             try markdown.write(to: fileURL, atomically: true, encoding: .utf8)
             isDirty = false
         } catch {
-            NSLog("MyNotion: Speichern fehlgeschlagen: \(error.localizedDescription)")
+            NSLog("Merkzeug: Speichern fehlgeschlagen: \(error.localizedDescription)")
         }
     }
 

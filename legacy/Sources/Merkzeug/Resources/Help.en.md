@@ -1,6 +1,6 @@
-# MyNotion – Help
+# Merkzeug – Help
 
-MyNotion is a native macOS editor for Markdown notes in the style of Notion:
+Merkzeug is a native macOS editor for Markdown notes in the style of Notion:
 you edit your notes **WYSIWYG** (formatted, without visible Markdown syntax),
 but everything is saved as clean, portable Markdown. All notes live as `.md`
 files in an ordinary folder – the **vault**.
@@ -17,7 +17,7 @@ files in an ordinary folder – the **vault**.
 - **Autosave:** changes are saved automatically one second after the last edit,
   and additionally when closing tabs or quitting the app.
   Manually: **⌘S** (active note) or **⌥⌘S** (all open notes).
-- The vault can also be preset via the `MYNOTION_VAULT` environment variable.
+- The vault can also be preset via the `MERKZEUG_VAULT` environment variable.
 
 ## 2. Sidebar & File Tree
 

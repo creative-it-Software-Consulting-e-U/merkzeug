@@ -54,7 +54,7 @@ export function App(): React.JSX.Element {
   const refreshTree = useCallback(async (v?: string | null): Promise<FileNode | null> => {
     const target = v ?? vaultRef.current
     if (!target) return null
-    const t = await window.mynotion.readTree(target)
+    const t = await window.merkzeug.readTree(target)
     setTree(t)
     return t
   }, [])
@@ -63,7 +63,7 @@ export function App(): React.JSX.Element {
     const target = v ?? vaultRef.current
     if (!target) return
     try {
-      setGitStatus(await window.mynotion.gitStatus(target))
+      setGitStatus(await window.merkzeug.gitStatus(target))
     } catch {
       setGitStatus(null)
     }
@@ -89,6 +89,26 @@ export function App(): React.JSX.Element {
       return next
     })
   }, [])
+
+  /** Einen Schritt in der Tab-Historie zurück (-1) oder vorwärts (+1) gehen. */
+  const stepHistory = useCallback(
+    (tabId: string, delta: -1 | 1): void => {
+      const tab = panesRef.current.flatMap((p) => p.tabs).find((t) => t.id === tabId)
+      if (!tab || !tab.navMode) return
+      const nextIndex = tab.historyIndex + delta
+      if (nextIndex < 0 || nextIndex >= tab.history.length) return
+      const target = tab.history[nextIndex]
+      const node = findNode(treeRef.current, target)
+      updateTab(tabId, (t) => ({
+        ...t,
+        path: target,
+        kind: node?.isDirectory ? 'folder' : 'note',
+        historyIndex: nextIndex,
+        loadToken: t.loadToken + 1
+      }))
+    },
+    [updateTab]
+  )
 
   /** Öffnet Notiz oder Ordner in einem neuen Tab (oder aktiviert vorhandenen Tab). */
   const openInNewTab = useCallback((path: string, kind: TabKind, paneIndex?: number): void => {
@@ -154,7 +174,7 @@ export function App(): React.JSX.Element {
   const handleLinkClick = useCallback(
     (tab: Tab, href: string): void => {
       if (isExternalLink(href)) {
-        void window.mynotion.openExternal(href)
+        void window.merkzeug.openExternal(href)
         return
       }
       const v = vaultRef.current
@@ -165,7 +185,7 @@ export function App(): React.JSX.Element {
           const withMd = extname(candidate) ? candidate : `${candidate}.md`
           for (const target of [candidate, withMd]) {
             const node = findNode(treeRef.current, target)
-            const exists = node !== null || (await window.mynotion.fileExists(target))
+            const exists = node !== null || (await window.merkzeug.fileExists(target))
             if (!exists) continue
             const isDir = node ? node.isDirectory : !extname(target)
             if (isDir) {
@@ -174,7 +194,7 @@ export function App(): React.JSX.Element {
               if (tab.navMode) navigateTab(tab.id, target, 'note')
               else openInNewTab(target, 'note')
             } else {
-              void window.mynotion.showInFolder(target)
+              void window.merkzeug.showInFolder(target)
             }
             return
           }
@@ -231,7 +251,7 @@ export function App(): React.JSX.Element {
 
   const handleCreateNote = useCallback(
     async (dir: string): Promise<void> => {
-      const path = await window.mynotion.createNote(dir)
+      const path = await window.merkzeug.createNote(dir)
       await refreshTree()
       expandFolder(dir)
       openInNewTab(path, 'note')
@@ -242,7 +262,7 @@ export function App(): React.JSX.Element {
 
   const handleCreateFolder = useCallback(
     async (dir: string): Promise<void> => {
-      const path = await window.mynotion.createFolder(dir)
+      const path = await window.merkzeug.createFolder(dir)
       await refreshTree()
       expandFolder(path)
       setSelectedPath(path)
@@ -267,7 +287,7 @@ export function App(): React.JSX.Element {
   const handleRename = useCallback(
     async (path: string, newName: string): Promise<void> => {
       try {
-        const newPath = await window.mynotion.renamePath(path, newName)
+        const newPath = await window.merkzeug.renamePath(path, newName)
         setPanes((prev) => {
           const mapPath = (p: string): string =>
             p === path ? newPath : p.startsWith(`${path}/`) ? newPath + p.slice(path.length) : p
@@ -287,7 +307,7 @@ export function App(): React.JSX.Element {
   const handleMove = useCallback(
     async (src: string, destDir: string): Promise<void> => {
       try {
-        const newPath = await window.mynotion.movePath(src, destDir)
+        const newPath = await window.merkzeug.movePath(src, destDir)
         setPanes((prev) => {
           const mapPath = (p: string): string =>
             p === src ? newPath : p.startsWith(`${src}/`) ? newPath + p.slice(src.length) : p
@@ -306,7 +326,7 @@ export function App(): React.JSX.Element {
 
   const handleTrash = useCallback(
     async (path: string): Promise<void> => {
-      await window.mynotion.trashPath(path)
+      await window.merkzeug.trashPath(path)
       // betroffene Tabs schließen
       for (const pane of panesRef.current) {
         for (const tab of pane.tabs) {
@@ -326,7 +346,7 @@ export function App(): React.JSX.Element {
       setGitMessage(null)
       // offene Änderungen erst speichern
       for (const handle of editorRefs.current.values()) await handle?.flush()
-      const result = await window.mynotion.gitCommitPush(v, message)
+      const result = await window.merkzeug.gitCommitPush(v, message)
       setGitBusy(false)
       setGitMessage(result.ok ? 'Commit & Push erfolgreich.' : `Fehler: ${result.output}`)
       await refreshGit()
@@ -339,7 +359,7 @@ export function App(): React.JSX.Element {
     if (!v) return
     setGitBusy(true)
     setGitMessage(null)
-    const result = await window.mynotion.gitPull(v)
+    const result = await window.merkzeug.gitPull(v)
     setGitBusy(false)
     setGitMessage(result.ok ? 'Pull erfolgreich.' : `Fehler: ${result.output}`)
     await refreshTree()
@@ -373,7 +393,7 @@ export function App(): React.JSX.Element {
       setExpanded(storedExpanded ? new Set(JSON.parse(storedExpanded)) : new Set([v]))
       setAssetsVisible(localStorage.getItem(`assetsVisible:${v}`) === 'true')
       setSplit(localStorage.getItem(`split:${v}`) === 'true')
-      await window.mynotion.setTitle(`MyNotion — ${basename(v)}`)
+      await window.merkzeug.setTitle(`Merkzeug — ${basename(v)}`)
       await refreshTree(v)
       await refreshGit(v)
     },
@@ -383,15 +403,15 @@ export function App(): React.JSX.Element {
   // Initialisierung
   useEffect(() => {
     void (async () => {
-      const initial = await window.mynotion.getInitialVault()
+      const initial = await window.merkzeug.getInitialVault()
       if (initial) await loadVault(initial)
       else {
         setVaultMissing(true)
-        setRecents(await window.mynotion.getRecentVaults())
+        setRecents(await window.merkzeug.getRecentVaults())
       }
     })()
-    const offVaultSet = window.mynotion.onVaultSet((v) => void loadVault(v))
-    const offChanged = window.mynotion.onVaultChanged(() => {
+    const offVaultSet = window.merkzeug.onVaultSet((v) => void loadVault(v))
+    const offChanged = window.merkzeug.onVaultChanged(() => {
       void refreshTree()
       void refreshGit()
     })
@@ -421,7 +441,7 @@ export function App(): React.JSX.Element {
 
   // Menü-Aktionen
   useEffect(() => {
-    const off = window.mynotion.onMenuAction((action: MenuAction) => {
+    const off = window.merkzeug.onMenuAction((action: MenuAction) => {
       switch (action) {
         case 'newNote':
           createAtSelection('note')
@@ -438,7 +458,7 @@ export function App(): React.JSX.Element {
         case 'closeTab': {
           const tab = activeTab()
           if (tab) closeTab(tab.id)
-          else void window.mynotion.closeWindow()
+          else void window.merkzeug.closeWindow()
           break
         }
         case 'undo':
@@ -483,32 +503,12 @@ export function App(): React.JSX.Element {
         }
         case 'navBack': {
           const tab = activeTab()
-          if (tab && tab.navMode && tab.historyIndex > 0) {
-            const target = tab.history[tab.historyIndex - 1]
-            const node = findNode(treeRef.current, target)
-            updateTab(tab.id, (t) => ({
-              ...t,
-              path: target,
-              kind: node?.isDirectory ? 'folder' : 'note',
-              historyIndex: t.historyIndex - 1,
-              loadToken: t.loadToken + 1
-            }))
-          }
+          if (tab) stepHistory(tab.id, -1)
           break
         }
         case 'navForward': {
           const tab = activeTab()
-          if (tab && tab.navMode && tab.historyIndex < tab.history.length - 1) {
-            const target = tab.history[tab.historyIndex + 1]
-            const node = findNode(treeRef.current, target)
-            updateTab(tab.id, (t) => ({
-              ...t,
-              path: target,
-              kind: node?.isDirectory ? 'folder' : 'note',
-              historyIndex: t.historyIndex + 1,
-              loadToken: t.loadToken + 1
-            }))
-          }
+          if (tab) stepHistory(tab.id, 1)
           break
         }
         case 'toggleSplit':
@@ -538,15 +538,80 @@ export function App(): React.JSX.Element {
       }
     })
     return off
-  }, [activeEditor, activeTab, closeTab, createAtSelection, moveTabToOtherPane, updateTab])
+  }, [activeEditor, activeTab, closeTab, createAtSelection, moveTabToOtherPane, stepHistory, updateTab])
+
+  // Maus- und Trackpad-Gesten für Zurück/Vorwärts im Navigationsmodus
+  useEffect(() => {
+    const goActive = (delta: -1 | 1): void => {
+      const pane = panesRef.current[activePaneRef.current]
+      if (pane.activeTabId) stepHistory(pane.activeTabId, delta)
+    }
+    const isWindows = navigator.platform.startsWith('Win')
+    const isMac = navigator.platform.startsWith('Mac')
+
+    // Zurück-/Vorwärts-Zusatztasten der Maus.
+    // Unter Windows kommen diese als app-command aus dem Main-Prozess (menu:action),
+    // hier zusätzlich zu reagieren würde doppelt navigieren.
+    const onMouseUp = (e: MouseEvent): void => {
+      if (isWindows) return
+      if (e.button === 3) {
+        e.preventDefault()
+        goActive(-1)
+      } else if (e.button === 4) {
+        e.preventDefault()
+        goActive(1)
+      }
+    }
+
+    // Zwei-Finger-Wischen auf dem macOS-Trackpad: horizontales Überscrollen erkennen.
+    // (Electrons 'swipe'-Event feuert nur bei der Systemeinstellung „mit drei Fingern".)
+    const SWIPE_THRESHOLD = 200
+    let wheelAccum = 0
+    let wheelFired = false
+    let wheelReset: ReturnType<typeof setTimeout> | undefined
+    const inHorizScrollable = (target: EventTarget | null): boolean => {
+      let el = target instanceof Element ? target : null
+      while (el) {
+        if (el.scrollWidth > el.clientWidth + 1) return true
+        el = el.parentElement
+      }
+      return false
+    }
+    const onWheel = (e: WheelEvent): void => {
+      if (!isMac || e.ctrlKey) return
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return
+      clearTimeout(wheelReset)
+      wheelReset = setTimeout(() => {
+        wheelAccum = 0
+        wheelFired = false
+      }, 250)
+      if (wheelFired || inHorizScrollable(e.target)) return
+      wheelAccum += e.deltaX
+      if (wheelAccum <= -SWIPE_THRESHOLD) {
+        wheelFired = true
+        goActive(-1)
+      } else if (wheelAccum >= SWIPE_THRESHOLD) {
+        wheelFired = true
+        goActive(1)
+      }
+    }
+
+    window.addEventListener('mouseup', onMouseUp)
+    window.addEventListener('wheel', onWheel, { passive: true })
+    return () => {
+      window.removeEventListener('mouseup', onMouseUp)
+      window.removeEventListener('wheel', onWheel)
+      clearTimeout(wheelReset)
+    }
+  }, [stepHistory])
 
   if (!vault) {
     return (
       <div className="welcome">
         <div className="welcome-drag-region" />
-        <h1>MyNotion</h1>
+        <h1>Merkzeug</h1>
         <p>Wähle einen Vault-Ordner mit Markdown-Notizen.</p>
-        <button className="primary" onClick={() => void window.mynotion.pickVault()}>
+        <button className="primary" onClick={() => void window.merkzeug.pickVault()}>
           Vault öffnen …
         </button>
         {vaultMissing && recents.length > 0 && (
@@ -590,36 +655,8 @@ export function App(): React.JSX.Element {
     },
     onToggleNavMode: (tabId: string) =>
       updateTab(tabId, (t) => ({ ...t, navMode: !t.navMode })),
-    onNavBack: (tabId: string) => {
-      const pane = panesRef.current[index]
-      const tab = pane.tabs.find((t) => t.id === tabId)
-      if (tab && tab.navMode && tab.historyIndex > 0) {
-        const target = tab.history[tab.historyIndex - 1]
-        const node = findNode(treeRef.current, target)
-        updateTab(tabId, (t) => ({
-          ...t,
-          path: target,
-          kind: node?.isDirectory ? 'folder' : 'note',
-          historyIndex: t.historyIndex - 1,
-          loadToken: t.loadToken + 1
-        }))
-      }
-    },
-    onNavForward: (tabId: string) => {
-      const pane = panesRef.current[index]
-      const tab = pane.tabs.find((t) => t.id === tabId)
-      if (tab && tab.navMode && tab.historyIndex < tab.history.length - 1) {
-        const target = tab.history[tab.historyIndex + 1]
-        const node = findNode(treeRef.current, target)
-        updateTab(tabId, (t) => ({
-          ...t,
-          path: target,
-          kind: node?.isDirectory ? 'folder' : 'note',
-          historyIndex: t.historyIndex + 1,
-          loadToken: t.loadToken + 1
-        }))
-      }
-    },
+    onNavBack: (tabId: string) => stepHistory(tabId, -1),
+    onNavForward: (tabId: string) => stepHistory(tabId, 1),
     onInsertLink: () => setLinkDialogOpen(true),
     onDirtyChange: (tabId: string, dirty: boolean) =>
       setDirtyTabs((prev) => {
@@ -659,7 +696,7 @@ export function App(): React.JSX.Element {
           onCreateFolder={(dir) => void handleCreateFolder(dir)}
           onRename={(path, newName) => void handleRename(path, newName)}
           onTrash={(path) => void handleTrash(path)}
-          onShowInFolder={(path) => void window.mynotion.showInFolder(path)}
+          onShowInFolder={(path) => void window.merkzeug.showInFolder(path)}
           onMove={(src, dest) => void handleMove(src, dest)}
           onNewNote={() => createAtSelection('note')}
           onNewFolder={() => createAtSelection('folder')}

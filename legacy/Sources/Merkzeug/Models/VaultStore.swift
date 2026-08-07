@@ -171,7 +171,7 @@ final class VaultStore: ObservableObject {
         let newURL = dir.appendingPathComponent(finalName)
         guard newURL != url else { return url }
         guard !fm.fileExists(atPath: newURL.path) else {
-            throw NSError(domain: "MyNotion", code: 1, userInfo: [
+            throw NSError(domain: "Merkzeug", code: 1, userInfo: [
                 NSLocalizedDescriptionKey: "Es existiert bereits ein Eintrag mit diesem Namen.",
             ])
         }
@@ -204,7 +204,7 @@ final class VaultStore: ObservableObject {
         }
         let target = destination.appendingPathComponent(url.lastPathComponent)
         guard !fm.fileExists(atPath: target.path) else {
-            throw NSError(domain: "MyNotion", code: 2, userInfo: [
+            throw NSError(domain: "Merkzeug", code: 2, userInfo: [
                 NSLocalizedDescriptionKey: "Am Zielort existiert bereits ein Eintrag mit diesem Namen.",
             ])
         }

@@ -26,7 +26,7 @@ struct WindowRequest: Codable, Hashable {
 }
 
 @main
-struct MyNotionApp: App {
+struct MerkzeugApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var delegate
 
     var body: some Scene {
@@ -40,7 +40,7 @@ struct MyNotionApp: App {
             AppCommands()
         }
 
-        Window("MyNotion-Hilfe", id: "help") {
+        Window("Merkzeug-Hilfe", id: "help") {
             HelpView()
         }
         .defaultSize(width: 640, height: 720)
@@ -157,7 +157,7 @@ struct AppCommands: Commands {
             Button("Trennlinie") { app?.activeTextView?.insertHorizontalRule() }
         }
         CommandGroup(replacing: .help) {
-            Button("MyNotion-Hilfe") { openWindow(id: "help") }
+            Button("Merkzeug-Hilfe") { openWindow(id: "help") }
                 .keyboardShortcut("?", modifiers: .command)
         }
         CommandMenu("Ansicht") {

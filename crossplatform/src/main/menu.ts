@@ -27,15 +27,15 @@ export function buildMenu(hooks: MenuHooks): void {
 
   const template: MenuItemConstructorOptions[] = [
     {
-      label: 'MyNotion',
+      label: 'Merkzeug',
       submenu: [
-        { role: 'about', label: 'Über MyNotion' },
+        { role: 'about', label: 'Über Merkzeug' },
         { type: 'separator' },
-        { role: 'hide', label: 'MyNotion ausblenden' },
+        { role: 'hide', label: 'Merkzeug ausblenden' },
         { role: 'hideOthers', label: 'Andere ausblenden' },
         { role: 'unhide', label: 'Alle einblenden' },
         { type: 'separator' },
-        { role: 'quit', label: 'MyNotion beenden' }
+        { role: 'quit', label: 'Merkzeug beenden' }
       ]
     },
     {
@@ -136,7 +136,7 @@ export function buildMenu(hooks: MenuHooks): void {
       role: 'help',
       submenu: [
         {
-          label: 'MyNotion-Hilfe',
+          label: 'Merkzeug-Hilfe',
           accelerator: 'Cmd+?',
           click: () => hooks.openHelp()
         }

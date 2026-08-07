@@ -1,6 +1,6 @@
-# MyNotion – Hilfe
+# Merkzeug – Hilfe
 
-MyNotion ist ein nativer macOS-Editor für Markdown-Notizen im Stil von Notion:
+Merkzeug ist ein nativer macOS-Editor für Markdown-Notizen im Stil von Notion:
 Du bearbeitest deine Notizen **WYSIWYG** (formatiert, ohne sichtbare Markdown-Syntax),
 gespeichert wird aber immer sauberes, portables Markdown. Alle Notizen liegen als
 `.md`-Dateien in einem gewöhnlichen Ordner – dem **Vault**.
@@ -17,7 +17,7 @@ gespeichert wird aber immer sauberes, portables Markdown. Alle Notizen liegen al
 - **Autosave:** Änderungen werden eine Sekunde nach der letzten Eingabe automatisch
   gespeichert, außerdem beim Schließen von Tabs und beim Beenden der App.
   Manuell: **⌘S** (aktive Notiz) bzw. **⌥⌘S** (alle offenen Notizen).
-- Der Vault kann auch per Umgebungsvariable `MYNOTION_VAULT` vorgegeben werden.
+- Der Vault kann auch per Umgebungsvariable `MERKZEUG_VAULT` vorgegeben werden.
 
 ## 2. Sidebar & Dateibaum
 

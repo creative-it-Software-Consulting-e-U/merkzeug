@@ -88,8 +88,8 @@ function registerIpc(): void {
     const win = winFromEvent(event)
     if (!win) return null
     let vault = getWindowVault(win.id)
-    if (!vault && process.env.MYNOTION_VAULT && existsSync(process.env.MYNOTION_VAULT)) {
-      vault = process.env.MYNOTION_VAULT
+    if (!vault && process.env.MERKZEUG_VAULT && existsSync(process.env.MERKZEUG_VAULT)) {
+      vault = process.env.MERKZEUG_VAULT
     }
     if (!vault) {
       const last = getLastVault()
@@ -97,7 +97,7 @@ function registerIpc(): void {
     }
     if (vault) {
       // Vault aus der Umgebung (Debug-/Testläufe) nicht in den Einstellungen speichern
-      const fromEnv = vault === process.env.MYNOTION_VAULT
+      const fromEnv = vault === process.env.MERKZEUG_VAULT
       setWindowVault(win.id, vault)
       if (!fromEnv) addRecentVault(vault)
       watchVault(win, vault)
@@ -158,7 +158,7 @@ function registerIpc(): void {
 }
 
 app.whenReady().then(() => {
-  electronApp.setAppUserModelId('com.creativeit.mynotion')
+  electronApp.setAppUserModelId('com.creative-it.merkzeug')
 
   protocol.handle('vault-file', (request) => {
     const url = new URL(request.url)
@@ -179,16 +179,16 @@ app.whenReady().then(() => {
   rebuildMenu()
 
   const envVault =
-    process.env.MYNOTION_VAULT && existsSync(process.env.MYNOTION_VAULT)
-      ? process.env.MYNOTION_VAULT
+    process.env.MERKZEUG_VAULT && existsSync(process.env.MERKZEUG_VAULT)
+      ? process.env.MERKZEUG_VAULT
       : null
   const mainWin = createMainWindow(envVault)
 
-  // Debug-Hook: Screenshot aufnehmen und beenden (MYNOTION_SCREENSHOT=/pfad.png).
-  // MYNOTION_CLICK="Schritt1,Schritt2": "menu:<aktion>" schickt eine Menü-Aktion,
+  // Debug-Hook: Screenshot aufnehmen und beenden (MERKZEUG_SCREENSHOT=/pfad.png).
+  // MERKZEUG_CLICK="Schritt1,Schritt2": "menu:<aktion>" schickt eine Menü-Aktion,
   // "js:<code>" führt JS im Renderer aus, alles andere klickt den Baum-Eintrag an.
-  if (process.env.MYNOTION_SCREENSHOT) {
-    const target = process.env.MYNOTION_SCREENSHOT
+  if (process.env.MERKZEUG_SCREENSHOT) {
+    const target = process.env.MERKZEUG_SCREENSHOT
     setTimeout(async () => {
       try {
         // warten, bis der Dateibaum gerendert ist
@@ -199,7 +199,7 @@ app.whenReady().then(() => {
           if (ready) break
           await new Promise((r) => setTimeout(r, 1000))
         }
-        for (const step of (process.env.MYNOTION_CLICK ?? '').split(';;').filter(Boolean)) {
+        for (const step of (process.env.MERKZEUG_CLICK ?? '').split(';;').filter(Boolean)) {
           if (step === 'helpwindow') {
             openHelpWindow()
             await new Promise((r) => setTimeout(r, 5000))

@@ -1,4 +1,4 @@
-# Willkommen bei MyNotion
+# Willkommen bei Merkzeug
 
 Das ist dein **WYSIWYG-Markdown-Editor**. Alles, was du hier siehst, wird als *sauberes Markdown* gespeichert.
 

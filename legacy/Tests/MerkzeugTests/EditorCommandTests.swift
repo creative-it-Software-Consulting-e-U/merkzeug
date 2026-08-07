@@ -1,6 +1,6 @@
 import XCTest
 import AppKit
-@testable import MyNotion
+@testable import Merkzeug
 @testable import MarkdownEngine
 
 /// Headless-Tests der Editor-Befehle: Dokument laden, Befehl ausführen,
@@ -11,7 +11,7 @@ final class EditorCommandTests: XCTestCase {
 
     override func setUpWithError() throws {
         tempDir = FileManager.default.temporaryDirectory
-            .appendingPathComponent("MyNotionTests-\(UUID().uuidString)")
+            .appendingPathComponent("MerkzeugTests-\(UUID().uuidString)")
         try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
     }
 

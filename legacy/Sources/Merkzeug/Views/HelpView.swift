@@ -31,7 +31,7 @@ struct HelpView: View {
             Divider()
             HelpMarkdownView(markdown: markdown)
         }
-        .navigationTitle(language == "de" ? "MyNotion-Hilfe" : "MyNotion Help")
+        .navigationTitle(language == "de" ? "Merkzeug-Hilfe" : "Merkzeug Help")
         .frame(minWidth: 480, minHeight: 400)
     }
 }

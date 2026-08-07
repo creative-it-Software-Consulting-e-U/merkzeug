@@ -1,4 +1,4 @@
-# MyNotion – Legacy (native macOS-App)
+# Merkzeug – Legacy (native macOS-App)
 
 > **Hinweis:** Diese native App ist die **Legacy-Version**. Die aktuelle
 > App-Version ist die Cross-Platform-Version (Electron + Milkdown) unter
@@ -12,7 +12,7 @@ bearbeitet. Gespeichert wird immer sauberes Markdown.
 ## Bauen & Starten
 
 ```bash
-make run        # Release-Build, erstellt dist/MyNotion.app und öffnet sie
+make run        # Release-Build, erstellt dist/Merkzeug.app und öffnet sie
 make test       # Round-Trip-Tests der Markdown-Engine
 ```
 
@@ -22,7 +22,7 @@ Die Auswahl wird gemerkt; über **Ablage → Vault öffnen…** (⌘O) wechselst
 Alternativ kann der Vault per Umgebungsvariable vorgegeben werden:
 
 ```bash
-MYNOTION_VAULT=/pfad/zum/vault dist/MyNotion.app/Contents/MacOS/MyNotion
+MERKZEUG_VAULT=/pfad/zum/vault dist/Merkzeug.app/Contents/MacOS/Merkzeug
 ```
 
 ## Funktionen
@@ -57,7 +57,7 @@ MYNOTION_VAULT=/pfad/zum/vault dist/MyNotion.app/Contents/MacOS/MyNotion
 
 ```
 Sources/MarkdownEngine/   Parser, NSAttributedString-Builder, Serializer (testbar)
-Sources/MyNotion/         App: Vault, Tabs, Editor (NSTextView/TextKit 1), SwiftUI-UI
+Sources/Merkzeug/         App: Vault, Tabs, Editor (NSTextView/TextKit 1), SwiftUI-UI
 Tests/                    Round-Trip-Tests Markdown → Editor → Markdown
 Support/                  Info.plist, Icon-Generator
 ../SampleVault/           Beispiel-Vault zum Ausprobieren (im Repo-Root)

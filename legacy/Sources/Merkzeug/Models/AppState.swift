@@ -122,7 +122,7 @@ final class AppState: ObservableObject {
             vault.open(URL(fileURLWithPath: initialVaultPath))
             return
         }
-        if let envPath = ProcessInfo.processInfo.environment["MYNOTION_VAULT"],
+        if let envPath = ProcessInfo.processInfo.environment["MERKZEUG_VAULT"],
            FileManager.default.fileExists(atPath: envPath) {
             vault.open(URL(fileURLWithPath: envPath))
             return

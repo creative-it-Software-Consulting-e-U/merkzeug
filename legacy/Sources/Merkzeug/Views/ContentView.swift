@@ -26,8 +26,8 @@ struct ContentView: View {
             detailView
         }
         .navigationTitle(vault.root != nil
-                         ? (vault.vaultURL?.lastPathComponent ?? "MyNotion")
-                         : "MyNotion")
+                         ? (vault.vaultURL?.lastPathComponent ?? "Merkzeug")
+                         : "Merkzeug")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {

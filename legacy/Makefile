@@ -1,4 +1,4 @@
-APP_NAME = MyNotion
+APP_NAME = Merkzeug
 BUNDLE   = dist/$(APP_NAME).app
 BINARY   = .build/release/$(APP_NAME)
 

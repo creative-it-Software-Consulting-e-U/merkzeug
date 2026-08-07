@@ -1,5 +1,5 @@
 import XCTest
-@testable import MyNotion
+@testable import Merkzeug
 
 final class NavigationModeTests: XCTestCase {
 
@@ -9,7 +9,7 @@ final class NavigationModeTests: XCTestCase {
 
     override func setUpWithError() throws {
         dir = FileManager.default.temporaryDirectory
-            .appendingPathComponent("MyNotionNavTests-\(UUID().uuidString)")
+            .appendingPathComponent("MerkzeugNavTests-\(UUID().uuidString)")
         try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         noteA = dir.appendingPathComponent("A.md")
         noteB = dir.appendingPathComponent("B.md")

@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "MyNotion",
+    name: "Merkzeug",
     platforms: [.macOS(.v14)],
     targets: [
         .target(
@@ -10,9 +10,9 @@ let package = Package(
             path: "Sources/MarkdownEngine"
         ),
         .executableTarget(
-            name: "MyNotion",
+            name: "Merkzeug",
             dependencies: ["MarkdownEngine"],
-            path: "Sources/MyNotion",
+            path: "Sources/Merkzeug",
             resources: [
                 .copy("Resources/mermaid.min.js"),
                 .copy("Resources/Help.de.md"),
@@ -25,9 +25,9 @@ let package = Package(
             path: "Tests/MarkdownEngineTests"
         ),
         .testTarget(
-            name: "MyNotionTests",
-            dependencies: ["MyNotion", "MarkdownEngine"],
-            path: "Tests/MyNotionTests"
+            name: "MerkzeugTests",
+            dependencies: ["Merkzeug", "MarkdownEngine"],
+            path: "Tests/MerkzeugTests"
         ),
     ]
 )

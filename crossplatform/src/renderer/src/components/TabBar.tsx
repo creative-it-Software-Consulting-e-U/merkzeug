@@ -24,10 +24,10 @@ export function TabBar({
     <div
       className="tab-bar"
       onDragOver={(e) => {
-        if (e.dataTransfer.types.includes('application/x-mynotion-tab')) e.preventDefault()
+        if (e.dataTransfer.types.includes('application/x-merkzeug-tab')) e.preventDefault()
       }}
       onDrop={(e) => {
-        const data = e.dataTransfer.getData('application/x-mynotion-tab')
+        const data = e.dataTransfer.getData('application/x-merkzeug-tab')
         if (!data) return
         const { tabId, pane } = JSON.parse(data) as { tabId: string; pane: number }
         if (pane !== paneIndex) onDropTab(tabId, pane)
@@ -46,7 +46,7 @@ export function TabBar({
             draggable
             onDragStart={(e) => {
               e.dataTransfer.setData(
-                'application/x-mynotion-tab',
+                'application/x-merkzeug-tab',
                 JSON.stringify({ tabId: tab.id, pane: paneIndex })
               )
             }}

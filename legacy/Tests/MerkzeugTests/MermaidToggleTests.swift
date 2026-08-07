@@ -1,6 +1,6 @@
 import XCTest
 import AppKit
-@testable import MyNotion
+@testable import Merkzeug
 @testable import MarkdownEngine
 
 /// Headless-Tests für das Umschalten Mermaid-Diagramm ⇄ Codeblock.
@@ -21,7 +21,7 @@ final class MermaidToggleTests: XCTestCase {
 
     override func setUpWithError() throws {
         tempDir = FileManager.default.temporaryDirectory
-            .appendingPathComponent("MyNotionTests-\(UUID().uuidString)")
+            .appendingPathComponent("MerkzeugTests-\(UUID().uuidString)")
         try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
     }
 

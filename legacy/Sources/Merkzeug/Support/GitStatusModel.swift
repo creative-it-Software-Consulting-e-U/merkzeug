@@ -47,7 +47,7 @@ final class GitStatusModel: ObservableObject {
     @Published private(set) var isBusy = false
 
     private var workingDirectory: URL?
-    private let queue = DispatchQueue(label: "MyNotion.git", qos: .utility)
+    private let queue = DispatchQueue(label: "Merkzeug.git", qos: .utility)
     private var refreshScheduled = false
 
     // MARK: - Status
@@ -216,7 +216,7 @@ final class GitStatusModel: ObservableObject {
         guard process.terminationStatus == 0 else {
             let stderrText = String(data: errData, encoding: .utf8)?
                 .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-            throw NSError(domain: "MyNotion.Git", code: Int(process.terminationStatus), userInfo: [
+            throw NSError(domain: "Merkzeug.Git", code: Int(process.terminationStatus), userInfo: [
                 NSLocalizedDescriptionKey: stderrText.isEmpty
                     ? "git \(args.joined(separator: " ")) ist fehlgeschlagen."
                     : stderrText,

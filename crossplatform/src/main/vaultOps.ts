@@ -1,6 +1,5 @@
 import { shell } from 'electron'
 import {
-  readdirSync,
   readFileSync,
   writeFileSync,
   mkdirSync,
@@ -8,8 +7,10 @@ import {
   renameSync,
   statSync
 } from 'node:fs'
+import { readdir } from 'node:fs/promises'
 import { join, dirname, basename, extname, resolve, sep } from 'node:path'
 import type { FileNode } from '../shared/types'
+import { isIgnoredDir } from './ignore'
 
 /** Name des Ressourcen-Ordners zu einer Notiz: "Notizname.assets" */
 export function assetsDirFor(notePath: string): string {
@@ -22,27 +23,34 @@ export function isAssetsDir(name: string): boolean {
   return name.endsWith('.assets')
 }
 
-export function readTree(root: string): FileNode {
-  const build = (dir: string): FileNode[] => {
-    let entries: string[]
+export async function readTree(root: string): Promise<FileNode> {
+  const build = async (dir: string): Promise<FileNode[]> => {
+    let entries
     try {
-      entries = readdirSync(dir)
+      entries = await readdir(dir, { withFileTypes: true })
     } catch {
       return []
     }
     const nodes: FileNode[] = []
-    for (const name of entries) {
+    for (const entry of entries) {
+      const { name } = entry
       if (name.startsWith('.')) continue
       const full = join(dir, name)
-      let stat
-      try {
-        stat = statSync(full)
-      } catch {
-        continue
+      let isDirectory = entry.isDirectory()
+      let isFile = entry.isFile()
+      if (entry.isSymbolicLink()) {
+        try {
+          const stat = statSync(full)
+          isDirectory = stat.isDirectory()
+          isFile = stat.isFile()
+        } catch {
+          continue
+        }
       }
-      if (stat.isDirectory()) {
-        nodes.push({ name, path: full, isDirectory: true, children: build(full) })
-      } else if (stat.isFile()) {
+      if (isDirectory) {
+        if (isIgnoredDir(full)) continue
+        nodes.push({ name, path: full, isDirectory: true, children: await build(full) })
+      } else if (isFile) {
         nodes.push({ name, path: full, isDirectory: false })
       }
     }
@@ -52,7 +60,7 @@ export function readTree(root: string): FileNode {
     })
     return nodes
   }
-  return { name: basename(root), path: root, isDirectory: true, children: build(root) }
+  return { name: basename(root), path: root, isDirectory: true, children: await build(root) }
 }
 
 export function readTextFile(path: string): string {

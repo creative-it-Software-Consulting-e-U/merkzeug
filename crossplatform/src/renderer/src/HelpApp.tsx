@@ -12,7 +12,7 @@ export function HelpApp(): React.JSX.Element {
     let crepe: Crepe | null = null
     let cancelled = false
     void (async () => {
-      const content = await window.mynotion.readHelp(lang)
+      const content = await window.merkzeug.readHelp(lang)
       if (cancelled || !rootRef.current) return
       rootRef.current.innerHTML = ''
       crepe = new Crepe({
@@ -42,7 +42,7 @@ export function HelpApp(): React.JSX.Element {
   return (
     <div className="help-app">
       <div className="help-header">
-        <span className="help-title">MyNotion-Hilfe</span>
+        <span className="help-title">Merkzeug-Hilfe</span>
         <div className="help-lang">
           <button className={lang === 'de' ? 'toggled' : ''} onClick={() => setLang('de')}>
             Deutsch

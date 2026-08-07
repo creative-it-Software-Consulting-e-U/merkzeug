@@ -19,6 +19,6 @@ async function getMermaid(): Promise<typeof import('mermaid').default> {
 export async function renderMermaid(code: string): Promise<string> {
   const mermaid = await getMermaid()
   counter += 1
-  const { svg } = await mermaid.render(`mynotion-mermaid-${counter}`, code)
+  const { svg } = await mermaid.render(`merkzeug-mermaid-${counter}`, code)
   return svg
 }

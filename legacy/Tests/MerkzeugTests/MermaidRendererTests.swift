@@ -1,5 +1,5 @@
 import XCTest
-@testable import MyNotion
+@testable import Merkzeug
 
 final class MermaidRendererTests: XCTestCase {
 

@@ -19,7 +19,7 @@ export function createMainWindow(vault: string | null): BrowserWindow {
     height: 850,
     minWidth: 720,
     minHeight: 480,
-    title: 'MyNotion',
+    title: 'Merkzeug',
     titleBarStyle: 'hiddenInset',
     trafficLightPosition: { x: 14, y: 14 },
     webPreferences: {
@@ -30,6 +30,17 @@ export function createMainWindow(vault: string | null): BrowserWindow {
 
   windowVaults.set(win.id, vault)
   win.once('closed', () => windowVaults.delete(win.id))
+
+  // Zurück-/Vorwärts-Maustasten und Touchpad-Gesten unter Windows
+  win.on('app-command', (_e, cmd) => {
+    if (cmd === 'browser-backward') win.webContents.send('menu:action', { action: 'navBack' })
+    else if (cmd === 'browser-forward') win.webContents.send('menu:action', { action: 'navForward' })
+  })
+  // Drei-Finger-Wischen unter macOS (Systemeinstellung „Zwischen Seiten blättern")
+  win.on('swipe', (_e, direction) => {
+    if (direction === 'left') win.webContents.send('menu:action', { action: 'navBack' })
+    else if (direction === 'right') win.webContents.send('menu:action', { action: 'navForward' })
+  })
 
   win.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url)
@@ -54,7 +65,7 @@ export function openHelpWindow(): void {
   helpWindow = new BrowserWindow({
     width: 760,
     height: 820,
-    title: 'MyNotion-Hilfe',
+    title: 'Merkzeug-Hilfe',
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false

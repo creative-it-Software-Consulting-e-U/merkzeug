@@ -1,5 +1,5 @@
 import XCTest
-@testable import MyNotion
+@testable import Merkzeug
 
 /// Reproduziert einen echten Maus-Klick auf einen Link im Editor und prüft,
 /// dass er im Navigationsmodus im selben Tab lädt (statt einen neuen zu öffnen).
@@ -13,7 +13,7 @@ final class LinkClickModeTests: XCTestCase {
 
     override func setUpWithError() throws {
         dir = FileManager.default.temporaryDirectory
-            .appendingPathComponent("MyNotionLinkClickTests-\(UUID().uuidString)")
+            .appendingPathComponent("MerkzeugLinkClickTests-\(UUID().uuidString)")
         folder = dir.appendingPathComponent("Projekte")
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
         noteA = dir.appendingPathComponent("A.md")

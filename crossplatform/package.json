@@ -1,7 +1,7 @@
 {
-  "name": "mynotion",
+  "name": "merkzeug",
   "version": "0.1.0",
-  "description": "MyNotion – WYSIWYG-Markdown-Editor (Cross-Platform)",
+  "description": "Merkzeug – WYSIWYG-Markdown-Editor (Cross-Platform)",
   "main": "out/main/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,7 +16,7 @@
   "keywords": [],
   "author": "Günther Wieser <guenther.wieser@creative-it.com>",
   "homepage": "https://www.creative-it.com",
-  "desktopName": "mynotion.desktop",
+  "desktopName": "merkzeug.desktop",
   "license": "MIT",
   "type": "commonjs",
   "devDependencies": {
@@ -47,5 +47,5 @@
     "fsevents@2.3.3": true,
     "electron-winstaller@5.4.0": true
   },
-  "productName": "MyNotion"
+  "productName": "Merkzeug"
 }

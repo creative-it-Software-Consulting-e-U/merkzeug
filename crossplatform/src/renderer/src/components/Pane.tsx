@@ -175,8 +175,8 @@ export function PaneView(props: PaneProps): React.JSX.Element {
           <div className="toolbar-spacer" />
           <button
             className="toolbar-btn icon"
-            title="MyNotion-Hilfe (⌘?)"
-            onClick={() => void window.mynotion.openHelp()}
+            title="Merkzeug-Hilfe (⌘?)"
+            onClick={() => void window.merkzeug.openHelp()}
           >
             <IconHelp />
           </button>
