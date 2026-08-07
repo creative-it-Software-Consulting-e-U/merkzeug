@@ -1,23 +1,40 @@
-# Merkzeug Mobile – iOS/iPadOS-Spike
+# Merkzeug Mobile – iOS/iPadOS
 
-Experimenteller Port von Merkzeug auf iOS/iPadOS: **Capacitor**-Schale um den
+Port von Merkzeug auf iOS/iPadOS: **Capacitor**-Schale um den
 gleichen Milkdown/Crepe-Editor wie in `crossplatform/`. Git übernimmt die App
 bewusst **nicht** selbst — der Vault-Ordner kommt von
 [Working Copy](https://apps.apple.com/app/working-copy-git-client/id896694807)
 (oder ist ein beliebiger Ordner in der Dateien-App); committen/pushen/pullen
 passiert dort.
 
+## Funktionen
+
+- Ordner-Navigation mit Zurück/Vorwärts-Stack, Kanten-Wischgesten mit
+  Mitzieh-Animation, Link-Navigation zwischen Notizen.
+- Standardmäßig **Lesemodus**; ✎ schaltet Bearbeitung ein. Autosave mit
+  **Stale-Check**: Wurde eine Notiz extern geändert (z. B. Pull in
+  Working Copy), wird nicht blind überschrieben, sondern nachgefragt.
+- Notizen und Ordner **anlegen (＋), umbenennen und löschen** (Eintrag
+  gedrückt halten).
+- **Suche** (🔍) über Dateinamen und Inhalte aller Notizen.
+- **In-App-Hilfe** (?, Deutsch/Englisch je nach Systemsprache).
+- Mermaid-Vorschau, Bilder als data-URIs, Einfügen legt sie unter
+  `assets/` neben der Notiz ab.
+- Nach einem Pull in Working Copy laden Ordnerliste und geöffnete
+  (unveränderte) Notizen beim App-Wechsel automatisch neu; ↻ erzwingt es.
+
 ## Architektur
 
-- `src/` – React-App (Vite). Dateibaum als Liste, Milkdown-Editor mit
-  Link-Navigation (Zurück/Vorwärts-Stack), Mermaid-Vorschau, Autosave.
-  Standardmäßig **Lesemodus**; ✎ schaltet Bearbeitung ein.
+- `src/` – React-App (Vite).
 - `src/vault.ts` – `VaultBackend`-Interface. Nativ: Capacitor-Plugin `Vault`;
   im Browser (`npm run dev`): In-Memory-Demo-Vault.
+- `src/help/Help.de.md` / `Help.en.md` – die In-App-Hilfe (beide Sprachen
+  synchron halten, siehe `../CLAUDE.md`).
 - `ios/App/App/VaultPlugin.swift` – natives Plugin: Ordner-Picker
   (`UIDocumentPickerViewController`), security-scoped Bookmark (überlebt
-  App-Neustarts), Dateibaum-Scan, Lesen/Schreiben mit `NSFileCoordinator`
-  (Pflicht bei File-Provider-Ordnern wie denen von Working Copy).
+  App-Neustarts), Dateibaum-Scan, Lesen/Schreiben/Umbenennen/Löschen mit
+  `NSFileCoordinator` (Pflicht bei File-Provider-Ordnern wie denen von
+  Working Copy), mtime-basierter Konflikt-Check, Volltextsuche.
 - Pfade sind im JS-Teil immer **Vault-relativ** (`/Projekte/Ideen.md`).
 
 ## Entwicklung
@@ -47,14 +64,11 @@ Das iOS-Projekt nutzt **Swift Package Manager** (kein CocoaPods nötig).
 Im Simulator gibt es kein Working Copy — dort stattdessen einen Ordner unter
 „Auf meinem iPhone“ anlegen und den auswählen.
 
-## Bewusste Grenzen des Spikes
+## Bewusste Grenzen
 
 - Kein Git in der App (Commit/Push/Pull → Working Copy).
 - Kein Datei-Watcher: neu eingelesen wird beim App-Wechsel oder per ↻.
-- Kein Anlegen/Umbenennen/Löschen von Notizen und Ordnern.
 - Bilder aus dem Vault werden als data-URIs geladen (gut für Notizen,
-  ungeeignet für sehr große Bilder); Einfügen legt sie unter `assets/` ab.
+  ungeeignet für sehr große Bilder).
 - Keine Tabs/Panes wie am Desktop — eine Notiz zur Zeit, Navigation über
   den Zurück/Vorwärts-Stack.
-- Hilfe (⌘?) ist nicht eingebaut; bei Übernahme als echtes Feature gelten
-  die Regeln aus `CLAUDE.md` (Hilfe + README beider Sprachen pflegen).

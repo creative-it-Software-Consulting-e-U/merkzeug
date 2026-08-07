@@ -18,7 +18,12 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
         CAPPluginMethod(name: "writeFile", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "readFileBase64", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "saveImage", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "exists", returnType: CAPPluginReturnPromise)
+        CAPPluginMethod(name: "exists", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "stat", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "createFolder", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "deleteItem", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "rename", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "search", returnType: CAPPluginReturnPromise)
     ]
 
     private static let bookmarkKey = "MerkzeugVaultBookmark"
@@ -180,6 +185,13 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
         if let writeError { throw writeError }
     }
 
+    /// Änderungszeitpunkt in Millisekunden seit Epoche (wie Date.now() im JS).
+    private static func mtimeMs(_ url: URL) -> Double? {
+        guard let attrs = try? FileManager.default.attributesOfItem(atPath: url.path),
+              let date = attrs[.modificationDate] as? Date else { return nil }
+        return date.timeIntervalSince1970 * 1000
+    }
+
     @objc func readFile(_ call: CAPPluginCall) {
         guard let path = call.getString("path"), let url = fileURL(for: path, call: call) else {
             if call.getString("path") == nil { call.reject("Parameter 'path' fehlt.") }
@@ -191,7 +203,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
                 call.reject("Datei ist kein UTF-8-Text.")
                 return
             }
-            call.resolve(["content": content])
+            call.resolve(["content": content, "mtime": Self.mtimeMs(url) ?? 0])
         } catch {
             call.reject("Lesen fehlgeschlagen: \(error.localizedDescription)")
         }
@@ -204,9 +216,17 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
             call.reject("Parameter 'path'/'content' fehlen.")
             return
         }
+        // Stale-Check: Wurde die Datei seit dem Laden extern geändert (z. B.
+        // durch einen Pull in Working Copy), nicht blind überschreiben.
+        if let expected = call.getDouble("expectedMtime"),
+           let onDisk = Self.mtimeMs(url),
+           onDisk > expected + 1 {
+            call.reject("Die Datei wurde außerhalb von Merkzeug geändert.", "CONFLICT")
+            return
+        }
         do {
             try coordinatedWrite(Data(content.utf8), to: url)
-            call.resolve()
+            call.resolve(["mtime": Self.mtimeMs(url) ?? 0])
         } catch {
             call.reject("Speichern fehlgeschlagen: \(error.localizedDescription)")
         }
@@ -252,5 +272,151 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
             return
         }
         call.resolve(["exists": FileManager.default.fileExists(atPath: url.path)])
+    }
+
+    @objc func stat(_ call: CAPPluginCall) {
+        guard let path = call.getString("path"), let url = fileURL(for: path, call: call) else {
+            if call.getString("path") == nil { call.reject("Parameter 'path' fehlt.") }
+            return
+        }
+        var isDir: ObjCBool = false
+        let exists = FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir)
+        var result: [String: Any] = ["exists": exists, "isDirectory": isDir.boolValue]
+        if exists, let mtime = Self.mtimeMs(url) {
+            result["mtime"] = mtime
+        }
+        call.resolve(result)
+    }
+
+    // MARK: - Anlegen / Umbenennen / Löschen
+
+    @objc func createFolder(_ call: CAPPluginCall) {
+        guard let path = call.getString("path"), let url = fileURL(for: path, call: call) else {
+            if call.getString("path") == nil { call.reject("Parameter 'path' fehlt.") }
+            return
+        }
+        var coordinatorError: NSError?
+        var opError: Error?
+        NSFileCoordinator().coordinate(writingItemAt: url, options: [], error: &coordinatorError) { actual in
+            do {
+                try FileManager.default.createDirectory(at: actual, withIntermediateDirectories: true)
+            } catch {
+                opError = error
+            }
+        }
+        if let err = coordinatorError ?? (opError as NSError?) {
+            call.reject("Ordner konnte nicht angelegt werden: \(err.localizedDescription)")
+            return
+        }
+        call.resolve()
+    }
+
+    @objc func deleteItem(_ call: CAPPluginCall) {
+        guard let path = call.getString("path"), let url = fileURL(for: path, call: call) else {
+            if call.getString("path") == nil { call.reject("Parameter 'path' fehlt.") }
+            return
+        }
+        guard url.standardizedFileURL.path != vaultURL?.standardizedFileURL.path else {
+            call.reject("Der Vault-Ordner selbst kann nicht gelöscht werden.")
+            return
+        }
+        var coordinatorError: NSError?
+        var opError: Error?
+        NSFileCoordinator().coordinate(writingItemAt: url, options: .forDeleting, error: &coordinatorError) { actual in
+            do {
+                try FileManager.default.removeItem(at: actual)
+            } catch {
+                opError = error
+            }
+        }
+        if let err = coordinatorError ?? (opError as NSError?) {
+            call.reject("Löschen fehlgeschlagen: \(err.localizedDescription)")
+            return
+        }
+        call.resolve()
+    }
+
+    @objc func rename(_ call: CAPPluginCall) {
+        guard let from = call.getString("from"),
+              let to = call.getString("to"),
+              let fromURL = fileURL(for: from, call: call),
+              let toURL = fileURL(for: to, call: call) else {
+            if call.getString("from") == nil || call.getString("to") == nil {
+                call.reject("Parameter 'from'/'to' fehlen.")
+            }
+            return
+        }
+        guard !FileManager.default.fileExists(atPath: toURL.path) else {
+            call.reject("Es gibt bereits eine Datei oder einen Ordner mit diesem Namen.")
+            return
+        }
+        var coordinatorError: NSError?
+        var opError: Error?
+        NSFileCoordinator().coordinate(
+            writingItemAt: fromURL, options: .forMoving,
+            writingItemAt: toURL, options: [],
+            error: &coordinatorError
+        ) { src, dst in
+            do {
+                try FileManager.default.createDirectory(
+                    at: dst.deletingLastPathComponent(),
+                    withIntermediateDirectories: true
+                )
+                try FileManager.default.moveItem(at: src, to: dst)
+            } catch {
+                opError = error
+            }
+        }
+        if let err = coordinatorError ?? (opError as NSError?) {
+            call.reject("Umbenennen fehlgeschlagen: \(err.localizedDescription)")
+            return
+        }
+        call.resolve()
+    }
+
+    // MARK: - Suche
+
+    /// Sucht case-insensitiv in Dateinamen und Inhalten aller Markdown-Dateien.
+    /// Läuft im Hintergrund, damit die UI nicht blockiert.
+    @objc func search(_ call: CAPPluginCall) {
+        guard let vault = vaultURL else {
+            call.reject("Kein Vault geöffnet.")
+            return
+        }
+        guard let query = call.getString("query"), !query.isEmpty else {
+            call.resolve(["results": []])
+            return
+        }
+        DispatchQueue.global(qos: .userInitiated).async {
+            let limit = 100
+            var results: [[String: Any]] = []
+            let vaultPath = vault.standardizedFileURL.path
+            let enumerator = FileManager.default.enumerator(
+                at: vault,
+                includingPropertiesForKeys: [.isDirectoryKey],
+                options: [.skipsHiddenFiles]
+            )
+            while let entry = enumerator?.nextObject() as? URL {
+                if results.count >= limit { break }
+                let isDir = (try? entry.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory ?? false
+                guard !isDir, entry.pathExtension.lowercased() == "md" else { continue }
+                let relPath = String(entry.standardizedFileURL.path.dropFirst(vaultPath.count))
+                let nameMatch = entry.lastPathComponent.localizedCaseInsensitiveContains(query)
+                var snippet = ""
+                if let data = try? Data(contentsOf: entry),
+                   let content = String(data: data, encoding: .utf8) {
+                    for line in content.split(separator: "\n", omittingEmptySubsequences: true) {
+                        if line.localizedCaseInsensitiveContains(query) {
+                            snippet = String(line.trimmingCharacters(in: .whitespaces).prefix(160))
+                            break
+                        }
+                    }
+                }
+                if nameMatch || !snippet.isEmpty {
+                    results.append(["path": relPath, "snippet": snippet])
+                }
+            }
+            call.resolve(["results": results])
+        }
     }
 }

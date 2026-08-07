@@ -3,7 +3,7 @@ import { Crepe } from '@milkdown/crepe'
 import { remarkStringifyOptionsCtx } from '@milkdown/kit/core'
 import { renderMermaid } from '../util/mermaid'
 import { isExternalLink, dirname, joinPath, normalizePath, extname } from '../util/paths'
-import { vault } from '../vault'
+import { vault, isConflictError } from '../vault'
 import '@milkdown/crepe/theme/common/style.css'
 import '@milkdown/crepe/theme/frame.css'
 
@@ -42,17 +42,49 @@ export function Editor({
   const latestMarkdownRef = useRef<string | null>(null)
   const lastSavedRef = useRef<string | null>(null)
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const mtimeRef = useRef<number | null>(null)
   const [loadError, setLoadError] = useState<string | null>(null)
+  // Erzwingt Neuladen von der Platte (nach externem Update oder verworfenem Konflikt)
+  const [reloadCounter, setReloadCounter] = useState(0)
 
   filePathRef.current = filePath
 
-  const doSave = useCallback(async (): Promise<void> => {
-    if (!dirtyRef.current || latestMarkdownRef.current === null) return
-    dirtyRef.current = false
-    onDirtyChange?.(false)
-    lastSavedRef.current = latestMarkdownRef.current
-    await vault.writeFile(filePathRef.current, latestMarkdownRef.current)
-  }, [onDirtyChange])
+  const doSave = useCallback(
+    async (force = false): Promise<void> => {
+      if (!dirtyRef.current || latestMarkdownRef.current === null) return
+      const markdown = latestMarkdownRef.current
+      try {
+        const mtime = await vault.writeFile(
+          filePathRef.current,
+          markdown,
+          force ? undefined : (mtimeRef.current ?? undefined)
+        )
+        mtimeRef.current = mtime
+        lastSavedRef.current = markdown
+        dirtyRef.current = false
+        onDirtyChange?.(false)
+      } catch (err) {
+        if (!isConflictError(err)) {
+          alert(`Speichern fehlgeschlagen: ${String(err)}`)
+          return
+        }
+        // Stale: Die Notiz wurde extern geändert (z. B. Pull in Working Copy).
+        const overwrite = confirm(
+          'Diese Notiz wurde außerhalb von Merkzeug geändert (z. B. durch ' +
+            'Working Copy).\n\nOK überschreibt den externen Stand mit deiner ' +
+            'Version, Abbrechen verwirft deine Änderungen und lädt neu.'
+        )
+        if (overwrite) {
+          await doSave(true)
+        } else {
+          dirtyRef.current = false
+          onDirtyChange?.(false)
+          setReloadCounter((c) => c + 1)
+        }
+      }
+    },
+    [onDirtyChange]
+  )
 
   const scheduleSave = useCallback((): void => {
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
@@ -95,7 +127,9 @@ export function Editor({
     const setup = async (): Promise<void> => {
       let content: string
       try {
-        content = await vault.readFile(filePathRef.current)
+        const loaded = await vault.readFile(filePathRef.current)
+        content = loaded.content
+        mtimeRef.current = loaded.mtime
       } catch (err) {
         if (!cancelled) setLoadError(String(err))
         return
@@ -242,25 +276,53 @@ export function Editor({
       if (instance) {
         if (dirtyRef.current && latestMarkdownRef.current !== null) {
           dirtyRef.current = false
-          void vault.writeFile(filePathRef.current, latestMarkdownRef.current)
+          void vault
+            .writeFile(filePathRef.current, latestMarkdownRef.current, mtimeRef.current ?? undefined)
+            .catch((err) => {
+              if (isConflictError(err)) {
+                alert(
+                  'Die Notiz wurde außerhalb von Merkzeug geändert – die letzten ' +
+                    'Änderungen wurden deshalb nicht gespeichert.'
+                )
+              } else {
+                console.warn('Speichern beim Verlassen fehlgeschlagen', err)
+              }
+            })
         }
         crepeRef.current = null
         void instance.destroy()
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadToken])
+  }, [loadToken, reloadCounter])
 
   useEffect(() => {
     crepeRef.current?.setReadonly(readonly)
   }, [readonly])
 
-  // Speichern, wenn die App in den Hintergrund geht (iOS kennt kein beforeunload)
+  // Speichern, wenn die App in den Hintergrund geht (iOS kennt kein
+  // beforeunload); beim Zurückkehren extern geänderte Notizen neu laden.
   useEffect(() => {
     const handler = (): void => {
       if (document.visibilityState === 'hidden') {
         if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
         void doSave()
+      } else if (document.visibilityState === 'visible' && !dirtyRef.current) {
+        void (async () => {
+          try {
+            const stat = await vault.stat(filePathRef.current)
+            if (
+              stat.exists &&
+              stat.mtime !== undefined &&
+              mtimeRef.current !== null &&
+              stat.mtime > mtimeRef.current + 1
+            ) {
+              setReloadCounter((c) => c + 1)
+            }
+          } catch {
+            // Ignorieren – beim nächsten Öffnen wird ohnehin frisch geladen.
+          }
+        })()
       }
     }
     document.addEventListener('visibilitychange', handler)

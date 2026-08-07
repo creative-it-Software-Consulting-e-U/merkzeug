@@ -1,8 +1,21 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Editor } from './components/Editor'
 import { FolderList } from './components/FolderList'
-import { basename, extname, isExternalLink, resolveVaultLink } from './util/paths'
+import { HelpView } from './components/HelpView'
+import { SearchView } from './components/SearchView'
+import { Sheet } from './components/Sheet'
+import {
+  basename,
+  dirname,
+  extname,
+  isExternalLink,
+  joinPath,
+  normalizePath,
+  resolveVaultLink
+} from './util/paths'
 import { vault, type FileNode, type VaultInfo } from './vault'
+
+type SheetState = { kind: 'create' } | { kind: 'item'; node: FileNode }
 
 function findNode(tree: FileNode | null, path: string): FileNode | null {
   if (!tree) return null
@@ -25,8 +38,14 @@ export default function App(): React.JSX.Element {
   const [loadToken, setLoadToken] = useState(0)
   const [editMode, setEditMode] = useState(false)
   const [dirty, setDirty] = useState(false)
+  const [sheet, setSheet] = useState<SheetState | null>(null)
+  const [searching, setSearching] = useState(false)
+  const [showHelp, setShowHelp] = useState(false)
   const treeRef = useRef<FileNode | null>(null)
   treeRef.current = tree
+  // Solange ein Overlay offen ist, sollen die Kanten-Wischgesten nicht greifen
+  const overlayOpenRef = useRef(false)
+  overlayOpenRef.current = sheet !== null || searching || showHelp
 
   const current = stack[stackIndex]
   const isNote = current.endsWith('.md')
@@ -127,6 +146,10 @@ export default function App(): React.JSX.Element {
     }
 
     const onStart = (e: TouchEvent): void => {
+      if (overlayOpenRef.current) {
+        dragging = null
+        return
+      }
       const t = e.touches[0]
       startX = t.clientX
       startY = t.clientY
@@ -222,6 +245,104 @@ export default function App(): React.JSX.Element {
     [navigateTo, stack]
   )
 
+  /** Verweise auf gelöschte/umbenannte Pfade aus dem Navigations-Stack werfen. */
+  const pruneStack = useCallback(
+    (oldPath: string): void => {
+      const idx = stackIndexRef.current
+      const keep = stack
+        .map((path, i) => ({ path, i }))
+        .filter(({ path }) => path !== oldPath && !path.startsWith(`${oldPath}/`))
+      const next = keep.length > 0 ? keep.map((k) => k.path) : ['/']
+      const newIdx = Math.max(0, Math.min(keep.filter((k) => k.i <= idx).length - 1, next.length - 1))
+      setStack(next)
+      setStackIndex(newIdx)
+      setLoadToken((t) => t + 1)
+    },
+    [stack]
+  )
+
+  const validName = (name: string): boolean => {
+    if (!name || name === '.' || name === '..' || /[/\\:]/.test(name)) {
+      alert('Der Name darf keine Schrägstriche oder Doppelpunkte enthalten.')
+      return false
+    }
+    return true
+  }
+
+  const createNote = useCallback(async (): Promise<void> => {
+    const input = window.prompt('Name der neuen Notiz:')?.trim()
+    if (!input) return
+    if (!validName(input)) return
+    const title = input.replace(/\.md$/i, '')
+    const path = normalizePath(joinPath(stack[stackIndexRef.current], `${title}.md`))
+    try {
+      if (await vault.exists(path)) {
+        alert('Es gibt bereits eine Notiz mit diesem Namen.')
+        return
+      }
+      await vault.writeFile(path, `# ${title}\n`)
+      await reloadTree()
+      navigateTo(path)
+      setEditMode(true)
+    } catch (err) {
+      alert(`Notiz konnte nicht angelegt werden: ${String(err)}`)
+    }
+  }, [navigateTo, reloadTree, stack])
+
+  const createFolder = useCallback(async (): Promise<void> => {
+    const input = window.prompt('Name des neuen Ordners:')?.trim()
+    if (!input) return
+    if (!validName(input)) return
+    const path = normalizePath(joinPath(stack[stackIndexRef.current], input))
+    try {
+      if (await vault.exists(path)) {
+        alert('Es gibt bereits einen Eintrag mit diesem Namen.')
+        return
+      }
+      await vault.createFolder(path)
+      await reloadTree()
+      navigateTo(path)
+    } catch (err) {
+      alert(`Ordner konnte nicht angelegt werden: ${String(err)}`)
+    }
+  }, [navigateTo, reloadTree, stack])
+
+  const renameItem = useCallback(
+    async (node: FileNode): Promise<void> => {
+      const currentName = node.isDirectory ? node.name : node.name.replace(/\.md$/i, '')
+      const input = window.prompt('Neuer Name:', currentName)?.trim()
+      if (!input || input === currentName) return
+      if (!validName(input)) return
+      const newName = node.isDirectory ? input : `${input.replace(/\.md$/i, '')}.md`
+      const to = normalizePath(joinPath(dirname(node.path), newName))
+      try {
+        await vault.rename(node.path, to)
+        pruneStack(node.path)
+        await reloadTree()
+      } catch (err) {
+        alert(`Umbenennen fehlgeschlagen: ${String(err)}`)
+      }
+    },
+    [pruneStack, reloadTree]
+  )
+
+  const deleteItem = useCallback(
+    async (node: FileNode): Promise<void> => {
+      const label = node.isDirectory
+        ? `Ordner „${node.name}" samt Inhalt wirklich löschen?`
+        : `Notiz „${node.name.replace(/\.md$/i, '')}" wirklich löschen?`
+      if (!confirm(label)) return
+      try {
+        await vault.deleteItem(node.path)
+        pruneStack(node.path)
+        await reloadTree()
+      } catch (err) {
+        alert(`Löschen fehlgeschlagen: ${String(err)}`)
+      }
+    },
+    [pruneStack, reloadTree]
+  )
+
   if (restoring) return <div className="start-screen" />
 
   if (!vaultInfo) {
@@ -235,6 +356,10 @@ export default function App(): React.JSX.Element {
         <button className="primary-btn" onClick={() => void pickVault()}>
           Vault-Ordner öffnen
         </button>
+        <button className="link-btn" onClick={() => setShowHelp(true)}>
+          Hilfe anzeigen
+        </button>
+        {showHelp && <HelpView onClose={() => setShowHelp(false)} />}
       </div>
     )
   }
@@ -260,7 +385,7 @@ export default function App(): React.JSX.Element {
           {title}
           {dirty ? ' •' : ''}
         </div>
-        {isNote && (
+        {isNote ? (
           <button
             className={`bar-btn${editMode ? ' active' : ''}`}
             onClick={() => setEditMode((v) => !v)}
@@ -268,9 +393,23 @@ export default function App(): React.JSX.Element {
           >
             ✎
           </button>
+        ) : (
+          <button
+            className="bar-btn"
+            onClick={() => setSheet({ kind: 'create' })}
+            title="Neue Notiz oder neuer Ordner"
+          >
+            ＋
+          </button>
         )}
+        <button className="bar-btn" onClick={() => setSearching(true)} title="Suchen">
+          🔍
+        </button>
         <button className="bar-btn" onClick={() => void reloadTree()} title="Neu einlesen">
           ↻
+        </button>
+        <button className="bar-btn" onClick={() => setShowHelp(true)} title="Hilfe">
+          ?
         </button>
         <button className="bar-btn" onClick={() => void pickVault()} title="Anderen Vault öffnen">
           ⌂
@@ -287,9 +426,43 @@ export default function App(): React.JSX.Element {
             onDirtyChange={setDirty}
           />
         ) : (
-          <FolderList node={folderNode} onOpen={navigateTo} />
+          <FolderList
+            node={folderNode}
+            onOpen={navigateTo}
+            onItemMenu={(node) => setSheet({ kind: 'item', node })}
+          />
         )}
       </main>
+      {searching && (
+        <SearchView
+          onOpen={(path) => {
+            setSearching(false)
+            navigateTo(path)
+          }}
+          onClose={() => setSearching(false)}
+        />
+      )}
+      {showHelp && <HelpView onClose={() => setShowHelp(false)} />}
+      {sheet?.kind === 'create' && (
+        <Sheet
+          title="Neu anlegen"
+          onClose={() => setSheet(null)}
+          actions={[
+            { label: 'Neue Notiz', onSelect: () => void createNote() },
+            { label: 'Neuer Ordner', onSelect: () => void createFolder() }
+          ]}
+        />
+      )}
+      {sheet?.kind === 'item' && (
+        <Sheet
+          title={sheet.node.isDirectory ? sheet.node.name : sheet.node.name.replace(/\.md$/i, '')}
+          onClose={() => setSheet(null)}
+          actions={[
+            { label: 'Umbenennen', onSelect: () => void renameItem(sheet.node) },
+            { label: 'Löschen', danger: true, onSelect: () => void deleteItem(sheet.node) }
+          ]}
+        />
+      )}
     </div>
   )
 }
