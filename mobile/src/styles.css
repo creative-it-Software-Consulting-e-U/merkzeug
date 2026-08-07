@@ -1,0 +1,359 @@
+:root {
+  --bg: #ffffff;
+  --bg-bar: #f5f5f7;
+  --text: #1d1d1f;
+  --text-dim: #6e6e73;
+  --border: #d2d2d7;
+  --accent: #007aff;
+  --danger: #ff3b30;
+  --row-active: rgba(0, 0, 0, 0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1a1a;
+    --bg-bar: #232323;
+    --text: #e6e6e6;
+    --text-dim: #a9a9a9;
+    --border: #3a3a3c;
+    --accent: #0a84ff;
+    --danger: #ff6666;
+    --row-active: rgba(255, 255, 255, 0.08);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior: none;
+}
+
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- Kopfleiste ---- */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: calc(env(safe-area-inset-top) + 6px) calc(env(safe-area-inset-right) + 8px) 6px
+    calc(env(safe-area-inset-left) + 8px);
+  background: var(--bg-bar);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.topbar-title {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 4px;
+}
+
+.bar-btn {
+  min-width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  font-size: 22px;
+  line-height: 1;
+  border-radius: 8px;
+  padding: 0 6px;
+}
+
+.bar-btn:disabled {
+  color: var(--text-dim);
+  opacity: 0.4;
+}
+
+.bar-btn.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.bar-btn:active:not(:disabled) {
+  background: var(--row-active);
+}
+
+/* ---- Inhalt ---- */
+
+.content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ---- Startbildschirm ---- */
+
+.start-screen {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 32px;
+  text-align: center;
+}
+
+.start-screen h1 {
+  margin: 0;
+}
+
+.start-screen p {
+  color: var(--text-dim);
+  max-width: 420px;
+  margin: 0;
+}
+
+.primary-btn {
+  margin-top: 10px;
+  padding: 14px 26px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: 12px;
+}
+
+.primary-btn:active {
+  opacity: 0.8;
+}
+
+/* ---- Ordnerliste ---- */
+
+.folder-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 env(safe-area-inset-bottom);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.folder-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 17px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.folder-row:active {
+  background: var(--row-active);
+}
+
+.folder-row-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.folder-row-name {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.folder-row-chevron {
+  color: var(--text-dim);
+  font-size: 20px;
+}
+
+.folder-empty {
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--text-dim);
+}
+
+/* ---- Editor (Typografie wie Desktop-App) ---- */
+
+.editor-host {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.editor-root {
+  flex: 1;
+  width: 100%;
+}
+
+.editor-root .milkdown {
+  background: transparent;
+  --crepe-font-title: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --crepe-font-default: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --crepe-font-code: 'SF Mono', ui-monospace, Menlo, Monaco, 'Cascadia Mono', monospace;
+  --crepe-base-font-size: 16px;
+  --crepe-color-inline-code: #ff2d55;
+  --mn-link: #007aff;
+  --mn-code-bg: rgba(142, 142, 147, 0.16);
+  --mn-codeblock-bg: rgba(142, 142, 147, 0.14);
+  --mn-table-header-bg: rgba(142, 142, 147, 0.12);
+}
+
+.editor-root .milkdown .ProseMirror {
+  padding: 18px 16px calc(env(safe-area-inset-bottom) + 80px);
+}
+
+.editor-root .milkdown .ProseMirror > :first-child {
+  margin-top: 0;
+}
+
+.editor-root .milkdown .ProseMirror h1,
+.editor-root .milkdown .ProseMirror h2,
+.editor-root .milkdown .ProseMirror h3,
+.editor-root .milkdown .ProseMirror h4,
+.editor-root .milkdown .ProseMirror h5,
+.editor-root .milkdown .ProseMirror h6 {
+  font-weight: 700;
+  padding: 0;
+  margin-bottom: 7px;
+}
+
+.editor-root .milkdown .ProseMirror h1 {
+  font-size: 26px;
+  line-height: 1.2;
+  margin-top: 14px;
+}
+
+.editor-root .milkdown .ProseMirror h2 {
+  font-size: 21px;
+  line-height: 1.2;
+  margin-top: 14px;
+}
+
+.editor-root .milkdown .ProseMirror h3 {
+  font-size: 17.5px;
+  line-height: 1.25;
+  margin-top: 10px;
+}
+
+.editor-root .milkdown .ProseMirror h4 {
+  font-size: 16px;
+  line-height: 1.3;
+  margin-top: 10px;
+}
+
+.editor-root .milkdown .ProseMirror h5,
+.editor-root .milkdown .ProseMirror h6 {
+  font-size: 15px;
+  line-height: 1.3;
+  margin-top: 10px;
+}
+
+.editor-root .milkdown .ProseMirror p {
+  line-height: 1.45;
+  padding: 2px 0;
+}
+
+.editor-root .milkdown .ProseMirror a {
+  color: var(--mn-link);
+}
+
+.editor-root .milkdown .ProseMirror code {
+  font-size: 14px;
+  background: var(--mn-code-bg);
+}
+
+.editor-root .milkdown .ProseMirror pre {
+  background: var(--mn-codeblock-bg);
+}
+
+.editor-root .milkdown .cm-editor {
+  font-size: 14px;
+}
+
+.editor-root .milkdown .ProseMirror th {
+  background-color: var(--mn-table-header-bg);
+}
+
+.editor-root .milkdown .ProseMirror blockquote {
+  color: var(--text-dim);
+}
+
+@media (prefers-color-scheme: dark) {
+  .editor-root .milkdown {
+    --crepe-color-background: #1a1a1a;
+    --crepe-color-on-background: #e6e6e6;
+    --crepe-color-surface: #121212;
+    --crepe-color-surface-low: #1c1c1c;
+    --crepe-color-on-surface: #d1d1d1;
+    --crepe-color-on-surface-variant: #a9a9a9;
+    --crepe-color-outline: #757575;
+    --crepe-color-primary: #b5b5b5;
+    --crepe-color-secondary: #4d4d4d;
+    --crepe-color-on-secondary: #d6d6d6;
+    --crepe-color-inverse: #e5e5e5;
+    --crepe-color-on-inverse: #2a2a2a;
+    --crepe-color-inline-code: #ff375f;
+    --mn-link: #0a84ff;
+    --crepe-color-error: #ff6666;
+    --crepe-color-hover: #232323;
+    --crepe-color-selected: #2f2f2f;
+    --crepe-color-inline-area: #2b2b2b;
+    --crepe-shadow-1:
+      0px 1px 2px 0px rgba(255, 255, 255, 0.3),
+      0px 1px 3px 1px rgba(255, 255, 255, 0.15);
+    --crepe-shadow-2:
+      0px 1px 2px 0px rgba(255, 255, 255, 0.3),
+      0px 2px 6px 2px rgba(255, 255, 255, 0.15);
+  }
+}
+
+.editor-error {
+  padding: 40px 24px;
+  color: var(--danger);
+}
+
+/* ---- Mermaid ---- */
+
+.mermaid-preview {
+  overflow-x: auto;
+}
+
+.mermaid-preview svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.mermaid-error {
+  color: var(--danger);
+  font-size: 14px;
+  padding: 8px 0;
+}

@@ -1,0 +1,32 @@
+{
+  "name": "merkzeug-mobile",
+  "version": "0.1.0",
+  "description": "Merkzeug – iOS/iPadOS-Spike (Capacitor + Milkdown, Vault via Working Copy)",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "sync": "npm run build && cap sync ios",
+    "open": "cap open ios"
+  },
+  "author": "Günther Wieser <guenther.wieser@creative-it.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@capacitor/core": "^8.5.0",
+    "@milkdown/crepe": "^7.22.0",
+    "@milkdown/kit": "^7.22.0",
+    "mermaid": "^11.16.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.0",
+    "@capacitor/ios": "^8.5.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^5.2.0",
+    "typescript": "^7.0.2",
+    "vite": "^7.3.6"
+  }
+}
