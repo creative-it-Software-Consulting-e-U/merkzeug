@@ -1,5 +1,5 @@
-appId: com.creativeit.mynotion
-productName: MyNotion
+appId: com.creative-it.merkzeug
+productName: Merkzeug
 directories:
   buildResources: build
   output: dist
@@ -12,7 +12,15 @@ extraResources:
 mac:
   category: public.app-category.productivity
   icon: build/icon.icns
-  identity: null
+  # Signiert automatisch mit dem "Developer ID Application"-Zertifikat
+  # (Team 3BNJ4M9R56) aus dem Login-Schlüsselbund.
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+  # Notarisierung läuft automatisch, wenn APPLE_API_KEY, APPLE_API_KEY_ID
+  # und APPLE_API_ISSUER gesetzt sind (siehe README), sonst wird sie
+  # übersprungen.
 win:
   icon: build/icon.png
   target:

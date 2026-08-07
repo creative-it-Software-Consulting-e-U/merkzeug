@@ -1,6 +1,6 @@
-# MyNotion – Cross-Platform (macOS, Windows & Linux)
+# Merkzeug – Cross-Platform (macOS, Windows & Linux)
 
-Die **aktuelle App-Version** von MyNotion auf Basis von **Electron + Milkdown**
+Die **aktuelle App-Version** von Merkzeug auf Basis von **Electron + Milkdown**
 (ProseMirror): ein Vault-basierter WYSIWYG-Markdown-Editor aus einer Codebasis
 für macOS, **Windows und Linux**. Die frühere native macOS-App liegt als
 Legacy-Version unter `../legacy/`.
@@ -11,8 +11,8 @@ Die Markdown-Dateien sind zwischen beiden Apps voll austauschbar.
 ```bash
 npm install            # Abhängigkeiten installieren
 npm run dev            # Entwicklungsmodus mit Hot Reload
-npm run package:mac    # macOS-App (unsigniert) nach dist/mac-arm64/MyNotion.app
-npm run package:mac:dmg# macOS-DMG nach dist/
+npm run package:mac    # macOS-App (signiert) nach dist/mac-arm64/Merkzeug.app
+npm run package:mac:dmg# macOS-DMG (signiert) nach dist/
 npm run package:win    # Windows-Installer (NSIS, x64 + arm64 kombiniert) – läuft auch auf dem Mac
 npm run package:linux  # Linux x64: AppImage, .deb und .rpm – läuft auch auf dem Mac
 ```
@@ -24,12 +24,31 @@ Für die Linux-Pakete (`package:linux`) werden auf dem Mac zusätzlich
 `gnu-tar`, `xz` (für .deb) und `rpm` (für .rpm) benötigt:
 `brew install gnu-tar xz rpm`.
 
+### macOS: Signierung & Notarisierung
+
+Die macOS-Builds werden automatisch mit dem „Developer ID Application“-
+Zertifikat (Team `3BNJ4M9R56`, creative-it) aus dem Login-Schlüsselbund
+signiert (Hardened Runtime, Entitlements in `build/entitlements.mac.plist`).
+Fehlt das Zertifikat im Schlüsselbund, bricht der Build mit einem
+Signierfehler ab.
+
+Für die Notarisierung (empfohlen vor Weitergabe des DMG) müssen vor dem
+Build diese Variablen gesetzt sein — dann notarisiert electron-builder
+automatisch, andernfalls wird der Schritt übersprungen:
+
+```bash
+export APPLE_API_KEY=~/.appstoreconnect/private_keys/AuthKey_2DJ72DRWCB.p8
+export APPLE_API_KEY_ID=2DJ72DRWCB
+export APPLE_API_ISSUER=69a6de6e-8907-47e3-e053-5b8c7c11a4d1
+npm run package:mac:dmg
+```
+
 ## Aufbau
 
 ```
 src/main/       Electron-Main-Prozess: Fenster, Menü (deutsch), IPC,
                 Datei-Operationen inkl. .assets-Logik, chokidar-Watcher, Git
-src/preload/    Typisierte IPC-Brücke (window.mynotion)
+src/preload/    Typisierte IPC-Brücke (window.merkzeug)
 src/renderer/   React-UI: Sidebar/Dateibaum, Tabs & zwei Sektionen,
                 Milkdown-Crepe-Editor, Ordnerübersicht, Hilfe- & Zoom-Fenster
 src/shared/     Gemeinsame Typen (IPC-Verträge)
@@ -47,6 +66,11 @@ Hilfe-Button in der Toolbar) und
 Autosave. Bonus gegenüber der Mac-App: Slash-Menü („/“), Auswahl-Toolbar,
 Aufgabenlisten und Verschieben von Blöcken per Drag & Drop.
 
+Abhängigkeits- und Build-Ordner (`node_modules`, `__pycache__`, virtualenvs
+sowie `target`/`build`/`dist`/`out` neben der passenden Build-Datei, siehe
+`src/main/ignore.ts`) werden im Dateibaum ausgeblendet und nicht überwacht —
+dadurch bleiben auch große Code-Repos als Vault benutzbar.
+
 ## Bekannte Unterschiede zur Mac-App
 
 - Beim ersten echten Bearbeiten einer Notiz normalisiert die Markdown-Engine
@@ -56,12 +80,10 @@ Aufgabenlisten und Verschieben von Blöcken per Drag & Drop.
   (statt automatisch über die Cursor-Position).
 - Web-Bilder (`http…`) werden angezeigt, wenn eine Internetverbindung besteht
   (die Mac-App zeigt einen Platzhalter).
-- Drei-Finger-Wischen und Maus-Zusatztasten für Zurück/Vorwärts sind nicht
-  belegt (⌘[ / ⌘] und Toolbar-Pfeile funktionieren).
 
 ## Debug-Screenshots
 
 Für automatisierte UI-Tests kann die App mit
-`MYNOTION_SCREENSHOT=/pfad.png [MYNOTION_CLICK='Schritt;;Schritt…']`
+`MERKZEUG_SCREENSHOT=/pfad.png [MERKZEUG_CLICK='Schritt;;Schritt…']`
 gestartet werden; sie führt die Schritte aus, speichert einen Screenshot und
 beendet sich (Schritte: Baum-Label, `menu:<aktion>`, `js:<code>`, `helpwindow`).
