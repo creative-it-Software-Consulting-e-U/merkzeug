@@ -609,6 +609,35 @@ button {
   color: var(--danger);
 }
 
+.editor-conflict {
+  flex: 0 0 auto;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  font-size: 13px;
+  background: var(--bg-sidebar);
+  border-bottom: 1px solid var(--border);
+}
+
+.editor-conflict span {
+  color: var(--danger);
+}
+
+.editor-conflict button {
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--bg);
+}
+
+.editor-conflict button:hover {
+  background: var(--bg-hover);
+}
+
 .mermaid-preview {
   position: relative;
   display: flex;

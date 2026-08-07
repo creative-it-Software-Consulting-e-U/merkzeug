@@ -8,7 +8,7 @@ export function ZoomApp(): React.JSX.Element {
   const dragging = useRef<{ x: number; y: number } | null>(null)
 
   useEffect(() => {
-    const off = window.mynotion.onZoomSvg((s) => setSvg(s))
+    const off = window.merkzeug.onZoomSvg((s) => setSvg(s))
     return off
   }, [])
 
@@ -31,7 +31,11 @@ export function ZoomApp(): React.JSX.Element {
       className="zoom-app"
       onWheel={(e) => {
         if (e.ctrlKey || e.metaKey) {
-          setScale((s) => Math.min(Math.max(s * (e.deltaY < 0 ? 1.1 : 0.9), 0.1), 10))
+          // Faktor an die Scroll-/Pinch-Distanz koppeln statt fix pro Event,
+          // sonst rast der Zoom bei Mausrad und Trackpad davon
+          const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY
+          const factor = Math.exp(-dy * 0.002)
+          setScale((s) => Math.min(Math.max(s * factor, 0.1), 10))
         } else {
           setOffset((o) => ({ x: o.x - e.deltaX, y: o.y - e.deltaY }))
         }

@@ -1,6 +1,6 @@
-# MyNotion – Hilfe
+# Merkzeug – Hilfe
 
-MyNotion ist ein Editor für Markdown-Notizen im Stil von Notion – diese Version
+Merkzeug ist ein Editor für Markdown-Notizen im Stil von Notion – diese Version
 läuft auf **macOS und Windows**. Du bearbeitest deine Notizen **WYSIWYG**
 (formatiert, ohne sichtbare Markdown-Syntax), gespeichert wird aber immer
 sauberes, portables Markdown. Alle Notizen liegen als `.md`-Dateien in einem
@@ -21,7 +21,7 @@ Alle Kürzel gelten mit **⌘** auf dem Mac; unter Windows entspricht ⌘ der
 - **Autosave:** Änderungen werden eine Sekunde nach der letzten Eingabe automatisch
   gespeichert, außerdem beim Schließen von Tabs und beim Beenden der App.
   Manuell: **⌘S** (aktive Notiz) bzw. **⌥⌘S** (alle offenen Notizen).
-- Der Vault kann auch per Umgebungsvariable `MYNOTION_VAULT` vorgegeben werden.
+- Der Vault kann auch per Umgebungsvariable `MERKZEUG_VAULT` vorgegeben werden.
 
 ## 2. Sidebar & Dateibaum
 
@@ -38,7 +38,19 @@ Links zeigt die Sidebar den Vault als hierarchischen Baum.
   sowie zum Neu-Einlesen des Vaults; das Augen-Symbol blendet die
   **Ressourcen-Ordner** ein/aus (⇧⌘R).
 - Änderungen, die außerhalb der App am Vault gemacht werden (Finder/Explorer,
-  Terminal, Sync), erkennt die App automatisch.
+  Terminal, Sync), erkennt die App automatisch. Das gilt auch für **offene
+  Notizen**: Ändert sich die Datei auf der Platte, lädt der Tab sie neu.
+  Hast du dort gerade ungespeicherte Änderungen, erscheint stattdessen ein
+  Banner mit der Wahl **„Neu laden“** (Stand von der Platte übernehmen) oder
+  **„Meine Version behalten“** (eigene Änderungen speichern); bis zur
+  Entscheidung wird nichts überschrieben.
+- **Versteckte und technische Ordner:** Einträge, die mit einem Punkt beginnen
+  (z. B. `.git`), sowie Abhängigkeits- und Build-Ordner aus Software-Projekten
+  werden ausgeblendet und nicht überwacht — `node_modules`, `__pycache__`,
+  Python-virtualenvs sowie `target`, `build`, `dist` und `out`, wenn daneben
+  die passende Build-Datei liegt (z. B. `pom.xml` oder `package.json`). So
+  bleibt die App auch flüssig, wenn ein großes Code-Repository als Vault
+  geöffnet wird.
 
 ## 3. Tabs, Sektionen & Fenster
 
@@ -99,7 +111,10 @@ in der Toolbar.
   laden das Ziel **im selben Tab** (statt einen neuen Tab zu öffnen).
 - Auch **Ordner-Links** bleiben im selben Tab: Der Tab zeigt die Ordnerübersicht,
   und Klicks auf deren Einträge navigieren im selben Tab weiter.
-- **Zurück/Vorwärts:** Pfeil-Buttons in der Toolbar oder **⌘[** / **⌘]**.
+- **Zurück/Vorwärts:** Pfeil-Buttons in der Toolbar, **⌘[** / **⌘]**, die
+  Zurück-/Vorwärts-Tasten der Maus oder Wischgesten auf dem Trackpad
+  (horizontales Wischen mit zwei Fingern, unter macOS auch mit drei Fingern,
+  wenn „Zwischen Seiten blättern" entsprechend eingestellt ist).
 - Die **Historie bleibt pro Tab erhalten**, auch wenn du den Modus verlässt, die
   Notiz bearbeitest und den Modus später wieder einschaltest.
 

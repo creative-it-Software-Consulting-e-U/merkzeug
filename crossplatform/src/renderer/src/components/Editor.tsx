@@ -92,25 +92,34 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const [loadError, setLoadError] = useState<string | null>(null)
+  // Externe Änderungen: letzter bekannter Stand auf der Platte + Konfliktzustand
+  const lastDiskRef = useRef<string | null>(null)
+  const conflictRef = useRef(false)
+  const [conflict, setConflict] = useState(false)
+  const [diskToken, setDiskToken] = useState(0)
 
   // Pfadwechsel ohne Neuladen (Umbenennen/Verschieben): nur Speicherziel anpassen
   filePathRef.current = filePath
 
   const doSave = useCallback(async (): Promise<void> => {
+    if (conflictRef.current) return
     if (!dirtyRef.current || latestMarkdownRef.current === null) return
     dirtyRef.current = false
     onDirtyChange?.(false)
     lastSavedRef.current = latestMarkdownRef.current
-    await window.mynotion.writeFile(filePathRef.current, latestMarkdownRef.current)
+    lastDiskRef.current = latestMarkdownRef.current
+    await window.merkzeug.writeFile(filePathRef.current, latestMarkdownRef.current)
   }, [onDirtyChange])
 
   const flushSync = useCallback((): void => {
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
+    if (conflictRef.current) return
     if (!dirtyRef.current || latestMarkdownRef.current === null) return
     dirtyRef.current = false
     onDirtyChange?.(false)
     lastSavedRef.current = latestMarkdownRef.current
-    window.mynotion.writeFileSync(filePathRef.current, latestMarkdownRef.current)
+    lastDiskRef.current = latestMarkdownRef.current
+    window.merkzeug.writeFileSync(filePathRef.current, latestMarkdownRef.current)
   }, [onDirtyChange])
 
   const scheduleSave = useCallback((): void => {
@@ -127,7 +136,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       binary += String.fromCharCode(...bytes.subarray(i, i + chunk))
     }
     const ext = (file.name.split('.').pop() || 'png').toLowerCase()
-    return window.mynotion.saveImage(filePathRef.current, btoa(binary), ext)
+    return window.merkzeug.saveImage(filePathRef.current, btoa(binary), ext)
   }, [])
 
   const displayUrl = useCallback((url: string): string => {
@@ -145,15 +154,18 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
     let cancelled = false
     let crepe: Crepe | null = null
     setLoadError(null)
+    conflictRef.current = false
+    setConflict(false)
 
     const setup = async (): Promise<void> => {
       let content: string
       try {
-        content = await window.mynotion.readFile(filePathRef.current)
+        content = await window.merkzeug.readFile(filePathRef.current)
       } catch (err) {
         if (!cancelled) setLoadError(String(err))
         return
       }
+      lastDiskRef.current = content
       if (cancelled || !rootRef.current) return
       rootRef.current.innerHTML = ''
 
@@ -299,20 +311,61 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
       const instance = crepe
       if (instance) {
-        if (dirtyRef.current && latestMarkdownRef.current !== null) {
+        if (!conflictRef.current && dirtyRef.current && latestMarkdownRef.current !== null) {
           dirtyRef.current = false
-          void window.mynotion.writeFile(filePathRef.current, latestMarkdownRef.current)
+          void window.merkzeug.writeFile(filePathRef.current, latestMarkdownRef.current)
         }
         crepeRef.current = null
         void instance.destroy()
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadToken])
+  }, [loadToken, diskToken])
 
   useEffect(() => {
     crepeRef.current?.setReadonly(readonly)
   }, [readonly])
+
+  // Externe Änderungen der offenen Datei erkennen: ohne eigene ungespeicherte
+  // Änderungen automatisch neu laden, sonst Konflikt-Banner zeigen (und den
+  // Autosave pausieren, damit nichts überschrieben wird).
+  useEffect(() => {
+    const off = window.merkzeug.onVaultChanged((_vault, paths) => {
+      if (conflictRef.current) return
+      if (paths.length === 0 || !paths.includes(filePathRef.current)) return
+      void (async () => {
+        let disk: string
+        try {
+          disk = await window.merkzeug.readFile(filePathRef.current)
+        } catch {
+          return
+        }
+        if (disk === lastDiskRef.current) return
+        if (dirtyRef.current) {
+          conflictRef.current = true
+          setConflict(true)
+        } else {
+          setDiskToken((t) => t + 1)
+        }
+      })()
+    })
+    return off
+  }, [])
+
+  const resolveConflictReload = useCallback((): void => {
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
+    conflictRef.current = false
+    setConflict(false)
+    dirtyRef.current = false
+    onDirtyChange?.(false)
+    setDiskToken((t) => t + 1)
+  }, [onDirtyChange])
+
+  const resolveConflictKeep = useCallback((): void => {
+    conflictRef.current = false
+    setConflict(false)
+    void doSave()
+  }, [doSave])
 
   // Speichern, wenn das Fenster geschlossen wird
   useEffect(() => {
@@ -455,7 +508,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
         if (svg) {
           e.preventDefault()
           e.stopPropagation()
-          void window.mynotion.openMermaidZoom(svg.outerHTML)
+          void window.merkzeug.openMermaidZoom(svg.outerHTML)
           return
         }
       }
@@ -555,6 +608,13 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       onPasteCapture={handlePaste}
       onDropCapture={handleDrop}
     >
+      {conflict && (
+        <div className="editor-conflict">
+          <span>Die Datei wurde außerhalb dieses Fensters geändert.</span>
+          <button onClick={resolveConflictReload}>Neu laden</button>
+          <button onClick={resolveConflictKeep}>Meine Version behalten</button>
+        </div>
+      )}
       <div ref={rootRef} className="editor-root" />
       <input
         ref={fileInputRef}

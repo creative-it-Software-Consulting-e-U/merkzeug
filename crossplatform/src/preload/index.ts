@@ -44,8 +44,9 @@ const api = {
     ipcRenderer.on('vault:set', listener)
     return () => ipcRenderer.removeListener('vault:set', listener)
   },
-  onVaultChanged: (handler: (vault: string) => void): (() => void) => {
-    const listener = (_e: unknown, payload: { vault: string }): void => handler(payload.vault)
+  onVaultChanged: (handler: (vault: string, paths: string[]) => void): (() => void) => {
+    const listener = (_e: unknown, payload: { vault: string; paths?: string[] }): void =>
+      handler(payload.vault, payload.paths ?? [])
     ipcRenderer.on('vault:changed', listener)
     return () => ipcRenderer.removeListener('vault:changed', listener)
   },
@@ -57,6 +58,6 @@ const api = {
   }
 }
 
-export type MyNotionApi = typeof api
+export type MerkzeugApi = typeof api
 
-contextBridge.exposeInMainWorld('mynotion', api)
+contextBridge.exposeInMainWorld('merkzeug', api)

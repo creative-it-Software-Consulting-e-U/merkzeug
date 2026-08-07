@@ -1,6 +1,6 @@
-# MyNotion – Help
+# Merkzeug – Help
 
-MyNotion is a Notion-style editor for Markdown notes – this edition runs on
+Merkzeug is a Notion-style editor for Markdown notes – this edition runs on
 **macOS and Windows**. You edit your notes **WYSIWYG** (formatted, without
 visible Markdown syntax), but everything is always saved as clean, portable
 Markdown. All notes live as `.md` files in an ordinary folder – the **vault**.
@@ -19,7 +19,7 @@ key and ⌥ to the **Alt** key.
 - **Autosave:** changes are saved automatically one second after the last edit,
   as well as when closing tabs and when quitting the app.
   Manually: **⌘S** (active note) or **⌥⌘S** (all open notes).
-- The vault can also be preset via the `MYNOTION_VAULT` environment variable.
+- The vault can also be preset via the `MERKZEUG_VAULT` environment variable.
 
 ## 2. Sidebar & file tree
 
@@ -36,7 +36,17 @@ The sidebar on the left shows the vault as a hierarchical tree.
   reload button for re-reading the vault; the eye icon shows/hides
   **asset folders** (⇧⌘R).
 - Changes made to the vault outside the app (Finder/Explorer, terminal, sync)
-  are detected automatically.
+  are detected automatically. This also applies to **open notes**: when the
+  file changes on disk, the tab reloads it. If you have unsaved changes there,
+  a banner appears instead, offering **"Reload"** (take the version from disk)
+  or **"Keep my version"** (save your own changes); nothing is overwritten
+  until you decide.
+- **Hidden and technical folders:** entries starting with a dot (e.g. `.git`)
+  as well as dependency and build folders from software projects are hidden
+  and not watched — `node_modules`, `__pycache__`, Python virtualenvs, and
+  `target`, `build`, `dist` and `out` when the matching build file sits next
+  to them (e.g. `pom.xml` or `package.json`). This keeps the app responsive
+  even when a large code repository is opened as a vault.
 
 ## 3. Tabs, sections & windows
 
@@ -95,7 +105,10 @@ For browsing linked notes there is a per-tab **navigation mode** – toggled wit
   target **in the same tab** (instead of opening a new tab).
 - **Folder links** also stay in the same tab: the tab shows the folder overview,
   and clicks on its entries continue navigating in the same tab.
-- **Back/forward:** arrow buttons in the toolbar or **⌘[** / **⌘]**.
+- **Back/forward:** arrow buttons in the toolbar, **⌘[** / **⌘]**, the
+  back/forward mouse buttons, or trackpad swipe gestures (horizontal
+  two-finger swipe; on macOS also three fingers if "Swipe between pages"
+  is configured accordingly).
 - The **history is kept per tab**, even if you leave the mode, edit the note and
   re-enable the mode later.
 
