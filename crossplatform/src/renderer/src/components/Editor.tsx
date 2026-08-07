@@ -97,6 +97,9 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   const conflictRef = useRef(false)
   const [conflict, setConflict] = useState(false)
   const [diskToken, setDiskToken] = useState(0)
+  // Hinweis "neu geladen um …" – bleibt bis zum Wegklicken oder Weitertippen
+  const [reloadInfo, setReloadInfo] = useState<string | null>(null)
+  const prevLoadTokenRef = useRef(loadToken)
 
   // Pfadwechsel ohne Neuladen (Umbenennen/Verschieben): nur Speicherziel anpassen
   filePathRef.current = filePath
@@ -156,6 +159,11 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
     setLoadError(null)
     conflictRef.current = false
     setConflict(false)
+    if (prevLoadTokenRef.current !== loadToken) {
+      // Navigation/Neuladen im selben Tab: alter Hinweis gilt nicht mehr
+      prevLoadTokenRef.current = loadToken
+      setReloadInfo(null)
+    }
 
     const setup = async (): Promise<void> => {
       let content: string
@@ -286,6 +294,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
           if (!dirtyRef.current) {
             dirtyRef.current = true
             onDirtyChange?.(true)
+            setReloadInfo(null)
           }
           scheduleSave()
         })
@@ -345,6 +354,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
           conflictRef.current = true
           setConflict(true)
         } else {
+          setReloadInfo(new Date().toLocaleTimeString())
           setDiskToken((t) => t + 1)
         }
       })()
@@ -358,6 +368,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
     setConflict(false)
     dirtyRef.current = false
     onDirtyChange?.(false)
+    setReloadInfo(new Date().toLocaleTimeString())
     setDiskToken((t) => t + 1)
   }, [onDirtyChange])
 
@@ -608,6 +619,16 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       onPasteCapture={handlePaste}
       onDropCapture={handleDrop}
     >
+      {reloadInfo && !conflict && (
+        <div className="editor-notice">
+          <span>
+            Neu geladen um {reloadInfo} – die Datei wurde außerhalb dieses Fensters geändert.
+          </span>
+          <button title="Hinweis ausblenden" onClick={() => setReloadInfo(null)}>
+            ✕
+          </button>
+        </div>
+      )}
       {conflict && (
         <div className="editor-conflict">
           <span>Die Datei wurde außerhalb dieses Fensters geändert.</span>

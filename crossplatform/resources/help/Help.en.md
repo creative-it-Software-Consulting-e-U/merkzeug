@@ -37,7 +37,8 @@ The sidebar on the left shows the vault as a hierarchical tree.
   **asset folders** (⇧⌘R).
 - Changes made to the vault outside the app (Finder/Explorer, terminal, sync)
   are detected automatically. This also applies to **open notes**: when the
-  file changes on disk, the tab reloads it. If you have unsaved changes there,
+  file changes on disk, the tab reloads it and shows a notice with the time
+  ("Reloaded at ...") above the editor. If you have unsaved changes there,
   a banner appears instead, offering **"Reload"** (take the version from disk)
   or **"Keep my version"** (save your own changes); nothing is overwritten
   until you decide.

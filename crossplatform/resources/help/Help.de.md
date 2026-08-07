@@ -39,7 +39,8 @@ Links zeigt die Sidebar den Vault als hierarchischen Baum.
   **Ressourcen-Ordner** ein/aus (⇧⌘R).
 - Änderungen, die außerhalb der App am Vault gemacht werden (Finder/Explorer,
   Terminal, Sync), erkennt die App automatisch. Das gilt auch für **offene
-  Notizen**: Ändert sich die Datei auf der Platte, lädt der Tab sie neu.
+  Notizen**: Ändert sich die Datei auf der Platte, lädt der Tab sie neu und
+  zeigt einen Hinweis mit Uhrzeit („Neu geladen um …“) über dem Editor.
   Hast du dort gerade ungespeicherte Änderungen, erscheint stattdessen ein
   Banner mit der Wahl **„Neu laden“** (Stand von der Platte übernehmen) oder
   **„Meine Version behalten“** (eigene Änderungen speichern); bis zur

@@ -609,6 +609,32 @@ button {
   color: var(--danger);
 }
 
+.editor-notice {
+  flex: 0 0 auto;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 16px;
+  font-size: 12px;
+  color: var(--text-dim);
+  background: var(--bg-sidebar);
+  border-bottom: 1px solid var(--border);
+}
+
+.editor-notice button {
+  padding: 0 4px;
+  color: var(--text-dim);
+  border-radius: 4px;
+}
+
+.editor-notice button:hover {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+
 .editor-conflict {
   flex: 0 0 auto;
   position: sticky;

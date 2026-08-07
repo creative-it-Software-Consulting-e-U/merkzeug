@@ -66,8 +66,8 @@ Hilfe-Button in der Toolbar) und
 Autosave. Bonus gegenüber der Mac-App: Slash-Menü („/“), Auswahl-Toolbar,
 Aufgabenlisten und Verschieben von Blöcken per Drag & Drop. Extern geänderte
 Dateien werden auch in offenen Tabs erkannt: ohne eigene ungespeicherte
-Änderungen lädt der Tab neu, sonst bietet ein Banner „Neu laden" oder
-„Meine Version behalten" an.
+Änderungen lädt der Tab neu (mit Uhrzeit-Hinweis über dem Editor), sonst
+bietet ein Banner „Neu laden" oder „Meine Version behalten" an.
 
 Abhängigkeits- und Build-Ordner (`node_modules`, `__pycache__`, virtualenvs
 sowie `target`/`build`/`dist`/`out` neben der passenden Build-Datei, siehe
