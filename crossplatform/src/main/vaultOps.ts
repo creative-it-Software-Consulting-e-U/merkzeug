@@ -94,6 +94,23 @@ export function createFolder(dir: string): string {
   return path
 }
 
+/**
+ * Benennt eine Notiz automatisch nach ihrem Titel-Slug um. Kollidiert der
+ * Name mit einer anderen Datei, wird "-2", "-3", … angehängt.
+ * Liefert den neuen Pfad (bzw. den alten, wenn er schon passt).
+ */
+export function autoRenameNote(path: string, base: string): string {
+  const dir = dirname(path)
+  if (basename(path, '.md') === base) return path
+  let candidate = base
+  let n = 2
+  while (existsSync(join(dir, `${candidate}.md`))) {
+    candidate = `${base}-${n}`
+    n += 1
+  }
+  return renamePath(path, `${candidate}.md`)
+}
+
 /** Ersetzt Verweise auf den alten Assets-Ordner in einer Notiz (auch URL-codiert). */
 function rewriteAssetLinks(content: string, oldBase: string, newBase: string): string {
   const variants: Array<[string, string]> = [

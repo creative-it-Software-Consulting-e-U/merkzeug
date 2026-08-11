@@ -5,6 +5,7 @@ import { join } from 'node:path'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import {
   createFolder,
+  autoRenameNote,
   createNote,
   movePath,
   readTextFile,
@@ -119,6 +120,7 @@ function registerIpc(): void {
   ipcMain.handle('file:createNote', (_e, dir: string) => createNote(dir))
   ipcMain.handle('file:createFolder', (_e, dir: string) => createFolder(dir))
   ipcMain.handle('file:rename', (_e, path: string, newName: string) => renamePath(path, newName))
+  ipcMain.handle('file:autoRename', (_e, path: string, base: string) => autoRenameNote(path, base))
   ipcMain.handle('file:move', (_e, src: string, destDir: string) => movePath(src, destDir))
   ipcMain.handle('file:trash', (_e, path: string) => trashPath(path))
   ipcMain.handle('file:exists', (_e, path: string) => existsSync(path))

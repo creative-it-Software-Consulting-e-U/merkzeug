@@ -64,7 +64,10 @@ Mermaid-Diagrammen inkl. Zoom-Fenster, Navigationsmodus mit Historie,
 Git-Integration (Status, Commit & Push, Pull), Hilfe in DE/EN (⌘? oder
 Hilfe-Button in der Toolbar) und
 Autosave. Bonus gegenüber der Mac-App: Slash-Menü („/“), Auswahl-Toolbar,
-Aufgabenlisten und Verschieben von Blöcken per Drag & Drop. Extern geänderte
+Aufgabenlisten, Verschieben von Blöcken per Drag & Drop, automatische
+Benennung neuer Notizen nach ihrer Überschrift 1 (Slug wie
+`2026-08-11-bpp-call-neustrukturierung`, bis zum manuellen Umbenennen) und
+die Tipp-Ersetzung `->` → „→“. Extern geänderte
 Dateien werden auch in offenen Tabs erkannt: ohne eigene ungespeicherte
 Änderungen lädt der Tab neu (mit Uhrzeit-Hinweis über dem Editor), sonst
 bietet ein Banner „Neu laden" oder „Meine Version behalten" an.

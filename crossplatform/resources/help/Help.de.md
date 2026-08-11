@@ -37,6 +37,14 @@ Links zeigt die Sidebar den Vault als hierarchischen Baum.
 - **Fußleiste der Sidebar:** Buttons für neue Notiz und neuen Ordner (links)
   sowie zum Neu-Einlesen des Vaults; das Augen-Symbol blendet die
   **Ressourcen-Ordner** ein/aus (⇧⌘R).
+- **Automatische Benennung neuer Notizen:** Eine neue Notiz heißt zunächst
+  „Neue Notiz“. Beginnt sie mit einer **Überschrift 1**, wird die Datei beim
+  Speichern automatisch nach dem Titel benannt: alles klein, Leerzeichen und
+  Sonderzeichen werden zu „-“, Umlaute bleiben erhalten — aus
+  „2026-08-11 BPP Call Gerulf & Alois - Neustrukturierung“ wird
+  `2026-08-11-bpp-call-gerulf-alois-neustrukturierung.md`. Ändert sich die
+  Überschrift, zieht der Dateiname nach. Sobald du die Datei einmal **manuell
+  umbenennst**, bleibt dein Name unangetastet.
 - Änderungen, die außerhalb der App am Vault gemacht werden (Finder/Explorer,
   Terminal, Sync), erkennt die App automatisch. Das gilt auch für **offene
   Notizen**: Ändert sich die Datei auf der Platte, lädt der Tab sie neu und
@@ -82,7 +90,8 @@ Der Editor zeigt die Notiz formatiert an; gespeichert wird Markdown.
   verschachteln mit Tab/⇧Tab, automatische Fortführung beim Enter und
   automatische Neunummerierung.
 - **Auto-Formatierung beim Tippen:** `# `, `## `, `- `, `1. `, `> ` am Zeilenanfang
-  sowie ` ``` ` erzeugen das jeweilige Format sofort.
+  sowie ` ``` ` erzeugen das jeweilige Format sofort; `->` wird zu einem
+  Pfeil „→“.
 - **Tabellen:** Einfügen über ⌥⌘T, das Slash-Menü oder Menü „Bearbeiten“. Mit Tab
   von Zelle zu Zelle springen; Zeilen/Spalten über die Tabellen-Steuerung direkt
   an der Tabelle oder das Menü **Tabelle** einfügen und löschen.

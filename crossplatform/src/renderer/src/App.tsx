@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { FileNode, GitStatus, MenuAction } from '../../shared/types'
-import { makeTab, type Pane, type Tab, type TabKind } from './types'
+import { autoNameFor, makeTab, type Pane, type Tab, type TabKind } from './types'
+import { leadingH1, slugifyTitle } from './util/autoName'
 import { basename, dirname, extname, isExternalLink, resolveVaultLink } from './util/paths'
 import type { EditorHandle } from './components/Editor'
 import { PaneView } from './components/Pane'
@@ -99,12 +100,14 @@ export function App(): React.JSX.Element {
       if (nextIndex < 0 || nextIndex >= tab.history.length) return
       const target = tab.history[nextIndex]
       const node = findNode(treeRef.current, target)
+      const kind: TabKind = node?.isDirectory ? 'folder' : 'note'
       updateTab(tabId, (t) => ({
         ...t,
         path: target,
-        kind: node?.isDirectory ? 'folder' : 'note',
+        kind,
         historyIndex: nextIndex,
-        loadToken: t.loadToken + 1
+        loadToken: t.loadToken + 1,
+        autoName: autoNameFor(target, kind)
       }))
     },
     [updateTab]
@@ -139,7 +142,8 @@ export function App(): React.JSX.Element {
         kind,
         history: [...tab.history.slice(0, tab.historyIndex + 1), path],
         historyIndex: tab.historyIndex + 1,
-        loadToken: tab.loadToken + 1
+        loadToken: tab.loadToken + 1,
+        autoName: autoNameFor(path, kind)
       }))
     },
     [updateTab]
@@ -293,13 +297,53 @@ export function App(): React.JSX.Element {
             p === path ? newPath : p.startsWith(`${path}/`) ? newPath + p.slice(path.length) : p
           return prev.map((pane) => ({
             ...pane,
-            tabs: pane.tabs.map((t) => ({ ...t, path: mapPath(t.path) }))
+            tabs: pane.tabs.map((t) =>
+              // manuell umbenannte Notiz nicht mehr automatisch benennen
+              t.path === path
+                ? { ...t, path: newPath, autoName: false }
+                : { ...t, path: mapPath(t.path) }
+            )
           })) as [Pane, Pane]
         })
         await refreshTree()
       } catch (err) {
         alert(String(err))
       }
+    },
+    [refreshTree]
+  )
+
+  /**
+   * Nach jedem Speichern: Notizen mit Standardnamen ("Neue Notiz …") automatisch
+   * nach ihrer Überschrift 1 benennen, bis sie manuell umbenannt werden.
+   */
+  const handleEditorSaved = useCallback(
+    (tabId: string, markdown: string): void => {
+      const tab = panesRef.current.flatMap((p) => p.tabs).find((t) => t.id === tabId)
+      if (!tab || tab.kind !== 'note' || !tab.autoName) return
+      const title = leadingH1(markdown)
+      if (!title) return
+      const slug = slugifyTitle(title)
+      if (!slug || slug === basename(tab.path, '.md')) return
+      const oldPath = tab.path
+      void (async () => {
+        let newPath: string
+        try {
+          newPath = await window.merkzeug.autoRenameNote(oldPath, slug)
+        } catch {
+          return
+        }
+        if (newPath === oldPath) return
+        setPanes(
+          (prev) =>
+            prev.map((pane) => ({
+              ...pane,
+              tabs: pane.tabs.map((t) => (t.path === oldPath ? { ...t, path: newPath } : t))
+            })) as [Pane, Pane]
+        )
+        setSelectedPath((p) => (p === oldPath ? newPath : p))
+        await refreshTree()
+      })()
     },
     [refreshTree]
   )
@@ -658,6 +702,7 @@ export function App(): React.JSX.Element {
     onNavBack: (tabId: string) => stepHistory(tabId, -1),
     onNavForward: (tabId: string) => stepHistory(tabId, 1),
     onInsertLink: () => setLinkDialogOpen(true),
+    onEditorSaved: handleEditorSaved,
     onDirtyChange: (tabId: string, dirty: boolean) =>
       setDirtyTabs((prev) => {
         const has = prev.has(tabId)

@@ -12,6 +12,8 @@ const api = {
   createFolder: (dir: string): Promise<string> => ipcRenderer.invoke('file:createFolder', dir),
   renamePath: (path: string, newName: string): Promise<string> =>
     ipcRenderer.invoke('file:rename', path, newName),
+  autoRenameNote: (path: string, base: string): Promise<string> =>
+    ipcRenderer.invoke('file:autoRename', path, base),
   movePath: (src: string, destDir: string): Promise<string> =>
     ipcRenderer.invoke('file:move', src, destDir),
   trashPath: (path: string): Promise<void> => ipcRenderer.invoke('file:trash', path),

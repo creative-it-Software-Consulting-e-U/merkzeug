@@ -45,6 +45,7 @@ interface PaneProps {
   onNavForward: (tabId: string) => void
   onInsertLink: () => void
   onDirtyChange: (tabId: string, dirty: boolean) => void
+  onEditorSaved: (tabId: string, markdown: string) => void
 }
 
 interface ToolbarMenu {
@@ -222,6 +223,7 @@ export function PaneView(props: PaneProps): React.JSX.Element {
                   readonly={tab.navMode}
                   onLinkClick={(href) => props.onLinkClick(tab, href)}
                   onDirtyChange={(dirty) => props.onDirtyChange(tab.id, dirty)}
+                  onSaved={(markdown) => props.onEditorSaved(tab.id, markdown)}
                 />
               ) : (
                 <FolderOverview

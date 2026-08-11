@@ -35,6 +35,14 @@ The sidebar on the left shows the vault as a hierarchical tree.
 - **Sidebar footer:** buttons for a new note and a new folder (left) plus a
   reload button for re-reading the vault; the eye icon shows/hides
   **asset folders** (⇧⌘R).
+- **Automatic naming of new notes:** a new note is initially called
+  "Neue Notiz". If it starts with a **heading 1**, the file is automatically
+  named after the title when saving: all lowercase, spaces and special
+  characters become "-", umlauts are kept — so
+  "2026-08-11 BPP Call Gerulf & Alois - Neustrukturierung" becomes
+  `2026-08-11-bpp-call-gerulf-alois-neustrukturierung.md`. When the heading
+  changes, the file name follows. As soon as you **rename the file manually**,
+  your name is left untouched.
 - Changes made to the vault outside the app (Finder/Explorer, terminal, sync)
   are detected automatically. This also applies to **open notes**: when the
   file changes on disk, the tab reloads it and shows a notice with the time
@@ -77,7 +85,8 @@ The editor shows the note formatted; what is saved is Markdown.
 - **Lists:** bullet list (⌥⌘8), numbered list (⌥⌘7) and task lists; nest with
   Tab/⇧Tab, automatic continuation on Enter and automatic renumbering.
 - **Auto-formatting while typing:** `# `, `## `, `- `, `1. `, `> ` at the start
-  of a line and ` ``` ` immediately create the corresponding format.
+  of a line and ` ``` ` immediately create the corresponding format; `->`
+  becomes an arrow "→".
 - **Tables:** insert via ⌥⌘T, the slash menu or the Edit menu. Jump from cell to
   cell with Tab; add and delete rows/columns via the table controls right at the
   table or the **Table** menu.

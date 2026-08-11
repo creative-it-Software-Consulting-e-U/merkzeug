@@ -8,7 +8,8 @@ import {
 } from 'react'
 import { Crepe } from '@milkdown/crepe'
 import { editorViewCtx, remarkStringifyOptionsCtx } from '@milkdown/kit/core'
-import { callCommand } from '@milkdown/kit/utils'
+import { InputRule } from '@milkdown/kit/prose/inputrules'
+import { $inputRule, callCommand } from '@milkdown/kit/utils'
 import { redoCommand, undoCommand } from '@milkdown/kit/plugin/history'
 import {
   createCodeBlockCommand,
@@ -75,12 +76,17 @@ interface EditorProps {
   /** aufgerufen bei Klick auf einen Link im Editor */
   onLinkClick: (href: string) => void
   onDirtyChange?: (dirty: boolean) => void
+  /** aufgerufen nach jedem Speichern mit dem gespeicherten Markdown */
+  onSaved?: (markdown: string) => void
 }
 
 const AUTOSAVE_MS = 1000
 
+/** "-" gefolgt von ">" wird beim Tippen zu einem Pfeil "→". */
+const arrowInputRule = $inputRule(() => new InputRule(/->$/, '→'))
+
 export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
-  { filePath, loadToken, readonly, onLinkClick, onDirtyChange },
+  { filePath, loadToken, readonly, onLinkClick, onDirtyChange, onSaved },
   ref
 ): React.JSX.Element {
   const rootRef = useRef<HTMLDivElement | null>(null)
@@ -109,10 +115,12 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
     if (!dirtyRef.current || latestMarkdownRef.current === null) return
     dirtyRef.current = false
     onDirtyChange?.(false)
-    lastSavedRef.current = latestMarkdownRef.current
-    lastDiskRef.current = latestMarkdownRef.current
-    await window.merkzeug.writeFile(filePathRef.current, latestMarkdownRef.current)
-  }, [onDirtyChange])
+    const markdown = latestMarkdownRef.current
+    lastSavedRef.current = markdown
+    lastDiskRef.current = markdown
+    await window.merkzeug.writeFile(filePathRef.current, markdown)
+    onSaved?.(markdown)
+  }, [onDirtyChange, onSaved])
 
   const flushSync = useCallback((): void => {
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
@@ -120,10 +128,12 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
     if (!dirtyRef.current || latestMarkdownRef.current === null) return
     dirtyRef.current = false
     onDirtyChange?.(false)
-    lastSavedRef.current = latestMarkdownRef.current
-    lastDiskRef.current = latestMarkdownRef.current
-    window.merkzeug.writeFileSync(filePathRef.current, latestMarkdownRef.current)
-  }, [onDirtyChange])
+    const markdown = latestMarkdownRef.current
+    lastSavedRef.current = markdown
+    lastDiskRef.current = markdown
+    window.merkzeug.writeFileSync(filePathRef.current, markdown)
+    onSaved?.(markdown)
+  }, [onDirtyChange, onSaved])
 
   const scheduleSave = useCallback((): void => {
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
@@ -282,6 +292,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
           rule: '-' as const
         }))
       })
+      crepe.editor.use(arrowInputRule)
 
       crepe.on((listener) => {
         listener.markdownUpdated((_ctx, markdown) => {
