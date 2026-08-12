@@ -42,6 +42,16 @@ export async function gitStatus(vault: string): Promise<GitStatus> {
   return { isRepo: true, branch, ahead, behind, hasRemote, changes }
 }
 
+async function doPush(vault: string, remotes: string): Promise<GitResult> {
+  let push = await git(vault, ['push'])
+  if (push.code !== 0 && /no upstream|--set-upstream/i.test(push.out)) {
+    const branch = (await git(vault, ['rev-parse', '--abbrev-ref', 'HEAD'])).out
+    const remote = remotes.split('\n')[0].trim()
+    push = await git(vault, ['push', '-u', remote, branch])
+  }
+  return { ok: push.code === 0, output: push.out }
+}
+
 export async function gitCommitPush(vault: string, message: string): Promise<GitResult> {
   const add = await git(vault, ['add', '-A'])
   if (add.code !== 0) return { ok: false, output: add.out }
@@ -52,13 +62,14 @@ export async function gitCommitPush(vault: string, message: string): Promise<Git
   }
   const remotes = (await git(vault, ['remote'])).out
   if (remotes.length === 0) return { ok: true, output: 'Commit erstellt (kein Remote zum Pushen).' }
-  let push = await git(vault, ['push'])
-  if (push.code !== 0 && /no upstream|--set-upstream/i.test(push.out)) {
-    const branch = (await git(vault, ['rev-parse', '--abbrev-ref', 'HEAD'])).out
-    const remote = remotes.split('\n')[0].trim()
-    push = await git(vault, ['push', '-u', remote, branch])
-  }
-  return { ok: push.code === 0, output: push.out }
+  return doPush(vault, remotes)
+}
+
+/** Nur pushen, ohne neuen Commit — um einen fehlgeschlagenen Push nachzuholen. */
+export async function gitPush(vault: string): Promise<GitResult> {
+  const remotes = (await git(vault, ['remote'])).out
+  if (remotes.length === 0) return { ok: false, output: 'Kein Remote zum Pushen konfiguriert.' }
+  return doPush(vault, remotes)
 }
 
 export async function gitPull(vault: string): Promise<GitResult> {

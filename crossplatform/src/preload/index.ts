@@ -24,6 +24,7 @@ const api = {
   gitStatus: (vault: string): Promise<GitStatus> => ipcRenderer.invoke('git:status', vault),
   gitCommitPush: (vault: string, message: string): Promise<GitResult> =>
     ipcRenderer.invoke('git:commitPush', vault, message),
+  gitPush: (vault: string): Promise<GitResult> => ipcRenderer.invoke('git:push', vault),
   gitPull: (vault: string): Promise<GitResult> => ipcRenderer.invoke('git:pull', vault),
   getRecentVaults: (): Promise<string[]> => ipcRenderer.invoke('recents:get'),
   openExternal: (url: string): Promise<void> => ipcRenderer.invoke('shell:openExternal', url),

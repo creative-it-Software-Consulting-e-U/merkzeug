@@ -12,6 +12,7 @@ interface SidebarProps {
   selectedPath: string | null
   gitStatus: GitStatus | null
   gitBusy: boolean
+  gitError: string | null
   onToggleExpand: (path: string) => void
   onOpenFile: (path: string) => void
   onOpenFolder: (path: string) => void
@@ -27,6 +28,7 @@ interface SidebarProps {
   onReload: () => void
   onToggleAssets: () => void
   onGitCommitPush: (message: string) => void
+  onGitPush: () => void
   onGitPull: () => void
 }
 
@@ -61,7 +63,9 @@ export function Sidebar(props: SidebarProps): React.JSX.Element {
       <GitBar
         status={props.gitStatus}
         busy={props.gitBusy}
+        error={props.gitError}
         onCommitPush={props.onGitCommitPush}
+        onPush={props.onGitPush}
         onPull={props.onGitPull}
       />
       <div className="sidebar-footer">

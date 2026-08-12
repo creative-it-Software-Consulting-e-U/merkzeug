@@ -196,6 +196,20 @@ button {
   color: var(--accent);
 }
 
+.git-error-badge {
+  color: var(--danger);
+  margin-right: 5px;
+  font-weight: 600;
+}
+
+.git-error {
+  color: var(--danger);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
 .git-detail {
   padding: 4px 12px 10px;
   display: flex;

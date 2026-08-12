@@ -159,11 +159,18 @@ Ist der Vault ein **Git-Repository**, erscheint unten in der Sidebar eine Status
   committest oder pullst.
 - **Klick auf die Statuszeile** klappt die Details auf: Liste der geänderten
   Dateien, Eingabefeld für die Commit-Nachricht sowie die Buttons
-  **Commit & Push** und **Pull**.
+  **Commit & Push**, **Push** und **Pull**.
 - **Commit & Push** sichert zuerst alle offenen Notizen, dann `git add`, Commit und
   Push. Ohne konfigurierten Upstream wird dieser automatisch gesetzt; ohne
   Remote wird nur lokal committet (mit Hinweis).
+- **Push** überträgt bereits committete, aber noch nicht gepushte Commits
+  (**n↑** in der Statuszeile) zum Server – etwa um einen fehlgeschlagenen Push
+  nachzuholen, wenn der Server zwischenzeitlich nicht erreichbar war.
 - **Pull** holt Änderungen vom Server; Merge-Konflikte löst du außerhalb der App.
+- Schlägt eine Git-Aktion fehl (z. B. weil der Server nicht erreichbar ist),
+  zeigt die Statuszeile ein **⚠**-Zeichen. Die Fehlermeldung steht in den
+  aufgeklappten Details; das Zeichen verschwindet, sobald eine Git-Aktion
+  wieder gelingt.
 - Die App nutzt die Git-Zugangsdaten deines Systems (SSH-Schlüssel oder Credential
   Helper). Wäre eine interaktive Anmeldung nötig, bricht der Vorgang mit einer
   Fehlermeldung ab statt zu warten.

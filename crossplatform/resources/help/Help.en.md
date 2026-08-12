@@ -152,13 +152,19 @@ the sidebar:
 - The status refreshes automatically – even when you commit or pull outside the
   app.
 - **Clicking the status line** expands the details: list of changed files, an
-  input field for the commit message and the **Commit & Push** and **Pull**
-  buttons.
+  input field for the commit message and the **Commit & Push**, **Push** and
+  **Pull** buttons.
 - **Commit & Push** first saves all open notes, then runs `git add`, commit and
   push. Without a configured upstream it is set automatically; without a remote
   only a local commit is created (with a note).
+- **Push** uploads commits that are already committed but not yet pushed
+  (**n↑** in the status line) – for example to retry a push that failed
+  because the server was temporarily unreachable.
 - **Pull** fetches changes from the server; merge conflicts are resolved outside
   the app.
+- If a Git operation fails (e.g. because the server is unreachable), the
+  status line shows a **⚠** sign. The error message appears in the expanded
+  details; the sign disappears as soon as a Git operation succeeds again.
 - The app uses your system's Git credentials (SSH keys or credential helper).
   If an interactive login were required, the operation aborts with an error
   message instead of hanging.

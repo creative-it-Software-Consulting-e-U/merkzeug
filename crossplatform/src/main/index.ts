@@ -15,7 +15,7 @@ import {
   trashPath,
   writeTextFile
 } from './vaultOps'
-import { gitCommitPush, gitPull, gitStatus } from './git'
+import { gitCommitPush, gitPull, gitPush, gitStatus } from './git'
 import { addRecentVault, getLastVault, getRecentVaults } from './settings'
 import { buildMenu } from './menu'
 import {
@@ -132,6 +132,7 @@ function registerIpc(): void {
   ipcMain.handle('git:commitPush', (_e, vault: string, message: string) =>
     gitCommitPush(vault, message)
   )
+  ipcMain.handle('git:push', (_e, vault: string) => gitPush(vault))
   ipcMain.handle('git:pull', (_e, vault: string) => gitPull(vault))
   ipcMain.handle('recents:get', () => getRecentVaults())
   ipcMain.handle('shell:openExternal', (_e, url: string) => shell.openExternal(url))

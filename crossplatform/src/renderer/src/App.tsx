@@ -35,6 +35,8 @@ export function App(): React.JSX.Element {
   const [gitStatus, setGitStatus] = useState<GitStatus | null>(null)
   const [gitBusy, setGitBusy] = useState(false)
   const [gitMessage, setGitMessage] = useState<string | null>(null)
+  // Letzter Git-Fehler; bleibt sichtbar, bis eine Operation wieder gelingt
+  const [gitError, setGitError] = useState<string | null>(null)
   const [dirtyTabs, setDirtyTabs] = useState<Set<string>>(new Set())
   const [linkDialogOpen, setLinkDialogOpen] = useState(false)
 
@@ -393,10 +395,23 @@ export function App(): React.JSX.Element {
       const result = await window.merkzeug.gitCommitPush(v, message)
       setGitBusy(false)
       setGitMessage(result.ok ? 'Commit & Push erfolgreich.' : `Fehler: ${result.output}`)
+      setGitError(result.ok ? null : result.output)
       await refreshGit()
     },
     [refreshGit]
   )
+
+  const handleGitPush = useCallback(async (): Promise<void> => {
+    const v = vaultRef.current
+    if (!v) return
+    setGitBusy(true)
+    setGitMessage(null)
+    const result = await window.merkzeug.gitPush(v)
+    setGitBusy(false)
+    setGitMessage(result.ok ? 'Push erfolgreich.' : `Fehler: ${result.output}`)
+    setGitError(result.ok ? null : result.output)
+    await refreshGit()
+  }, [refreshGit])
 
   const handleGitPull = useCallback(async (): Promise<void> => {
     const v = vaultRef.current
@@ -406,6 +421,7 @@ export function App(): React.JSX.Element {
     const result = await window.merkzeug.gitPull(v)
     setGitBusy(false)
     setGitMessage(result.ok ? 'Pull erfolgreich.' : `Fehler: ${result.output}`)
+    setGitError(result.ok ? null : result.output)
     await refreshTree()
     await refreshGit()
   }, [refreshGit, refreshTree])
@@ -726,6 +742,7 @@ export function App(): React.JSX.Element {
           selectedPath={selectedPath}
           gitStatus={gitStatus}
           gitBusy={gitBusy}
+          gitError={gitError}
           onToggleExpand={(path) =>
             setExpanded((prev) => {
               const next = new Set(prev)
@@ -751,6 +768,7 @@ export function App(): React.JSX.Element {
           }}
           onToggleAssets={() => setAssetsVisible((prev) => !prev)}
           onGitCommitPush={(msg) => void handleGitCommitPush(msg)}
+          onGitPush={() => void handleGitPush()}
           onGitPull={() => void handleGitPull()}
         />
         <div className={`panes${split ? ' split' : ''}`}>
