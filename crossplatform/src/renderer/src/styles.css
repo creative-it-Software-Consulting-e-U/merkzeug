@@ -81,6 +81,21 @@ button {
   min-height: 0;
 }
 
+/* Zieh-Griff zwischen Sidebar und Editorbereich; überlappt die Trennlinie */
+.sidebar-resizer {
+  flex: 0 0 auto;
+  width: 7px;
+  margin: 0 -3px 0 -4px;
+  z-index: 5;
+  cursor: col-resize;
+}
+
+.sidebar-resizer:hover,
+.sidebar-resizer.dragging {
+  background: var(--accent);
+  opacity: 0.35;
+}
+
 .sidebar-header {
   padding: 8px 12px;
   font-weight: 600;
@@ -95,9 +110,15 @@ button {
 
 .sidebar-tree {
   flex: 1;
-  overflow-y: auto;
+  overflow: auto;
   min-height: 0;
   padding-bottom: 8px;
+}
+
+/* Baum wächst mit dem breitesten Eintrag, damit horizontal gescrollt werden kann */
+.file-tree {
+  width: max-content;
+  min-width: 100%;
 }
 
 .sidebar-footer {
@@ -122,7 +143,6 @@ button {
   cursor: default;
   user-select: none;
   white-space: nowrap;
-  overflow: hidden;
 }
 
 .tree-row:hover {
@@ -151,8 +171,7 @@ button {
 }
 
 .tree-label {
-  overflow: hidden;
-  text-overflow: ellipsis;
+  padding-right: 6px;
 }
 
 .tree-rename-input {

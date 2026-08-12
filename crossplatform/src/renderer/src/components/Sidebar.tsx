@@ -6,6 +6,7 @@ import { IconEye, IconNewFolder, IconNewNote, IconReload } from './icons'
 
 interface SidebarProps {
   vault: string
+  width: number
   tree: FileNode | null
   expanded: Set<string>
   assetsVisible: boolean
@@ -34,7 +35,7 @@ interface SidebarProps {
 
 export function Sidebar(props: SidebarProps): React.JSX.Element {
   return (
-    <div className="sidebar">
+    <div className="sidebar" style={{ width: props.width }}>
       <div className="sidebar-header">
         <span className="sidebar-vault-name" title={props.vault}>
           {basename(props.vault)}

@@ -29,6 +29,10 @@ Links zeigt die Sidebar den Vault als hierarchischen Baum.
 
 - **Klick auf eine Notiz** öffnet sie in einem Tab; Klick auf einen Ordner klappt
   ihn auf/zu. **Doppelklick auf einen Ordner** öffnet die Ordnerübersicht.
+- **Breite anpassen:** Die Trennlinie zwischen Sidebar und Editorbereich lässt
+  sich mit der Maus ziehen; Doppelklick darauf stellt die Standardbreite wieder
+  her. Reicht der Platz für lange Namen oder tiefe Hierarchien nicht, kann der
+  Baum horizontal und vertikal gescrollt werden.
 - **Kontextmenü** (Rechtsklick): neue Notiz, neuer Ordner, Umbenennen,
   in den Papierkorb legen, im Finder/Explorer zeigen.
 - **Verschieben:** Dateien und Ordner einfach per Drag & Drop auf einen Ordner ziehen.

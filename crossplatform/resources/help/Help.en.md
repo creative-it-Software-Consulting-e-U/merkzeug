@@ -27,6 +27,10 @@ The sidebar on the left shows the vault as a hierarchical tree.
 
 - **Clicking a note** opens it in a tab; clicking a folder expands/collapses it.
   **Double-clicking a folder** opens the folder overview.
+- **Adjusting the width:** drag the divider between the sidebar and the editor
+  area with the mouse; double-clicking it restores the default width. If there
+  is not enough room for long names or deep hierarchies, the tree can be
+  scrolled horizontally and vertically.
 - **Context menu** (right-click): new note, new folder, rename, move to trash,
   show in Finder/Explorer.
 - **Moving:** simply drag files and folders onto a folder.

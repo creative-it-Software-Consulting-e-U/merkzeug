@@ -10,6 +10,13 @@ import { LinkDialog } from './components/LinkDialog'
 
 const emptyPane = (): Pane => ({ tabs: [], activeTabId: null })
 
+const SIDEBAR_DEFAULT_WIDTH = 260
+const SIDEBAR_MIN_WIDTH = 160
+const SIDEBAR_MAX_WIDTH = 600
+
+const clampSidebarWidth = (w: number): number =>
+  Math.min(SIDEBAR_MAX_WIDTH, Math.max(SIDEBAR_MIN_WIDTH, w))
+
 function findNode(node: FileNode | null, path: string): FileNode | null {
   if (!node) return null
   if (node.path === path) return node
@@ -39,6 +46,13 @@ export function App(): React.JSX.Element {
   const [gitError, setGitError] = useState<string | null>(null)
   const [dirtyTabs, setDirtyTabs] = useState<Set<string>>(new Set())
   const [linkDialogOpen, setLinkDialogOpen] = useState(false)
+  const [sidebarWidth, setSidebarWidth] = useState<number>(() => {
+    const stored = Number(localStorage.getItem('sidebarWidth'))
+    return Number.isFinite(stored) && stored > 0
+      ? clampSidebarWidth(stored)
+      : SIDEBAR_DEFAULT_WIDTH
+  })
+  const [sidebarResizing, setSidebarResizing] = useState(false)
 
   const editorRefs = useRef<Map<string, EditorHandle | null>>(new Map())
   const vaultRef = useRef<string | null>(null)
@@ -498,6 +512,9 @@ export function App(): React.JSX.Element {
   useEffect(() => {
     if (vault) localStorage.setItem(`split:${vault}`, String(split))
   }, [split, vault])
+  useEffect(() => {
+    localStorage.setItem('sidebarWidth', String(sidebarWidth))
+  }, [sidebarWidth])
 
   // Menü-Aktionen
   useEffect(() => {
@@ -736,6 +753,7 @@ export function App(): React.JSX.Element {
       <div className="app-body">
         <Sidebar
           vault={vault}
+          width={sidebarWidth}
           tree={tree}
           expanded={expanded}
           assetsVisible={assetsVisible}
@@ -770,6 +788,25 @@ export function App(): React.JSX.Element {
           onGitCommitPush={(msg) => void handleGitCommitPush(msg)}
           onGitPush={() => void handleGitPush()}
           onGitPull={() => void handleGitPull()}
+        />
+        <div
+          className={`sidebar-resizer${sidebarResizing ? ' dragging' : ''}`}
+          onPointerDown={(e) => {
+            e.preventDefault()
+            setSidebarResizing(true)
+            // synthetische Events (UI-Testmodus) kennen kein Pointer-Capture
+            try {
+              e.currentTarget.setPointerCapture(e.pointerId)
+            } catch {
+              /* ignorieren */
+            }
+          }}
+          onPointerMove={(e) => {
+            if (sidebarResizing) setSidebarWidth(clampSidebarWidth(e.clientX))
+          }}
+          onPointerUp={() => setSidebarResizing(false)}
+          onDoubleClick={() => setSidebarWidth(SIDEBAR_DEFAULT_WIDTH)}
+          title="Ziehen zum Anpassen, Doppelklick für Standardbreite"
         />
         <div className={`panes${split ? ' split' : ''}`}>
           <PaneView {...paneProps(0)} />
