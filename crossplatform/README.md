@@ -73,7 +73,11 @@ Aufgabenlisten, Verschieben von Blöcken per Drag & Drop, PDF-Export (⌘P oder
 Kontextmenü: einzelne Notiz oder Index-Datei mitsamt aller verlinkten
 Dokumente derselben Hierarchie, alphabetisch angehängt, mit internen
 Sprungzielen zwischen den Dokumenten; bei Tabellen, die nicht auf eine
-A4-Hochformatseite passen, automatisch im Querformat), automatische
+A4-Hochformatseite passen, automatisch im Querformat), PDF-Vorlagen mit
+Firmen-Layout (Einstellungen ⌘,: Vorlagen-Ordner — via iCloud Drive/Google
+Drive/OneDrive/Dropbox geräteübergreifend synchronisierbar — mit Kopfzeile,
+Fußzeile, Deckblatt, Logo, Zusatz-CSS und Rändern je Vorlage; Zuweisung pro
+Vault in `.merkzeug/settings.json`, wandert per Git mit), automatische
 Benennung neuer Notizen nach ihrer Überschrift 1 (Slug wie
 `2026-08-11-bpp-call-neustrukturierung`, bis zum manuellen Umbenennen) und
 die Tipp-Ersetzung `->` → „→“. Extern geänderte
@@ -101,6 +105,10 @@ dadurch bleiben auch große Code-Repos als Vault benutzbar.
 Für automatisierte UI-Tests kann die App mit
 `MERKZEUG_SCREENSHOT=/pfad.png [MERKZEUG_CLICK='Schritt;;Schritt…']`
 gestartet werden; sie führt die Schritte aus, speichert einen Screenshot und
-beendet sich (Schritte: Baum-Label, `menu:<aktion>`, `js:<code>`, `helpwindow`).
+beendet sich (Schritte: Baum-Label, `menu:<aktion>`, `js:<code>`, `helpwindow`,
+`settingswindow`).
 Mit `MERKZEUG_PDF_TARGET=/pfad.pdf` läuft der PDF-Export ohne Dialoge: Ziel aus
 der Variable, bei vorhandenen Links automatisch inklusive verlinkter Dokumente.
+`MERKZEUG_TEMPLATES_ROOT=/pfad` überschreibt den Vorlagen-Ordner,
+`MERKZEUG_PDF_TEMPLATE=Name` erzwingt eine Vorlage unabhängig von der
+Vault-Zuweisung.

@@ -1,8 +1,9 @@
 import { app, BrowserWindow, dialog, ipcMain, net, protocol, shell } from 'electron'
 import { pathToFileURL } from 'node:url'
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
+import type { TemplateState } from '../shared/types'
 import {
   createFolder,
   autoRenameNote,
@@ -16,13 +17,27 @@ import {
   writeTextFile
 } from './vaultOps'
 import { gitCommitPush, gitPull, gitPush, gitStatus } from './git'
-import { addRecentVault, getLastVault, getRecentVaults } from './settings'
+import {
+  addRecentVault,
+  getLastVault,
+  getRecentVaults,
+  setStoredTemplatesRoot
+} from './settings'
+import {
+  createTemplate,
+  getVaultTemplateName,
+  listTemplates,
+  setVaultTemplateName,
+  templatesRoot
+} from './templates'
 import { buildMenu } from './menu'
 import {
   createMainWindow,
+  getSettingsVault,
   getWindowVault,
   openHelpWindow,
   openMermaidZoom,
+  openSettingsWindow,
   setWindowVault
 } from './windows'
 import { watchVault } from './watcher'
@@ -89,8 +104,21 @@ function rebuildMenu(): void {
       if (win) assignVault(win, path)
       else assignVault(createMainWindow(path), path)
     },
-    openHelp: openHelpWindow
+    openHelp: openHelpWindow,
+    openSettings: (win) =>
+      openSettingsWindow(win ? getWindowVault(win.id) : getLastVault() ?? null)
   })
+}
+
+/** Zustand für das Einstellungs-Fenster (nach jeder Aktion neu geliefert) */
+function templateState(): TemplateState {
+  const vault = getSettingsVault()
+  return {
+    vault,
+    templatesRoot: templatesRoot(),
+    templates: listTemplates(),
+    assigned: vault ? getVaultTemplateName(vault) : null
+  }
 }
 
 function registerIpc(): void {
@@ -156,6 +184,38 @@ function registerIpc(): void {
     return readFileSync(join(base, file), 'utf8')
   })
   ipcMain.handle('help:open', () => openHelpWindow())
+
+  // Einstellungs-Fenster: PDF-Vorlagen verwalten und dem Vault zuweisen
+  ipcMain.handle('tpl:state', () => templateState())
+  ipcMain.handle('tpl:pickRoot', async (event) => {
+    const win = winFromEvent(event) ?? undefined
+    const options: Electron.OpenDialogOptions = {
+      title: 'Vorlagen-Ordner auswählen',
+      properties: ['openDirectory', 'createDirectory']
+    }
+    const res = win ? await dialog.showOpenDialog(win, options) : await dialog.showOpenDialog(options)
+    if (!res.canceled && res.filePaths[0]) setStoredTemplatesRoot(res.filePaths[0])
+    return templateState()
+  })
+  ipcMain.handle('tpl:create', (_e, name: string) => {
+    const dir = createTemplate(name)
+    void shell.openPath(dir)
+    return templateState()
+  })
+  ipcMain.handle('tpl:assign', (_e, name: string | null) => {
+    const vault = getSettingsVault()
+    if (vault) setVaultTemplateName(vault, name)
+    return templateState()
+  })
+  ipcMain.handle('tpl:showRoot', () => {
+    const root = templatesRoot()
+    mkdirSync(root, { recursive: true })
+    void shell.openPath(root)
+  })
+  ipcMain.handle('tpl:showTemplate', (_e, name: string) =>
+    shell.openPath(join(templatesRoot(), name))
+  )
+
   registerPdfIpc()
   ipcMain.handle('zoom:openMermaid', (_e, svg: string) => openMermaidZoom(svg))
 
@@ -213,7 +273,17 @@ app.whenReady().then(() => {
           await new Promise((r) => setTimeout(r, 1000))
         }
         for (const step of (process.env.MERKZEUG_CLICK ?? '').split(';;').filter(Boolean)) {
-          if (step === 'helpwindow') {
+          if (step === 'settingswindow') {
+            openSettingsWindow(getWindowVault(mainWin.id))
+            await new Promise((r) => setTimeout(r, 3000))
+            const settingsWin = BrowserWindow.getAllWindows().find((w) => w !== mainWin)
+            if (settingsWin) {
+              const image = await settingsWin.webContents.capturePage()
+              const { writeFileSync } = await import('node:fs')
+              writeFileSync(target.replace('.png', '-settings.png'), image.toPNG())
+              settingsWin.close()
+            }
+          } else if (step === 'helpwindow') {
             openHelpWindow()
             await new Promise((r) => setTimeout(r, 5000))
             const helpWin = BrowserWindow.getAllWindows().find((w) => w !== mainWin)

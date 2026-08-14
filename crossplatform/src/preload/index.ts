@@ -5,7 +5,9 @@ import type {
   GitStatus,
   MenuAction,
   PdfDoc,
-  PdfExportProgress
+  PdfExportProgress,
+  PdfTemplate,
+  TemplateState
 } from '../shared/types'
 
 const api = {
@@ -45,14 +47,31 @@ const api = {
   openMermaidZoom: (svg: string): Promise<void> => ipcRenderer.invoke('zoom:openMermaid', svg),
   exportPdf: (path: string): Promise<void> => ipcRenderer.invoke('pdf:export', path),
   // nur für das unsichtbare PDF-Fenster (#pdf)
-  getPdfDocs: (): Promise<{ vault: string | null; docs: PdfDoc[] }> =>
-    ipcRenderer.invoke('pdf:getDocs'),
+  getPdfDocs: (): Promise<{
+    vault: string | null
+    docs: PdfDoc[]
+    template: PdfTemplate | null
+  }> => ipcRenderer.invoke('pdf:getDocs'),
   pdfReady: (landscape: boolean): void => ipcRenderer.send('pdf:ready', landscape),
   pdfProgress: (done: number, total: number): void => ipcRenderer.send('pdf:progress', done, total),
   onPdfExportProgress: (handler: (progress: PdfExportProgress) => void): (() => void) => {
     const listener = (_e: unknown, progress: PdfExportProgress): void => handler(progress)
     ipcRenderer.on('pdf:exportProgress', listener)
     return () => ipcRenderer.removeListener('pdf:exportProgress', listener)
+  },
+
+  // Einstellungs-Fenster (#settings): PDF-Vorlagen verwalten
+  getTemplateState: (): Promise<TemplateState> => ipcRenderer.invoke('tpl:state'),
+  pickTemplatesRoot: (): Promise<TemplateState> => ipcRenderer.invoke('tpl:pickRoot'),
+  createTemplate: (name: string): Promise<TemplateState> => ipcRenderer.invoke('tpl:create', name),
+  assignTemplate: (name: string | null): Promise<TemplateState> =>
+    ipcRenderer.invoke('tpl:assign', name),
+  showTemplatesRoot: (): Promise<void> => ipcRenderer.invoke('tpl:showRoot'),
+  showTemplate: (name: string): Promise<void> => ipcRenderer.invoke('tpl:showTemplate', name),
+  onSettingsRefresh: (handler: () => void): (() => void) => {
+    const listener = (): void => handler()
+    ipcRenderer.on('settings:refresh', listener)
+    return () => ipcRenderer.removeListener('settings:refresh', listener)
   },
 
   onMenuAction: (handler: (action: MenuAction) => void): (() => void) => {

@@ -2,11 +2,15 @@ import { BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, dirname, isAbsolute, join, normalize, relative, resolve } from 'node:path'
 import { is } from '@electron-toolkit/utils'
-import type { PdfDoc, PdfExportProgress } from '../shared/types'
+import type { PdfDoc, PdfExportProgress, PdfTemplate } from '../shared/types'
+import { getVaultTemplateName, loadTemplate } from './templates'
 import { getWindowVault } from './windows'
 
 /** Dokumente je PDF-Fenster (WebContents-ID), vom Renderer per pdf:getDocs abgeholt */
-const pendingDocs = new Map<number, { vault: string | null; docs: PdfDoc[] }>()
+const pendingDocs = new Map<
+  number,
+  { vault: string | null; docs: PdfDoc[]; template: PdfTemplate | null }
+>()
 /** Auflöser für das "fertig gerendert"-Signal je PDF-Fenster (Wert: Querformat?) */
 const readyResolvers = new Map<number, (landscape: boolean) => void>()
 /** auslösendes Fenster je PDF-Fenster, für die Fortschrittsanzeige */
@@ -65,9 +69,30 @@ export function collectLinkedDocs(indexPath: string, vault: string | null): stri
   return [...found].sort((a, b) => a.localeCompare(b, 'de', { numeric: true }))
 }
 
+/** Ersetzt {{titel}}/{{datum}} in den HTML-Teilen der Vorlage */
+function applyPlaceholders(template: PdfTemplate, notePath: string): PdfTemplate {
+  const titel = basename(notePath, '.md')
+  const datum = new Date().toLocaleDateString('de-DE', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  })
+  const fill = (s?: string): string | undefined =>
+    s?.split('{{titel}}').join(titel).split('{{datum}}').join(datum)
+  return {
+    ...template,
+    header: fill(template.header),
+    footer: fill(template.footer),
+    cover: fill(template.cover)
+  }
+}
+
+const mmToInch = (mm: number): number => mm / 25.4
+
 async function renderPdf(
   vault: string | null,
   docs: PdfDoc[],
+  template: PdfTemplate | null,
   sourceWin: BrowserWindow
 ): Promise<Buffer> {
   const pdfWin = new BrowserWindow({
@@ -83,7 +108,7 @@ async function renderPdf(
     }
   })
   try {
-    pendingDocs.set(pdfWin.webContents.id, { vault, docs })
+    pendingDocs.set(pdfWin.webContents.id, { vault, docs, template })
     sourceWindows.set(pdfWin.webContents.id, sourceWin)
     const ready = new Promise<boolean>((resolveReady) => {
       // Notbremse: notfalls unfertig drucken; großzügig, skaliert mit der Dokumentzahl
@@ -105,7 +130,28 @@ async function renderPdf(
     // abgeschnitten würden (misst das PDF-Fenster nach dem Rendern)
     const landscape = await ready
     sendProgress(sourceWin, { phase: 'print', done: docs.length, total: docs.length + 1 })
-    return await pdfWin.webContents.printToPDF({ printBackground: true, pageSize: 'A4', landscape })
+    const options: Electron.PrintToPDFOptions = {
+      printBackground: true,
+      pageSize: 'A4',
+      landscape
+    }
+    if (template) {
+      if (template.header || template.footer) {
+        options.displayHeaderFooter = true
+        // Chromium verlangt beide Templates, sonst erscheint sein Standard-Text
+        options.headerTemplate = template.header ?? '<span></span>'
+        options.footerTemplate = template.footer ?? '<span></span>'
+      }
+      if (template.margins) {
+        options.margins = {
+          top: mmToInch(template.margins.top),
+          bottom: mmToInch(template.margins.bottom),
+          left: mmToInch(template.margins.left),
+          right: mmToInch(template.margins.right)
+        }
+      }
+    }
+    return await pdfWin.webContents.printToPDF(options)
   } finally {
     pendingDocs.delete(pdfWin.webContents.id)
     readyResolvers.delete(pdfWin.webContents.id)
@@ -118,6 +164,29 @@ async function exportPdf(win: BrowserWindow, notePath: string): Promise<void> {
   // Debug-/Testmodus: Ziel aus der Umgebung, keine Dialoge
   const debugTarget = process.env.MERKZEUG_PDF_TARGET
   const vault = getWindowVault(win.id)
+
+  // Vorlage: dem Vault zugewiesen (Debug-/Testläufe: aus der Umgebung)
+  const templateName =
+    process.env.MERKZEUG_PDF_TEMPLATE ?? (vault ? getVaultTemplateName(vault) : null)
+  let template: PdfTemplate | null = null
+  if (templateName) {
+    template = loadTemplate(templateName)
+    if (template) {
+      template = applyPlaceholders(template, notePath)
+    } else if (!debugTarget) {
+      const { response } = await dialog.showMessageBox(win, {
+        type: 'warning',
+        title: 'PDF-Vorlage nicht gefunden',
+        message: `Die zugewiesene Vorlage „${templateName}“ liegt nicht im Vorlagen-Ordner.`,
+        detail:
+          'Der Export wird ohne Vorlage erstellt. Vorlagen werden unter Merkzeug → Einstellungen (⌘,) verwaltet.',
+        buttons: ['Ohne Vorlage exportieren', 'Abbrechen'],
+        defaultId: 0,
+        cancelId: 1
+      })
+      if (response === 1) return
+    }
+  }
 
   let linked: string[] = []
   try {
@@ -162,7 +231,7 @@ async function exportPdf(win: BrowserWindow, notePath: string): Promise<void> {
     const files = withLinked ? [notePath, ...linked] : [notePath]
     const docs: PdfDoc[] = files.map((p) => ({ path: p, content: readFileSync(p, 'utf8') }))
     sendProgress(win, { phase: 'start', done: 0, total: docs.length + 1 })
-    writeFileSync(target, await renderPdf(vault, docs, win))
+    writeFileSync(target, await renderPdf(vault, docs, template, win))
   } catch (err) {
     sendProgress(win, { phase: 'error' })
     dialog.showErrorBox('PDF-Export fehlgeschlagen', String(err))
@@ -179,7 +248,7 @@ export function registerPdfIpc(): void {
   })
   ipcMain.handle(
     'pdf:getDocs',
-    (event) => pendingDocs.get(event.sender.id) ?? { vault: null, docs: [] }
+    (event) => pendingDocs.get(event.sender.id) ?? { vault: null, docs: [], template: null }
   )
   ipcMain.on('pdf:ready', (event, landscape: boolean) => {
     readyResolvers.get(event.sender.id)?.(landscape === true)

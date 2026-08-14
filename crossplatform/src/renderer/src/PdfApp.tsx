@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Crepe } from '@milkdown/crepe'
-import type { PdfDoc } from '../../shared/types'
+import type { PdfDoc, PdfTemplate } from '../../shared/types'
 import { renderMermaid } from './util/mermaid'
 import { isExternalLink, resolveVaultLink } from './util/paths'
 import '@milkdown/crepe/theme/common/style.css'
@@ -195,12 +195,28 @@ function DocView({
 
 /** Unsichtbares Fenster (#pdf): rendert die Dokumente und meldet „fertig“ an den Main-Prozess. */
 export function PdfApp(): React.JSX.Element {
-  const [payload, setPayload] = useState<{ vault: string | null; docs: PdfDoc[] } | null>(null)
+  const [payload, setPayload] = useState<{
+    vault: string | null
+    docs: PdfDoc[]
+    template: PdfTemplate | null
+  } | null>(null)
   const doneCount = useRef(0)
 
   useEffect(() => {
     void window.merkzeug.getPdfDocs().then(setPayload)
   }, [])
+
+  // Vorlage anwenden: Zusatz-CSS injizieren; Dokumenttitel = Notizname
+  // (Chromiums <span class="title"> in Kopf-/Fußzeile nutzt den Fenstertitel)
+  useEffect(() => {
+    if (!payload || payload.docs.length === 0) return
+    document.title = payload.docs[0].path.split(/[/\\]/).pop()?.replace(/\.md$/i, '') ?? 'Merkzeug'
+    if (!payload.template?.css) return
+    const style = document.createElement('style')
+    style.textContent = payload.template.css
+    document.head.appendChild(style)
+    return () => style.remove()
+  }, [payload])
 
   // Crepe erzeugt Mermaid-Vorschauen erst, wenn der Block sichtbar wird.
   // Deshalb einmal langsam durch den gesamten Inhalt scrollen, bis alle
@@ -254,6 +270,9 @@ export function PdfApp(): React.JSX.Element {
 
   return (
     <div className="pdf-app">
+      {payload?.template?.cover && (
+        <div className="pdf-cover" dangerouslySetInnerHTML={{ __html: payload.template.cover }} />
+      )}
       {docs.map((doc, i) => (
         <DocView
           key={doc.path}

@@ -81,6 +81,43 @@ export function openHelpWindow(): void {
   }
 }
 
+let settingsWindow: BrowserWindow | null = null
+/** Vault des Fensters, aus dem die Einstellungen zuletzt geöffnet wurden */
+let settingsVault: string | null = null
+
+export function getSettingsVault(): string | null {
+  return settingsVault
+}
+
+export function openSettingsWindow(vault: string | null): void {
+  settingsVault = vault
+  if (settingsWindow && !settingsWindow.isDestroyed()) {
+    settingsWindow.focus()
+    // ggf. neuer Vault-Kontext: Renderer lädt den Zustand neu
+    settingsWindow.webContents.send('settings:refresh')
+    return
+  }
+  settingsWindow = new BrowserWindow({
+    width: 560,
+    height: 660,
+    minWidth: 460,
+    minHeight: 400,
+    title: 'Einstellungen',
+    webPreferences: {
+      preload: join(__dirname, '../preload/index.js'),
+      sandbox: false
+    }
+  })
+  settingsWindow.once('closed', () => {
+    settingsWindow = null
+  })
+  if (is.dev && process.env.ELECTRON_RENDERER_URL) {
+    settingsWindow.loadURL(`${process.env.ELECTRON_RENDERER_URL}#settings`)
+  } else {
+    settingsWindow.loadFile(join(__dirname, '../renderer/index.html'), { hash: 'settings' })
+  }
+}
+
 export function openMermaidZoom(svg: string): void {
   const zoom = new BrowserWindow({
     width: 900,

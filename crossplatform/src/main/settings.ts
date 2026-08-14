@@ -5,6 +5,8 @@ import { join, dirname } from 'node:path'
 interface Settings {
   lastVault?: string
   recentVaults: string[]
+  /** Ordner mit den PDF-Vorlagen (je Vorlage ein Unterordner) */
+  templatesRoot?: string
 }
 
 let cache: Settings | null = null
@@ -44,4 +46,13 @@ export function addRecentVault(path: string): void {
 
 export function getLastVault(): string | undefined {
   return loadSettings().lastVault
+}
+
+export function getStoredTemplatesRoot(): string | undefined {
+  return loadSettings().templatesRoot
+}
+
+export function setStoredTemplatesRoot(path: string): void {
+  loadSettings().templatesRoot = path
+  saveSettings()
 }

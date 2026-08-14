@@ -4,6 +4,7 @@ import { App } from './App'
 import { HelpApp } from './HelpApp'
 import { ZoomApp } from './ZoomApp'
 import { PdfApp } from './PdfApp'
+import { SettingsApp } from './SettingsApp'
 import './styles.css'
 
 function Root(): React.JSX.Element {
@@ -11,6 +12,7 @@ function Root(): React.JSX.Element {
   if (hash === '#help') return <HelpApp />
   if (hash === '#zoom') return <ZoomApp />
   if (hash === '#pdf') return <PdfApp />
+  if (hash === '#settings') return <SettingsApp />
   return <App />
 }
 

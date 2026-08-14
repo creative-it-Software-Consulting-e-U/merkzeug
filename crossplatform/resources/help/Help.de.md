@@ -198,6 +198,36 @@ in der Toolbar.
   Stand („Dokument 3 von 15 gerendert …“, danach „PDF wird erzeugt …“).
 - Nach dem Export wird die erzeugte Datei im Finder/Explorer gezeigt.
 
+### PDF-Vorlagen (Briefkopf, Kopf- und Fußzeile)
+
+Mit Vorlagen bekommt das PDF ein Firmen-Layout: Logo und Kopfzeile auf jeder
+Seite, Fußzeile mit Seitenzahlen sowie optional ein Deckblatt.
+
+- Verwaltet werden Vorlagen unter **Merkzeug → Einstellungen…** (⌘,). Dort wird
+  der **Vorlagen-Ordner** festgelegt; jede Vorlage ist ein Unterordner darin.
+- **„Anlegen“** erzeugt eine neue Vorlage mit Beispieldateien und öffnet sie im
+  Finder/Explorer. Eine Vorlage besteht aus (alle Dateien optional):
+  - `kopfzeile.html` – Kopfzeile auf jeder Seite
+  - `fusszeile.html` – Fußzeile auf jeder Seite
+  - `deckblatt.html` – Deckblatt als erste Seite
+  - `stil.css` – Zusatz-CSS für den Dokumentinhalt
+  - `vorlage.json` – Seitenränder in Millimetern
+- **Platzhalter:** `{{titel}}` (Name der Notiz) und `{{datum}}` (Exportdatum);
+  in Kopf-/Fußzeile zusätzlich `<span class="pageNumber"></span>` und
+  `<span class="totalPages"></span>` für Seitenzahlen.
+- **Logo:** Bilddatei (z. B. `logo.png`) mit in den Vorlagen-Ordner legen und
+  relativ referenzieren (`<img src="logo.png" style="height: 8mm">`) – sie wird
+  beim Export automatisch eingebettet. In Kopf- und Fußzeile ist nur
+  Inline-CSS möglich. Details stehen in der `LIESMICH.md` jeder Vorlage.
+- **Zuweisung pro Vault:** In den Einstellungen wird dem aktuellen Vault eine
+  Vorlage zugewiesen. Die Zuweisung liegt im Vault
+  (`.merkzeug/settings.json`) und wandert per Git auf alle Geräte mit; der
+  Export verwendet sie automatisch. Ohne Zuweisung wird wie bisher ohne
+  Vorlage exportiert.
+- **Sync zwischen Geräten:** Liegt der Vorlagen-Ordner in **iCloud Drive,
+  Google Drive, OneDrive oder Dropbox**, synchronisiert der jeweilige
+  Cloud-Client die Vorlagen automatisch auf alle Rechner.
+
 ## 10. Git-Integration
 
 Ist der Vault ein **Git-Repository**, erscheint unten in der Sidebar eine Statuszeile:
@@ -236,6 +266,7 @@ Ist der Vault ein **Git-Repository**, erscheint unten in der Sidebar eine Status
 | ⌘W / ⇧⌘W | Tab schließen / Fenster schließen |
 | ⌘S / ⌥⌘S | Sichern / Alle sichern |
 | ⌘P | Als PDF exportieren |
+| ⌘, | Einstellungen (PDF-Vorlagen) |
 | ⌘B / ⌘I / ⌥⌘X / ⌘E | Fett / Kursiv / Durchgestrichen / Inline-Code |
 | ⌥⌘0 … ⌥⌘6 | Text / Überschrift 1–6 |
 | ⌥⌘8 / ⌥⌘7 | Aufzählung / Nummerierte Liste |

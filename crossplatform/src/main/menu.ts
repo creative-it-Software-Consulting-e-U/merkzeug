@@ -7,6 +7,7 @@ interface MenuHooks {
   openVault: (win: BrowserWindow | undefined) => void
   openRecent: (win: BrowserWindow | undefined, path: string) => void
   openHelp: () => void
+  openSettings: (win: BrowserWindow | undefined) => void
 }
 
 function send(action: MenuAction): void {
@@ -30,6 +31,12 @@ export function buildMenu(hooks: MenuHooks): void {
       label: 'Merkzeug',
       submenu: [
         { role: 'about', label: 'Über Merkzeug' },
+        { type: 'separator' },
+        {
+          label: 'Einstellungen…',
+          accelerator: 'Cmd+,',
+          click: () => hooks.openSettings(BrowserWindow.getFocusedWindow() ?? undefined)
+        },
         { type: 'separator' },
         { role: 'hide', label: 'Merkzeug ausblenden' },
         { role: 'hideOthers', label: 'Andere ausblenden' },

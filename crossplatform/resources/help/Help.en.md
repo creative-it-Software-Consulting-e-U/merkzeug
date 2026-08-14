@@ -188,6 +188,36 @@ For browsing linked notes there is a per-tab **navigation mode** – toggled wit
   the status ("document 3 of 15 rendered …", then "generating PDF …").
 - After the export the generated file is revealed in Finder/Explorer.
 
+### PDF templates (letterhead, header and footer)
+
+Templates give the PDF a company layout: a logo and header on every page, a
+footer with page numbers, and an optional cover page.
+
+- Templates are managed under **Merkzeug → Settings…** (⌘,). That is where the
+  **templates folder** is chosen; each template is a subfolder inside it.
+- **"Anlegen"** (create) sets up a new template with example files and opens it
+  in Finder/Explorer. A template consists of (all files optional):
+  - `kopfzeile.html` – header on every page
+  - `fusszeile.html` – footer on every page
+  - `deckblatt.html` – cover page (first page)
+  - `stil.css` – additional CSS for the document content
+  - `vorlage.json` – page margins in millimetres
+- **Placeholders:** `{{titel}}` (note name) and `{{datum}}` (export date); in
+  header and footer additionally `<span class="pageNumber"></span>` and
+  `<span class="totalPages"></span>` for page numbers.
+- **Logo:** put an image file (e.g. `logo.png`) into the template folder and
+  reference it relatively (`<img src="logo.png" style="height: 8mm">`) – it is
+  embedded automatically on export. Header and footer support inline CSS only.
+  Details are in each template's `LIESMICH.md`.
+- **Per-vault assignment:** in the settings a template is assigned to the
+  current vault. The assignment is stored inside the vault
+  (`.merkzeug/settings.json`) and travels to all devices via Git; the export
+  uses it automatically. Without an assignment the PDF is exported without a
+  template, as before.
+- **Sync between devices:** if the templates folder lives in **iCloud Drive,
+  Google Drive, OneDrive or Dropbox**, the respective cloud client syncs the
+  templates to all machines automatically.
+
 ## 10. Git integration
 
 If the vault is a **Git repository**, a status line appears at the bottom of
@@ -227,6 +257,7 @@ the sidebar:
 | ⌘W / ⇧⌘W | Close tab / Close window |
 | ⌘S / ⌥⌘S | Save / Save all |
 | ⌘P | Export as PDF |
+| ⌘, | Settings (PDF templates) |
 | ⌘B / ⌘I / ⌥⌘X / ⌘E | Bold / Italic / Strikethrough / Inline code |
 | ⌥⌘0 … ⌥⌘6 | Text / Heading 1–6 |
 | ⌥⌘8 / ⌥⌘7 | Bullet list / Numbered list |
