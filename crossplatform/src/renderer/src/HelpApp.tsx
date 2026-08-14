@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Crepe } from '@milkdown/crepe'
+import { jumpToFragment } from './util/anchors'
+import { isExternalLink, splitFragment } from './util/paths'
 import '@milkdown/crepe/theme/common/style.css'
 import '@milkdown/crepe/theme/frame.css'
 
@@ -39,6 +41,23 @@ export function HelpApp(): React.JSX.Element {
     }
   }, [lang])
 
+  // Links in der Hilfe: extern im Browser öffnen, "#anker" springt zur
+  // Überschrift (Inhaltsverzeichnis); andere Ziele gibt es hier nicht.
+  const handleClickCapture = useCallback((e: React.MouseEvent): void => {
+    const link = (e.target as HTMLElement).closest('a')
+    if (!link) return
+    const href = link.getAttribute('href')
+    if (!href) return
+    e.preventDefault()
+    e.stopPropagation()
+    if (isExternalLink(href)) {
+      void window.merkzeug.openExternal(href)
+      return
+    }
+    const { path, fragment } = splitFragment(href)
+    if (!path && fragment && rootRef.current) jumpToFragment(rootRef.current, fragment)
+  }, [])
+
   return (
     <div className="help-app">
       <div className="help-header">
@@ -52,7 +71,7 @@ export function HelpApp(): React.JSX.Element {
           </button>
         </div>
       </div>
-      <div ref={rootRef} className="help-content" />
+      <div ref={rootRef} className="help-content" onClickCapture={handleClickCapture} />
     </div>
   )
 }

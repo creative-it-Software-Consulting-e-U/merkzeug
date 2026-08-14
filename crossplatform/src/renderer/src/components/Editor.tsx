@@ -33,7 +33,9 @@ import {
   toggleStrikethroughCommand
 } from '@milkdown/kit/preset/gfm'
 import { renderMermaid } from '../util/mermaid'
+import { jumpToFragment } from '../util/anchors'
 import { isExternalLink } from '../util/paths'
+import type { AnchorTarget } from '../types'
 import '@milkdown/crepe/theme/common/style.css'
 import '@milkdown/crepe/theme/frame.css'
 
@@ -75,18 +77,24 @@ interface EditorProps {
   readonly: boolean
   /** aufgerufen bei Klick auf einen Link im Editor */
   onLinkClick: (href: string) => void
+  /** Anker, zu dem gesprungen werden soll (ggf. erst nach dem Laden) */
+  anchor?: AnchorTarget | null
   onDirtyChange?: (dirty: boolean) => void
   /** aufgerufen nach jedem Speichern mit dem gespeicherten Markdown */
   onSaved?: (markdown: string) => void
 }
 
 const AUTOSAVE_MS = 1000
+// Anker-Sprung nach dem Laden: begrenzt oft nachprobieren, falls das DOM
+// (Heading-IDs, Layout) noch nicht fertig ist; danach still oben bleiben
+const ANCHOR_RETRY_MS = 150
+const ANCHOR_MAX_TRIES = 7
 
 /** "-" gefolgt von ">" wird beim Tippen zu einem Pfeil "→". */
 const arrowInputRule = $inputRule(() => new InputRule(/->$/, '→'))
 
 export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
-  { filePath, loadToken, readonly, onLinkClick, onDirtyChange, onSaved },
+  { filePath, loadToken, readonly, onLinkClick, anchor, onDirtyChange, onSaved },
   ref
 ): React.JSX.Element {
   const rootRef = useRef<HTMLDivElement | null>(null)
@@ -106,6 +114,9 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   // Hinweis "neu geladen um …" – bleibt bis zum Wegklicken oder Weitertippen
   const [reloadInfo, setReloadInfo] = useState<string | null>(null)
   const prevLoadTokenRef = useRef(loadToken)
+  // Anker, der erst nach Abschluss des Ladens angesprungen werden kann
+  const pendingFragmentRef = useRef<string | null>(null)
+  const anchorTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Pfadwechsel ohne Neuladen (Umbenennen/Verschieben): nur Speicherziel anpassen
   filePathRef.current = filePath
@@ -150,6 +161,20 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
     }
     const ext = (file.name.split('.').pop() || 'png').toLowerCase()
     return window.merkzeug.saveImage(filePathRef.current, btoa(binary), ext)
+  }, [])
+
+  /** Zum Anker springen; probiert begrenzt oft nach, bis das Ziel im DOM steht. */
+  const jumpWhenAvailable = useCallback((fragment: string): void => {
+    if (anchorTimerRef.current) clearTimeout(anchorTimerRef.current)
+    let tries = 0
+    const attempt = (): void => {
+      const root = rootRef.current
+      if (root && jumpToFragment(root, fragment)) return
+      tries += 1
+      if (tries >= ANCHOR_MAX_TRIES) return // kein passendes Ziel: oben bleiben
+      anchorTimerRef.current = setTimeout(attempt, ANCHOR_RETRY_MS)
+    }
+    attempt()
   }, [])
 
   const displayUrl = useCallback((url: string): string => {
@@ -322,6 +347,12 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       dirtyRef.current = false
       crepe.setReadonly(readonly)
       crepeRef.current = crepe
+      // während des Ladens angefallenen Anker-Sprung jetzt ausführen
+      const pending = pendingFragmentRef.current
+      if (pending) {
+        pendingFragmentRef.current = null
+        jumpWhenAvailable(pending)
+      }
     }
 
     void setup()
@@ -329,6 +360,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
     return () => {
       cancelled = true
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
+      if (anchorTimerRef.current) clearTimeout(anchorTimerRef.current)
       const instance = crepe
       if (instance) {
         if (!conflictRef.current && dirtyRef.current && latestMarkdownRef.current !== null) {
@@ -345,6 +377,14 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   useEffect(() => {
     crepeRef.current?.setReadonly(readonly)
   }, [readonly])
+
+  // Anker-Sprung: sofort, wenn der Editor schon steht, sonst nach dem Laden
+  useEffect(() => {
+    if (!anchor) return
+    if (crepeRef.current) jumpWhenAvailable(anchor.fragment)
+    else pendingFragmentRef.current = anchor.fragment
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [anchor?.token])
 
   // Externe Änderungen der offenen Datei erkennen: ohne eigene ungespeicherte
   // Änderungen automatisch neu laden, sonst Konflikt-Banner zeigen (und den

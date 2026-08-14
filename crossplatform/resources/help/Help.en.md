@@ -8,6 +8,17 @@ Markdown. All notes live as `.md` files in an ordinary folder – the **vault**.
 All shortcuts use **⌘** on the Mac; on Windows, ⌘ corresponds to the **Ctrl**
 key and ⌥ to the **Alt** key.
 
+**Contents:** [1. Getting started](#1.-getting-started) ·
+[2. Sidebar & file tree](#2.-sidebar-&-file-tree) ·
+[3. Tabs, sections & windows](#3.-tabs,-sections-&-windows) ·
+[4. Editor & formatting](#4.-editor-&-formatting) ·
+[5. Links](#5.-links) ·
+[6. Navigation mode](#6.-navigation-mode-%28reading-&-browsing%29) ·
+[7. Mermaid diagrams](#7.-mermaid-diagrams) ·
+[8. Image assets](#8.-image-assets) ·
+[9. Git integration](#9.-git-integration) ·
+[10. Keyboard shortcuts](#10.-keyboard-shortcuts)
+
 ---
 
 ## 1. Getting started
@@ -109,6 +120,12 @@ The editor shows the note formatted; what is saved is Markdown.
 - **Links to `.md` files** open the note in a tab. **Links to folders** expand
   the folder in the sidebar and open the folder overview. External links open
   in the browser or default application.
+- **Links to headings:** append `#heading` to the target to jump straight to a
+  heading – e.g. `note.md#getting-started`. Just `#getting-started` jumps to the
+  heading **within the same note**. The fragment is the heading text in lower
+  case with `-` instead of spaces; case and punctuation are treated leniently
+  when jumping. The target heading is briefly highlighted after the jump. If the
+  fragment does not match any heading, the note opens at the top.
 
 ## 6. Navigation mode (reading & browsing)
 

@@ -60,7 +60,9 @@ resources/help/ In-App-Hilfe (DE/EN) – bei Feature-Änderungen aktualisieren!
 Entspricht der nativen macOS-App (siehe `../legacy/README.md`): Vault-Ordner mit
 Dateibaum (Breite per Trennlinie verstellbar, scrollt bei Platzmangel horizontal
 und vertikal), Tabs und zwei Sektionen, Mehrfenster-Betrieb, WYSIWYG-Editor mit
-Tabellen, Bildern (`Notizname.assets/`), formatierten Links (⌘K),
+Tabellen, Bildern (`Notizname.assets/`), formatierten Links (⌘K) inkl.
+Anker-Sprüngen auf Überschriften (`notiz.md#überschrift`, `#überschrift`
+innerhalb derselben Notiz),
 Mermaid-Diagrammen inkl. Zoom-Fenster, Navigationsmodus mit Historie,
 Git-Integration (Status, Commit & Push, Push, Pull, Fehleranzeige ⚠ bei
 fehlgeschlagenen Aktionen), Hilfe in DE/EN (⌘? oder
