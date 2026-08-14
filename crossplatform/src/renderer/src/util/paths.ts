@@ -73,6 +73,22 @@ export function isExternalLink(href: string): boolean {
 }
 
 /**
+ * Trennt einen Link in Pfad und Anker-Fragment ("pfad#fragment").
+ * Bei reinen Anker-Links ("#fragment") ist der Pfad leer.
+ */
+export function splitFragment(href: string): { path: string; fragment: string | null } {
+  const idx = href.indexOf('#')
+  if (idx === -1) return { path: href, fragment: null }
+  let fragment = href.slice(idx + 1)
+  try {
+    fragment = decodeURIComponent(fragment)
+  } catch {
+    // ungültige Escape-Sequenzen: Fragment unverändert verwenden
+  }
+  return { path: href.slice(0, idx), fragment: fragment || null }
+}
+
+/**
  * Löst einen Vault-Link auf: relativ zur Notiz, relativ zur Vault-Wurzel
  * (führender "/") oder absolut im Dateisystem.
  * Liefert Kandidaten-Pfade in Prüf-Reihenfolge.

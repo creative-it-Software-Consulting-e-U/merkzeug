@@ -221,6 +221,7 @@ export function PaneView(props: PaneProps): React.JSX.Element {
                   filePath={tab.path}
                   loadToken={tab.loadToken}
                   readonly={tab.navMode}
+                  jump={tab.pendingJump}
                   onLinkClick={(href) => props.onLinkClick(tab, href)}
                   onDirtyChange={(dirty) => props.onDirtyChange(tab.id, dirty)}
                   onSaved={(markdown) => props.onEditorSaved(tab.id, markdown)}

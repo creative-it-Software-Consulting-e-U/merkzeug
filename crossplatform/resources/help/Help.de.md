@@ -9,6 +9,18 @@ gewöhnlichen Ordner – dem **Vault**.
 Alle Kürzel gelten mit **⌘** auf dem Mac; unter Windows entspricht ⌘ der
 **Strg**-Taste und ⌥ der **Alt**-Taste.
 
+**Inhalt:** [1. Erste Schritte](#1.-erste-schritte) ·
+[2. Sidebar & Dateibaum](#2.-sidebar-&-dateibaum) ·
+[3. Tabs, Sektionen & Fenster](#3.-tabs,-sektionen-&-fenster) ·
+[4. Editor & Formatierung](#4.-editor-&-formatierung) ·
+[5. Links](#5.-links) ·
+[6. Navigationsmodus](#6.-navigationsmodus-%28lesen-&-blättern%29) ·
+[7. Mermaid-Diagramme](#7.-mermaid-diagramme) ·
+[8. Bild-Ressourcen](#8.-bild-ressourcen) ·
+[9. PDF-Export](#9.-pdf-export) ·
+[10. Git-Integration](#10.-git-integration) ·
+[11. Tastaturkürzel](#11.-tastaturkürzel)
+
 ---
 
 ## 1. Erste Schritte
@@ -114,6 +126,13 @@ Der Editor zeigt die Notiz formatiert an; gespeichert wird Markdown.
 - **Links auf `.md`-Dateien** öffnen die Notiz in einem Tab. **Links auf Ordner**
   klappen den Ordner in der Sidebar auf und öffnen die Ordnerübersicht.
   Externe Links öffnen im Browser bzw. Standardprogramm.
+- **Links auf Überschriften:** Hänge `#überschrift` an das Ziel an, um direkt zu
+  einer Überschrift zu springen – z. B. `notiz.md#erste-schritte`. Nur
+  `#erste-schritte` springt zur Überschrift **in derselben Notiz**. Das Fragment
+  ist der Überschriftentext in Kleinbuchstaben mit `-` statt Leerzeichen;
+  Groß-/Kleinschreibung und Satzzeichen werden beim Springen tolerant behandelt.
+  Die Ziel-Überschrift wird nach dem Sprung kurz hervorgehoben. Zeigt das
+  Fragment auf keine vorhandene Überschrift, öffnet die Notiz am Anfang.
 
 ## 6. Navigationsmodus (Lesen & Blättern)
 
@@ -129,6 +148,9 @@ in der Toolbar.
   Zurück-/Vorwärts-Tasten der Maus oder Wischgesten auf dem Trackpad
   (horizontales Wischen mit zwei Fingern, unter macOS auch mit drei Fingern,
   wenn „Zwischen Seiten blättern" entsprechend eingestellt ist).
+- Beim Zurück-/Vorwärtsgehen landest du wieder an der **Stelle, an der du die
+  Notiz verlassen hast** (bzw. am verlinkten Anker, wenn du dort nicht gescrollt
+  hattest).
 - Die **Historie bleibt pro Tab erhalten**, auch wenn du den Modus verlässt, die
   Notiz bearbeitest und den Modus später wieder einschaltest.
 

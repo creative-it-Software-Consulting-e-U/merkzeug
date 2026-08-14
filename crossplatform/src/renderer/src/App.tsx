@@ -2,7 +2,15 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type { FileNode, GitStatus, MenuAction, PdfExportProgress } from '../../shared/types'
 import { autoNameFor, makeTab, type Pane, type Tab, type TabKind } from './types'
 import { leadingH1, slugifyTitle } from './util/autoName'
-import { basename, dirname, extname, isExternalLink, resolveVaultLink } from './util/paths'
+import {
+  basename,
+  dirname,
+  extname,
+  isExternalLink,
+  resolveVaultLink,
+  splitFragment
+} from './util/paths'
+import type { HistoryEntry, JumpTarget } from './types'
 import type { EditorHandle } from './components/Editor'
 import { PaneView } from './components/Pane'
 import { Sidebar } from './components/Sidebar'
@@ -131,6 +139,24 @@ export function App(): React.JSX.Element {
     })
   }, [])
 
+  // Sprungziele (Anker/Scroll-Position): jedes Ziel bekommt ein neues Token,
+  // damit dasselbe Ziel mehrfach hintereinander angesprungen werden kann
+  const jumpTokenRef = useRef(0)
+  const makeJump = useCallback((target: Omit<JumpTarget, 'token'>): JumpTarget => {
+    jumpTokenRef.current += 1
+    return { ...target, token: jumpTokenRef.current }
+  }, [])
+
+  /** Aktuelle Scroll-Position des Editors im aktuellen Historien-Eintrag merken. */
+  const rememberScroll = useCallback(
+    (tab: Tab, tabId: string): ((entry: HistoryEntry, i: number) => HistoryEntry) => {
+      const scrollTop = editorRefs.current.get(tabId)?.getScrollTop()
+      return (entry, i) =>
+        i === tab.historyIndex && scrollTop != null ? { ...entry, scrollTop } : entry
+    },
+    []
+  )
+
   /** Einen Schritt in der Tab-Historie zurück (-1) oder vorwärts (+1) gehen. */
   const stepHistory = useCallback(
     (tabId: string, delta: -1 | 1): void => {
@@ -138,55 +164,87 @@ export function App(): React.JSX.Element {
       if (!tab || !tab.navMode) return
       const nextIndex = tab.historyIndex + delta
       if (nextIndex < 0 || nextIndex >= tab.history.length) return
-      const target = tab.history[nextIndex]
-      const node = findNode(treeRef.current, target)
+      const entry = tab.history[nextIndex]
+      const node = findNode(treeRef.current, entry.path)
       const kind: TabKind = node?.isDirectory ? 'folder' : 'note'
+      const withScroll = rememberScroll(tab, tabId)
       updateTab(tabId, (t) => ({
         ...t,
-        path: target,
+        path: entry.path,
         kind,
+        history: t.history.map(withScroll),
         historyIndex: nextIndex,
         loadToken: t.loadToken + 1,
-        autoName: autoNameFor(target, kind)
+        autoName: autoNameFor(entry.path, kind),
+        // zur verlassenen Stelle zurückkehren; sonst ggf. zum Anker springen
+        pendingJump:
+          entry.scrollTop != null
+            ? makeJump({ scrollTop: entry.scrollTop })
+            : entry.anchor
+              ? makeJump({ fragment: entry.anchor })
+              : null
       }))
     },
-    [updateTab]
+    [makeJump, rememberScroll, updateTab]
   )
 
   /** Öffnet Notiz oder Ordner in einem neuen Tab (oder aktiviert vorhandenen Tab). */
-  const openInNewTab = useCallback((path: string, kind: TabKind, paneIndex?: number): void => {
-    const pi = (paneIndex ?? activePaneRef.current) as 0 | 1
-    setPanes((prev) => {
-      const pane = prev[pi]
-      const existing = pane.tabs.find((t) => t.path === path && t.kind === kind)
-      if (existing) {
+  const openInNewTab = useCallback(
+    (path: string, kind: TabKind, paneIndex?: number, anchor?: string): void => {
+      const pi = (paneIndex ?? activePaneRef.current) as 0 | 1
+      const pendingJump = anchor ? makeJump({ fragment: anchor }) : undefined
+      setPanes((prev) => {
+        const pane = prev[pi]
+        const existing = pane.tabs.find((t) => t.path === path && t.kind === kind)
+        if (existing) {
+          const next = [...prev] as [Pane, Pane]
+          next[pi] = {
+            ...pane,
+            // vorhandener Tab: nicht neu laden, nur zum Anker springen
+            tabs: pendingJump
+              ? pane.tabs.map((t) => (t.id === existing.id ? { ...t, pendingJump } : t))
+              : pane.tabs,
+            activeTabId: existing.id
+          }
+          return next
+        }
+        const tab = makeTab(path, kind)
+        if (pendingJump) {
+          tab.pendingJump = pendingJump
+          tab.history = [{ path, anchor }]
+        }
         const next = [...prev] as [Pane, Pane]
-        next[pi] = { ...pane, activeTabId: existing.id }
+        next[pi] = { tabs: [...pane.tabs, tab], activeTabId: tab.id }
         return next
-      }
-      const tab = makeTab(path, kind)
-      const next = [...prev] as [Pane, Pane]
-      next[pi] = { tabs: [...pane.tabs, tab], activeTabId: tab.id }
-      return next
-    })
-  }, [])
+      })
+    },
+    [makeJump]
+  )
 
   /** Navigation im selben Tab (Navigationsmodus / Ordnerübersicht). */
   const navigateTab = useCallback(
-    (tabId: string, path: string, kind: TabKind): void => {
+    (tabId: string, path: string, kind: TabKind, anchor?: string): void => {
       const editor = editorRefs.current.get(tabId)
       void editor?.flush()
-      updateTab(tabId, (tab) => ({
-        ...tab,
-        path,
-        kind,
-        history: [...tab.history.slice(0, tab.historyIndex + 1), path],
-        historyIndex: tab.historyIndex + 1,
-        loadToken: tab.loadToken + 1,
-        autoName: autoNameFor(path, kind)
-      }))
+      updateTab(tabId, (tab) => {
+        // Scroll-Position des verlassenen Eintrags für Zurück/Vorwärts merken
+        const withScroll = rememberScroll(tab, tabId)
+        return {
+          ...tab,
+          path,
+          kind,
+          history: [
+            ...tab.history.slice(0, tab.historyIndex + 1).map(withScroll),
+            { path, anchor }
+          ],
+          historyIndex: tab.historyIndex + 1,
+          loadToken: tab.loadToken + 1,
+          autoName: autoNameFor(path, kind),
+          pendingJump: anchor ? makeJump({ fragment: anchor }) : null
+        }
+      })
     },
-    [updateTab]
+    [makeJump, rememberScroll, updateTab]
   )
 
   const expandFolder = useCallback((path: string): void => {
@@ -221,9 +279,18 @@ export function App(): React.JSX.Element {
         void window.merkzeug.openExternal(href)
         return
       }
+      const { path: linkPath, fragment } = splitFragment(href)
+      if (!linkPath) {
+        // reiner Anker ("#überschrift"): Sprung innerhalb der aktuellen Notiz
+        if (fragment) {
+          const pendingJump = makeJump({ fragment })
+          updateTab(tab.id, (t) => ({ ...t, pendingJump }))
+        }
+        return
+      }
       const v = vaultRef.current
       if (!v) return
-      const candidates = resolveVaultLink(href, tab.path, v)
+      const candidates = resolveVaultLink(linkPath, tab.path, v)
       void (async () => {
         for (const candidate of candidates) {
           const withMd = extname(candidate) ? candidate : `${candidate}.md`
@@ -235,8 +302,12 @@ export function App(): React.JSX.Element {
             if (isDir) {
               openFolderOverview(target, tab.navMode ? tab : undefined)
             } else if (target.endsWith('.md')) {
-              if (tab.navMode) navigateTab(tab.id, target, 'note')
-              else openInNewTab(target, 'note')
+              if (fragment && target === tab.path) {
+                // Ziel ist die bereits geladene Notiz: nicht neu laden, nur springen
+                const pendingJump = makeJump({ fragment })
+                updateTab(tab.id, (t) => ({ ...t, pendingJump }))
+              } else if (tab.navMode) navigateTab(tab.id, target, 'note', fragment ?? undefined)
+              else openInNewTab(target, 'note', undefined, fragment ?? undefined)
             } else {
               void window.merkzeug.showInFolder(target)
             }
@@ -245,7 +316,7 @@ export function App(): React.JSX.Element {
         }
       })()
     },
-    [navigateTab, openFolderOverview, openInNewTab]
+    [makeJump, navigateTab, openFolderOverview, openInNewTab, updateTab]
   )
 
   const closeTab = useCallback((tabId: string): void => {

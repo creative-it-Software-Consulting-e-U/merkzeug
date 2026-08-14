@@ -33,7 +33,9 @@ import {
   toggleStrikethroughCommand
 } from '@milkdown/kit/preset/gfm'
 import { renderMermaid } from '../util/mermaid'
+import { jumpToFragment } from '../util/anchors'
 import { isExternalLink } from '../util/paths'
+import type { JumpTarget } from '../types'
 import '@milkdown/crepe/theme/common/style.css'
 import '@milkdown/crepe/theme/frame.css'
 
@@ -66,6 +68,8 @@ export interface EditorHandle {
   flush: () => Promise<void>
   flushSync: () => void
   getSelectedText: () => string
+  /** aktuelle Scroll-Position des Editors (für die Tab-Historie) */
+  getScrollTop: () => number
 }
 
 interface EditorProps {
@@ -75,21 +79,28 @@ interface EditorProps {
   readonly: boolean
   /** aufgerufen bei Klick auf einen Link im Editor */
   onLinkClick: (href: string) => void
+  /** Ziel (Anker oder Scroll-Position), das ggf. erst nach dem Laden angesprungen wird */
+  jump?: JumpTarget | null
   onDirtyChange?: (dirty: boolean) => void
   /** aufgerufen nach jedem Speichern mit dem gespeicherten Markdown */
   onSaved?: (markdown: string) => void
 }
 
 const AUTOSAVE_MS = 1000
+// Anker-Sprung nach dem Laden: begrenzt oft nachprobieren, falls das DOM
+// (Heading-IDs, Layout) noch nicht fertig ist; danach still oben bleiben
+const ANCHOR_RETRY_MS = 150
+const ANCHOR_MAX_TRIES = 7
 
 /** "-" gefolgt von ">" wird beim Tippen zu einem Pfeil "→". */
 const arrowInputRule = $inputRule(() => new InputRule(/->$/, '→'))
 
 export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
-  { filePath, loadToken, readonly, onLinkClick, onDirtyChange, onSaved },
+  { filePath, loadToken, readonly, onLinkClick, jump, onDirtyChange, onSaved },
   ref
 ): React.JSX.Element {
   const rootRef = useRef<HTMLDivElement | null>(null)
+  const hostRef = useRef<HTMLDivElement | null>(null)
   const crepeRef = useRef<Crepe | null>(null)
   const filePathRef = useRef(filePath)
   const dirtyRef = useRef(false)
@@ -106,6 +117,10 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   // Hinweis "neu geladen um …" – bleibt bis zum Wegklicken oder Weitertippen
   const [reloadInfo, setReloadInfo] = useState<string | null>(null)
   const prevLoadTokenRef = useRef(loadToken)
+  // Sprungziel, das erst nach Abschluss des Ladens angesprungen werden kann
+  const pendingJumpRef = useRef<JumpTarget | null>(null)
+  const anchorTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const scrollTimersRef = useRef<ReturnType<typeof setTimeout>[]>([])
 
   // Pfadwechsel ohne Neuladen (Umbenennen/Verschieben): nur Speicherziel anpassen
   filePathRef.current = filePath
@@ -151,6 +166,45 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
     const ext = (file.name.split('.').pop() || 'png').toLowerCase()
     return window.merkzeug.saveImage(filePathRef.current, btoa(binary), ext)
   }, [])
+
+  /** Zum Anker springen; probiert begrenzt oft nach, bis das Ziel im DOM steht. */
+  const jumpWhenAvailable = useCallback((fragment: string): void => {
+    if (anchorTimerRef.current) clearTimeout(anchorTimerRef.current)
+    let tries = 0
+    const attempt = (): void => {
+      const root = rootRef.current
+      if (root && jumpToFragment(root, fragment)) return
+      tries += 1
+      if (tries >= ANCHOR_MAX_TRIES) return // kein passendes Ziel: oben bleiben
+      anchorTimerRef.current = setTimeout(attempt, ANCHOR_RETRY_MS)
+    }
+    attempt()
+  }, [])
+
+  /**
+   * Gemerkte Scroll-Position wiederherstellen; wie beim Anker-Sprung kurz
+   * nachjustieren, weil spät gerenderte Blöcke die Inhaltshöhe noch ändern.
+   */
+  const restoreScroll = useCallback((top: number): void => {
+    for (const timer of scrollTimersRef.current) clearTimeout(timer)
+    scrollTimersRef.current = []
+    const apply = (): void => {
+      if (hostRef.current) hostRef.current.scrollTop = top
+    }
+    apply()
+    for (const delay of [250, 700, 1400]) {
+      scrollTimersRef.current.push(setTimeout(apply, delay))
+    }
+  }, [])
+
+  /** Sprungziel ausführen: gemerkte Scroll-Position vor Anker. */
+  const applyJump = useCallback(
+    (target: JumpTarget): void => {
+      if (target.scrollTop != null) restoreScroll(target.scrollTop)
+      else if (target.fragment) jumpWhenAvailable(target.fragment)
+    },
+    [jumpWhenAvailable, restoreScroll]
+  )
 
   const displayUrl = useCallback((url: string): string => {
     if (!url || isExternalLink(url) || url.startsWith('data:') || url.startsWith('vault-file:')) {
@@ -322,6 +376,12 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       dirtyRef.current = false
       crepe.setReadonly(readonly)
       crepeRef.current = crepe
+      // während des Ladens angefallenes Sprungziel jetzt ausführen
+      const pending = pendingJumpRef.current
+      if (pending) {
+        pendingJumpRef.current = null
+        applyJump(pending)
+      }
     }
 
     void setup()
@@ -329,6 +389,9 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
     return () => {
       cancelled = true
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
+      if (anchorTimerRef.current) clearTimeout(anchorTimerRef.current)
+      for (const timer of scrollTimersRef.current) clearTimeout(timer)
+      scrollTimersRef.current = []
       const instance = crepe
       if (instance) {
         if (!conflictRef.current && dirtyRef.current && latestMarkdownRef.current !== null) {
@@ -345,6 +408,14 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   useEffect(() => {
     crepeRef.current?.setReadonly(readonly)
   }, [readonly])
+
+  // Sprungziel: sofort ausführen, wenn der Editor schon steht, sonst nach dem Laden
+  useEffect(() => {
+    if (!jump) return
+    if (crepeRef.current) applyJump(jump)
+    else pendingJumpRef.current = jump
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jump?.token])
 
   // Externe Änderungen der offenen Datei erkennen: ohne eigene ungespeicherte
   // Änderungen automatisch neu laden, sonst Konflikt-Banner zeigen (und den
@@ -505,6 +576,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       openImagePicker: () => fileInputRef.current?.click(),
       flush: doSave,
       flushSync,
+      getScrollTop: () => hostRef.current?.scrollTop ?? 0,
       getSelectedText: () => {
         const crepe = crepeRef.current
         if (!crepe) return ''
@@ -625,6 +697,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
 
   return (
     <div
+      ref={hostRef}
       className="editor-host"
       onClickCapture={handleClickCapture}
       onPasteCapture={handlePaste}
