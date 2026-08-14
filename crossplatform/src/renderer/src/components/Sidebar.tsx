@@ -23,6 +23,7 @@ interface SidebarProps {
   onRename: (path: string, newName: string) => void
   onTrash: (path: string) => void
   onShowInFolder: (path: string) => void
+  onExportPdf: (path: string) => void
   onMove: (src: string, destDir: string) => void
   onNewNote: () => void
   onNewFolder: () => void
@@ -57,6 +58,7 @@ export function Sidebar(props: SidebarProps): React.JSX.Element {
             onRename={props.onRename}
             onTrash={props.onTrash}
             onShowInFolder={props.onShowInFolder}
+            onExportPdf={props.onExportPdf}
             onMove={props.onMove}
           />
         )}

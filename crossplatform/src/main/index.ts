@@ -26,10 +26,19 @@ import {
   setWindowVault
 } from './windows'
 import { watchVault } from './watcher'
+import { registerPdfIpc } from './pdfExport'
 
 protocol.registerSchemesAsPrivileged([
   { scheme: 'vault-file', privileges: { stream: true, supportFetchAPI: true, bypassCSP: true } }
 ])
+
+// Sicherheitsnetz für sehr große Vaults: sind alle Datei-Deskriptoren belegt,
+// scheitern spawn() (Git) und printToPDF() im Main-Prozess mit EBADF.
+try {
+  process.setFdLimit(8192)
+} catch {
+  /* unter Windows nicht verfügbar */
+}
 
 function winFromEvent(event: Electron.IpcMainInvokeEvent): BrowserWindow | null {
   return BrowserWindow.fromWebContents(event.sender)
@@ -147,6 +156,7 @@ function registerIpc(): void {
     return readFileSync(join(base, file), 'utf8')
   })
   ipcMain.handle('help:open', () => openHelpWindow())
+  registerPdfIpc()
   ipcMain.handle('zoom:openMermaid', (_e, svg: string) => openMermaidZoom(svg))
 
   // Synchrones Speichern für beforeunload (Fenster-/App-Schluss)

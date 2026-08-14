@@ -66,7 +66,11 @@ Git-Integration (Status, Commit & Push, Push, Pull, Fehleranzeige ⚠ bei
 fehlgeschlagenen Aktionen), Hilfe in DE/EN (⌘? oder
 Hilfe-Button in der Toolbar) und
 Autosave. Bonus gegenüber der Mac-App: Slash-Menü („/“), Auswahl-Toolbar,
-Aufgabenlisten, Verschieben von Blöcken per Drag & Drop, automatische
+Aufgabenlisten, Verschieben von Blöcken per Drag & Drop, PDF-Export (⌘P oder
+Kontextmenü: einzelne Notiz oder Index-Datei mitsamt aller verlinkten
+Dokumente derselben Hierarchie, alphabetisch angehängt, mit internen
+Sprungzielen zwischen den Dokumenten; bei Tabellen, die nicht auf eine
+A4-Hochformatseite passen, automatisch im Querformat), automatische
 Benennung neuer Notizen nach ihrer Überschrift 1 (Slug wie
 `2026-08-11-bpp-call-neustrukturierung`, bis zum manuellen Umbenennen) und
 die Tipp-Ersetzung `->` → „→“. Extern geänderte
@@ -95,3 +99,5 @@ Für automatisierte UI-Tests kann die App mit
 `MERKZEUG_SCREENSHOT=/pfad.png [MERKZEUG_CLICK='Schritt;;Schritt…']`
 gestartet werden; sie führt die Schritte aus, speichert einen Screenshot und
 beendet sich (Schritte: Baum-Label, `menu:<aktion>`, `js:<code>`, `helpwindow`).
+Mit `MERKZEUG_PDF_TARGET=/pfad.pdf` läuft der PDF-Export ohne Dialoge: Ziel aus
+der Variable, bei vorhandenen Links automatisch inklusive verlinkter Dokumente.

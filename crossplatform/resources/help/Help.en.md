@@ -31,8 +31,8 @@ The sidebar on the left shows the vault as a hierarchical tree.
   area with the mouse; double-clicking it restores the default width. If there
   is not enough room for long names or deep hierarchies, the tree can be
   scrolled horizontally and vertically.
-- **Context menu** (right-click): new note, new folder, rename, move to trash,
-  show in Finder/Explorer.
+- **Context menu** (right-click): new note, new folder, export as PDF, rename,
+  move to trash, show in Finder/Explorer.
 - **Moving:** simply drag files and folders onto a folder.
 - **Folder overview:** shows the contents of a folder as cards in its own tab;
   clicking notes and subfolders navigates onward.
@@ -145,7 +145,30 @@ For browsing linked notes there is a per-tab **navigation mode** – toggled wit
   **deleting** it goes to the trash as well.
 - Asset folders are hidden in the file tree by default (⇧⌘R shows them).
 
-## 9. Git integration
+## 9. PDF export
+
+- **File → Export as PDF…** (⌘P) exports the active note as a PDF;
+  alternatively right-click a note in the file tree.
+- If the note links to other Markdown files **in the same hierarchy** (its own
+  folder or below), the app asks: **"Only this file"** or **"With linked
+  documents"**. The latter is meant for index files such as a `README` with a
+  table of contents: the index file comes first, followed by all directly
+  linked documents in alphabetical order – each starting on a new page.
+- The PDF is always rendered in the light theme (regardless of the system
+  appearance) and includes tables, images and Mermaid diagrams. Web links,
+  files outside the hierarchy and unlinked files are not appended.
+- **Automatic landscape:** if any exported document contains a table that
+  does not fit on an A4 page in portrait orientation, the entire PDF is
+  generated in landscape.
+- **Links in the PDF:** links between the exported documents (e.g. from the
+  table of contents) jump directly to the respective page inside the PDF;
+  web links stay clickable. Vault links to files not included in the PDF
+  appear as plain text.
+- While exporting, a **progress indicator** at the bottom of the window shows
+  the status ("document 3 of 15 rendered …", then "generating PDF …").
+- After the export the generated file is revealed in Finder/Explorer.
+
+## 10. Git integration
 
 If the vault is a **Git repository**, a status line appears at the bottom of
 the sidebar:
@@ -173,7 +196,7 @@ the sidebar:
   If an interactive login were required, the operation aborts with an error
   message instead of hanging.
 
-## 10. Keyboard shortcuts
+## 11. Keyboard shortcuts
 
 | Shortcut | Function |
 | --- | --- |
@@ -183,6 +206,7 @@ the sidebar:
 | ⌘O | Open vault |
 | ⌘W / ⇧⌘W | Close tab / Close window |
 | ⌘S / ⌥⌘S | Save / Save all |
+| ⌘P | Export as PDF |
 | ⌘B / ⌘I / ⌥⌘X / ⌘E | Bold / Italic / Strikethrough / Inline code |
 | ⌥⌘0 … ⌥⌘6 | Text / Heading 1–6 |
 | ⌥⌘8 / ⌥⌘7 | Bullet list / Numbered list |

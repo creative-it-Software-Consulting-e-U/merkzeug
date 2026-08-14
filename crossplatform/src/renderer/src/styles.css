@@ -485,7 +485,7 @@ button {
 }
 
 .editor-root .milkdown,
-.help-content .milkdown {
+:is(.help-content, .pdf-content) .milkdown {
   background: transparent;
   /* native Systemschrift statt Serifen-Theme */
   --crepe-font-title: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -507,12 +507,12 @@ button {
   padding: 24px 28px 80px;
 }
 
-.help-content .milkdown .ProseMirror {
+:is(.help-content, .pdf-content) .milkdown .ProseMirror {
   padding: 24px 28px 60px;
 }
 
 .editor-root .milkdown .ProseMirror > :first-child,
-.help-content .milkdown .ProseMirror > :first-child {
+:is(.help-content, .pdf-content) .milkdown .ProseMirror > :first-child {
   margin-top: 0;
 }
 
@@ -522,40 +522,40 @@ button {
 .editor-root .milkdown .ProseMirror h4,
 .editor-root .milkdown .ProseMirror h5,
 .editor-root .milkdown .ProseMirror h6,
-.help-content .milkdown .ProseMirror h1,
-.help-content .milkdown .ProseMirror h2,
-.help-content .milkdown .ProseMirror h3,
-.help-content .milkdown .ProseMirror h4,
-.help-content .milkdown .ProseMirror h5,
-.help-content .milkdown .ProseMirror h6 {
+:is(.help-content, .pdf-content) .milkdown .ProseMirror h1,
+:is(.help-content, .pdf-content) .milkdown .ProseMirror h2,
+:is(.help-content, .pdf-content) .milkdown .ProseMirror h3,
+:is(.help-content, .pdf-content) .milkdown .ProseMirror h4,
+:is(.help-content, .pdf-content) .milkdown .ProseMirror h5,
+:is(.help-content, .pdf-content) .milkdown .ProseMirror h6 {
   font-weight: 700;
   padding: 0;
   margin-bottom: 7px;
 }
 
 .editor-root .milkdown .ProseMirror h1,
-.help-content .milkdown .ProseMirror h1 {
+:is(.help-content, .pdf-content) .milkdown .ProseMirror h1 {
   font-size: 26px;
   line-height: 1.2;
   margin-top: 14px;
 }
 
 .editor-root .milkdown .ProseMirror h2,
-.help-content .milkdown .ProseMirror h2 {
+:is(.help-content, .pdf-content) .milkdown .ProseMirror h2 {
   font-size: 21px;
   line-height: 1.2;
   margin-top: 14px;
 }
 
 .editor-root .milkdown .ProseMirror h3,
-.help-content .milkdown .ProseMirror h3 {
+:is(.help-content, .pdf-content) .milkdown .ProseMirror h3 {
   font-size: 17.5px;
   line-height: 1.25;
   margin-top: 10px;
 }
 
 .editor-root .milkdown .ProseMirror h4,
-.help-content .milkdown .ProseMirror h4 {
+:is(.help-content, .pdf-content) .milkdown .ProseMirror h4 {
   font-size: 16px;
   line-height: 1.3;
   margin-top: 10px;
@@ -563,47 +563,47 @@ button {
 
 .editor-root .milkdown .ProseMirror h5,
 .editor-root .milkdown .ProseMirror h6,
-.help-content .milkdown .ProseMirror h5,
-.help-content .milkdown .ProseMirror h6 {
+:is(.help-content, .pdf-content) .milkdown .ProseMirror h5,
+:is(.help-content, .pdf-content) .milkdown .ProseMirror h6 {
   font-size: 15px;
   line-height: 1.3;
   margin-top: 10px;
 }
 
 .editor-root .milkdown .ProseMirror p,
-.help-content .milkdown .ProseMirror p {
+:is(.help-content, .pdf-content) .milkdown .ProseMirror p {
   line-height: 1.4;
   padding: 2px 0;
 }
 
 .editor-root .milkdown .ProseMirror a,
-.help-content .milkdown .ProseMirror a {
+:is(.help-content, .pdf-content) .milkdown .ProseMirror a {
   color: var(--mn-link);
 }
 
 .editor-root .milkdown .ProseMirror code,
-.help-content .milkdown .ProseMirror code {
+:is(.help-content, .pdf-content) .milkdown .ProseMirror code {
   font-size: 13.5px;
   background: var(--mn-code-bg);
 }
 
 .editor-root .milkdown .ProseMirror pre,
-.help-content .milkdown .ProseMirror pre {
+:is(.help-content, .pdf-content) .milkdown .ProseMirror pre {
   background: var(--mn-codeblock-bg);
 }
 
 .editor-root .milkdown .cm-editor,
-.help-content .milkdown .cm-editor {
+:is(.help-content, .pdf-content) .milkdown .cm-editor {
   font-size: 13.5px;
 }
 
 .editor-root .milkdown .ProseMirror th,
-.help-content .milkdown .ProseMirror th {
+:is(.help-content, .pdf-content) .milkdown .ProseMirror th {
   background-color: var(--mn-table-header-bg);
 }
 
 .editor-root .milkdown .ProseMirror blockquote,
-.help-content .milkdown .ProseMirror blockquote {
+:is(.help-content, .pdf-content) .milkdown .ProseMirror blockquote {
   color: var(--text-dim);
 }
 
@@ -1027,4 +1027,80 @@ button.primary:disabled {
   align-items: center;
   justify-content: center;
   transform-origin: center center;
+}
+
+/* ---- PDF-Export (unsichtbares Fenster, #pdf) ---- */
+
+/* Ohne festes 100%-Layout mit overflow:hidden, sonst kann der Druck nicht paginieren */
+html:has(.pdf-app),
+html:has(.pdf-app) body,
+html:has(.pdf-app) #root {
+  height: auto;
+  overflow: visible;
+  background: #fff;
+}
+
+.pdf-app {
+  background: #fff;
+  color: #1a1a1a;
+  color-scheme: light;
+}
+
+/* jedes weitere Dokument beginnt auf einer neuen Seite */
+.pdf-doc {
+  display: block;
+  break-after: page;
+  page-break-after: always;
+}
+
+.pdf-doc:last-child {
+  break-after: auto;
+}
+
+.pdf-content .milkdown {
+  background: #fff;
+}
+
+/* Seitenränder kommen vom PDF-Druck, nicht vom Editor-Inset */
+.pdf-content .milkdown .ProseMirror {
+  padding: 0 0 12px;
+}
+
+/* Editor-Bedienelemente (Codeblock-Buttons, Sprachwahl usw.) gehören nicht ins PDF */
+.pdf-app button {
+  display: none !important;
+}
+
+/* Fortschritts-Toast während des PDF-Exports */
+.pdf-progress-toast {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 280px;
+  max-width: 70%;
+  background: var(--text);
+  color: var(--bg);
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  z-index: 100;
+}
+
+.pdf-progress-track {
+  height: 4px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--bg) 30%, transparent);
+  overflow: hidden;
+}
+
+.pdf-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--bg);
+  transition: width 0.3s ease;
 }

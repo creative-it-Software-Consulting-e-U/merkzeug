@@ -33,8 +33,8 @@ Links zeigt die Sidebar den Vault als hierarchischen Baum.
   sich mit der Maus ziehen; Doppelklick darauf stellt die Standardbreite wieder
   her. Reicht der Platz für lange Namen oder tiefe Hierarchien nicht, kann der
   Baum horizontal und vertikal gescrollt werden.
-- **Kontextmenü** (Rechtsklick): neue Notiz, neuer Ordner, Umbenennen,
-  in den Papierkorb legen, im Finder/Explorer zeigen.
+- **Kontextmenü** (Rechtsklick): neue Notiz, neuer Ordner, als PDF exportieren,
+  Umbenennen, in den Papierkorb legen, im Finder/Explorer zeigen.
 - **Verschieben:** Dateien und Ordner einfach per Drag & Drop auf einen Ordner ziehen.
 - **Ordnerübersicht:** zeigt den Inhalt eines Ordners als Karten in einem eigenen
   Tab; Klicks auf Notizen und Unterordner navigieren weiter.
@@ -152,7 +152,31 @@ in der Toolbar.
   landet er mit im Papierkorb.
 - Ressourcen-Ordner sind im Dateibaum standardmäßig ausgeblendet (⇧⌘R zeigt sie).
 
-## 9. Git-Integration
+## 9. PDF-Export
+
+- **Ablage → Als PDF exportieren…** (⌘P) exportiert die aktive Notiz als PDF;
+  alternativ per Rechtsklick auf eine Notiz im Dateibaum.
+- Verlinkt die Notiz weitere Markdown-Dateien **in derselben Hierarchie** (im
+  eigenen Ordner oder darunter), fragt die App: **„Nur diese Datei“** oder
+  **„Mit verlinkten Dokumenten“**. Letzteres ist für Index-Dateien wie eine
+  `README` mit Inhaltsverzeichnis gedacht: Zuerst kommt die Index-Datei,
+  danach alle direkt verlinkten Dokumente in alphabetischer Reihenfolge –
+  jedes beginnt auf einer neuen Seite.
+- Das PDF wird immer hell gerendert (unabhängig vom System-Design) und enthält
+  Tabellen, Bilder und Mermaid-Diagramme. Web-Links, Dateien außerhalb der
+  Hierarchie und nicht verlinkte Dateien werden nicht angehängt.
+- **Automatisches Querformat:** Enthält eines der exportierten Dokumente eine
+  Tabelle, die nicht auf eine A4-Seite im Hochformat passt, wird das gesamte
+  PDF im Querformat erzeugt.
+- **Links im PDF:** Links zwischen den exportierten Dokumenten (z. B. vom
+  Inhaltsverzeichnis) springen im PDF direkt zur jeweiligen Seite; Web-Links
+  bleiben klickbar. Vault-Links auf Dateien, die nicht im PDF enthalten sind,
+  erscheinen als normaler Text.
+- Während des Exports zeigt eine **Fortschrittsanzeige** unten im Fenster den
+  Stand („Dokument 3 von 15 gerendert …“, danach „PDF wird erzeugt …“).
+- Nach dem Export wird die erzeugte Datei im Finder/Explorer gezeigt.
+
+## 10. Git-Integration
 
 Ist der Vault ein **Git-Repository**, erscheint unten in der Sidebar eine Statuszeile:
 
@@ -179,7 +203,7 @@ Ist der Vault ein **Git-Repository**, erscheint unten in der Sidebar eine Status
   Helper). Wäre eine interaktive Anmeldung nötig, bricht der Vorgang mit einer
   Fehlermeldung ab statt zu warten.
 
-## 10. Tastaturkürzel
+## 11. Tastaturkürzel
 
 | Kürzel | Funktion |
 | --- | --- |
@@ -189,6 +213,7 @@ Ist der Vault ein **Git-Repository**, erscheint unten in der Sidebar eine Status
 | ⌘O | Vault öffnen |
 | ⌘W / ⇧⌘W | Tab schließen / Fenster schließen |
 | ⌘S / ⌥⌘S | Sichern / Alle sichern |
+| ⌘P | Als PDF exportieren |
 | ⌘B / ⌘I / ⌥⌘X / ⌘E | Fett / Kursiv / Durchgestrichen / Inline-Code |
 | ⌥⌘0 … ⌥⌘6 | Text / Überschrift 1–6 |
 | ⌥⌘8 / ⌥⌘7 | Aufzählung / Nummerierte Liste |

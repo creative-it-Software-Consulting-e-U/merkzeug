@@ -49,6 +49,22 @@ export type MenuAction =
   | 'toggleSplit'
   | 'moveTabOtherPane'
   | 'toggleAssets'
+  | 'exportPdf'
+
+/** Ein Dokument, das das unsichtbare PDF-Fenster rendern soll */
+export interface PdfDoc {
+  path: string
+  content: string
+}
+
+/** Fortschritt des PDF-Exports, gesendet an das auslösende Fenster */
+export interface PdfExportProgress {
+  phase: 'start' | 'render' | 'print' | 'done' | 'error'
+  /** abgeschlossene Schritte (gerenderte Dokumente; Drucken = letzter Schritt) */
+  done?: number
+  /** Gesamtschritte = Dokumente + 1 (Drucken) */
+  total?: number
+}
 
 export interface VaultChange {
   vault: string

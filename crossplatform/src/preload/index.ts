@@ -1,5 +1,12 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import type { FileNode, GitResult, GitStatus, MenuAction } from '../shared/types'
+import type {
+  FileNode,
+  GitResult,
+  GitStatus,
+  MenuAction,
+  PdfDoc,
+  PdfExportProgress
+} from '../shared/types'
 
 const api = {
   getInitialVault: (): Promise<string | null> => ipcRenderer.invoke('app:getInitialVault'),
@@ -36,6 +43,17 @@ const api = {
   writeFileSync: (path: string, content: string): boolean =>
     ipcRenderer.sendSync('file:writeSync', path, content),
   openMermaidZoom: (svg: string): Promise<void> => ipcRenderer.invoke('zoom:openMermaid', svg),
+  exportPdf: (path: string): Promise<void> => ipcRenderer.invoke('pdf:export', path),
+  // nur für das unsichtbare PDF-Fenster (#pdf)
+  getPdfDocs: (): Promise<{ vault: string | null; docs: PdfDoc[] }> =>
+    ipcRenderer.invoke('pdf:getDocs'),
+  pdfReady: (landscape: boolean): void => ipcRenderer.send('pdf:ready', landscape),
+  pdfProgress: (done: number, total: number): void => ipcRenderer.send('pdf:progress', done, total),
+  onPdfExportProgress: (handler: (progress: PdfExportProgress) => void): (() => void) => {
+    const listener = (_e: unknown, progress: PdfExportProgress): void => handler(progress)
+    ipcRenderer.on('pdf:exportProgress', listener)
+    return () => ipcRenderer.removeListener('pdf:exportProgress', listener)
+  },
 
   onMenuAction: (handler: (action: MenuAction) => void): (() => void) => {
     const listener = (_e: unknown, payload: { action: MenuAction }): void => handler(payload.action)

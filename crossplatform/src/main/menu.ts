@@ -52,6 +52,8 @@ export function buildMenu(hooks: MenuHooks): void {
         item('Sichern', 'saveNote', 'Cmd+S'),
         item('Alle sichern', 'saveAll', 'Alt+Cmd+S'),
         { type: 'separator' },
+        item('Als PDF exportieren…', 'exportPdf', 'Cmd+P'),
+        { type: 'separator' },
         {
           label: 'Vault öffnen…',
           accelerator: 'Cmd+O',

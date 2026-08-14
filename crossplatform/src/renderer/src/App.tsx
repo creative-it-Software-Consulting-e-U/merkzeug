@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import type { FileNode, GitStatus, MenuAction } from '../../shared/types'
+import type { FileNode, GitStatus, MenuAction, PdfExportProgress } from '../../shared/types'
 import { autoNameFor, makeTab, type Pane, type Tab, type TabKind } from './types'
 import { leadingH1, slugifyTitle } from './util/autoName'
 import { basename, dirname, extname, isExternalLink, resolveVaultLink } from './util/paths'
@@ -46,6 +46,12 @@ export function App(): React.JSX.Element {
   const [gitError, setGitError] = useState<string | null>(null)
   const [dirtyTabs, setDirtyTabs] = useState<Set<string>>(new Set())
   const [linkDialogOpen, setLinkDialogOpen] = useState(false)
+  // laufender PDF-Export (Fortschritts-Toast); null = kein Export aktiv
+  const [pdfProgress, setPdfProgress] = useState<{
+    phase: PdfExportProgress['phase']
+    done?: number
+    total: number
+  } | null>(null)
   const [sidebarWidth, setSidebarWidth] = useState<number>(() => {
     const stored = Number(localStorage.getItem('sidebarWidth'))
     return Number.isFinite(stored) && stored > 0
@@ -95,6 +101,24 @@ export function App(): React.JSX.Element {
   const activeTab = useCallback((): Tab | null => {
     const pane = panesRef.current[activePaneRef.current]
     return pane.tabs.find((t) => t.id === pane.activeTabId) ?? null
+  }, [])
+
+  /** PDF-Export: vorher alle offenen Notizen sichern, damit der Stand aktuell ist. */
+  const exportPdf = useCallback(async (path: string): Promise<void> => {
+    for (const handle of editorRefs.current.values()) await handle?.flush()
+    await window.merkzeug.exportPdf(path)
+  }, [])
+
+  // Fortschritt des PDF-Exports empfangen
+  useEffect(() => {
+    const off = window.merkzeug.onPdfExportProgress((progress) => {
+      if (progress.phase === 'done' || progress.phase === 'error' || !progress.total) {
+        setPdfProgress(null)
+      } else {
+        setPdfProgress({ phase: progress.phase, done: progress.done, total: progress.total })
+      }
+    })
+    return off
   }, [])
 
   const updateTab = useCallback((tabId: string, update: (tab: Tab) => Tab): void => {
@@ -612,10 +636,15 @@ export function App(): React.JSX.Element {
         case 'toggleAssets':
           setAssetsVisible((prev) => !prev)
           break
+        case 'exportPdf': {
+          const tab = activeTab()
+          if (tab?.kind === 'note') void exportPdf(tab.path)
+          break
+        }
       }
     })
     return off
-  }, [activeEditor, activeTab, closeTab, createAtSelection, moveTabToOtherPane, stepHistory, updateTab])
+  }, [activeEditor, activeTab, closeTab, createAtSelection, exportPdf, moveTabToOtherPane, stepHistory, updateTab])
 
   // Maus- und Trackpad-Gesten für Zurück/Vorwärts im Navigationsmodus
   useEffect(() => {
@@ -777,6 +806,7 @@ export function App(): React.JSX.Element {
           onRename={(path, newName) => void handleRename(path, newName)}
           onTrash={(path) => void handleTrash(path)}
           onShowInFolder={(path) => void window.merkzeug.showInFolder(path)}
+          onExportPdf={(path) => void exportPdf(path)}
           onMove={(src, dest) => void handleMove(src, dest)}
           onNewNote={() => createAtSelection('note')}
           onNewFolder={() => createAtSelection('folder')}
@@ -816,6 +846,23 @@ export function App(): React.JSX.Element {
       {gitMessage && (
         <div className="git-toast" onClick={() => setGitMessage(null)}>
           {gitMessage}
+        </div>
+      )}
+      {pdfProgress && (
+        <div className="pdf-progress-toast">
+          <span className="pdf-progress-label">
+            {pdfProgress.phase === 'print'
+              ? 'PDF-Export: PDF wird erzeugt …'
+              : pdfProgress.phase === 'render' && pdfProgress.done
+                ? `PDF-Export: Dokument ${Math.min(pdfProgress.done, pdfProgress.total - 1)} von ${pdfProgress.total - 1} gerendert …`
+                : 'PDF-Export: Dokumente werden gerendert …'}
+          </span>
+          <div className="pdf-progress-track">
+            <div
+              className="pdf-progress-fill"
+              style={{ width: `${Math.round(((pdfProgress.done ?? 0) / pdfProgress.total) * 100)}%` }}
+            />
+          </div>
         </div>
       )}
       {linkDialogOpen && (

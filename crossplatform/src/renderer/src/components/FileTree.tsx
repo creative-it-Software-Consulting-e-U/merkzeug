@@ -16,6 +16,7 @@ interface FileTreeProps {
   onRename: (path: string, newName: string) => void
   onTrash: (path: string) => void
   onShowInFolder: (path: string) => void
+  onExportPdf: (path: string) => void
   onMove: (src: string, destDir: string) => void
 }
 
@@ -58,6 +59,12 @@ export function FileTree(props: FileTreeProps): React.JSX.Element {
       entries.push(
         { label: 'Neue Notiz', onClick: () => props.onCreateNote(node.path) },
         { label: 'Neuer Ordner', onClick: () => props.onCreateFolder(node.path) },
+        { separator: true, label: '' }
+      )
+    }
+    if (!node.isDirectory && node.name.endsWith('.md')) {
+      entries.push(
+        { label: 'Als PDF exportieren…', onClick: () => props.onExportPdf(node.path) },
         { separator: true, label: '' }
       )
     }
