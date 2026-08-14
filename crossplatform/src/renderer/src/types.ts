@@ -7,11 +7,17 @@ export interface HistoryEntry {
   path: string
   /** Anker (Überschriften-Fragment), zu dem beim Öffnen gesprungen wurde */
   anchor?: string
+  /** Scroll-Position beim Verlassen des Eintrags (Zurück/Vorwärts kehrt dorthin zurück) */
+  scrollTop?: number
 }
 
-/** Sprungziel im Editor; token erzwingt erneutes Springen bei gleichem Fragment */
-export interface AnchorTarget {
-  fragment: string
+/**
+ * Sprungziel im Editor: Überschriften-Anker oder gemerkte Scroll-Position.
+ * token erzwingt erneutes Springen bei gleichem Ziel.
+ */
+export interface JumpTarget {
+  fragment?: string
+  scrollTop?: number
   token: number
 }
 
@@ -26,8 +32,8 @@ export interface Tab {
   loadToken: number
   /** Datei wird automatisch nach der Überschrift 1 benannt (bis zum manuellen Umbenennen) */
   autoName: boolean
-  /** Anker, zu dem der Editor (ggf. nach dem Laden) springen soll */
-  pendingAnchor?: AnchorTarget | null
+  /** Ziel, zu dem der Editor (ggf. nach dem Laden) springen soll */
+  pendingJump?: JumpTarget | null
 }
 
 export interface Pane {

@@ -147,6 +147,9 @@ in der Toolbar.
   Zurück-/Vorwärts-Tasten der Maus oder Wischgesten auf dem Trackpad
   (horizontales Wischen mit zwei Fingern, unter macOS auch mit drei Fingern,
   wenn „Zwischen Seiten blättern" entsprechend eingestellt ist).
+- Beim Zurück-/Vorwärtsgehen landest du wieder an der **Stelle, an der du die
+  Notiz verlassen hast** (bzw. am verlinkten Anker, wenn du dort nicht gescrollt
+  hattest).
 - Die **Historie bleibt pro Tab erhalten**, auch wenn du den Modus verlässt, die
   Notiz bearbeitest und den Modus später wieder einschaltest.
 

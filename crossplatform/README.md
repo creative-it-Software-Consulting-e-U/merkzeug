@@ -63,7 +63,8 @@ und vertikal), Tabs und zwei Sektionen, Mehrfenster-Betrieb, WYSIWYG-Editor mit
 Tabellen, Bildern (`Notizname.assets/`), formatierten Links (⌘K) inkl.
 Anker-Sprüngen auf Überschriften (`notiz.md#überschrift`, `#überschrift`
 innerhalb derselben Notiz),
-Mermaid-Diagrammen inkl. Zoom-Fenster, Navigationsmodus mit Historie,
+Mermaid-Diagrammen inkl. Zoom-Fenster, Navigationsmodus mit Historie
+(Zurück/Vorwärts kehren an die verlassene Stelle zurück),
 Git-Integration (Status, Commit & Push, Push, Pull, Fehleranzeige ⚠ bei
 fehlgeschlagenen Aktionen), Hilfe in DE/EN (⌘? oder
 Hilfe-Button in der Toolbar) und

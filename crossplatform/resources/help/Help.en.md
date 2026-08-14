@@ -140,6 +140,8 @@ For browsing linked notes there is a per-tab **navigation mode** – toggled wit
   back/forward mouse buttons, or trackpad swipe gestures (horizontal
   two-finger swipe; on macOS also three fingers if "Swipe between pages"
   is configured accordingly).
+- Going back/forward returns you to the **position where you left the note**
+  (or to the linked anchor if you had not scrolled there).
 - The **history is kept per tab**, even if you leave the mode, edit the note and
   re-enable the mode later.
 
