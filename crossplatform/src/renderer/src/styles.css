@@ -484,6 +484,63 @@ button {
   width: 100%;
 }
 
+/* ---- Frontmatter-Balken über dem Text ---- */
+
+.frontmatter-bar {
+  flex: 0 0 auto;
+  /* horizontal bündig mit dem Text-Inset des Editors (28px) */
+  margin: 12px 28px 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-hover);
+  overflow: hidden;
+}
+
+.frontmatter-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-dim);
+  text-align: left;
+}
+
+.frontmatter-toggle:hover {
+  background: var(--bg-active);
+  color: var(--text);
+}
+
+.frontmatter-chevron {
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+
+.frontmatter-chevron.open {
+  transform: rotate(90deg);
+}
+
+.frontmatter-input {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-top: 1px solid var(--border);
+  outline: none;
+  resize: vertical;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'SF Mono', ui-monospace, Menlo, Monaco, 'Cascadia Mono', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.frontmatter-input::placeholder {
+  color: var(--text-dim);
+}
+
 /* ---- Anker-Sprünge (Links auf Überschriften) ---- */
 
 .milkdown .ProseMirror :is(h1, h2, h3, h4, h5, h6) {

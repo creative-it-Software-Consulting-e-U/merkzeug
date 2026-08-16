@@ -117,8 +117,10 @@ Der Editor zeigt die Notiz formatiert an; gespeichert wird Markdown.
 - **Blöcke verschieben:** Der Griff links neben einem Block (erscheint beim
   Überfahren) erlaubt Verschieben per Drag & Drop.
 - **YAML-Frontmatter:** Ein `---`-Block am Dateianfang (z. B. mit `title:`,
-  `tags:` …) wird im Editor ausgeblendet und beim Speichern unverändert
-  erhalten. `title:` bestimmt den Titel beim PDF-Export.
+  `tags:` …) erscheint nicht im Text, sondern hinter dem grauen, aufklappbaren
+  Balken **„Frontmatter“** ganz oben im Editor. Dort lässt er sich direkt
+  bearbeiten; wird das Feld geleert, entfällt der Block beim Speichern.
+  `title:` bestimmt den Titel beim PDF-Export.
 
 ## 5. Links
 

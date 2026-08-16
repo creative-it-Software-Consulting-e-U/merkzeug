@@ -112,8 +112,10 @@ The editor shows the note formatted; what is saved is Markdown.
 - **Moving blocks:** the handle to the left of a block (appears on hover)
   allows drag & drop reordering.
 - **YAML frontmatter:** a `---` block at the top of the file (e.g. with
-  `title:`, `tags:` …) is hidden in the editor and preserved unchanged when
-  saving. `title:` sets the title used by the PDF export.
+  `title:`, `tags:` …) does not appear in the text; instead it sits behind the
+  gray, collapsible **"Frontmatter"** bar at the very top of the editor, where
+  it can be edited directly. Clearing the field removes the block on save.
+  `title:` sets the title used by the PDF export.
 
 ## 5. Links
 

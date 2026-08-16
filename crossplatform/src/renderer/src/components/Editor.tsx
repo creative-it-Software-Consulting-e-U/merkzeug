@@ -96,6 +96,19 @@ const ANCHOR_MAX_TRIES = 7
 /** "-" gefolgt von ">" wird beim Tippen zu einem Pfeil "→". */
 const arrowInputRule = $inputRule(() => new InputRule(/->$/, '→'))
 
+/** Inhalt eines Frontmatter-Blocks ohne die umschließenden Trennzeilen (`---`/`...`). */
+function frontmatterInner(block: string): string {
+  const lines = block.split(/(?<=\n)/)
+  if (lines.length < 2) return ''
+  return lines.slice(1, -1).join('')
+}
+
+/** Editierten Frontmatter-Text wieder als vollständigen Block verpacken; leer → kein Block. */
+function wrapFrontmatter(inner: string): string {
+  if (inner.trim() === '') return ''
+  return `---\n${inner.endsWith('\n') ? inner : inner + '\n'}---\n`
+}
+
 export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   { filePath, loadToken, readonly, onLinkClick, jump, onDirtyChange, onSaved },
   ref
@@ -109,6 +122,11 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   // YAML-Frontmatter der Datei: wird im Editor nicht angezeigt, beim
   // Speichern aber unverändert wieder vorangestellt
   const frontmatterRef = useRef('')
+  // Frontmatter-Balken über dem Text: auf-/zugeklappt + editierbarer Inhalt
+  const [fmOpen, setFmOpen] = useState(false)
+  const [fmText, setFmText] = useState('')
+  // wurde das Frontmatter seit dem letzten Laden editiert? (für das Ladefenster)
+  const fmDirtyRef = useRef(false)
   const lastSavedRef = useRef<string | null>(null)
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
@@ -160,6 +178,22 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
     saveTimerRef.current = setTimeout(() => void doSave(), AUTOSAVE_MS)
   }, [doSave])
+
+  const handleFrontmatterChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
+      const text = e.target.value
+      setFmText(text)
+      frontmatterRef.current = wrapFrontmatter(text)
+      fmDirtyRef.current = true
+      if (!dirtyRef.current) {
+        dirtyRef.current = true
+        onDirtyChange?.(true)
+        setReloadInfo(null)
+      }
+      scheduleSave()
+    },
+    [onDirtyChange, scheduleSave]
+  )
 
   const uploadImage = useCallback(async (file: File): Promise<string> => {
     const buffer = await file.arrayBuffer()
@@ -233,6 +267,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       // Navigation/Neuladen im selben Tab: alter Hinweis gilt nicht mehr
       prevLoadTokenRef.current = loadToken
       setReloadInfo(null)
+      setFmOpen(false)
     }
 
     const setup = async (): Promise<void> => {
@@ -247,7 +282,11 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       // Frontmatter nicht in den Editor geben; beim Speichern wieder voranstellen
       const { frontmatter, body } = splitFrontmatter(content)
       frontmatterRef.current = frontmatter
+      fmDirtyRef.current = false
+      // bis der Editor steht, keinen (alten) Inhalt speichern
+      latestMarkdownRef.current = null
       if (cancelled || !rootRef.current) return
+      setFmText(frontmatterInner(frontmatter))
       rootRef.current.innerHTML = ''
 
       crepe = new Crepe({
@@ -382,7 +421,10 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       baseline = crepe.getMarkdown()
       latestMarkdownRef.current = body
       lastSavedRef.current = null
-      dirtyRef.current = false
+      // dirty nur behalten, wenn während des Ladens Frontmatter editiert wurde;
+      // spurige markdownUpdated-Events beim Aufbau zählen nicht
+      dirtyRef.current = fmDirtyRef.current
+      if (fmDirtyRef.current) scheduleSave()
       crepe.setReadonly(readonly)
       crepeRef.current = crepe
       // während des Ladens angefallenes Sprungziel jetzt ausführen
@@ -732,6 +774,27 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
           <button onClick={resolveConflictKeep}>Meine Version behalten</button>
         </div>
       )}
+      <div className="frontmatter-bar">
+        <button
+          className="frontmatter-toggle"
+          title={fmOpen ? 'Frontmatter zuklappen' : 'Frontmatter aufklappen'}
+          onClick={() => setFmOpen((o) => !o)}
+        >
+          <span className={fmOpen ? 'frontmatter-chevron open' : 'frontmatter-chevron'}>▸</span>
+          Frontmatter
+        </button>
+        {fmOpen && (
+          <textarea
+            className="frontmatter-input"
+            value={fmText}
+            onChange={handleFrontmatterChange}
+            readOnly={readonly}
+            spellCheck={false}
+            rows={Math.min(12, Math.max(3, fmText.split('\n').length))}
+            placeholder={'title: Mein Titel\ntags: [beispiel]'}
+          />
+        )}
+      </div>
       <div ref={rootRef} className="editor-root" />
       <input
         ref={fileInputRef}
