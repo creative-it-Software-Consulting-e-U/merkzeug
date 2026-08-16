@@ -32,6 +32,7 @@ import {
   insertTableCommand,
   toggleStrikethroughCommand
 } from '@milkdown/kit/preset/gfm'
+import { splitFrontmatter } from '../../../shared/docTitle'
 import { renderMermaid } from '../util/mermaid'
 import { jumpToFragment } from '../util/anchors'
 import { isExternalLink } from '../util/paths'
@@ -105,6 +106,9 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   const filePathRef = useRef(filePath)
   const dirtyRef = useRef(false)
   const latestMarkdownRef = useRef<string | null>(null)
+  // YAML-Frontmatter der Datei: wird im Editor nicht angezeigt, beim
+  // Speichern aber unverändert wieder vorangestellt
+  const frontmatterRef = useRef('')
   const lastSavedRef = useRef<string | null>(null)
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
@@ -131,9 +135,10 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
     dirtyRef.current = false
     onDirtyChange?.(false)
     const markdown = latestMarkdownRef.current
+    const full = frontmatterRef.current + markdown
     lastSavedRef.current = markdown
-    lastDiskRef.current = markdown
-    await window.merkzeug.writeFile(filePathRef.current, markdown)
+    lastDiskRef.current = full
+    await window.merkzeug.writeFile(filePathRef.current, full)
     onSaved?.(markdown)
   }, [onDirtyChange, onSaved])
 
@@ -144,9 +149,10 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
     dirtyRef.current = false
     onDirtyChange?.(false)
     const markdown = latestMarkdownRef.current
+    const full = frontmatterRef.current + markdown
     lastSavedRef.current = markdown
-    lastDiskRef.current = markdown
-    window.merkzeug.writeFileSync(filePathRef.current, markdown)
+    lastDiskRef.current = full
+    window.merkzeug.writeFileSync(filePathRef.current, full)
     onSaved?.(markdown)
   }, [onDirtyChange, onSaved])
 
@@ -238,12 +244,15 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
         return
       }
       lastDiskRef.current = content
+      // Frontmatter nicht in den Editor geben; beim Speichern wieder voranstellen
+      const { frontmatter, body } = splitFrontmatter(content)
+      frontmatterRef.current = frontmatter
       if (cancelled || !rootRef.current) return
       rootRef.current.innerHTML = ''
 
       crepe = new Crepe({
         root: rootRef.current,
-        defaultValue: content,
+        defaultValue: body,
         features: {
           [Crepe.Feature.Latex]: false,
           [Crepe.Feature.AI]: false,
@@ -371,7 +380,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
         return
       }
       baseline = crepe.getMarkdown()
-      latestMarkdownRef.current = content
+      latestMarkdownRef.current = body
       lastSavedRef.current = null
       dirtyRef.current = false
       crepe.setReadonly(readonly)
@@ -396,7 +405,10 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       if (instance) {
         if (!conflictRef.current && dirtyRef.current && latestMarkdownRef.current !== null) {
           dirtyRef.current = false
-          void window.merkzeug.writeFile(filePathRef.current, latestMarkdownRef.current)
+          void window.merkzeug.writeFile(
+            filePathRef.current,
+            frontmatterRef.current + latestMarkdownRef.current
+          )
         }
         crepeRef.current = null
         void instance.destroy()

@@ -77,7 +77,10 @@ A4-Hochformatseite passen, automatisch im Querformat), PDF-Vorlagen mit
 Firmen-Layout (Einstellungen ⌘,: Vorlagen-Ordner — via iCloud Drive/Google
 Drive/OneDrive/Dropbox geräteübergreifend synchronisierbar — mit Kopfzeile,
 Fußzeile, Deckblatt, Logo, Zusatz-CSS und Rändern je Vorlage; Zuweisung pro
-Vault in `.merkzeug/settings.json`, wandert per Git mit), automatische
+Vault in `.merkzeug/settings.json`, wandert per Git mit),
+YAML-Frontmatter (Block am Dateianfang wird im Editor ausgeblendet und beim
+Speichern erhalten; `title:` bestimmt den Titel im PDF-Export, sonst die
+erste Überschrift 1, sonst der Dateiname), automatische
 Benennung neuer Notizen nach ihrer Überschrift 1 (Slug wie
 `2026-08-11-bpp-call-neustrukturierung`, bis zum manuellen Umbenennen) und
 die Tipp-Ersetzung `->` → „→“. Extern geänderte

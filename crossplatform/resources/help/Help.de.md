@@ -116,6 +116,9 @@ Der Editor zeigt die Notiz formatiert an; gespeichert wird Markdown.
 - **Undo/Redo** wie gewohnt (⌘Z / ⇧⌘Z).
 - **Blöcke verschieben:** Der Griff links neben einem Block (erscheint beim
   Überfahren) erlaubt Verschieben per Drag & Drop.
+- **YAML-Frontmatter:** Ein `---`-Block am Dateianfang (z. B. mit `title:`,
+  `tags:` …) wird im Editor ausgeblendet und beim Speichern unverändert
+  erhalten. `title:` bestimmt den Titel beim PDF-Export.
 
 ## 5. Links
 
@@ -212,8 +215,9 @@ Seite, Fußzeile mit Seitenzahlen sowie optional ein Deckblatt.
   - `deckblatt.html` – Deckblatt als erste Seite
   - `stil.css` – Zusatz-CSS für den Dokumentinhalt
   - `vorlage.json` – Seitenränder in Millimetern
-- **Platzhalter:** `{{titel}}` (erste Überschrift 1 der Notiz, sonst der
-  Dateiname) und `{{datum}}` (Exportdatum);
+- **Platzhalter:** `{{titel}}` (`title:` aus dem YAML-Frontmatter, sonst die
+  erste Überschrift 1 der Notiz, sonst der Dateiname) und `{{datum}}`
+  (Exportdatum);
   in Kopf-/Fußzeile zusätzlich `<span class="pageNumber"></span>` und
   `<span class="totalPages"></span>` für Seitenzahlen.
 - **Logo:** Bilddatei (z. B. `logo.png`) mit in den Vorlagen-Ordner legen und

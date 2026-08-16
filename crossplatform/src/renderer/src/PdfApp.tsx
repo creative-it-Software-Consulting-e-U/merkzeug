@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Crepe } from '@milkdown/crepe'
-import { docTitle } from '../../shared/docTitle'
+import { docTitle, splitFrontmatter } from '../../shared/docTitle'
 import type { PdfDoc, PdfTemplate } from '../../shared/types'
 import { renderMermaid } from './util/mermaid'
 import { isExternalLink, resolveVaultLink } from './util/paths'
@@ -123,7 +123,8 @@ function DocView({
       rootRef.current.innerHTML = ''
       crepe = new Crepe({
         root: rootRef.current,
-        defaultValue: rewriteLinks(doc.content, doc.path, vault, anchors),
+        // Frontmatter gehört nicht in den sichtbaren PDF-Inhalt
+        defaultValue: rewriteLinks(splitFrontmatter(doc.content).body, doc.path, vault, anchors),
         features: {
           [Crepe.Feature.Latex]: false,
           [Crepe.Feature.AI]: false,

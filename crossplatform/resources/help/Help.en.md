@@ -111,6 +111,9 @@ The editor shows the note formatted; what is saved is Markdown.
 - **Undo/redo** as usual (⌘Z / ⇧⌘Z).
 - **Moving blocks:** the handle to the left of a block (appears on hover)
   allows drag & drop reordering.
+- **YAML frontmatter:** a `---` block at the top of the file (e.g. with
+  `title:`, `tags:` …) is hidden in the editor and preserved unchanged when
+  saving. `title:` sets the title used by the PDF export.
 
 ## 5. Links
 
@@ -202,8 +205,9 @@ footer with page numbers, and an optional cover page.
   - `deckblatt.html` – cover page (first page)
   - `stil.css` – additional CSS for the document content
   - `vorlage.json` – page margins in millimetres
-- **Placeholders:** `{{titel}}` (first level-1 heading of the note, falling
-  back to the file name) and `{{datum}}` (export date); in
+- **Placeholders:** `{{titel}}` (`title:` from the YAML frontmatter, otherwise
+  the first level-1 heading of the note, otherwise the file name) and
+  `{{datum}}` (export date); in
   header and footer additionally `<span class="pageNumber"></span>` and
   `<span class="totalPages"></span>` for page numbers.
 - **Logo:** put an image file (e.g. `logo.png`) into the template folder and
