@@ -72,7 +72,9 @@ Autosave. Bonus gegenüber der Mac-App: Slash-Menü („/“), Auswahl-Toolbar,
 Aufgabenlisten, Verschieben von Blöcken per Drag & Drop, PDF-Export (⌘P oder
 Kontextmenü: einzelne Notiz oder Index-Datei mitsamt aller verlinkten
 Dokumente derselben Hierarchie, alphabetisch angehängt, mit internen
-Sprungzielen zwischen den Dokumenten; bei Tabellen, die nicht auf eine
+Sprungzielen zwischen den Dokumenten; einzelne Dokumente per
+`pdf-exclude:`-Liste im Frontmatter der Index-Datei ausschließbar; bei
+Tabellen, die nicht auf eine
 A4-Hochformatseite passen, automatisch im Querformat), PDF-Vorlagen mit
 Firmen-Layout (Einstellungen ⌘,: Vorlagen-Ordner — via iCloud Drive/Google
 Drive/OneDrive/Dropbox geräteübergreifend synchronisierbar — mit Kopfzeile,

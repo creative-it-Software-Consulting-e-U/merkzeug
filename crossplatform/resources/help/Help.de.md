@@ -189,6 +189,20 @@ in der Toolbar.
   `README` mit Inhaltsverzeichnis gedacht: Zuerst kommt die Index-Datei,
   danach alle direkt verlinkten Dokumente in alphabetischer Reihenfolge –
   jedes beginnt auf einer neuen Seite.
+- **Dokumente ausschließen:** Eine `pdf-exclude:`-Liste im Frontmatter der
+  Index-Datei nimmt einzelne verlinkte Dokumente vom Export aus, z. B.:
+
+  ```
+  ---
+  pdf-exclude:
+    - intern
+    - unterordner/entwurf.md
+  ---
+  ```
+
+  Pfade wie in Links: relativ zur Index-Datei, mit führendem `/` relativ zum
+  Vault; `.md` ist optional. Auch die Kurzform `pdf-exclude: [intern, entwurf]`
+  ist möglich. Ausgeschlossene Dokumente zählen in der Nachfrage nicht mit.
 - Das PDF wird immer hell gerendert (unabhängig vom System-Design) und enthält
   Tabellen, Bilder und Mermaid-Diagramme. Web-Links, Dateien außerhalb der
   Hierarchie und nicht verlinkte Dateien werden nicht angehängt.

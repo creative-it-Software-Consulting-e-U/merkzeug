@@ -179,6 +179,21 @@ For browsing linked notes there is a per-tab **navigation mode** – toggled wit
   documents"**. The latter is meant for index files such as a `README` with a
   table of contents: the index file comes first, followed by all directly
   linked documents in alphabetical order – each starting on a new page.
+- **Excluding documents:** a `pdf-exclude:` list in the index file's
+  frontmatter leaves individual linked documents out of the export, e.g.:
+
+  ```
+  ---
+  pdf-exclude:
+    - internal
+    - subfolder/draft.md
+  ---
+  ```
+
+  Paths work like in links: relative to the index file, with a leading `/`
+  relative to the vault; `.md` is optional. The short form
+  `pdf-exclude: [internal, draft]` also works. Excluded documents are not
+  counted in the export prompt.
 - The PDF is always rendered in the light theme (regardless of the system
   appearance) and includes tables, images and Mermaid diagrams. Web links,
   files outside the hierarchy and unlinked files are not appended.

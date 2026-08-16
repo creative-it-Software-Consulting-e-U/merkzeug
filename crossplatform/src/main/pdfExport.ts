@@ -2,7 +2,7 @@ import { BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, dirname, isAbsolute, join, normalize, relative, resolve } from 'node:path'
 import { is } from '@electron-toolkit/utils'
-import { docTitle } from '../shared/docTitle'
+import { docTitle, frontmatterList, splitFrontmatter } from '../shared/docTitle'
 import type { PdfDoc, PdfExportProgress, PdfTemplate } from '../shared/types'
 import { getVaultTemplateName, loadTemplate } from './templates'
 import { getWindowVault } from './windows'
@@ -28,7 +28,10 @@ function isWithin(dir: string, path: string): boolean {
 
 /**
  * Sammelt alle aus der Index-Datei verlinkten Markdown-Dateien, die in derselben
- * Hierarchie (Ordner der Index-Datei oder darunter) liegen — alphabetisch sortiert.
+ * Hierarchie (Ordner der Index-Datei oder darunter) liegen — alphabetisch
+ * sortiert. Dokumente aus der `pdf-exclude:`-Liste im Frontmatter der
+ * Index-Datei (Pfade wie in Links: relativ zur Datei, mit `/` vault-relativ,
+ * `.md` optional) werden ausgelassen.
  */
 export function collectLinkedDocs(indexPath: string, vault: string | null): string[] {
   const md = readFileSync(indexPath, 'utf8')
@@ -36,6 +39,13 @@ export function collectLinkedDocs(indexPath: string, vault: string | null): stri
   const scannable = md.replace(/```[\s\S]*?```/g, '').replace(/`[^`\n]*`/g, '')
   const dir = dirname(indexPath)
   const found = new Set<string>()
+
+  const excluded = new Set<string>()
+  for (const entry of frontmatterList(splitFrontmatter(md).frontmatter, 'pdf-exclude')) {
+    let abs = normalize(entry.startsWith('/') && vault ? join(vault, entry) : join(dir, entry))
+    if (!abs.toLowerCase().endsWith('.md')) abs += '.md'
+    excluded.add(resolve(abs))
+  }
 
   const targets: string[] = []
   // Inline-Links [Text](ziel) — Bilder (![...]) auslassen
@@ -65,6 +75,7 @@ export function collectLinkedDocs(indexPath: string, vault: string | null): stri
     abs = resolve(abs)
     if (abs === resolve(indexPath)) continue
     if (!isWithin(dir, abs)) continue
+    if (excluded.has(abs)) continue
     found.add(abs)
   }
   return [...found].sort((a, b) => a.localeCompare(b, 'de', { numeric: true }))

@@ -28,6 +28,38 @@ function frontmatterTitle(frontmatter: string): string | null {
 }
 
 /**
+ * Werte einer Listen-Eigenschaft aus dem Frontmatter (nur oberste Ebene).
+ * Unterstützt die Inline-Form (`key: [a, b]` oder `key: a, b`) und die
+ * Block-Form (`key:` gefolgt von `- Eintrag`-Zeilen); umschließende
+ * Anführungszeichen je Eintrag entfallen. Ohne den Schlüssel: leere Liste.
+ */
+export function frontmatterList(frontmatter: string, key: string): string[] {
+  const unquote = (s: string): string => s.replace(/^(['"])(.*)\1$/, '$2').trim()
+  const lines = frontmatter.split(/\r?\n/)
+  const head = new RegExp(`^${key}[ \\t]*:[ \\t]*(.*)$`)
+  for (let i = 0; i < lines.length; i++) {
+    const m = lines[i].match(head)
+    if (!m) continue
+    const rest = m[1].trim()
+    if (rest) {
+      const inner = rest.startsWith('[') && rest.endsWith(']') ? rest.slice(1, -1) : rest
+      return inner
+        .split(',')
+        .map((s) => unquote(s.trim()))
+        .filter(Boolean)
+    }
+    const items: string[] = []
+    for (let j = i + 1; j < lines.length; j++) {
+      const item = lines[j].match(/^[ \t]*-[ \t]+(.+?)[ \t]*$/)
+      if (item) items.push(unquote(item[1]))
+      else if (lines[j].trim() !== '') break
+    }
+    return items.filter(Boolean)
+  }
+  return []
+}
+
+/**
  * Titel eines Markdown-Dokuments: `title:` aus dem YAML-Frontmatter, sonst die
  * erste Überschrift 1 (außerhalb von Codeblöcken, von Inline-Auszeichnung
  * befreit) — sonst der Fallback (üblicherweise der Dateiname).
