@@ -2,6 +2,7 @@ import { BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, dirname, isAbsolute, join, normalize, relative, resolve } from 'node:path'
 import { is } from '@electron-toolkit/utils'
+import { docTitle } from '../shared/docTitle'
 import type { PdfDoc, PdfExportProgress, PdfTemplate } from '../shared/types'
 import { getVaultTemplateName, loadTemplate } from './templates'
 import { getWindowVault } from './windows'
@@ -71,7 +72,12 @@ export function collectLinkedDocs(indexPath: string, vault: string | null): stri
 
 /** Ersetzt {{titel}}/{{datum}} in den HTML-Teilen der Vorlage */
 function applyPlaceholders(template: PdfTemplate, notePath: string): PdfTemplate {
-  const titel = basename(notePath, '.md')
+  let titel = basename(notePath, '.md')
+  try {
+    titel = docTitle(readFileSync(notePath, 'utf8'), titel)
+  } catch {
+    /* Datei nicht lesbar → Dateiname als Titel */
+  }
   const datum = new Date().toLocaleDateString('de-DE', {
     day: '2-digit',
     month: '2-digit',

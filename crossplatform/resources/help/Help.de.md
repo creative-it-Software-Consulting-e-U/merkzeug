@@ -212,7 +212,8 @@ Seite, Fußzeile mit Seitenzahlen sowie optional ein Deckblatt.
   - `deckblatt.html` – Deckblatt als erste Seite
   - `stil.css` – Zusatz-CSS für den Dokumentinhalt
   - `vorlage.json` – Seitenränder in Millimetern
-- **Platzhalter:** `{{titel}}` (Name der Notiz) und `{{datum}}` (Exportdatum);
+- **Platzhalter:** `{{titel}}` (erste Überschrift 1 der Notiz, sonst der
+  Dateiname) und `{{datum}}` (Exportdatum);
   in Kopf-/Fußzeile zusätzlich `<span class="pageNumber"></span>` und
   `<span class="totalPages"></span>` für Seitenzahlen.
 - **Logo:** Bilddatei (z. B. `logo.png`) mit in den Vorlagen-Ordner legen und

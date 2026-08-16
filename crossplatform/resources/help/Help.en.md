@@ -202,7 +202,8 @@ footer with page numbers, and an optional cover page.
   - `deckblatt.html` – cover page (first page)
   - `stil.css` – additional CSS for the document content
   - `vorlage.json` – page margins in millimetres
-- **Placeholders:** `{{titel}}` (note name) and `{{datum}}` (export date); in
+- **Placeholders:** `{{titel}}` (first level-1 heading of the note, falling
+  back to the file name) and `{{datum}}` (export date); in
   header and footer additionally `<span class="pageNumber"></span>` and
   `<span class="totalPages"></span>` for page numbers.
 - **Logo:** put an image file (e.g. `logo.png`) into the template folder and

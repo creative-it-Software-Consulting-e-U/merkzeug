@@ -160,8 +160,8 @@ Dieser Ordner ist eine PDF-Vorlage für Merkzeug. Alle Dateien sind optional:
 - \`stil.css\` — Zusatz-CSS für den Dokumentinhalt
 - \`vorlage.json\` — Seitenränder in Millimetern
 
-Platzhalter in den HTML-Dateien: \`{{titel}}\` (Name der exportierten Notiz) und
-\`{{datum}}\` (Exportdatum). In Kopf- und Fußzeile zusätzlich
+Platzhalter in den HTML-Dateien: \`{{titel}}\` (erste Überschrift 1 der Notiz,
+sonst der Dateiname) und \`{{datum}}\` (Exportdatum). In Kopf- und Fußzeile zusätzlich
 \`<span class="pageNumber"></span>\` und \`<span class="totalPages"></span>\` für
 Seitenzahlen.
 

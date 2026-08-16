@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Crepe } from '@milkdown/crepe'
+import { docTitle } from '../../shared/docTitle'
 import type { PdfDoc, PdfTemplate } from '../../shared/types'
 import { renderMermaid } from './util/mermaid'
 import { isExternalLink, resolveVaultLink } from './util/paths'
@@ -210,7 +211,9 @@ export function PdfApp(): React.JSX.Element {
   // (Chromiums <span class="title"> in Kopf-/Fußzeile nutzt den Fenstertitel)
   useEffect(() => {
     if (!payload || payload.docs.length === 0) return
-    document.title = payload.docs[0].path.split(/[/\\]/).pop()?.replace(/\.md$/i, '') ?? 'Merkzeug'
+    const first = payload.docs[0]
+    const fallback = first.path.split(/[/\\]/).pop()?.replace(/\.md$/i, '') ?? 'Merkzeug'
+    document.title = docTitle(first.content, fallback)
     if (!payload.template?.css) return
     const style = document.createElement('style')
     style.textContent = payload.template.css
