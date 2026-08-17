@@ -1372,17 +1372,18 @@ html:has(.pdf-app) #root {
   line-height: 1.4;
 }
 
-.pdf-toc-l1 {
+/* mindestens so spezifisch wie ".pdf-toc li", sonst gewinnt dessen margin-Shorthand */
+.pdf-toc li.pdf-toc-l1 {
   font-weight: 600;
   margin-top: 10px;
 }
 
-.pdf-toc-l2 {
-  margin-left: 18px;
+.pdf-toc li.pdf-toc-l2 {
+  padding-left: 18px;
 }
 
-.pdf-toc-l3 {
-  margin-left: 36px;
+.pdf-toc li.pdf-toc-l3 {
+  padding-left: 36px;
 }
 
 .pdf-toc a {
