@@ -15,16 +15,26 @@ export function splitFrontmatter(md: string): { frontmatter: string; body: strin
   return { frontmatter: '', body: md }
 }
 
+/** Skalarer Wert eines Frontmatter-Schlüssels (nur oberste Ebene), ohne Anführungszeichen. */
+export function frontmatterScalar(frontmatter: string, key: string): string | null {
+  const m = frontmatter.match(new RegExp(`^${key}[ \\t]*:[ \\t]*(.+?)[ \\t]*\\r?$`, 'im'))
+  if (!m) return null
+  let value = m[1].trim()
+  const quote = value[0]
+  if ((quote === '"' || quote === "'") && value.endsWith(quote) && value.length > 1) {
+    value = value.slice(1, -1).trim()
+  }
+  return value || null
+}
+
+/** Wahrheitswert eines Frontmatter-Schlüssels (`true`/`ja`/`yes`/`1`). */
+export function frontmatterFlag(frontmatter: string, key: string): boolean {
+  return /^(true|ja|yes|1)$/i.test(frontmatterScalar(frontmatter, key) ?? '')
+}
+
 /** `title:` aus dem Frontmatter (nur oberste Ebene), ohne umschließende Anführungszeichen. */
 function frontmatterTitle(frontmatter: string): string | null {
-  const m = frontmatter.match(/^title[ \t]*:[ \t]*(.+?)[ \t]*\r?$/im)
-  if (!m) return null
-  let title = m[1].trim()
-  const quote = title[0]
-  if ((quote === '"' || quote === "'") && title.endsWith(quote) && title.length > 1) {
-    title = title.slice(1, -1).trim()
-  }
-  return title || null
+  return frontmatterScalar(frontmatter, 'title')
 }
 
 /**

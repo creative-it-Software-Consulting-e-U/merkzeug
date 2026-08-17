@@ -69,11 +69,14 @@ Git-Integration (Status, Commit & Push, Push, Pull, Fehleranzeige ⚠ bei
 fehlgeschlagenen Aktionen), Hilfe in DE/EN (⌘? oder
 Hilfe-Button in der Toolbar) und
 Autosave. Bonus gegenüber der Mac-App: Slash-Menü („/“), Auswahl-Toolbar,
+Inhaltsverzeichnis-Dropdown in der Toolbar (springt zu Überschriften),
 Aufgabenlisten, Verschieben von Blöcken per Drag & Drop, PDF-Export (⌘P oder
 Kontextmenü: einzelne Notiz oder Index-Datei mitsamt aller verlinkten
 Dokumente derselben Hierarchie, alphabetisch angehängt, mit internen
 Sprungzielen zwischen den Dokumenten; einzelne Dokumente per
-`pdf-exclude:`-Liste im Frontmatter der Index-Datei ausschließbar; bei
+`pdf-exclude:`-Liste im Frontmatter der Index-Datei ausschließbar;
+`pdf-toc: true` stellt ein klickbares Inhaltsverzeichnis voran, nach dem
+Deckblatt ab Seite 2; bei
 Tabellen, die nicht auf eine
 A4-Hochformatseite passen, automatisch im Querformat), PDF-Vorlagen mit
 Firmen-Layout (Einstellungen ⌘,: Vorlagen-Ordner — via iCloud Drive/Google

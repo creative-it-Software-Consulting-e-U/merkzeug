@@ -948,6 +948,10 @@ button {
   position: fixed;
   z-index: 1000;
   min-width: 190px;
+  max-width: 420px;
+  /* lange Menüs (z. B. Inhaltsverzeichnis) scrollen statt überzulaufen */
+  max-height: min(70vh, 560px);
+  overflow-y: auto;
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -962,6 +966,10 @@ button {
   padding: 5px 10px;
   border-radius: 5px;
   font-size: 13px;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .context-menu-item:hover {
@@ -1336,6 +1344,50 @@ html:has(.pdf-app) #root {
   display: block;
   break-after: page;
   page-break-after: always;
+}
+
+/* Inhaltsverzeichnis (pdf-toc: im Frontmatter): eigene Seite vor dem Inhalt */
+.pdf-toc {
+  display: block;
+  break-after: page;
+  page-break-after: always;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.pdf-toc-title {
+  margin: 0 0 18px;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.pdf-toc ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pdf-toc li {
+  margin: 5px 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.pdf-toc-l1 {
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.pdf-toc-l2 {
+  margin-left: 18px;
+}
+
+.pdf-toc-l3 {
+  margin-left: 36px;
+}
+
+.pdf-toc a {
+  color: inherit;
+  text-decoration: none;
 }
 
 /* jedes weitere Dokument beginnt auf einer neuen Seite */

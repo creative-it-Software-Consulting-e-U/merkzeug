@@ -94,6 +94,10 @@ Der Editor zeigt die Notiz formatiert an; gespeichert wird Markdown.
   durchgestrichen/Inline-Code, Listen, Zitat, Codeblock, Link, Bild, Tabelle
   und Trennlinie — plus Zurück/Vorwärts sowie rechts den Hilfe-Button
   (Fragezeichen, öffnet diese Hilfe) und den Navigationsmodus (Buch-Symbol).
+- **Inhaltsverzeichnis-Dropdown:** Der Listen-Button links in der Toolbar
+  zeigt alle Überschriften der Notiz (eingerückt nach Ebene); ein Klick
+  springt direkt zur jeweiligen Überschrift. Funktioniert auch im
+  Navigationsmodus.
 - **Slash-Menü:** Tippe **„/“** in einer leeren Zeile für alle Block-Typen
   (Überschriften, Listen, Zitat, Codeblock, Tabelle, Bild …).
 - **Auswahl-Toolbar:** Text markieren zeigt eine schwebende Leiste für fett,
@@ -122,9 +126,9 @@ Der Editor zeigt die Notiz formatiert an; gespeichert wird Markdown.
   bearbeiten; wird das Feld geleert, entfällt der Block beim Speichern.
   `title:` bestimmt den Titel beim PDF-Export.
 - **Welche Felder wertet Merkzeug aus?** Das Menü **„+ Feld“** rechts im
-  Frontmatter-Balken listet sie mit Erklärung auf (derzeit `title:` und
-  `pdf-exclude:`) und fügt per Klick eine Vorlagen-Zeile ein. Eigene Felder
-  darüber hinaus werden gespeichert, aber nicht ausgewertet.
+  Frontmatter-Balken listet sie mit Erklärung auf (derzeit `title:`,
+  `pdf-exclude:` und `pdf-toc:`) und fügt per Klick eine Vorlagen-Zeile ein.
+  Eigene Felder darüber hinaus werden gespeichert, aber nicht ausgewertet.
 
 ## 5. Links
 
@@ -207,6 +211,10 @@ in der Toolbar.
   Pfade wie in Links: relativ zur Index-Datei, mit führendem `/` relativ zum
   Vault; `.md` ist optional. Auch die Kurzform `pdf-exclude: [intern, entwurf]`
   ist möglich. Ausgeschlossene Dokumente zählen in der Nachfrage nicht mit.
+- **Inhaltsverzeichnis:** `pdf-toc: true` im Frontmatter der exportierten
+  (Index-)Datei stellt dem PDF ein klickbares Inhaltsverzeichnis voran —
+  Überschriften 1–3 aller enthaltenen Dokumente auf einer eigenen Seite nach
+  dem Deckblatt (mit Deckblatt also ab Seite 2).
 - Das PDF wird immer hell gerendert (unabhängig vom System-Design) und enthält
   Tabellen, Bilder und Mermaid-Diagramme. Web-Links, Dateien außerhalb der
   Hierarchie und nicht verlinkte Dateien werden nicht angehängt.

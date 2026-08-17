@@ -11,6 +11,17 @@ const base = {
   strokeLinejoin: 'round'
 } as const
 
+export function IconToc(): React.JSX.Element {
+  return (
+    <svg {...base}>
+      <line x1="2.5" y1="3.5" x2="10.5" y2="3.5" />
+      <line x1="4.5" y1="6.5" x2="12.5" y2="6.5" />
+      <line x1="6.5" y1="9.5" x2="13.5" y2="9.5" />
+      <line x1="2.5" y1="12.5" x2="9" y2="12.5" />
+    </svg>
+  )
+}
+
 export function IconBack(): React.JSX.Element {
   return (
     <svg {...base}>

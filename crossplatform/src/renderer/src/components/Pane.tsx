@@ -23,7 +23,8 @@ import {
   IconOrderedList,
   IconQuote,
   IconStrike,
-  IconTable
+  IconTable,
+  IconToc
 } from './icons'
 
 interface PaneProps {
@@ -49,7 +50,7 @@ interface PaneProps {
 }
 
 interface ToolbarMenu {
-  kind: 'heading' | 'table'
+  kind: 'heading' | 'table' | 'toc'
   x: number
   y: number
 }
@@ -75,6 +76,17 @@ export function PaneView(props: PaneProps): React.JSX.Element {
     { label: 'Überschrift 2', onClick: () => format('h2') },
     { label: 'Überschrift 3', onClick: () => format('h3') }
   ]
+
+  /** Einträge des Inhaltsverzeichnis-Dropdowns, beim Öffnen aus dem Dokument gelesen. */
+  const tocEntries = (): MenuEntry[] => {
+    const headings = editor()?.getHeadings() ?? []
+    if (headings.length === 0) return [{ label: 'Keine Überschriften im Dokument' }]
+    return headings.map((h) => ({
+      // Einrückung je Ebene über Geviert-Leerzeichen
+      label: '\u2003'.repeat(Math.max(0, h.level - 1)) + h.text,
+      onClick: () => editor()?.jumpToHeading(h.id || h.text)
+    }))
+  }
 
   const tableEntries: MenuEntry[] = [
     { label: 'Tabelle einfügen (3×3)', onClick: () => editor()?.insertTable(3, 3) },
@@ -141,6 +153,16 @@ export function PaneView(props: PaneProps): React.JSX.Element {
           {activeTab.kind === 'note' && (
             <>
               <div className="toolbar-divider" />
+              <button
+                className="toolbar-btn icon"
+                title="Inhaltsverzeichnis: zu einer Überschrift springen"
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={(e) => openMenu('toc', e)}
+              >
+                <IconToc />
+                <IconCaret />
+              </button>
+              <div className="toolbar-divider" />
               {fmtBtn(
                 'Absatzformat',
                 <>
@@ -196,7 +218,13 @@ export function PaneView(props: PaneProps): React.JSX.Element {
             <ContextMenu
               x={menu.x}
               y={menu.y}
-              entries={menu.kind === 'heading' ? headingEntries : tableEntries}
+              entries={
+                menu.kind === 'heading'
+                  ? headingEntries
+                  : menu.kind === 'table'
+                    ? tableEntries
+                    : tocEntries()
+              }
               onClose={() => setMenu(null)}
             />
           )}

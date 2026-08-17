@@ -90,6 +90,9 @@ The editor shows the note formatted; what is saved is Markdown.
   strikethrough/inline code, lists, quote, code block, link, image, table and
   divider — plus back/forward as well as, on the right, the help button
   (question mark, opens this help) and navigation mode (book icon).
+- **Table-of-contents dropdown:** the list button on the left of the toolbar
+  shows all headings of the note (indented by level); clicking one jumps
+  straight to that heading. Also works in navigation mode.
 - **Slash menu:** type **"/"** on an empty line for all block types (headings,
   lists, quote, code block, table, image …).
 - **Selection toolbar:** selecting text shows a floating bar for bold, italic,
@@ -117,9 +120,9 @@ The editor shows the note formatted; what is saved is Markdown.
   it can be edited directly. Clearing the field removes the block on save.
   `title:` sets the title used by the PDF export.
 - **Which fields does Merkzeug interpret?** The **"+ Feld"** menu on the right
-  of the frontmatter bar lists them with an explanation (currently `title:`
-  and `pdf-exclude:`) and inserts a template line on click. Any other fields
-  are preserved but not interpreted.
+  of the frontmatter bar lists them with an explanation (currently `title:`,
+  `pdf-exclude:` and `pdf-toc:`) and inserts a template line on click. Any
+  other fields are preserved but not interpreted.
 
 ## 5. Links
 
@@ -198,6 +201,10 @@ For browsing linked notes there is a per-tab **navigation mode** – toggled wit
   relative to the vault; `.md` is optional. The short form
   `pdf-exclude: [internal, draft]` also works. Excluded documents are not
   counted in the export prompt.
+- **Table of contents:** `pdf-toc: true` in the frontmatter of the exported
+  (index) file prepends a clickable table of contents to the PDF — headings
+  1–3 of all included documents on a page of its own after the cover (so
+  starting on page 2 when there is a cover).
 - The PDF is always rendered in the light theme (regardless of the system
   appearance) and includes tables, images and Mermaid diagrams. Web links,
   files outside the hierarchy and unlinked files are not appended.

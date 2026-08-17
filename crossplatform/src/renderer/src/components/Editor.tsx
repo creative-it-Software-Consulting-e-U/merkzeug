@@ -71,6 +71,10 @@ export interface EditorHandle {
   getSelectedText: () => string
   /** aktuelle Scroll-Position des Editors (für die Tab-Historie) */
   getScrollTop: () => number
+  /** Überschriften des Dokuments (für das Inhaltsverzeichnis-Dropdown) */
+  getHeadings: () => { id: string; text: string; level: number }[]
+  /** zur Überschrift springen (id oder Überschriftentext als Fragment) */
+  jumpToHeading: (fragment: string) => void
 }
 
 interface EditorProps {
@@ -120,6 +124,11 @@ const FRONTMATTER_FIELDS: { key: string; insert: string; hint: string }[] = [
     key: 'pdf-exclude',
     insert: 'pdf-exclude:\n  - ',
     hint: 'Verlinkte Dokumente, die der PDF-Export auslässt'
+  },
+  {
+    key: 'pdf-toc',
+    insert: 'pdf-toc: true',
+    hint: 'Inhaltsverzeichnis am PDF-Anfang (nach dem Deckblatt)'
   }
 ]
 
@@ -690,6 +699,22 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       flush: doSave,
       flushSync,
       getScrollTop: () => hostRef.current?.scrollTop ?? 0,
+      getHeadings: () => {
+        const root = rootRef.current
+        if (!root) return []
+        return [
+          ...root.querySelectorAll<HTMLElement>('.ProseMirror :is(h1, h2, h3, h4, h5, h6)')
+        ]
+          .map((h) => ({
+            id: h.id,
+            text: h.textContent?.trim() ?? '',
+            level: Number(h.tagName[1])
+          }))
+          .filter((h) => h.text)
+      },
+      jumpToHeading: (fragment) => {
+        if (rootRef.current) jumpToFragment(rootRef.current, fragment)
+      },
       getSelectedText: () => {
         const crepe = crepeRef.current
         if (!crepe) return ''

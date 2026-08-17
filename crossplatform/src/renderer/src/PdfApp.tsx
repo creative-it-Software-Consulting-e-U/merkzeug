@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Crepe } from '@milkdown/crepe'
-import { docTitle, splitFrontmatter } from '../../shared/docTitle'
+import { docTitle, frontmatterFlag, splitFrontmatter } from '../../shared/docTitle'
 import type { PdfDoc, PdfTemplate } from '../../shared/types'
 import { renderMermaid } from './util/mermaid'
 import { isExternalLink, resolveVaultLink } from './util/paths'
@@ -195,6 +195,34 @@ function DocView({
   )
 }
 
+interface TocEntry {
+  id: string
+  text: string
+  level: number
+}
+
+/**
+ * Einträge fürs Inhaltsverzeichnis aus den fertig gerenderten Dokumenten
+ * einsammeln (H1–H3). Fehlende oder doppelte Überschriften-IDs (möglich, weil
+ * jedes Dokument eine eigene Milkdown-Instanz ist) werden eindeutig ersetzt.
+ */
+function buildToc(): TocEntry[] {
+  const entries: TocEntry[] = []
+  const seen = new Set<string>()
+  let n = 0
+  for (const docEl of document.querySelectorAll('.pdf-doc')) {
+    for (const heading of docEl.querySelectorAll<HTMLElement>('h1, h2, h3')) {
+      const text = heading.textContent?.trim()
+      if (!text) continue
+      n += 1
+      if (!heading.id || seen.has(heading.id)) heading.id = `pdf-toc-target-${n}`
+      seen.add(heading.id)
+      entries.push({ id: heading.id, text, level: Number(heading.tagName[1]) })
+    }
+  }
+  return entries
+}
+
 /** Unsichtbares Fenster (#pdf): rendert die Dokumente und meldet „fertig“ an den Main-Prozess. */
 export function PdfApp(): React.JSX.Element {
   const [payload, setPayload] = useState<{
@@ -202,6 +230,7 @@ export function PdfApp(): React.JSX.Element {
     docs: PdfDoc[]
     template: PdfTemplate | null
   } | null>(null)
+  const [toc, setToc] = useState<TocEntry[] | null>(null)
   const doneCount = useRef(0)
 
   useEffect(() => {
@@ -265,6 +294,11 @@ export function PdfApp(): React.JSX.Element {
     doneCount.current += 1
     window.merkzeug.pdfProgress(doneCount.current, docs.length)
     if (docs.length > 0 && doneCount.current >= docs.length) {
+      // pdf-toc: im Frontmatter der ersten (Index-)Datei aktiviert ein
+      // Inhaltsverzeichnis vor dem Inhalt (nach dem Deckblatt)
+      if (frontmatterFlag(splitFrontmatter(docs[0].content).frontmatter, 'pdf-toc')) {
+        setToc(buildToc())
+      }
       // kurze Schonfrist für Layout/Schriften, dann drucken lassen
       void document.fonts.ready.then(() =>
         setTimeout(() => window.merkzeug.pdfReady(needsLandscape()), 300)
@@ -276,6 +310,18 @@ export function PdfApp(): React.JSX.Element {
     <div className="pdf-app">
       {payload?.template?.cover && (
         <div className="pdf-cover" dangerouslySetInnerHTML={{ __html: payload.template.cover }} />
+      )}
+      {toc && toc.length > 0 && (
+        <nav className="pdf-toc">
+          <h1 className="pdf-toc-title">Inhaltsverzeichnis</h1>
+          <ul>
+            {toc.map((entry) => (
+              <li key={entry.id} className={`pdf-toc-l${entry.level}`}>
+                <a href={`#${entry.id}`}>{entry.text}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
       )}
       {docs.map((doc, i) => (
         <DocView
