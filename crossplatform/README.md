@@ -78,7 +78,10 @@ Sprungzielen zwischen den Dokumenten; einzelne Dokumente per
 `pdf-toc: true` stellt ein klickbares Inhaltsverzeichnis voran, nach dem
 Deckblatt ab Seite 2; bei
 Tabellen, die nicht auf eine
-A4-Hochformatseite passen, automatisch im Querformat), PDF-Vorlagen mit
+A4-Hochformatseite passen, automatisch im Querformat — dann trägt das Dokument
+die Klasse `pdf-landscape` am `<html>`-Element, auf die Vorlagen-CSS reagieren
+kann; Mermaid-Diagramme werden nie über Seitengrenzen geteilt und bei
+Übergröße auf Seitenhöhe verkleinert), PDF-Vorlagen mit
 Firmen-Layout (Einstellungen ⌘,: Vorlagen-Ordner — via iCloud Drive/Google
 Drive/OneDrive/Dropbox geräteübergreifend synchronisierbar — mit Kopfzeile,
 Fußzeile, Deckblatt, Logo, Zusatz-CSS und Rändern je Vorlage; Zuweisung pro

@@ -170,6 +170,11 @@ Bilder (Logo usw.): Bilddatei mit in diesen Ordner legen und relativ referenzier
 z. B. \`<img src="logo.png" style="height: 8mm">\` — Merkzeug bettet sie beim Export
 automatisch ein. In Kopf- und Fußzeile ist nur Inline-CSS möglich.
 
+Querformat: Erzeugt Merkzeug das PDF automatisch im Querformat (wegen breiter
+Tabellen), trägt das Dokument die Klasse \`pdf-landscape\` am \`<html>\`-Element.
+\`stil.css\` kann darauf reagieren, z. B. ein hohes Deckblatt niedriger machen:
+\`html.pdf-landscape .cover { height: 150mm; }\`.
+
 Die Vorlage wird einem Vault über Merkzeug → Einstellungen zugewiesen
 (gespeichert in \`.merkzeug/settings.json\` im Vault).
 `

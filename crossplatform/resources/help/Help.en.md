@@ -208,6 +208,9 @@ For browsing linked notes there is a per-tab **navigation mode** – toggled wit
 - The PDF is always rendered in the light theme (regardless of the system
   appearance) and includes tables, images and Mermaid diagrams. Web links,
   files outside the hierarchy and unlinked files are not appended.
+- **Mermaid in the PDF:** diagrams are never split across a page break — if a
+  diagram no longer fits on the current page it starts on the next one, and a
+  diagram taller than a page is scaled down to fit.
 - **Automatic landscape:** if any exported document contains a table that
   does not fit on an A4 page in portrait orientation, the entire PDF is
   generated in landscape.
@@ -242,6 +245,10 @@ footer with page numbers, and an optional cover page.
   reference it relatively (`<img src="logo.png" style="height: 8mm">`) – it is
   embedded automatically on export. Header and footer support inline CSS only.
   Details are in each template's `LIESMICH.md`.
+- **Detecting landscape:** when the PDF is generated in landscape
+  automatically, the document carries the class `pdf-landscape` on the
+  `<html>` element. `stil.css` can react to it, e.g. to make a tall cover page
+  shorter: `html.pdf-landscape .cover { height: 150mm; }`.
 - **Per-vault assignment:** in the settings a template is assigned to the
   current vault. The assignment is stored inside the vault
   (`.merkzeug/settings.json`) and travels to all devices via Git; the export

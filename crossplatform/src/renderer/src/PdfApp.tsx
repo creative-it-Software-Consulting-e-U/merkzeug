@@ -19,6 +19,28 @@ function countMermaidBlocks(md: string): number {
  */
 const PORTRAIT_CONTENT_WIDTH = 710
 
+/**
+ * Größte Diagrammhöhe, die sicher auf eine Seite passt (auch im Querformat,
+ * abzüglich Kopf-/Fußzeilenränder). Höhere Diagramme werden verkleinert,
+ * damit sie nicht über Seitengrenzen umbrechen.
+ */
+const MAX_DIAGRAM_HEIGHT = 600
+
+/**
+ * Mermaid gibt dem SVG `width="100%"` und nur eine max-width — beim
+ * Bildschirm-Layout ist das fein, aber Chromiums Druck-Layout malt solche
+ * SVGs winzig, während der Umfluss die volle Höhe reserviert. Deshalb feste
+ * Pixelmaße aus der viewBox setzen, verkleinert auf Seitenbreite und -höhe.
+ */
+function fixSvgPrintSize(svg: SVGSVGElement): void {
+  const vb = svg.viewBox.baseVal
+  if (!vb || vb.width <= 0 || vb.height <= 0) return
+  const scale = Math.min(1, PORTRAIT_CONTENT_WIDTH / vb.width, MAX_DIAGRAM_HEIGHT / vb.height)
+  svg.style.maxWidth = ''
+  svg.setAttribute('width', String(Math.floor(vb.width * scale)))
+  svg.setAttribute('height', String(Math.floor(vb.height * scale)))
+}
+
 function needsLandscape(): boolean {
   return [...document.querySelectorAll<HTMLTableElement>('.pdf-content table')].some((table) => {
     // Milkdown streckt Tabellen auf Containerbreite; maßgeblich ist die
@@ -146,6 +168,8 @@ function DocView({
                   const wrap = document.createElement('div')
                   wrap.className = 'mermaid-preview'
                   wrap.innerHTML = svg
+                  const svgEl = wrap.querySelector('svg')
+                  if (svgEl) fixSvgPrintSize(svgEl)
                   apply(wrap)
                 })
                 .catch(() => {
@@ -300,8 +324,12 @@ export function PdfApp(): React.JSX.Element {
         setToc(buildToc())
       }
       // kurze Schonfrist für Layout/Schriften, dann drucken lassen
+      const landscape = needsLandscape()
+      // Vorlagen können sich per CSS aufs Querformat einstellen
+      // (z. B. Deckblatt-Höhe), etwa mit `html.pdf-landscape .cover { … }`
+      document.documentElement.classList.toggle('pdf-landscape', landscape)
       void document.fonts.ready.then(() =>
-        setTimeout(() => window.merkzeug.pdfReady(needsLandscape()), 300)
+        setTimeout(() => window.merkzeug.pdfReady(landscape), 300)
       )
     }
   }

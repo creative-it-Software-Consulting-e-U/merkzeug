@@ -218,6 +218,10 @@ in der Toolbar.
 - Das PDF wird immer hell gerendert (unabhängig vom System-Design) und enthält
   Tabellen, Bilder und Mermaid-Diagramme. Web-Links, Dateien außerhalb der
   Hierarchie und nicht verlinkte Dateien werden nicht angehängt.
+- **Mermaid im PDF:** Diagramme werden nie über einen Seitenumbruch geteilt —
+  passt ein Diagramm nicht mehr auf die aktuelle Seite, beginnt es auf der
+  nächsten; ein Diagramm, das höher als eine Seite wäre, wird passend
+  verkleinert.
 - **Automatisches Querformat:** Enthält eines der exportierten Dokumente eine
   Tabelle, die nicht auf eine A4-Seite im Hochformat passt, wird das gesamte
   PDF im Querformat erzeugt.
@@ -252,6 +256,10 @@ Seite, Fußzeile mit Seitenzahlen sowie optional ein Deckblatt.
   relativ referenzieren (`<img src="logo.png" style="height: 8mm">`) – sie wird
   beim Export automatisch eingebettet. In Kopf- und Fußzeile ist nur
   Inline-CSS möglich. Details stehen in der `LIESMICH.md` jeder Vorlage.
+- **Querformat erkennen:** Wird das PDF automatisch im Querformat erzeugt,
+  trägt das Dokument die Klasse `pdf-landscape` am `<html>`-Element. `stil.css`
+  kann darauf reagieren, z. B. ein hohes Deckblatt niedriger machen:
+  `html.pdf-landscape .cover { height: 150mm; }`.
 - **Zuweisung pro Vault:** In den Einstellungen wird dem aktuellen Vault eine
   Vorlage zugewiesen. Die Zuweisung liegt im Vault
   (`.merkzeug/settings.json`) und wandert per Git auf alle Geräte mit; der

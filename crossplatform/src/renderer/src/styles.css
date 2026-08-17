@@ -1416,6 +1416,32 @@ html:has(.pdf-app) #root {
   display: none !important;
 }
 
+/* Scrollbalken (z. B. unter breiten Codeblöcken) nicht mitdrucken */
+.pdf-app ::-webkit-scrollbar {
+  display: none;
+}
+
+/* Mermaid-Diagramme: nicht über Seitengrenzen umbrechen (der ganze Codeblock
+   mitsamt Hintergrund, nicht nur das SVG). Kein Flex-Layout — Chromium malt
+   SVGs in umbrochenen Flex-Containern beim Drucken winzig
+   (die Größe kommt aus fixSvgPrintSize in der PdfApp). */
+.pdf-app .milkdown-code-block:has(.mermaid-preview) {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.pdf-app .mermaid-preview {
+  display: block;
+  text-align: center;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.pdf-app .mermaid-preview svg {
+  max-width: none;
+  height: auto;
+}
+
 /* Fortschritts-Toast während des PDF-Exports */
 .pdf-progress-toast {
   position: fixed;
