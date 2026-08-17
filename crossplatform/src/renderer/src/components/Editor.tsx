@@ -129,6 +129,11 @@ const FRONTMATTER_FIELDS: { key: string; insert: string; hint: string }[] = [
     key: 'pdf-toc',
     insert: 'pdf-toc: true',
     hint: 'Inhaltsverzeichnis am PDF-Anfang (nach dem Deckblatt)'
+  },
+  {
+    key: 'language',
+    insert: 'language: de',
+    hint: 'Sprache des Dokuments – z. B. „en“: bestimmt den Titel des PDF-Inhaltsverzeichnisses'
   }
 ]
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Crepe } from '@milkdown/crepe'
-import { docTitle, frontmatterFlag, splitFrontmatter } from '../../shared/docTitle'
+import { docTitle, frontmatterFlag, frontmatterScalar, splitFrontmatter } from '../../shared/docTitle'
 import type { PdfDoc, PdfTemplate } from '../../shared/types'
 import { renderMermaid } from './util/mermaid'
 import { isExternalLink, resolveVaultLink } from './util/paths'
@@ -140,11 +140,17 @@ function DocView({
       return `vault-file://local${encodeURI(abs.replace(/\\/g, '/'))}`
     }
 
+    // Eigener Container je Effekt-Durchlauf: das Aufräumen entfernt ihn
+    // mitsamt allem, was ein noch laufendes crepe.create() später einhängt —
+    // sonst zählt buildToc() Überschriften doppelt (StrictMode-Doppellauf)
+    const host = document.createElement('div')
+
     void (async () => {
       if (!rootRef.current) return
       rootRef.current.innerHTML = ''
+      rootRef.current.appendChild(host)
       crepe = new Crepe({
-        root: rootRef.current,
+        root: host,
         // Frontmatter gehört nicht in den sichtbaren PDF-Inhalt
         defaultValue: rewriteLinks(splitFrontmatter(doc.content).body, doc.path, vault, anchors),
         features: {
@@ -208,6 +214,7 @@ function DocView({
     return () => {
       cancelled = true
       if (crepe) void crepe.destroy()
+      host.remove()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [doc])
@@ -223,6 +230,30 @@ interface TocEntry {
   id: string
   text: string
   level: number
+}
+
+/** Titel des PDF-Inhaltsverzeichnisses je Dokumentsprache (`language:` im Frontmatter). */
+const TOC_TITLES: Record<string, string> = {
+  de: 'Inhaltsverzeichnis',
+  en: 'Table of Contents',
+  fr: 'Table des matières',
+  es: 'Índice',
+  it: 'Indice',
+  pt: 'Índice',
+  nl: 'Inhoudsopgave'
+}
+
+/** `language:`/`lang:` aus dem Frontmatter der (Index-)Datei, z. B. `en` oder `en-US`. */
+function docLanguage(content: string): string | null {
+  const { frontmatter } = splitFrontmatter(content)
+  return frontmatterScalar(frontmatter, 'language') ?? frontmatterScalar(frontmatter, 'lang')
+}
+
+/** Ohne `language:` bleibt es beim bisherigen Deutsch; unbekannte Sprachen → Englisch. */
+function tocTitle(language: string | null): string {
+  if (!language) return TOC_TITLES.de
+  const primary = language.toLowerCase().split(/[-_]/)[0]
+  return TOC_TITLES[primary] ?? TOC_TITLES.en
 }
 
 /**
@@ -268,6 +299,9 @@ export function PdfApp(): React.JSX.Element {
     const first = payload.docs[0]
     const fallback = first.path.split(/[/\\]/).pop()?.replace(/\.md$/i, '') ?? 'Merkzeug'
     document.title = docTitle(first.content, fallback)
+    // Dokumentsprache ans <html>-Element (u. a. für Silbentrennung im Druck)
+    const language = docLanguage(first.content)
+    if (language) document.documentElement.lang = language
     if (!payload.template?.css) return
     const style = document.createElement('style')
     style.textContent = payload.template.css
@@ -341,7 +375,9 @@ export function PdfApp(): React.JSX.Element {
       )}
       {toc && toc.length > 0 && (
         <nav className="pdf-toc">
-          <h1 className="pdf-toc-title">Inhaltsverzeichnis</h1>
+          <h1 className="pdf-toc-title">
+            {tocTitle(docs.length > 0 ? docLanguage(docs[0].content) : null)}
+          </h1>
           <ul>
             {toc.map((entry) => (
               <li key={entry.id} className={`pdf-toc-l${entry.level}`}>

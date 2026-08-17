@@ -127,8 +127,9 @@ Der Editor zeigt die Notiz formatiert an; gespeichert wird Markdown.
   `title:` bestimmt den Titel beim PDF-Export.
 - **Welche Felder wertet Merkzeug aus?** Das Menü **„+ Feld“** rechts im
   Frontmatter-Balken listet sie mit Erklärung auf (derzeit `title:`,
-  `pdf-exclude:` und `pdf-toc:`) und fügt per Klick eine Vorlagen-Zeile ein.
-  Eigene Felder darüber hinaus werden gespeichert, aber nicht ausgewertet.
+  `pdf-exclude:`, `pdf-toc:` und `language:`) und fügt per Klick eine
+  Vorlagen-Zeile ein. Eigene Felder darüber hinaus werden gespeichert, aber
+  nicht ausgewertet.
 
 ## 5. Links
 
@@ -215,6 +216,11 @@ in der Toolbar.
   (Index-)Datei stellt dem PDF ein klickbares Inhaltsverzeichnis voran —
   Überschriften 1–3 aller enthaltenen Dokumente auf einer eigenen Seite nach
   dem Deckblatt (mit Deckblatt also ab Seite 2).
+- **Dokumentsprache:** `language:` im Frontmatter der (Index-)Datei (z. B.
+  `language: en`) bestimmt die Überschrift des Inhaltsverzeichnisses
+  („Table of Contents“ statt „Inhaltsverzeichnis“; unterstützt: de, en, fr,
+  es, it, pt, nl — andere Sprachen erhalten den englischen Titel) und die
+  Silbentrennung im PDF. Ohne Angabe bleibt es bei Deutsch.
 - Das PDF wird immer hell gerendert (unabhängig vom System-Design) und enthält
   Tabellen, Bilder und Mermaid-Diagramme. Web-Links, Dateien außerhalb der
   Hierarchie und nicht verlinkte Dateien werden nicht angehängt.

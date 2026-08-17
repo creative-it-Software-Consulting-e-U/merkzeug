@@ -121,8 +121,8 @@ The editor shows the note formatted; what is saved is Markdown.
   `title:` sets the title used by the PDF export.
 - **Which fields does Merkzeug interpret?** The **"+ Feld"** menu on the right
   of the frontmatter bar lists them with an explanation (currently `title:`,
-  `pdf-exclude:` and `pdf-toc:`) and inserts a template line on click. Any
-  other fields are preserved but not interpreted.
+  `pdf-exclude:`, `pdf-toc:` and `language:`) and inserts a template line on
+  click. Any other fields are preserved but not interpreted.
 
 ## 5. Links
 
@@ -205,6 +205,11 @@ For browsing linked notes there is a per-tab **navigation mode** – toggled wit
   (index) file prepends a clickable table of contents to the PDF — headings
   1–3 of all included documents on a page of its own after the cover (so
   starting on page 2 when there is a cover).
+- **Document language:** `language:` in the frontmatter of the (index) file
+  (e.g. `language: en`) sets the heading of the table of contents ("Table of
+  Contents" instead of the German "Inhaltsverzeichnis"; supported: de, en,
+  fr, es, it, pt, nl — other languages get the English title) and the
+  hyphenation used in the PDF. Without it, German is used as before.
 - The PDF is always rendered in the light theme (regardless of the system
   appearance) and includes tables, images and Mermaid diagrams. Web links,
   files outside the hierarchy and unlinked files are not appended.

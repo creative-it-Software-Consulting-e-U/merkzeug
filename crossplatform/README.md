@@ -76,7 +76,8 @@ Dokumente derselben Hierarchie, alphabetisch angehängt, mit internen
 Sprungzielen zwischen den Dokumenten; einzelne Dokumente per
 `pdf-exclude:`-Liste im Frontmatter der Index-Datei ausschließbar;
 `pdf-toc: true` stellt ein klickbares Inhaltsverzeichnis voran, nach dem
-Deckblatt ab Seite 2; bei
+Deckblatt ab Seite 2, mit Überschrift in der Dokumentsprache
+(`language:` im Frontmatter, z. B. `en`); bei
 Tabellen, die nicht auf eine
 A4-Hochformatseite passen, automatisch im Querformat — dann trägt das Dokument
 die Klasse `pdf-landscape` am `<html>`-Element, auf die Vorlagen-CSS reagieren
