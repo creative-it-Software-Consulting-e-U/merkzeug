@@ -235,9 +235,12 @@ async function exportPdf(win: BrowserWindow, notePath: string): Promise<void> {
 
   let target = debugTarget ?? null
   if (!target) {
+    // Nur der Dateiname als defaultPath: so wählt das System den Ordner
+    // (zuletzt verwendetes Verzeichnis, wie unter macOS üblich) — ein
+    // kompletter Pfad würde den Dialog jedes Mal in denselben Ordner zwingen
     const res = await dialog.showSaveDialog(win, {
       title: 'PDF sichern',
-      defaultPath: join(dirname(notePath), `${basename(notePath, '.md')}.pdf`),
+      defaultPath: `${basename(notePath, '.md')}.pdf`,
       filters: [{ name: 'PDF', extensions: ['pdf'] }]
     })
     if (res.canceled || !res.filePath) return
