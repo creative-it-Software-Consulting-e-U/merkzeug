@@ -82,7 +82,10 @@ Tabellen, die nicht auf eine
 A4-Hochformatseite passen, automatisch im Querformat — dann trägt das Dokument
 die Klasse `pdf-landscape` am `<html>`-Element, auf die Vorlagen-CSS reagieren
 kann; Mermaid-Diagramme werden nie über Seitengrenzen geteilt und bei
-Übergröße auf Seitenhöhe verkleinert), PDF-Vorlagen mit
+Übergröße auf Seitenhöhe verkleinert; Mehrfachauswahl im Dateibaum per
+⌘/Ctrl- bzw. ⇧-Klick unter Notizen desselben Ordners, dann per Kontextmenü
+jede ausgewählte Notiz einzeln als eigenes PDF in einen Zielordner
+exportieren), PDF-Vorlagen mit
 Firmen-Layout (Einstellungen ⌘,: Vorlagen-Ordner — via iCloud Drive/Google
 Drive/OneDrive/Dropbox geräteübergreifend synchronisierbar — mit Kopfzeile,
 Fußzeile, Deckblatt, Logo, Zusatz-CSS und Rändern je Vorlage; Zuweisung pro
@@ -123,6 +126,8 @@ beendet sich (Schritte: Baum-Label, `menu:<aktion>`, `js:<code>`, `helpwindow`,
 `settingswindow`).
 Mit `MERKZEUG_PDF_TARGET=/pfad.pdf` läuft der PDF-Export ohne Dialoge: Ziel aus
 der Variable, bei vorhandenen Links automatisch inklusive verlinkter Dokumente.
+Beim Mehrfach-Export (`pdf:exportMulti`) wird die Variable als Zielordner
+interpretiert; vorhandene PDFs werden ohne Rückfrage überschrieben.
 `MERKZEUG_TEMPLATES_ROOT=/pfad` überschreibt den Vorlagen-Ordner,
 `MERKZEUG_PDF_TEMPLATE=Name` erzwingt eine Vorlage unabhängig von der
 Vault-Zuweisung.

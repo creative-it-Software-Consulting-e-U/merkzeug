@@ -45,6 +45,11 @@ The sidebar on the left shows the vault as a hierarchical tree.
   scrolled horizontally and vertically.
 - **Context menu** (right-click): new note, new folder, export as PDF, rename,
   move to trash, show in Finder/Explorer.
+- **Multi-selection:** ⌘-click (Windows/Linux: Ctrl-click) adds further notes
+  to the selection or removes them again, ⇧-click selects the range up to the
+  clicked note — both only among notes of the **same folder**. Right-clicking
+  the selection then offers **"Export N files as PDF…"** (see the PDF export
+  section).
 - **Moving:** simply drag files and folders onto a folder.
 - **Folder overview:** shows the contents of a folder as cards in its own tab;
   clicking notes and subfolders navigates onward.
@@ -186,6 +191,13 @@ For browsing linked notes there is a per-tab **navigation mode** – toggled wit
   documents"**. The latter is meant for index files such as a `README` with a
   table of contents: the index file comes first, followed by all directly
   linked documents in alphabetical order – each starting on a new page.
+- **Exporting several notes individually:** after a multi-selection in the
+  file tree (⌘/Ctrl- or ⇧-click, see section 2) the context menu offers
+  **"Export N files as PDF…"**. You choose a **target folder**, then each
+  selected note is exported there as its **own PDF** (note's file name with
+  `.pdf`) — without the linked-documents prompt, each file on its own.
+  Existing PDFs with the same name are overwritten after confirmation. An
+  assigned PDF template applies to all files.
 - **Excluding documents:** a `pdf-exclude:` list in the index file's
   frontmatter leaves individual linked documents out of the export, e.g.:
 

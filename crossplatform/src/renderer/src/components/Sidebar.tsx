@@ -10,20 +10,21 @@ interface SidebarProps {
   tree: FileNode | null
   expanded: Set<string>
   assetsVisible: boolean
-  selectedPath: string | null
+  selectedPaths: Set<string>
   gitStatus: GitStatus | null
   gitBusy: boolean
   gitError: string | null
   onToggleExpand: (path: string) => void
   onOpenFile: (path: string) => void
   onOpenFolder: (path: string) => void
-  onSelect: (path: string) => void
+  onSelect: (path: string, mode?: 'toggle' | 'range') => void
   onCreateNote: (dir: string) => void
   onCreateFolder: (dir: string) => void
   onRename: (path: string, newName: string) => void
   onTrash: (path: string) => void
   onShowInFolder: (path: string) => void
   onExportPdf: (path: string) => void
+  onExportPdfMulti: (paths: string[]) => void
   onMove: (src: string, destDir: string) => void
   onNewNote: () => void
   onNewFolder: () => void
@@ -48,7 +49,7 @@ export function Sidebar(props: SidebarProps): React.JSX.Element {
             root={props.tree}
             expanded={props.expanded}
             assetsVisible={props.assetsVisible}
-            selectedPath={props.selectedPath}
+            selectedPaths={props.selectedPaths}
             onToggleExpand={props.onToggleExpand}
             onOpenFile={props.onOpenFile}
             onOpenFolder={props.onOpenFolder}
@@ -59,6 +60,7 @@ export function Sidebar(props: SidebarProps): React.JSX.Element {
             onTrash={props.onTrash}
             onShowInFolder={props.onShowInFolder}
             onExportPdf={props.onExportPdf}
+            onExportPdfMulti={props.onExportPdfMulti}
             onMove={props.onMove}
           />
         )}

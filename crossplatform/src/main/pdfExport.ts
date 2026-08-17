@@ -14,8 +14,15 @@ const pendingDocs = new Map<
 >()
 /** Auflöser für das "fertig gerendert"-Signal je PDF-Fenster (Wert: Querformat?) */
 const readyResolvers = new Map<number, (landscape: boolean) => void>()
-/** auslösendes Fenster je PDF-Fenster, für die Fortschrittsanzeige */
-const sourceWindows = new Map<number, BrowserWindow>()
+/**
+ * Auslösendes Fenster je PDF-Fenster, für die Fortschrittsanzeige.
+ * `base` verschiebt den Fortschritt beim Multi-Export: `done` bereits
+ * abgeschlossene Schritte, `total` Gesamtschritte über alle Dateien.
+ */
+const sourceWindows = new Map<
+  number,
+  { win: BrowserWindow; base?: { done: number; total: number } }
+>()
 
 function sendProgress(win: BrowserWindow, progress: PdfExportProgress): void {
   if (!win.isDestroyed()) win.webContents.send('pdf:exportProgress', progress)
@@ -110,7 +117,8 @@ async function renderPdf(
   vault: string | null,
   docs: PdfDoc[],
   template: PdfTemplate | null,
-  sourceWin: BrowserWindow
+  sourceWin: BrowserWindow,
+  progressBase?: { done: number; total: number }
 ): Promise<Buffer> {
   const pdfWin = new BrowserWindow({
     show: false,
@@ -126,7 +134,7 @@ async function renderPdf(
   })
   try {
     pendingDocs.set(pdfWin.webContents.id, { vault, docs, template })
-    sourceWindows.set(pdfWin.webContents.id, sourceWin)
+    sourceWindows.set(pdfWin.webContents.id, { win: sourceWin, base: progressBase })
     const ready = new Promise<boolean>((resolveReady) => {
       // Notbremse: notfalls unfertig drucken; großzügig, skaliert mit der Dokumentzahl
       const timer = setTimeout(() => {
@@ -146,7 +154,11 @@ async function renderPdf(
     // Querformat, wenn ein Dokument Tabellen enthält, die im Hochformat
     // abgeschnitten würden (misst das PDF-Fenster nach dem Rendern)
     const landscape = await ready
-    sendProgress(sourceWin, { phase: 'print', done: docs.length, total: docs.length + 1 })
+    sendProgress(sourceWin, {
+      phase: 'print',
+      done: progressBase ? progressBase.done + docs.length : docs.length,
+      total: progressBase ? progressBase.total : docs.length + 1
+    })
     const options: Electron.PrintToPDFOptions = {
       printBackground: true,
       pageSize: 'A4',
@@ -261,10 +273,97 @@ async function exportPdf(win: BrowserWindow, notePath: string): Promise<void> {
   if (!debugTarget) shell.showItemInFolder(target)
 }
 
+/**
+ * Exportiert mehrere Notizen einzeln als PDF in einen wählbaren Zielordner
+ * (je Datei ein PDF mit dem Namen der Notiz). Verlinkte Dokumente werden
+ * dabei nicht angehängt — jede Datei wird für sich exportiert.
+ */
+async function exportPdfMulti(win: BrowserWindow, notePaths: string[]): Promise<void> {
+  if (notePaths.length === 0) return
+  // Debug-/Testmodus: Zielordner aus der Umgebung, keine Dialoge
+  const debugTarget = process.env.MERKZEUG_PDF_TARGET
+  const vault = getWindowVault(win.id)
+
+  const templateName =
+    process.env.MERKZEUG_PDF_TEMPLATE ?? (vault ? getVaultTemplateName(vault) : null)
+  let template: PdfTemplate | null = null
+  if (templateName) {
+    template = loadTemplate(templateName)
+    if (!template && !debugTarget) {
+      const { response } = await dialog.showMessageBox(win, {
+        type: 'warning',
+        title: 'PDF-Vorlage nicht gefunden',
+        message: `Die zugewiesene Vorlage „${templateName}“ liegt nicht im Vorlagen-Ordner.`,
+        detail:
+          'Der Export wird ohne Vorlage erstellt. Vorlagen werden unter Merkzeug → Einstellungen (⌘,) verwaltet.',
+        buttons: ['Ohne Vorlage exportieren', 'Abbrechen'],
+        defaultId: 0,
+        cancelId: 1
+      })
+      if (response === 1) return
+    }
+  }
+
+  let chosenDir = debugTarget ?? null
+  if (!chosenDir) {
+    const res = await dialog.showOpenDialog(win, {
+      title: 'Zielordner für den PDF-Export wählen',
+      buttonLabel: 'Exportieren',
+      properties: ['openDirectory', 'createDirectory']
+    })
+    if (res.canceled || res.filePaths.length === 0) return
+    chosenDir = res.filePaths[0]
+  }
+  const targetDir = chosenDir
+
+  const files = [...notePaths].sort((a, b) => a.localeCompare(b, 'de', { numeric: true }))
+  const targetFor = (p: string): string => join(targetDir, `${basename(p, '.md')}.pdf`)
+  const existing = files.filter((p) => existsSync(targetFor(p)))
+  if (existing.length > 0 && !debugTarget) {
+    const { response } = await dialog.showMessageBox(win, {
+      type: 'warning',
+      title: 'Vorhandene PDFs überschreiben?',
+      message:
+        existing.length === 1
+          ? `„${basename(targetFor(existing[0]))}“ ist im Zielordner bereits vorhanden.`
+          : `${existing.length} der PDF-Dateien sind im Zielordner bereits vorhanden.`,
+      detail: 'Beim Export werden sie überschrieben.',
+      buttons: ['Überschreiben', 'Abbrechen'],
+      defaultId: 0,
+      cancelId: 1
+    })
+    if (response === 1) return
+  }
+
+  const total = files.length + 1
+  try {
+    sendProgress(win, { phase: 'start', done: 0, total })
+    for (let i = 0; i < files.length; i++) {
+      const p = files[i]
+      const docs: PdfDoc[] = [{ path: p, content: readFileSync(p, 'utf8') }]
+      const docTemplate = template ? applyPlaceholders(template, p) : null
+      writeFileSync(
+        targetFor(p),
+        await renderPdf(vault, docs, docTemplate, win, { done: i, total })
+      )
+    }
+  } catch (err) {
+    sendProgress(win, { phase: 'error' })
+    dialog.showErrorBox('PDF-Export fehlgeschlagen', String(err))
+    return
+  }
+  sendProgress(win, { phase: 'done' })
+  if (!debugTarget) shell.showItemInFolder(targetFor(files[0]))
+}
+
 export function registerPdfIpc(): void {
   ipcMain.handle('pdf:export', async (event, notePath: string) => {
     const win = BrowserWindow.fromWebContents(event.sender)
     if (win) await exportPdf(win, notePath)
+  })
+  ipcMain.handle('pdf:exportMulti', async (event, notePaths: string[]) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
+    if (win) await exportPdfMulti(win, notePaths)
   })
   ipcMain.handle(
     'pdf:getDocs',
@@ -277,6 +376,12 @@ export function registerPdfIpc(): void {
   // Fortschritt aus dem PDF-Fenster an das auslösende Fenster durchreichen
   ipcMain.on('pdf:progress', (event, done: number, total: number) => {
     const source = sourceWindows.get(event.sender.id)
-    if (source) sendProgress(source, { phase: 'render', done, total: total + 1 })
+    if (source) {
+      sendProgress(source.win, {
+        phase: 'render',
+        done: source.base ? source.base.done + done : done,
+        total: source.base ? source.base.total : total + 1
+      })
+    }
   })
 }

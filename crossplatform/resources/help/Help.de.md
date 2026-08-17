@@ -47,6 +47,11 @@ Links zeigt die Sidebar den Vault als hierarchischen Baum.
   Baum horizontal und vertikal gescrollt werden.
 - **Kontextmenü** (Rechtsklick): neue Notiz, neuer Ordner, als PDF exportieren,
   Umbenennen, in den Papierkorb legen, im Finder/Explorer zeigen.
+- **Mehrfachauswahl:** ⌘-Klick (Windows/Linux: Ctrl-Klick) nimmt weitere
+  Notizen in die Auswahl auf bzw. wieder heraus, ⇧-Klick wählt den Bereich
+  bis zur angeklickten Notiz — beides nur unter Notizen **desselben Ordners**.
+  Rechtsklick auf die Auswahl bietet dann **„N Dateien als PDF
+  exportieren…“** an (siehe Abschnitt PDF-Export).
 - **Verschieben:** Dateien und Ordner einfach per Drag & Drop auf einen Ordner ziehen.
 - **Ordnerübersicht:** zeigt den Inhalt eines Ordners als Karten in einem eigenen
   Tab; Klicks auf Notizen und Unterordner navigieren weiter.
@@ -198,6 +203,13 @@ in der Toolbar.
   `README` mit Inhaltsverzeichnis gedacht: Zuerst kommt die Index-Datei,
   danach alle direkt verlinkten Dokumente in alphabetischer Reihenfolge –
   jedes beginnt auf einer neuen Seite.
+- **Mehrere Notizen einzeln exportieren:** Nach einer Mehrfachauswahl im
+  Dateibaum (⌘/Ctrl- bzw. ⇧-Klick, siehe Abschnitt 2) bietet das Kontextmenü
+  **„N Dateien als PDF exportieren…“** an. Man wählt einen **Zielordner**,
+  dann wird jede ausgewählte Notiz als **eigenes PDF** (Dateiname der Notiz
+  mit `.pdf`) dorthin exportiert — ohne Nachfrage zu verlinkten Dokumenten,
+  jede Datei für sich. Vorhandene gleichnamige PDFs werden nach Rückfrage
+  überschrieben. Eine zugewiesene PDF-Vorlage gilt für alle Dateien.
 - **Dokumente ausschließen:** Eine `pdf-exclude:`-Liste im Frontmatter der
   Index-Datei nimmt einzelne verlinkte Dokumente vom Export aus, z. B.:
 

@@ -46,6 +46,9 @@ export function App(): React.JSX.Element {
   const [activePane, setActivePane] = useState<0 | 1>(0)
   const [expanded, setExpanded] = useState<Set<string>>(new Set())
   const [selectedPath, setSelectedPath] = useState<string | null>(null)
+  // Mehrfachauswahl im Baum (nur Notizen im selben Ordner); enthält bei
+  // Mehrfachauswahl auch selectedPath (den Anker für ⇧-Klick-Bereiche)
+  const [multiSelected, setMultiSelected] = useState<Set<string>>(new Set())
   const [assetsVisible, setAssetsVisible] = useState(false)
   const [gitStatus, setGitStatus] = useState<GitStatus | null>(null)
   const [gitBusy, setGitBusy] = useState(false)
@@ -79,6 +82,8 @@ export function App(): React.JSX.Element {
   splitRef.current = split
   const selectedRef = useRef(selectedPath)
   selectedRef.current = selectedPath
+  const multiSelectedRef = useRef(multiSelected)
+  multiSelectedRef.current = multiSelected
   const treeRef = useRef(tree)
   treeRef.current = tree
 
@@ -116,6 +121,69 @@ export function App(): React.JSX.Element {
     for (const handle of editorRefs.current.values()) await handle?.flush()
     await window.merkzeug.exportPdf(path)
   }, [])
+
+  /** Mehrfachauswahl einzeln als PDFs in einen Zielordner exportieren. */
+  const exportPdfMulti = useCallback(async (paths: string[]): Promise<void> => {
+    for (const handle of editorRefs.current.values()) await handle?.flush()
+    await window.merkzeug.exportPdfMulti(paths)
+  }, [])
+
+  /**
+   * Baum-Auswahl: normaler Klick wählt einzeln, ⌘/Ctrl-Klick erweitert,
+   * ⇧-Klick wählt einen Bereich — Mehrfachauswahl nur unter Notizen
+   * desselben Ordners (selectedPath ist dabei der Anker).
+   */
+  const handleSelect = useCallback((path: string, mode?: 'toggle' | 'range'): void => {
+    const anchor = selectedRef.current
+    const sameFolder = anchor !== null && anchor !== path && dirname(anchor) === dirname(path)
+    const anchorIsNote = sameFolder && findNode(treeRef.current, anchor)?.isDirectory === false
+    if (!mode || !anchorIsNote) {
+      setSelectedPath(path)
+      setMultiSelected(new Set())
+      return
+    }
+    if (mode === 'toggle') {
+      const next = new Set(multiSelectedRef.current.size > 0 ? multiSelectedRef.current : [anchor])
+      if (next.has(path)) next.delete(path)
+      else next.add(path)
+      if (next.size === 1) {
+        // nur noch eine Datei übrig: zurück zur Einzelauswahl
+        setSelectedPath([...next][0])
+        setMultiSelected(new Set())
+        return
+      }
+      // beim Abwählen bleibt der bisherige Anker bestehen
+      if (next.has(path)) setSelectedPath(path)
+      setMultiSelected(next)
+      return
+    }
+    // range: alle Notizen zwischen Anker und Klickziel (in Baum-Reihenfolge)
+    const parent = findNode(treeRef.current, dirname(path))
+    const siblings = (parent?.children ?? [])
+      .filter((c) => !c.isDirectory && c.name.endsWith('.md'))
+      .map((c) => c.path)
+    const i1 = siblings.indexOf(anchor)
+    const i2 = siblings.indexOf(path)
+    if (i1 === -1 || i2 === -1) {
+      setSelectedPath(path)
+      setMultiSelected(new Set())
+      return
+    }
+    const [lo, hi] = i1 < i2 ? [i1, i2] : [i2, i1]
+    const range = siblings.slice(lo, hi + 1)
+    setMultiSelected(range.length > 1 ? new Set(range) : new Set())
+  }, [])
+
+  // Nach Baum-Änderungen (Löschen, Verschieben, Umbenennen) verschwundene
+  // Pfade aus der Mehrfachauswahl entfernen
+  useEffect(() => {
+    setMultiSelected((prev) => {
+      if (prev.size === 0) return prev
+      const next = new Set([...prev].filter((p) => findNode(tree, p)))
+      if (next.size === prev.size) return prev
+      return next.size > 1 ? next : new Set()
+    })
+  }, [tree])
 
   // Fortschritt des PDF-Exports empfangen
   useEffect(() => {
@@ -371,6 +439,7 @@ export function App(): React.JSX.Element {
       expandFolder(dir)
       openInNewTab(path, 'note')
       setSelectedPath(path)
+      setMultiSelected(new Set())
     },
     [expandFolder, openInNewTab, refreshTree]
   )
@@ -381,6 +450,7 @@ export function App(): React.JSX.Element {
       await refreshTree()
       expandFolder(path)
       setSelectedPath(path)
+      setMultiSelected(new Set())
     },
     [expandFolder, refreshTree]
   )
@@ -558,6 +628,7 @@ export function App(): React.JSX.Element {
       setVault(v)
       setVaultMissing(false)
       setSelectedPath(null)
+      setMultiSelected(new Set())
       const storedExpanded = localStorage.getItem(`expanded:${v}`)
       setExpanded(storedExpanded ? new Set(JSON.parse(storedExpanded)) : new Set([v]))
       setAssetsVisible(localStorage.getItem(`assetsVisible:${v}`) === 'true')
@@ -857,7 +928,13 @@ export function App(): React.JSX.Element {
           tree={tree}
           expanded={expanded}
           assetsVisible={assetsVisible}
-          selectedPath={selectedPath}
+          selectedPaths={
+            multiSelected.size > 0
+              ? multiSelected
+              : selectedPath
+                ? new Set([selectedPath])
+                : new Set<string>()
+          }
           gitStatus={gitStatus}
           gitBusy={gitBusy}
           gitError={gitError}
@@ -871,13 +948,14 @@ export function App(): React.JSX.Element {
           }
           onOpenFile={(path) => openInNewTab(path, 'note')}
           onOpenFolder={(path) => openFolderOverview(path)}
-          onSelect={setSelectedPath}
+          onSelect={handleSelect}
           onCreateNote={(dir) => void handleCreateNote(dir)}
           onCreateFolder={(dir) => void handleCreateFolder(dir)}
           onRename={(path, newName) => void handleRename(path, newName)}
           onTrash={(path) => void handleTrash(path)}
           onShowInFolder={(path) => void window.merkzeug.showInFolder(path)}
           onExportPdf={(path) => void exportPdf(path)}
+          onExportPdfMulti={(paths) => void exportPdfMulti(paths)}
           onMove={(src, dest) => void handleMove(src, dest)}
           onNewNote={() => createAtSelection('note')}
           onNewFolder={() => createAtSelection('folder')}

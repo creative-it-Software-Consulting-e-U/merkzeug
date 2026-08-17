@@ -6,17 +6,19 @@ interface FileTreeProps {
   root: FileNode
   expanded: Set<string>
   assetsVisible: boolean
-  selectedPath: string | null
+  /** ausgewählte Pfade; Mehrfachauswahl nur für Notizen im selben Ordner */
+  selectedPaths: Set<string>
   onToggleExpand: (path: string) => void
   onOpenFile: (path: string) => void
   onOpenFolder: (path: string) => void
-  onSelect: (path: string) => void
+  onSelect: (path: string, mode?: 'toggle' | 'range') => void
   onCreateNote: (dir: string) => void
   onCreateFolder: (dir: string) => void
   onRename: (path: string, newName: string) => void
   onTrash: (path: string) => void
   onShowInFolder: (path: string) => void
   onExportPdf: (path: string) => void
+  onExportPdfMulti: (paths: string[]) => void
   onMove: (src: string, destDir: string) => void
 }
 
@@ -54,6 +56,16 @@ export function FileTree(props: FileTreeProps): React.JSX.Element {
   )
 
   const menuEntries = (node: FileNode): MenuEntry[] => {
+    // Rechtsklick auf eine Datei der Mehrfachauswahl: Aktionen für alle
+    if (props.selectedPaths.size > 1 && props.selectedPaths.has(node.path)) {
+      const paths = [...props.selectedPaths]
+      return [
+        {
+          label: `${paths.length} Dateien als PDF exportieren…`,
+          onClick: () => props.onExportPdfMulti(paths)
+        }
+      ]
+    }
     const entries: MenuEntry[] = []
     if (node.isDirectory) {
       entries.push(
@@ -86,7 +98,7 @@ export function FileTree(props: FileTreeProps): React.JSX.Element {
     if (isAssetsDir(node) && !props.assetsVisible) return null
 
     const isExpanded = props.expanded.has(node.path)
-    const isSelected = props.selectedPath === node.path
+    const isSelected = props.selectedPaths.has(node.path)
     const isRenaming = renaming === node.path
     const isDropTarget = dropTarget === node.path
 
@@ -116,7 +128,17 @@ export function FileTree(props: FileTreeProps): React.JSX.Element {
               props.onMove(src, node.path)
             }
           }}
-          onClick={() => {
+          onClick={(e) => {
+            // Mehrfachauswahl (nur Notizen): ⌘/Ctrl-Klick erweitert, ⇧-Klick
+            // wählt den Bereich — beides ohne die Datei zu öffnen
+            if (!node.isDirectory && node.name.endsWith('.md') && (e.metaKey || e.ctrlKey)) {
+              props.onSelect(node.path, 'toggle')
+              return
+            }
+            if (!node.isDirectory && node.name.endsWith('.md') && e.shiftKey) {
+              props.onSelect(node.path, 'range')
+              return
+            }
             props.onSelect(node.path)
             if (node.isDirectory) props.onToggleExpand(node.path)
             else if (node.name.endsWith('.md')) props.onOpenFile(node.path)
