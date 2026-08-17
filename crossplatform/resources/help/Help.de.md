@@ -121,6 +121,10 @@ Der Editor zeigt die Notiz formatiert an; gespeichert wird Markdown.
   Balken **„Frontmatter“** ganz oben im Editor. Dort lässt er sich direkt
   bearbeiten; wird das Feld geleert, entfällt der Block beim Speichern.
   `title:` bestimmt den Titel beim PDF-Export.
+- **Welche Felder wertet Merkzeug aus?** Das Menü **„+ Feld“** rechts im
+  Frontmatter-Balken listet sie mit Erklärung auf (derzeit `title:` und
+  `pdf-exclude:`) und fügt per Klick eine Vorlagen-Zeile ein. Eigene Felder
+  darüber hinaus werden gespeichert, aber nicht ausgewertet.
 
 ## 5. Links
 

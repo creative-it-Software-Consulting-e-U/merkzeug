@@ -116,6 +116,10 @@ The editor shows the note formatted; what is saved is Markdown.
   gray, collapsible **"Frontmatter"** bar at the very top of the editor, where
   it can be edited directly. Clearing the field removes the block on save.
   `title:` sets the title used by the PDF export.
+- **Which fields does Merkzeug interpret?** The **"+ Feld"** menu on the right
+  of the frontmatter bar lists them with an explanation (currently `title:`
+  and `pdf-exclude:`) and inserts a template line on click. Any other fields
+  are preserved but not interpreted.
 
 ## 5. Links
 

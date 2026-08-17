@@ -82,7 +82,8 @@ Fußzeile, Deckblatt, Logo, Zusatz-CSS und Rändern je Vorlage; Zuweisung pro
 Vault in `.merkzeug/settings.json`, wandert per Git mit),
 YAML-Frontmatter (Block am Dateianfang erscheint nicht im Text, sondern hinter
 einem aufklappbaren „Frontmatter“-Balken oben im Editor und ist dort
-editierbar; `title:` bestimmt den Titel im PDF-Export, sonst die
+editierbar; das „+ Feld“-Menü im Balken listet die ausgewerteten Felder samt
+Erklärung und fügt sie ein; `title:` bestimmt den Titel im PDF-Export, sonst die
 erste Überschrift 1, sonst der Dateiname), automatische
 Benennung neuer Notizen nach ihrer Überschrift 1 (Slug wie
 `2026-08-11-bpp-call-neustrukturierung`, bis zum manuellen Umbenennen) und

@@ -109,6 +109,20 @@ function wrapFrontmatter(inner: string): string {
   return `---\n${inner.endsWith('\n') ? inner : inner + '\n'}---\n`
 }
 
+/** Frontmatter-Felder, die die App auswertet — Grundlage des „+ Feld“-Menüs. */
+const FRONTMATTER_FIELDS: { key: string; insert: string; hint: string }[] = [
+  {
+    key: 'title',
+    insert: 'title: ',
+    hint: 'Titel der Notiz – bestimmt {{titel}} beim PDF-Export'
+  },
+  {
+    key: 'pdf-exclude',
+    insert: 'pdf-exclude:\n  - ',
+    hint: 'Verlinkte Dokumente, die der PDF-Export auslässt'
+  }
+]
+
 export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   { filePath, loadToken, readonly, onLinkClick, jump, onDirtyChange, onSaved },
   ref
@@ -125,6 +139,9 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   // Frontmatter-Balken über dem Text: auf-/zugeklappt + editierbarer Inhalt
   const [fmOpen, setFmOpen] = useState(false)
   const [fmText, setFmText] = useState('')
+  const [fmMenuOpen, setFmMenuOpen] = useState(false)
+  const fmMenuRef = useRef<HTMLDivElement | null>(null)
+  const fmTextareaRef = useRef<HTMLTextAreaElement | null>(null)
   // wurde das Frontmatter seit dem letzten Laden editiert? (für das Ladefenster)
   const fmDirtyRef = useRef(false)
   const lastSavedRef = useRef<string | null>(null)
@@ -179,9 +196,8 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
     saveTimerRef.current = setTimeout(() => void doSave(), AUTOSAVE_MS)
   }, [doSave])
 
-  const handleFrontmatterChange = useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
-      const text = e.target.value
+  const applyFmText = useCallback(
+    (text: string): void => {
       setFmText(text)
       frontmatterRef.current = wrapFrontmatter(text)
       fmDirtyRef.current = true
@@ -194,6 +210,48 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
     },
     [onDirtyChange, scheduleSave]
   )
+
+  const handleFrontmatterChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>): void => applyFmText(e.target.value),
+    [applyFmText]
+  )
+
+  /** Vorlagen-Zeile aus dem „+ Feld“-Menü ans Ende des Frontmatters anfügen. */
+  const insertFmField = useCallback(
+    (insert: string): void => {
+      setFmMenuOpen(false)
+      setFmOpen(true)
+      const base = fmText.trim() === '' ? '' : fmText.endsWith('\n') ? fmText : fmText + '\n'
+      const next = base + insert
+      applyFmText(next)
+      // fokussieren und Cursor ans Ende, sobald das Textfeld gerendert ist
+      requestAnimationFrame(() => {
+        const ta = fmTextareaRef.current
+        if (ta) {
+          ta.focus()
+          ta.setSelectionRange(next.length, next.length)
+        }
+      })
+    },
+    [applyFmText, fmText]
+  )
+
+  // „+ Feld“-Menü bei Klick außerhalb oder Escape schließen
+  useEffect(() => {
+    if (!fmMenuOpen) return
+    const close = (e: MouseEvent): void => {
+      if (!fmMenuRef.current?.contains(e.target as Node)) setFmMenuOpen(false)
+    }
+    const esc = (e: KeyboardEvent): void => {
+      if (e.key === 'Escape') setFmMenuOpen(false)
+    }
+    window.addEventListener('mousedown', close)
+    window.addEventListener('keydown', esc)
+    return () => {
+      window.removeEventListener('mousedown', close)
+      window.removeEventListener('keydown', esc)
+    }
+  }, [fmMenuOpen])
 
   const uploadImage = useCallback(async (file: File): Promise<string> => {
     const buffer = await file.arrayBuffer()
@@ -268,6 +326,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       prevLoadTokenRef.current = loadToken
       setReloadInfo(null)
       setFmOpen(false)
+      setFmMenuOpen(false)
     }
 
     const setup = async (): Promise<void> => {
@@ -775,16 +834,53 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
         </div>
       )}
       <div className="frontmatter-bar">
-        <button
-          className="frontmatter-toggle"
-          title={fmOpen ? 'Frontmatter zuklappen' : 'Frontmatter aufklappen'}
-          onClick={() => setFmOpen((o) => !o)}
-        >
-          <span className={fmOpen ? 'frontmatter-chevron open' : 'frontmatter-chevron'}>▸</span>
-          Frontmatter
-        </button>
+        <div className="frontmatter-head">
+          <button
+            className="frontmatter-toggle"
+            title={fmOpen ? 'Frontmatter zuklappen' : 'Frontmatter aufklappen'}
+            onClick={() => setFmOpen((o) => !o)}
+          >
+            <span className={fmOpen ? 'frontmatter-chevron open' : 'frontmatter-chevron'}>▸</span>
+            Frontmatter
+          </button>
+          {!readonly && (
+            <div className="frontmatter-add" ref={fmMenuRef}>
+              <button
+                className="frontmatter-add-btn"
+                title="Unterstütztes Feld einfügen"
+                onClick={() => setFmMenuOpen((o) => !o)}
+              >
+                + Feld
+              </button>
+              {fmMenuOpen && (
+                <div className="frontmatter-menu">
+                  {FRONTMATTER_FIELDS.map((field) => {
+                    const present = new RegExp(`^${field.key}[ \\t]*:`, 'm').test(fmText)
+                    return (
+                      <button
+                        key={field.key}
+                        className="frontmatter-menu-item"
+                        disabled={present}
+                        onClick={() => insertFmField(field.insert)}
+                      >
+                        <span className="frontmatter-menu-key">{field.key}</span>
+                        <span className="frontmatter-menu-hint">
+                          {present ? 'bereits vorhanden' : field.hint}
+                        </span>
+                      </button>
+                    )
+                  })}
+                  <div className="frontmatter-menu-note">
+                    Eigene Felder werden gespeichert, aber nicht ausgewertet.
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
         {fmOpen && (
           <textarea
+            ref={fmTextareaRef}
             className="frontmatter-input"
             value={fmText}
             onChange={handleFrontmatterChange}

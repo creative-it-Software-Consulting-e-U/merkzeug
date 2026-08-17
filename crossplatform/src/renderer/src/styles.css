@@ -493,15 +493,21 @@ button {
   border: 1px solid var(--border);
   border-radius: 6px;
   background: var(--bg-hover);
-  overflow: hidden;
+}
+
+.frontmatter-head {
+  display: flex;
+  align-items: stretch;
 }
 
 .frontmatter-toggle {
   display: flex;
   align-items: center;
   gap: 6px;
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   padding: 5px 10px;
+  border-radius: 5px;
   font-size: 12px;
   font-weight: 500;
   color: var(--text-dim);
@@ -522,12 +528,84 @@ button {
   transform: rotate(90deg);
 }
 
+.frontmatter-add {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.frontmatter-add-btn {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.frontmatter-add-btn:hover {
+  background: var(--bg-active);
+  color: var(--text);
+}
+
+.frontmatter-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 100;
+  min-width: 320px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+}
+
+.frontmatter-menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 5px;
+  text-align: left;
+}
+
+.frontmatter-menu-item:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+
+.frontmatter-menu-item:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.frontmatter-menu-key {
+  font-family: 'SF Mono', ui-monospace, Menlo, Monaco, 'Cascadia Mono', monospace;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.frontmatter-menu-hint {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.frontmatter-menu-note {
+  padding: 6px 8px 4px;
+  border-top: 1px solid var(--border);
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
 .frontmatter-input {
   display: block;
   width: 100%;
   padding: 8px 10px;
   border: none;
   border-top: 1px solid var(--border);
+  border-radius: 0 0 5px 5px;
   outline: none;
   resize: vertical;
   background: var(--bg);
