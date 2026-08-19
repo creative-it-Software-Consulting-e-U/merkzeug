@@ -132,7 +132,7 @@ Der Editor zeigt die Notiz formatiert an; gespeichert wird Markdown.
   `title:` bestimmt den Titel beim PDF-Export.
 - **Welche Felder wertet Merkzeug aus?** Das Menü **„+ Feld“** rechts im
   Frontmatter-Balken listet sie mit Erklärung auf (derzeit `title:`,
-  `pdf-exclude:`, `pdf-toc:` und `language:`) und fügt per Klick eine
+  `pdf-linked-title:`, `pdf-exclude:`, `pdf-toc:` und `language:`) und fügt per Klick eine
   Vorlagen-Zeile ein. Eigene Felder darüber hinaus werden gespeichert, aber
   nicht ausgewertet.
 
@@ -224,6 +224,22 @@ in der Toolbar.
   Pfade wie in Links: relativ zur Index-Datei, mit führendem `/` relativ zum
   Vault; `.md` ist optional. Auch die Kurzform `pdf-exclude: [intern, entwurf]`
   ist möglich. Ausgeschlossene Dokumente zählen in der Nachfrage nicht mit.
+- **Eigener Titel für den Gesamt-Export:** `pdf-linked-title:` im Frontmatter
+  der Index-Datei setzt den Dokumenttitel für den Export **mit verlinkten
+  Dokumenten** — nützlich, wenn die Index-Datei allein z. B. ein „Management
+  Summary“ ist, das Gesamtdokument aber „Full Report“ heißen soll:
+
+  ```
+  ---
+  title: Management Summary
+  pdf-linked-title: Full Report
+  ---
+  ```
+
+  Beim Export „Nur diese Datei“ gilt weiterhin `title:` (bzw. die erste
+  Überschrift). Der Titel erscheint in den PDF-Metadaten, im
+  `{{titel}}`-Platzhalter von Vorlagen und in Chromiums `<span class="title">`
+  in Kopf-/Fußzeilen.
 - **Inhaltsverzeichnis:** `pdf-toc: true` im Frontmatter der exportierten
   (Index-)Datei stellt dem PDF ein klickbares Inhaltsverzeichnis voran —
   Überschriften 1–3 aller enthaltenen Dokumente auf einer eigenen Seite nach
@@ -266,7 +282,8 @@ Seite, Fußzeile mit Seitenzahlen sowie optional ein Deckblatt.
   - `stil.css` – Zusatz-CSS für den Dokumentinhalt
   - `vorlage.json` – Seitenränder in Millimetern
 - **Platzhalter:** `{{titel}}` (`title:` aus dem YAML-Frontmatter, sonst die
-  erste Überschrift 1 der Notiz, sonst der Dateiname) und `{{datum}}`
+  erste Überschrift 1 der Notiz, sonst der Dateiname; beim Export mit
+  verlinkten Dokumenten hat `pdf-linked-title:` Vorrang) und `{{datum}}`
   (Exportdatum);
   in Kopf-/Fußzeile zusätzlich `<span class="pageNumber"></span>` und
   `<span class="totalPages"></span>` für Seitenzahlen.

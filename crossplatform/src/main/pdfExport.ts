@@ -2,7 +2,7 @@ import { BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, dirname, isAbsolute, join, normalize, relative, resolve } from 'node:path'
 import { is } from '@electron-toolkit/utils'
-import { docTitle, frontmatterList, splitFrontmatter } from '../shared/docTitle'
+import { frontmatterList, pdfExportTitle, splitFrontmatter } from '../shared/docTitle'
 import type { PdfDoc, PdfExportProgress, PdfTemplate } from '../shared/types'
 import { getVaultTemplateName, loadTemplate } from './templates'
 import { getWindowVault } from './windows'
@@ -89,10 +89,14 @@ export function collectLinkedDocs(indexPath: string, vault: string | null): stri
 }
 
 /** Ersetzt {{titel}}/{{datum}} in den HTML-Teilen der Vorlage */
-function applyPlaceholders(template: PdfTemplate, notePath: string): PdfTemplate {
+function applyPlaceholders(
+  template: PdfTemplate,
+  notePath: string,
+  withLinked: boolean
+): PdfTemplate {
   let titel = basename(notePath, '.md')
   try {
-    titel = docTitle(readFileSync(notePath, 'utf8'), titel)
+    titel = pdfExportTitle(readFileSync(notePath, 'utf8'), titel, withLinked)
   } catch {
     /* Datei nicht lesbar → Dateiname als Titel */
   }
@@ -200,9 +204,7 @@ async function exportPdf(win: BrowserWindow, notePath: string): Promise<void> {
   let template: PdfTemplate | null = null
   if (templateName) {
     template = loadTemplate(templateName)
-    if (template) {
-      template = applyPlaceholders(template, notePath)
-    } else if (!debugTarget) {
+    if (!template && !debugTarget) {
       const { response } = await dialog.showMessageBox(win, {
         type: 'warning',
         title: 'PDF-Vorlage nicht gefunden',
@@ -244,6 +246,9 @@ async function exportPdf(win: BrowserWindow, notePath: string): Promise<void> {
       withLinked = response === 1
     }
   }
+  // Platzhalter erst jetzt ersetzen: {{titel}} hängt davon ab, ob mit
+  // verlinkten Dokumenten exportiert wird (pdf-linked-title: im Frontmatter)
+  if (template) template = applyPlaceholders(template, notePath, withLinked)
 
   let target = debugTarget ?? null
   if (!target) {
@@ -341,7 +346,7 @@ async function exportPdfMulti(win: BrowserWindow, notePaths: string[]): Promise<
     for (let i = 0; i < files.length; i++) {
       const p = files[i]
       const docs: PdfDoc[] = [{ path: p, content: readFileSync(p, 'utf8') }]
-      const docTemplate = template ? applyPlaceholders(template, p) : null
+      const docTemplate = template ? applyPlaceholders(template, p, false) : null
       writeFileSync(
         targetFor(p),
         await renderPdf(vault, docs, docTemplate, win, { done: i, total })

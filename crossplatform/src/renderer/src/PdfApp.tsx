@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Crepe } from '@milkdown/crepe'
-import { docTitle, frontmatterFlag, frontmatterScalar, splitFrontmatter } from '../../shared/docTitle'
+import { frontmatterFlag, frontmatterScalar, pdfExportTitle, splitFrontmatter } from '../../shared/docTitle'
 import type { PdfDoc, PdfTemplate } from '../../shared/types'
 import { renderMermaid } from './util/mermaid'
 import { isExternalLink, resolveVaultLink } from './util/paths'
@@ -298,7 +298,9 @@ export function PdfApp(): React.JSX.Element {
     if (!payload || payload.docs.length === 0) return
     const first = payload.docs[0]
     const fallback = first.path.split(/[/\\]/).pop()?.replace(/\.md$/i, '') ?? 'Merkzeug'
-    document.title = docTitle(first.content, fallback)
+    // Mehr als ein Dokument gibt es nur beim Export „mit verlinkten
+    // Dokumenten“ — dann darf pdf-linked-title: den Titel übersteuern
+    document.title = pdfExportTitle(first.content, fallback, payload.docs.length > 1)
     // Dokumentsprache ans <html>-Element (u. a. für Silbentrennung im Druck)
     const language = docLanguage(first.content)
     if (language) document.documentElement.lang = language

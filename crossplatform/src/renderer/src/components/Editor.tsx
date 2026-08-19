@@ -121,6 +121,11 @@ const FRONTMATTER_FIELDS: { key: string; insert: string; hint: string }[] = [
     hint: 'Titel der Notiz – bestimmt {{titel}} beim PDF-Export'
   },
   {
+    key: 'pdf-linked-title',
+    insert: 'pdf-linked-title: ',
+    hint: 'Titel beim PDF-Export mit verlinkten Dokumenten (hat dann Vorrang vor title:)'
+  },
+  {
     key: 'pdf-exclude',
     insert: 'pdf-exclude:\n  - ',
     hint: 'Verlinkte Dokumente, die der PDF-Export auslässt'

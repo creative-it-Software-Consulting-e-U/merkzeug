@@ -126,7 +126,7 @@ The editor shows the note formatted; what is saved is Markdown.
   `title:` sets the title used by the PDF export.
 - **Which fields does Merkzeug interpret?** The **"+ Feld"** menu on the right
   of the frontmatter bar lists them with an explanation (currently `title:`,
-  `pdf-exclude:`, `pdf-toc:` and `language:`) and inserts a template line on
+  `pdf-linked-title:`, `pdf-exclude:`, `pdf-toc:` and `language:`) and inserts a template line on
   click. Any other fields are preserved but not interpreted.
 
 ## 5. Links
@@ -213,6 +213,21 @@ For browsing linked notes there is a per-tab **navigation mode** – toggled wit
   relative to the vault; `.md` is optional. The short form
   `pdf-exclude: [internal, draft]` also works. Excluded documents are not
   counted in the export prompt.
+- **Separate title for the combined export:** `pdf-linked-title:` in the index
+  file's frontmatter sets the document title for the export **with linked
+  documents** — useful when the index file on its own is, say, a "Management
+  Summary" while the combined document should be called "Full Report":
+
+  ```
+  ---
+  title: Management Summary
+  pdf-linked-title: Full Report
+  ---
+  ```
+
+  The "Only this file" export keeps using `title:` (or the first heading). The
+  title appears in the PDF metadata, in the `{{titel}}` placeholder of
+  templates and in Chromium's `<span class="title">` in headers/footers.
 - **Table of contents:** `pdf-toc: true` in the frontmatter of the exported
   (index) file prepends a clickable table of contents to the PDF — headings
   1–3 of all included documents on a page of its own after the cover (so
@@ -254,7 +269,8 @@ footer with page numbers, and an optional cover page.
   - `stil.css` – additional CSS for the document content
   - `vorlage.json` – page margins in millimetres
 - **Placeholders:** `{{titel}}` (`title:` from the YAML frontmatter, otherwise
-  the first level-1 heading of the note, otherwise the file name) and
+  the first level-1 heading of the note, otherwise the file name; when
+  exporting with linked documents, `pdf-linked-title:` takes precedence) and
   `{{datum}}` (export date); in
   header and footer additionally `<span class="pageNumber"></span>` and
   `<span class="totalPages"></span>` for page numbers.

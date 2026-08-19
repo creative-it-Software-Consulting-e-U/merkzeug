@@ -96,3 +96,16 @@ export function docTitle(md: string, fallback: string): string {
   }
   return fallback
 }
+
+/**
+ * Titel für den PDF-Export: beim Export „mit verlinkten Dokumenten“ hat
+ * `pdf-linked-title:` aus dem Frontmatter Vorrang (z. B. „Full Report“ statt
+ * „Management Summary“), sonst gilt der normale Dokumenttitel wie bei docTitle.
+ */
+export function pdfExportTitle(md: string, fallback: string, withLinked: boolean): string {
+  if (withLinked) {
+    const linked = frontmatterScalar(splitFrontmatter(md).frontmatter, 'pdf-linked-title')
+    if (linked) return linked
+  }
+  return docTitle(md, fallback)
+}

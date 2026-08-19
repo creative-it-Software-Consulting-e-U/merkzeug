@@ -75,6 +75,8 @@ Kontextmenü: einzelne Notiz oder Index-Datei mitsamt aller verlinkten
 Dokumente derselben Hierarchie, alphabetisch angehängt, mit internen
 Sprungzielen zwischen den Dokumenten; einzelne Dokumente per
 `pdf-exclude:`-Liste im Frontmatter der Index-Datei ausschließbar;
+`pdf-linked-title:` setzt einen eigenen Dokumenttitel für den Export mit
+verlinkten Dokumenten, z. B. „Full Report“ statt des `title:` der Index-Datei;
 `pdf-toc: true` stellt ein klickbares Inhaltsverzeichnis voran, nach dem
 Deckblatt ab Seite 2, mit Überschrift in der Dokumentsprache
 (`language:` im Frontmatter, z. B. `en`); bei
@@ -94,7 +96,8 @@ YAML-Frontmatter (Block am Dateianfang erscheint nicht im Text, sondern hinter
 einem aufklappbaren „Frontmatter“-Balken oben im Editor und ist dort
 editierbar; das „+ Feld“-Menü im Balken listet die ausgewerteten Felder samt
 Erklärung und fügt sie ein; `title:` bestimmt den Titel im PDF-Export, sonst die
-erste Überschrift 1, sonst der Dateiname), automatische
+erste Überschrift 1, sonst der Dateiname; beim Export mit verlinkten Dokumenten
+hat `pdf-linked-title:` Vorrang), automatische
 Benennung neuer Notizen nach ihrer Überschrift 1 (Slug wie
 `2026-08-11-bpp-call-neustrukturierung`, bis zum manuellen Umbenennen) und
 die Tipp-Ersetzung `->` → „→“. Extern geänderte
