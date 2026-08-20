@@ -74,23 +74,23 @@ export function Sidebar(props: SidebarProps): React.JSX.Element {
         onPull={props.onGitPull}
       />
       <div className="sidebar-footer">
-        <button className="toolbar-btn icon" title="Neue Notiz (⌘N)" onClick={props.onNewNote}>
+        <button className="toolbar-btn icon" data-tip="Neue Notiz (⌘N)" onClick={props.onNewNote}>
           <IconNewNote />
         </button>
         <button
           className="toolbar-btn icon"
-          title="Neuer Ordner (⇧⌘N)"
+          data-tip="Neuer Ordner (⇧⌘N)"
           onClick={props.onNewFolder}
         >
           <IconNewFolder />
         </button>
         <div className="toolbar-spacer" />
-        <button className="toolbar-btn icon" title="Neu einlesen" onClick={props.onReload}>
+        <button className="toolbar-btn icon" data-tip="Neu einlesen" onClick={props.onReload}>
           <IconReload />
         </button>
         <button
           className="toolbar-btn icon"
-          title={
+          data-tip={
             props.assetsVisible
               ? 'Ressourcen ausblenden (⇧⌘R)'
               : 'Ressourcen einblenden (⇧⌘R)'

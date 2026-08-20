@@ -33,6 +33,7 @@ import {
   toggleStrikethroughCommand
 } from '@milkdown/kit/preset/gfm'
 import { splitFrontmatter } from '../../../shared/docTitle'
+import { searchPlugin, searchPluginKey, type SearchMeta } from '../util/searchPlugin'
 import { renderMermaid } from '../util/mermaid'
 import { jumpToFragment } from '../util/anchors'
 import { isExternalLink } from '../util/paths'
@@ -69,6 +70,8 @@ export interface EditorHandle {
   flush: () => Promise<void>
   flushSync: () => void
   getSelectedText: () => string
+  /** Suchleiste öffnen (mit oder ohne Ersetzen-Zeile) */
+  openSearch: (withReplace: boolean) => void
   /** aktuelle Scroll-Position des Editors (für die Tab-Historie) */
   getScrollTop: () => number
   /** Überschriften des Dokuments (für das Inhaltsverzeichnis-Dropdown) */
@@ -179,6 +182,17 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   const pendingJumpRef = useRef<JumpTarget | null>(null)
   const anchorTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const scrollTimersRef = useRef<ReturnType<typeof setTimeout>[]>([])
+  // Suchen & Ersetzen: Leiste, Eingaben und Trefferstand
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [searchReplace, setSearchReplace] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [replaceText, setReplaceText] = useState('')
+  const [searchHits, setSearchHits] = useState({ count: 0, active: 0 })
+  const searchInputRef = useRef<HTMLInputElement | null>(null)
+  const searchOpenRef = useRef(false)
+  searchOpenRef.current = searchOpen
+  // Trefferzähler nach Dokumentänderungen aktualisieren (aus markdownUpdated)
+  const searchSyncRef = useRef<() => void>(() => {})
 
   // Pfadwechsel ohne Neuladen (Umbenennen/Verschieben): nur Speicherziel anpassen
   filePathRef.current = filePath
@@ -334,12 +348,117 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
     return `vault-file://local${encodeURI(abs.replace(/\\/g, '/'))}`
   }, [])
 
+  /** Trefferanzeige aus dem Plugin-Zustand übernehmen */
+  const syncSearchHits = useCallback((): void => {
+    const crepe = crepeRef.current
+    if (!crepe) return
+    crepe.editor.action((ctx) => {
+      const s = searchPluginKey.getState(ctx.get(editorViewCtx).state)
+      setSearchHits({ count: s?.matches.length ?? 0, active: s?.activeIndex ?? 0 })
+    })
+  }, [])
+  searchSyncRef.current = syncSearchHits
+
+  const scrollToActiveMatch = useCallback((): void => {
+    requestAnimationFrame(() => {
+      rootRef.current?.querySelector('.search-match-active')?.scrollIntoView({ block: 'center' })
+    })
+  }, [])
+
+  /** Suchbegriff bzw. aktiven Treffer ans Plugin melden */
+  const dispatchSearch = useCallback(
+    (meta: SearchMeta): void => {
+      const crepe = crepeRef.current
+      if (!crepe) return
+      crepe.editor.action((ctx) => {
+        const view = ctx.get(editorViewCtx)
+        view.dispatch(view.state.tr.setMeta(searchPluginKey, meta))
+      })
+      syncSearchHits()
+      scrollToActiveMatch()
+    },
+    [scrollToActiveMatch, syncSearchHits]
+  )
+
+  const stepSearch = useCallback(
+    (dir: 1 | -1): void => {
+      const crepe = crepeRef.current
+      if (!crepe) return
+      let index: number | null = null
+      crepe.editor.action((ctx) => {
+        const s = searchPluginKey.getState(ctx.get(editorViewCtx).state)
+        if (s && s.matches.length > 0) index = s.activeIndex + dir
+      })
+      if (index !== null) dispatchSearch({ activeIndex: index })
+    },
+    [dispatchSearch]
+  )
+
+  const closeSearch = useCallback((): void => {
+    setSearchOpen(false)
+    dispatchSearch({ query: '' })
+    crepeRef.current?.editor.action((ctx) => ctx.get(editorViewCtx).focus())
+  }, [dispatchSearch])
+
+  const replaceCurrent = useCallback((): void => {
+    const crepe = crepeRef.current
+    if (!crepe || readonly) return
+    crepe.editor.action((ctx) => {
+      const view = ctx.get(editorViewCtx)
+      const s = searchPluginKey.getState(view.state)
+      const m = s?.matches[s.activeIndex]
+      if (!m) return
+      view.dispatch(view.state.tr.insertText(replaceText, m.from, m.to))
+    })
+    syncSearchHits()
+    scrollToActiveMatch()
+  }, [readonly, replaceText, scrollToActiveMatch, syncSearchHits])
+
+  const replaceAll = useCallback((): void => {
+    const crepe = crepeRef.current
+    if (!crepe || readonly) return
+    crepe.editor.action((ctx) => {
+      const view = ctx.get(editorViewCtx)
+      const s = searchPluginKey.getState(view.state)
+      if (!s || s.matches.length === 0) return
+      // rückwärts ersetzen, damit die vorderen Positionen gültig bleiben
+      let tr = view.state.tr
+      for (const m of [...s.matches].reverse()) tr = tr.insertText(replaceText, m.from, m.to)
+      view.dispatch(tr)
+    })
+    syncSearchHits()
+  }, [readonly, replaceText, syncSearchHits])
+
+  const openSearchBar = useCallback(
+    (withReplace: boolean): void => {
+      setSearchOpen(true)
+      setSearchReplace(withReplace)
+      // aktuelle Auswahl (einzeilig) als Suchbegriff übernehmen
+      let selected = ''
+      crepeRef.current?.editor.action((ctx) => {
+        const view = ctx.get(editorViewCtx)
+        const { from, to } = view.state.selection
+        selected = view.state.doc.textBetween(from, to, '\n')
+      })
+      const query = selected && !selected.includes('\n') ? selected : searchQuery
+      if (query !== searchQuery) setSearchQuery(query)
+      if (query) dispatchSearch({ query, activeIndex: 0 })
+      requestAnimationFrame(() => {
+        searchInputRef.current?.focus()
+        searchInputRef.current?.select()
+      })
+    },
+    [dispatchSearch, searchQuery]
+  )
+
   useEffect(() => {
     let cancelled = false
     let crepe: Crepe | null = null
     setLoadError(null)
     conflictRef.current = false
     setConflict(false)
+    // Editor wird neu aufgebaut: der Suchzustand des Plugins geht verloren
+    setSearchOpen(false)
     if (prevLoadTokenRef.current !== loadToken) {
       // Navigation/Neuladen im selben Tab: alter Hinweis gilt nicht mehr
       prevLoadTokenRef.current = loadToken
@@ -473,10 +592,12 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
         }))
       })
       crepe.editor.use(arrowInputRule)
+      crepe.editor.use(searchPlugin)
 
       crepe.on((listener) => {
         listener.markdownUpdated((_ctx, markdown) => {
           latestMarkdownRef.current = markdown
+          if (searchOpenRef.current) searchSyncRef.current()
           const clean =
             lastSavedRef.current === null
               ? baseline === null || markdown === baseline
@@ -735,9 +856,10 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
           text = view.state.doc.textBetween(from, to, ' ')
         })
         return text
-      }
+      },
+      openSearch: openSearchBar
     }),
-    [doSave, flushSync, runCommand, uploadImage]
+    [doSave, flushSync, openSearchBar, runCommand, uploadImage]
   )
 
   const handleClickCapture = useCallback(
@@ -851,6 +973,104 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       onPasteCapture={handlePaste}
       onDropCapture={handleDrop}
     >
+      {searchOpen && (
+        <div className="search-anchor">
+          <div className="search-bar">
+            <div className="search-row">
+              <input
+                ref={searchInputRef}
+                className="search-input"
+                value={searchQuery}
+                placeholder="Suchen …"
+                spellCheck={false}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value)
+                  dispatchSearch({ query: e.target.value, activeIndex: 0 })
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    stepSearch(e.shiftKey ? -1 : 1)
+                  } else if (e.key === 'Escape') {
+                    e.preventDefault()
+                    closeSearch()
+                  }
+                }}
+              />
+              <span className="search-count">
+                {searchQuery === ''
+                  ? ''
+                  : searchHits.count === 0
+                    ? 'keine Treffer'
+                    : `${searchHits.active + 1} von ${searchHits.count}`}
+              </span>
+              <button
+                className="search-btn"
+                data-tip="Vorheriger Treffer (⇧↩)"
+                disabled={searchHits.count === 0}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => stepSearch(-1)}
+              >
+                ‹
+              </button>
+              <button
+                className="search-btn"
+                data-tip="Nächster Treffer (↩)"
+                disabled={searchHits.count === 0}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => stepSearch(1)}
+              >
+                ›
+              </button>
+              <button
+                className="search-btn"
+                data-tip="Suche schließen (Esc)"
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={closeSearch}
+              >
+                ✕
+              </button>
+            </div>
+            {searchReplace && !readonly && (
+              <div className="search-row">
+                <input
+                  className="search-input"
+                  value={replaceText}
+                  placeholder="Ersetzen durch …"
+                  spellCheck={false}
+                  onChange={(e) => setReplaceText(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      replaceCurrent()
+                    } else if (e.key === 'Escape') {
+                      e.preventDefault()
+                      closeSearch()
+                    }
+                  }}
+                />
+                <button
+                  className="search-action"
+                  disabled={searchHits.count === 0}
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={replaceCurrent}
+                >
+                  Ersetzen
+                </button>
+                <button
+                  className="search-action"
+                  data-tip="Alle Treffer ersetzen"
+                  disabled={searchHits.count === 0}
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={replaceAll}
+                >
+                  Alle
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
       {reloadInfo && !conflict && (
         <div className="editor-notice">
           <span>

@@ -117,6 +117,13 @@ The editor shows the note formatted; what is saved is Markdown.
 - **Images:** paste from the clipboard, drag & drop, slash menu or
   **Edit → Insert Image…**.
 - **Undo/redo** as usual (⌘Z / ⇧⌘Z).
+- **Find & replace:** **⌘F** opens the search bar at the top right of the
+  editor, **⌥⌘F** additionally shows the replace row (also via
+  **Edit → Find…**). The search covers the current note and is
+  case-insensitive; selected text is taken over as the search term. **↩**
+  jumps to the next match, **⇧↩** to the previous one, **Esc** closes the
+  bar. "Ersetzen" replaces the current match, "Alle" replaces all matches.
+  In navigation mode you can search but not replace.
 - **Moving blocks:** the handle to the left of a block (appears on hover)
   allows drag & drop reordering.
 - **YAML frontmatter:** a `---` block at the top of the file (e.g. with
@@ -337,6 +344,7 @@ the sidebar:
 | ⇧⌘B / ⌥⌘C | Quote / Code block |
 | ⌘K | Insert link |
 | ⌥⌘T | Insert table |
+| ⌘F / ⌥⌘F | Find / Find and replace |
 | ⌘R | Toggle navigation mode |
 | ⌘[ / ⌘] | Back / Forward |
 | ⌘\ | Toggle second section |

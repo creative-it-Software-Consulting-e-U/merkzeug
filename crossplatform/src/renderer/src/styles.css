@@ -1475,3 +1475,121 @@ html:has(.pdf-app) #root {
   background: var(--bg);
   transition: width 0.3s ease;
 }
+
+/* ---- App-weite Tooltips (data-tip) ---- */
+
+.app-tooltip {
+  position: fixed;
+  z-index: 1000;
+  max-width: 320px;
+  padding: 4px 9px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-sidebar);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.35;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
+  pointer-events: none;
+}
+
+/* ---- Suchen & Ersetzen ---- */
+
+/* Anker ohne Höhe: hält die Leiste beim Scrollen oben, ohne Platz zu belegen */
+.search-anchor {
+  position: sticky;
+  top: 0;
+  height: 0;
+  z-index: 40;
+  flex: 0 0 auto;
+}
+
+.search-bar {
+  position: absolute;
+  top: 8px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-sidebar);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.search-input {
+  width: 210px;
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+}
+
+.search-count {
+  min-width: 76px;
+  text-align: right;
+  font-size: 11px;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.search-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+
+.search-btn:hover:not(:disabled) {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+
+.search-btn:disabled {
+  opacity: 0.4;
+}
+
+.search-action {
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 12px;
+  color: var(--text);
+  background: var(--bg-hover);
+}
+
+.search-action:hover:not(:disabled) {
+  background: var(--bg-active);
+}
+
+.search-action:disabled {
+  opacity: 0.4;
+}
+
+.editor-root .search-match {
+  background: color-mix(in srgb, var(--accent) 25%, transparent);
+  border-radius: 2px;
+}
+
+.editor-root .search-match-active {
+  background: color-mix(in srgb, var(--accent) 55%, transparent);
+  outline: 1px solid var(--accent);
+}

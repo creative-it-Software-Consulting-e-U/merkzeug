@@ -15,6 +15,7 @@ import type { EditorHandle } from './components/Editor'
 import { PaneView } from './components/Pane'
 import { Sidebar } from './components/Sidebar'
 import { LinkDialog } from './components/LinkDialog'
+import { TooltipLayer } from './components/Tooltip'
 
 const emptyPane = (): Pane => ({ tabs: [], activeTabId: null })
 
@@ -721,6 +722,12 @@ export function App(): React.JSX.Element {
         case 'insertTable':
           activeEditor()?.insertTable()
           break
+        case 'find':
+          activeEditor()?.openSearch(false)
+          break
+        case 'findReplace':
+          activeEditor()?.openSearch(true)
+          break
         case 'tableRowAbove':
           activeEditor()?.tableCommand('rowAbove')
           break
@@ -1021,6 +1028,7 @@ export function App(): React.JSX.Element {
           onCancel={() => setLinkDialogOpen(false)}
         />
       )}
+      <TooltipLayer />
     </div>
   )
 }

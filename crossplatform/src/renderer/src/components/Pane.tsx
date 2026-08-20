@@ -109,7 +109,7 @@ export function PaneView(props: PaneProps): React.JSX.Element {
   ): React.JSX.Element => (
     <button
       className={`toolbar-btn icon${extraClass ? ` ${extraClass}` : ''}`}
-      title={title}
+      data-tip={title}
       disabled={activeTab?.navMode}
       onMouseDown={(e) => e.preventDefault()}
       onClick={onClick}
@@ -136,7 +136,7 @@ export function PaneView(props: PaneProps): React.JSX.Element {
         <div className="pane-toolbar">
           <button
             className="toolbar-btn icon"
-            title="Zurück (⌘[)"
+            data-tip="Zurück (⌘[)"
             disabled={!activeTab.navMode || activeTab.historyIndex <= 0}
             onClick={() => props.onNavBack(activeTab.id)}
           >
@@ -144,7 +144,7 @@ export function PaneView(props: PaneProps): React.JSX.Element {
           </button>
           <button
             className="toolbar-btn icon"
-            title="Vorwärts (⌘])"
+            data-tip="Vorwärts (⌘])"
             disabled={!activeTab.navMode || activeTab.historyIndex >= activeTab.history.length - 1}
             onClick={() => props.onNavForward(activeTab.id)}
           >
@@ -155,7 +155,7 @@ export function PaneView(props: PaneProps): React.JSX.Element {
               <div className="toolbar-divider" />
               <button
                 className="toolbar-btn icon"
-                title="Inhaltsverzeichnis: zu einer Überschrift springen"
+                data-tip="Inhaltsverzeichnis: zu einer Überschrift springen"
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={(e) => openMenu('toc', e)}
               >
@@ -198,14 +198,14 @@ export function PaneView(props: PaneProps): React.JSX.Element {
           <div className="toolbar-spacer" />
           <button
             className="toolbar-btn icon"
-            title="Merkzeug-Hilfe (⌘?)"
+            data-tip="Merkzeug-Hilfe (⌘?)"
             onClick={() => void window.merkzeug.openHelp()}
           >
             <IconHelp />
           </button>
           <button
             className={`toolbar-btn icon${activeTab.navMode ? ' toggled' : ''}`}
-            title={
+            data-tip={
               activeTab.navMode
                 ? 'Navigationsmodus verlassen (⌘R)'
                 : 'Navigationsmodus: read-only, Links öffnen im selben Tab (⌘R)'

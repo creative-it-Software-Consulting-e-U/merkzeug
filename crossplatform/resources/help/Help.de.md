@@ -123,6 +123,13 @@ Der Editor zeigt die Notiz formatiert an; gespeichert wird Markdown.
 - **Bilder:** per Einfügen aus der Zwischenablage, Drag & Drop, Slash-Menü oder
   Menü „Bearbeiten → Bild einfügen…“.
 - **Undo/Redo** wie gewohnt (⌘Z / ⇧⌘Z).
+- **Suchen & Ersetzen:** **⌘F** öffnet die Suchleiste rechts oben im Editor,
+  **⌥⌘F** zusätzlich die Ersetzen-Zeile (auch über **Bearbeiten → Suchen…**).
+  Gesucht wird in der aktuellen Notiz ohne Beachtung der Groß-/Kleinschreibung;
+  eine markierte Textstelle wird als Suchbegriff übernommen. **↩** springt zum
+  nächsten, **⇧↩** zum vorherigen Treffer, **Esc** schließt die Leiste.
+  „Ersetzen“ ersetzt den aktuellen Treffer, „Alle“ sämtliche Treffer. Im
+  Navigationsmodus ist nur Suchen möglich, nicht Ersetzen.
 - **Blöcke verschieben:** Der Griff links neben einem Block (erscheint beim
   Überfahren) erlaubt Verschieben per Drag & Drop.
 - **YAML-Frontmatter:** Ein `---`-Block am Dateianfang (z. B. mit `title:`,
@@ -349,6 +356,7 @@ Ist der Vault ein **Git-Repository**, erscheint unten in der Sidebar eine Status
 | ⇧⌘B / ⌥⌘C | Zitat / Codeblock |
 | ⌘K | Link einfügen |
 | ⌥⌘T | Tabelle einfügen |
+| ⌘F / ⌥⌘F | Suchen / Suchen und Ersetzen |
 | ⌘R | Navigationsmodus ein/aus |
 | ⌘[ / ⌘] | Zurück / Vorwärts |
 | ⌘\ | Zweite Sektion ein-/ausblenden |

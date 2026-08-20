@@ -93,6 +93,9 @@ export function buildMenu(hooks: MenuHooks): void {
         { role: 'paste', label: 'Einsetzen' },
         { role: 'selectAll', label: 'Alles auswählen' },
         { type: 'separator' },
+        item('Suchen…', 'find', 'Cmd+F'),
+        item('Suchen und Ersetzen…', 'findReplace', 'Alt+Cmd+F'),
+        { type: 'separator' },
         item('Link einfügen…', 'insertLink', 'Cmd+K'),
         item('Bild einfügen…', 'insertImage'),
         item('Tabelle einfügen', 'insertTable', 'Alt+Cmd+T')

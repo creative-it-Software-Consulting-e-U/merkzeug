@@ -37,6 +37,8 @@ export type MenuAction =
   | 'insertLink'
   | 'insertImage'
   | 'insertTable'
+  | 'find'
+  | 'findReplace'
   | 'tableRowAbove'
   | 'tableRowBelow'
   | 'tableColBefore'
