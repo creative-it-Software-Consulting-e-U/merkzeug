@@ -21,6 +21,27 @@ export function meetingTimeLabel(ev: CalendarEvent): string {
   return `${localTime(new Date(ev.start))}–${localTime(new Date(ev.end))}`
 }
 
+const bodyDayFormat = new Intl.DateTimeFormat('de-DE', {
+  weekday: 'short',
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric'
+})
+
+/** Datum/Zeit-Zeile für den Notiz-Text: "Mi., 26.08.2026 · 14:49–15:49" */
+export function meetingDateLine(ev: CalendarEvent): string {
+  const start = new Date(ev.start)
+  if (ev.allDay) {
+    // Ganztägige Termine enden um Mitternacht nach dem letzten Tag
+    const lastDay = new Date(Date.parse(ev.end) - 1)
+    if (localDate(lastDay) !== localDate(start)) {
+      return `${bodyDayFormat.format(start)} – ${bodyDayFormat.format(lastDay)} · ganztägig`
+    }
+    return `${bodyDayFormat.format(start)} · ganztägig`
+  }
+  return `${bodyDayFormat.format(start)} · ${meetingTimeLabel(ev)}`
+}
+
 /** "Name <mail>", nur Name oder nur Mail – je nachdem, was vorhanden ist */
 function personLabel(p: CalendarPerson): string | null {
   if (p.name && p.email && p.name !== p.email) return `${p.name} <${p.email}>`
@@ -54,6 +75,27 @@ export function meetingNoteContent(ev: CalendarEvent): string {
     for (const label of attendees) lines.push(`  - ${yamlQuote(label)}`)
   }
   if (ev.meetingUrl) lines.push(`meeting-url: ${yamlQuote(ev.meetingUrl)}`)
-  lines.push('---', '', `# ${ev.title}`, '', '## Agenda', '', '## Notizen', '', '## Aufgaben', '')
+  lines.push('---', '', `# ${ev.title}`, '')
+  let dateLine = `**${meetingDateLine(ev)}**`
+  if (ev.location) dateLine += ` · ${ev.location}`
+  lines.push(dateLine, '')
+  // Teilnehmerliste zum Abhaken („wer war wirklich dabei?“);
+  // Organisator zuerst, ohne Dublette, falls er auch als Teilnehmer geführt wird
+  const checklist: string[] = []
+  const organizerName = ev.organizer?.name ?? ev.organizer?.email
+  if (organizerName) checklist.push(`${organizerName} (Organisator)`)
+  for (const a of ev.attendees) {
+    const name = a.name ?? a.email
+    if (!name) continue
+    const isOrganizer =
+      (ev.organizer?.email && a.email === ev.organizer.email) || name === organizerName
+    if (!isOrganizer) checklist.push(name)
+  }
+  if (checklist.length > 0) {
+    lines.push('## Teilnehmer', '')
+    for (const name of checklist) lines.push(`- [ ] ${name}`)
+    lines.push('')
+  }
+  lines.push('## Agenda', '', '## Notizen', '', '## Aufgaben', '')
   return lines.join('\n')
 }

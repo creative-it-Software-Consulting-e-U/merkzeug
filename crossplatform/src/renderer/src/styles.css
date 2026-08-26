@@ -1726,3 +1726,20 @@ html:has(.pdf-app) #root {
 .meeting-foot .meeting-past-toggle {
   margin-right: auto;
 }
+
+/* spezifischer als .dialog label (das column erzwingt) */
+.dialog label.meeting-allday {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-dim);
+  cursor: pointer;
+  user-select: none;
+}
+
+.dialog label.meeting-allday input {
+  margin: 0;
+  accent-color: var(--accent);
+}

@@ -60,13 +60,16 @@ The sidebar on the left shows the vault as a hierarchical tree.
   Meeting-Notiz…" or the calendar button in the footer) lists the running
   and upcoming events of the next 14 days from your locally configured
   calendars — on macOS all accounts of the Calendar app (iCloud,
-  Exchange/Microsoft 365, Google, …), with no cloud API involved. **"Frühere
+  Exchange/Microsoft 365, Google, …), with no cloud API involved. All-day
+  events (vacations, birthdays, …) are hidden by default and can be shown
+  via the checkbox above the list. **"Frühere
   anzeigen"** reveals past events, **"Suchen"** searches titles, people and
-  locations within ±90 days. Clicking an event creates a ready-named note
-  with date, time, location, organizer, attendees and the detected meeting
-  link (Teams/Zoom/Meet/Webex) in the frontmatter, plus Agenda, Notes and
-  Tasks sections. The first time, macOS asks for permission to access the
-  calendar. On Windows and Linux the calendar integration is not available
+  locations within ±90 days. Clicking an event creates a ready-named note:
+  the event data (date, time, location, organizer, attendees, detected
+  Teams/Zoom/Meet/Webex link) goes into the frontmatter; the body contains
+  date and time below the heading, a **checkable attendee list** (who
+  actually showed up?) and the Agenda, Notes and Tasks sections. The first
+  time, macOS asks for permission to access the calendar. On Windows and Linux the calendar integration is not available
   yet.
 - **Automatic naming of new notes:** a new note is initially called
   "Neue Notiz". If it starts with a **heading 1**, the file is automatically

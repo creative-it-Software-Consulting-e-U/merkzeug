@@ -62,12 +62,16 @@ Links zeigt die Sidebar den Vault als hierarchischen Baum.
   Meeting-Notiz…“ oder der Kalender-Button in der Fußleiste) zeigt laufende
   und kommende Termine der nächsten 14 Tage aus den lokal eingebundenen
   Kalendern — unter macOS alle Konten der Kalender-App (iCloud,
-  Exchange/Microsoft 365, Google, …), ganz ohne Cloud-API. **„Frühere
+  Exchange/Microsoft 365, Google, …), ganz ohne Cloud-API. Ganztägige
+  Termine (Urlaube, Geburtstage, …) sind standardmäßig ausgeblendet und
+  lassen sich über die Checkbox über der Liste einblenden. **„Frühere
   anzeigen“** blendet vergangene Termine ein, **„Suchen“** durchsucht Titel,
   Personen und Orte im Zeitraum ±90 Tage. Ein Klick auf einen Termin erzeugt
-  eine fertig benannte Notiz mit Datum, Uhrzeit, Ort, Organisator,
-  Teilnehmern und erkanntem Besprechungs-Link (Teams/Zoom/Meet/Webex) im
-  Frontmatter sowie den Abschnitten Agenda, Notizen und Aufgaben. Beim
+  eine fertig benannte Notiz: Die Termin-Daten (Datum, Uhrzeit, Ort,
+  Organisator, Teilnehmer, erkannter Teams/Zoom/Meet/Webex-Link) landen im
+  Frontmatter; im Text stehen Datum/Uhrzeit unter der Überschrift, eine
+  **abhakbare Teilnehmerliste** (wer war wirklich dabei?) sowie die
+  Abschnitte Agenda, Notizen und Aufgaben. Beim
   ersten Mal fragt macOS nach der Erlaubnis für den Kalender-Zugriff.
   Unter Windows und Linux ist die Kalender-Anbindung noch nicht verfügbar.
 - **Automatische Benennung neuer Notizen:** Eine neue Notiz heißt zunächst

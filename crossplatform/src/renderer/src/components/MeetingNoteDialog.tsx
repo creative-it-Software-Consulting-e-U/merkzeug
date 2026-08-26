@@ -70,6 +70,8 @@ export function MeetingNoteDialog({ onPick, onCancel }: MeetingNoteDialogProps):
   const [error, setError] = useState<CalendarResult['error'] | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [showPast, setShowPast] = useState(false)
+  // ganztägige Termine (Urlaube, Geburtstage, …) standardmäßig ausblenden
+  const [showAllDay, setShowAllDay] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [active, setActive] = useState(0)
@@ -120,13 +122,15 @@ export function MeetingNoteDialog({ onPick, onCancel }: MeetingNoteDialogProps):
       (a, b) => Date.parse(a.start) - Date.parse(b.start) || a.title.localeCompare(b.title, 'de')
     )
     const q = query.trim().toLowerCase()
+    // eine konkrete Suche zeigt auch ganztägige Treffer
     if (searchOpen && q) return all.filter((ev) => matchesQuery(ev, q))
     return all.filter((ev) => {
+      if (ev.allDay && !showAllDay) return false
       const isPast = Date.parse(ev.end) < now
       if (isPast) return showPast && Date.parse(ev.end) >= now - PAST_DAYS * DAY
       return Date.parse(ev.start) <= now + UPCOMING_DAYS * DAY
     })
-  }, [events, query, searchOpen, showPast])
+  }, [events, query, searchOpen, showPast, showAllDay])
 
   // Auswahl-Index eingrenzen, wenn sich die Liste ändert
   useEffect(() => {
@@ -236,6 +240,14 @@ export function MeetingNoteDialog({ onPick, onCancel }: MeetingNoteDialogProps):
             placeholder={`Titel, Person oder Ort – ±${SEARCH_DAYS} Tage`}
           />
         )}
+        <label className="meeting-allday">
+          <input
+            type="checkbox"
+            checked={showAllDay}
+            onChange={(e) => setShowAllDay(e.target.checked)}
+          />
+          Ganztägige Termine anzeigen
+        </label>
         <div className="meeting-list" ref={listRef}>
           {rows}
           {status && <div className="meeting-status">{status}</div>}

@@ -71,9 +71,10 @@ Hilfe-Button in der Toolbar) und
 Autosave. Bonus gegenüber der Mac-App: Meeting-Notizen aus dem Kalender
 (⌃⌘N: listet laufende und kommende Termine aus den lokal eingebundenen
 Kalendern — macOS/EventKit, also alle Konten der Kalender-App ohne Cloud-API —
-mit „Frühere anzeigen“ und Suche ±90 Tage; ein Klick erzeugt eine fertig
-benannte Notiz mit Datum, Zeit, Ort, Organisator, Teilnehmern und erkanntem
-Teams/Zoom/Meet/Webex-Link im Frontmatter; Windows/Outlook und ICS-Fallback
+ganztägige Termine per Checkbox zuschaltbar, mit „Frühere anzeigen“ und Suche
+±90 Tage; ein Klick erzeugt eine fertig benannte Notiz mit den Termin-Daten
+inkl. erkanntem Teams/Zoom/Meet/Webex-Link im Frontmatter, Datum/Zeit und
+abhakbarer Teilnehmerliste im Text; Windows/Outlook und ICS-Fallback
 geplant), Suchen & Ersetzen in der aktuellen
 Notiz (⌘F bzw. ⌥⌘F, im Navigationsmodus nur Suchen), Slash-Menü („/“),
 Auswahl-Toolbar,
