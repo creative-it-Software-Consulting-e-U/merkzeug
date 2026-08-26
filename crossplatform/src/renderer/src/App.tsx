@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import type { FileNode, GitStatus, MenuAction, PdfExportProgress } from '../../shared/types'
+import type {
+  CalendarEvent,
+  FileNode,
+  GitStatus,
+  MenuAction,
+  PdfExportProgress
+} from '../../shared/types'
 import { autoNameFor, makeTab, type Pane, type Tab, type TabKind } from './types'
 import { leadingH1, slugifyTitle } from './util/autoName'
 import {
@@ -15,7 +21,9 @@ import type { EditorHandle } from './components/Editor'
 import { PaneView } from './components/Pane'
 import { Sidebar } from './components/Sidebar'
 import { LinkDialog } from './components/LinkDialog'
+import { MeetingNoteDialog } from './components/MeetingNoteDialog'
 import { TooltipLayer } from './components/Tooltip'
+import { meetingNoteContent, meetingNoteFileBase } from './util/meetingNote'
 
 const emptyPane = (): Pane => ({ tabs: [], activeTabId: null })
 
@@ -58,6 +66,7 @@ export function App(): React.JSX.Element {
   const [gitError, setGitError] = useState<string | null>(null)
   const [dirtyTabs, setDirtyTabs] = useState<Set<string>>(new Set())
   const [linkDialogOpen, setLinkDialogOpen] = useState(false)
+  const [meetingDialogOpen, setMeetingDialogOpen] = useState(false)
   // laufender PDF-Export (Fortschritts-Toast); null = kein Export aktiv
   const [pdfProgress, setPdfProgress] = useState<{
     phase: PdfExportProgress['phase']
@@ -456,6 +465,29 @@ export function App(): React.JSX.Element {
     [expandFolder, refreshTree]
   )
 
+  /** Meeting-Notiz aus einem Kalendertermin im Ordner der aktuellen Auswahl. */
+  const handleCreateMeetingNote = useCallback(
+    async (ev: CalendarEvent): Promise<void> => {
+      setMeetingDialogOpen(false)
+      const v = vaultRef.current
+      if (!v) return
+      const sel = selectedRef.current
+      const node = sel ? findNode(treeRef.current, sel) : null
+      const dir = node ? (node.isDirectory ? node.path : dirname(node.path)) : v
+      const path = await window.merkzeug.createNoteFrom(
+        dir,
+        meetingNoteFileBase(ev),
+        meetingNoteContent(ev)
+      )
+      await refreshTree()
+      expandFolder(dir)
+      openInNewTab(path, 'note')
+      setSelectedPath(path)
+      setMultiSelected(new Set())
+    },
+    [expandFolder, openInNewTab, refreshTree]
+  )
+
   /** Neue Notiz/neuer Ordner im Ordner der aktuellen Auswahl (sonst Vault-Wurzel). */
   const createAtSelection = useCallback(
     (kind: 'note' | 'folder'): void => {
@@ -689,6 +721,9 @@ export function App(): React.JSX.Element {
       switch (action) {
         case 'newNote':
           createAtSelection('note')
+          break
+        case 'newMeetingNote':
+          setMeetingDialogOpen(true)
           break
         case 'newFolder':
           createAtSelection('folder')
@@ -965,6 +1000,7 @@ export function App(): React.JSX.Element {
           onExportPdfMulti={(paths) => void exportPdfMulti(paths)}
           onMove={(src, dest) => void handleMove(src, dest)}
           onNewNote={() => createAtSelection('note')}
+          onNewMeetingNote={() => setMeetingDialogOpen(true)}
           onNewFolder={() => createAtSelection('folder')}
           onReload={() => {
             void refreshTree()
@@ -1020,6 +1056,12 @@ export function App(): React.JSX.Element {
             />
           </div>
         </div>
+      )}
+      {meetingDialogOpen && (
+        <MeetingNoteDialog
+          onPick={(ev) => void handleCreateMeetingNote(ev)}
+          onCancel={() => setMeetingDialogOpen(false)}
+        />
       )}
       {linkDialogOpen && (
         <LinkDialog

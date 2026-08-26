@@ -88,6 +88,17 @@ export function createNote(dir: string): string {
   return path
 }
 
+/**
+ * Legt eine Notiz mit vorgegebenem Namen und Inhalt an (z. B. Meeting-Notiz).
+ * Bei Namenskollision wird " 2", " 3", … angehängt. Liefert den Pfad.
+ */
+export function createNoteFrom(dir: string, base: string, content: string): string {
+  const safeBase = base.replace(/[/\\:]/g, '-').trim() || 'Neue Notiz'
+  const path = uniquePath(dir, safeBase, '.md')
+  writeFileSync(path, content, 'utf8')
+  return path
+}
+
 export function createFolder(dir: string): string {
   const path = uniquePath(dir, 'Neuer Ordner', '')
   mkdirSync(path)

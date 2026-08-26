@@ -8,6 +8,7 @@ import {
   createFolder,
   autoRenameNote,
   createNote,
+  createNoteFrom,
   movePath,
   readTextFile,
   readTree,
@@ -42,6 +43,7 @@ import {
 } from './windows'
 import { watchVault } from './watcher'
 import { registerPdfIpc } from './pdfExport'
+import { listCalendarEvents } from './calendar'
 
 protocol.registerSchemesAsPrivileged([
   { scheme: 'vault-file', privileges: { stream: true, supportFetchAPI: true, bypassCSP: true } }
@@ -155,7 +157,13 @@ function registerIpc(): void {
   ipcMain.handle('file:read', (_e, path: string) => readTextFile(path))
   ipcMain.handle('file:write', (_e, path: string, content: string) => writeTextFile(path, content))
   ipcMain.handle('file:createNote', (_e, dir: string) => createNote(dir))
+  ipcMain.handle('file:createNoteFrom', (_e, dir: string, base: string, content: string) =>
+    createNoteFrom(dir, base, content)
+  )
   ipcMain.handle('file:createFolder', (_e, dir: string) => createFolder(dir))
+  ipcMain.handle('calendar:list', (_e, fromMs: number, toMs: number) =>
+    listCalendarEvents(fromMs, toMs)
+  )
   ipcMain.handle('file:rename', (_e, path: string, newName: string) => renamePath(path, newName))
   ipcMain.handle('file:autoRename', (_e, path: string, base: string) => autoRenameNote(path, base))
   ipcMain.handle('file:move', (_e, src: string, destDir: string) => movePath(src, destDir))

@@ -12,6 +12,16 @@ extraResources:
 mac:
   category: public.app-category.productivity
   icon: build/icon.icns
+  # EventKit-Helfer für „Neue Meeting-Notiz" (vor dem Packen kompiliert,
+  # siehe Skript build:calhelper)
+  extraResources:
+    - from: resources/calendar/merkzeug-calendar
+      to: calendar/merkzeug-calendar
+  extendInfo:
+    NSCalendarsUsageDescription: >-
+      Merkzeug liest deine Kalendertermine, um daraus Meeting-Notizen zu erstellen.
+    NSCalendarsFullAccessUsageDescription: >-
+      Merkzeug liest deine Kalendertermine, um daraus Meeting-Notizen zu erstellen.
   # Signiert automatisch mit dem "Developer ID Application"-Zertifikat
   # (Team 3BNJ4M9R56) aus dem Login-Schlüsselbund.
   hardenedRuntime: true

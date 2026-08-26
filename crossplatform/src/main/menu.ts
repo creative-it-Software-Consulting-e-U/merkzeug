@@ -54,6 +54,7 @@ export function buildMenu(hooks: MenuHooks): void {
           click: () => hooks.newWindow()
         },
         item('Neue Notiz', 'newNote', 'Cmd+N'),
+        item('Neue Meeting-Notiz…', 'newMeetingNote', 'Ctrl+Cmd+N'),
         item('Neuer Ordner', 'newFolder', 'Shift+Cmd+N'),
         { type: 'separator' },
         item('Sichern', 'saveNote', 'Cmd+S'),

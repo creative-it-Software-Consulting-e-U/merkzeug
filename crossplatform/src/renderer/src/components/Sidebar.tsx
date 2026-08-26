@@ -2,7 +2,7 @@ import type { FileNode, GitStatus } from '../../../shared/types'
 import { basename } from '../util/paths'
 import { FileTree } from './FileTree'
 import { GitBar } from './GitBar'
-import { IconEye, IconNewFolder, IconNewNote, IconReload } from './icons'
+import { IconEye, IconMeetingNote, IconNewFolder, IconNewNote, IconReload } from './icons'
 
 interface SidebarProps {
   vault: string
@@ -27,6 +27,7 @@ interface SidebarProps {
   onExportPdfMulti: (paths: string[]) => void
   onMove: (src: string, destDir: string) => void
   onNewNote: () => void
+  onNewMeetingNote: () => void
   onNewFolder: () => void
   onReload: () => void
   onToggleAssets: () => void
@@ -76,6 +77,13 @@ export function Sidebar(props: SidebarProps): React.JSX.Element {
       <div className="sidebar-footer">
         <button className="toolbar-btn icon" data-tip="Neue Notiz (⌘N)" onClick={props.onNewNote}>
           <IconNewNote />
+        </button>
+        <button
+          className="toolbar-btn icon"
+          data-tip="Neue Meeting-Notiz (⌃⌘N)"
+          onClick={props.onNewMeetingNote}
+        >
+          <IconMeetingNote />
         </button>
         <button
           className="toolbar-btn icon"

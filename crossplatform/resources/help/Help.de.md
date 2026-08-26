@@ -55,9 +55,21 @@ Links zeigt die Sidebar den Vault als hierarchischen Baum.
 - **Verschieben:** Dateien und Ordner einfach per Drag & Drop auf einen Ordner ziehen.
 - **Ordnerübersicht:** zeigt den Inhalt eines Ordners als Karten in einem eigenen
   Tab; Klicks auf Notizen und Unterordner navigieren weiter.
-- **Fußleiste der Sidebar:** Buttons für neue Notiz und neuen Ordner (links)
-  sowie zum Neu-Einlesen des Vaults; das Augen-Symbol blendet die
-  **Ressourcen-Ordner** ein/aus (⇧⌘R).
+- **Fußleiste der Sidebar:** Buttons für neue Notiz, neue Meeting-Notiz und
+  neuen Ordner (links) sowie zum Neu-Einlesen des Vaults; das Augen-Symbol
+  blendet die **Ressourcen-Ordner** ein/aus (⇧⌘R).
+- **Meeting-Notizen aus dem Kalender:** **⌃⌘N** (Menü „Ablage → Neue
+  Meeting-Notiz…“ oder der Kalender-Button in der Fußleiste) zeigt laufende
+  und kommende Termine der nächsten 14 Tage aus den lokal eingebundenen
+  Kalendern — unter macOS alle Konten der Kalender-App (iCloud,
+  Exchange/Microsoft 365, Google, …), ganz ohne Cloud-API. **„Frühere
+  anzeigen“** blendet vergangene Termine ein, **„Suchen“** durchsucht Titel,
+  Personen und Orte im Zeitraum ±90 Tage. Ein Klick auf einen Termin erzeugt
+  eine fertig benannte Notiz mit Datum, Uhrzeit, Ort, Organisator,
+  Teilnehmern und erkanntem Besprechungs-Link (Teams/Zoom/Meet/Webex) im
+  Frontmatter sowie den Abschnitten Agenda, Notizen und Aufgaben. Beim
+  ersten Mal fragt macOS nach der Erlaubnis für den Kalender-Zugriff.
+  Unter Windows und Linux ist die Kalender-Anbindung noch nicht verfügbar.
 - **Automatische Benennung neuer Notizen:** Eine neue Notiz heißt zunächst
   „Neue Notiz“. Beginnt sie mit einer **Überschrift 1**, wird die Datei beim
   Speichern automatisch nach dem Titel benannt: alles klein, Leerzeichen und
@@ -343,6 +355,7 @@ Ist der Vault ein **Git-Repository**, erscheint unten in der Sidebar eine Status
 | Kürzel | Funktion |
 | --- | --- |
 | ⌘N | Neue Notiz |
+| ⌃⌘N | Neue Meeting-Notiz |
 | ⇧⌘N | Neuer Ordner |
 | ⌥⌘N | Neues Fenster |
 | ⌘O | Vault öffnen |

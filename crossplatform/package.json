@@ -8,8 +8,9 @@
     "dev": "electron-vite dev",
     "build": "electron-vite build",
     "start": "electron-vite preview",
-    "package:mac": "electron-vite build && electron-builder --mac dir",
-    "package:mac:dmg": "electron-vite build && electron-builder --mac dmg",
+    "build:calhelper": "swiftc -O resources/calendar/MerkzeugCalendar.swift -o resources/calendar/merkzeug-calendar",
+    "package:mac": "npm run build:calhelper && electron-vite build && electron-builder --mac dir",
+    "package:mac:dmg": "npm run build:calhelper && electron-vite build && electron-builder --mac dmg",
     "package:win": "electron-vite build && electron-builder --win --x64 --arm64",
     "package:linux": "electron-vite build && electron-builder --linux --x64"
   },

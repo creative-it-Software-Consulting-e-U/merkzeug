@@ -234,3 +234,16 @@ export function IconBook({ filled }: { filled: boolean }): React.JSX.Element {
     </svg>
   )
 }
+
+export function IconMeetingNote(): React.JSX.Element {
+  return (
+    <svg {...base}>
+      <rect x="2.5" y="3.5" width="11" height="10" rx="1" />
+      <line x1="5.5" y1="2" x2="5.5" y2="4.5" />
+      <line x1="10.5" y1="2" x2="10.5" y2="4.5" />
+      <line x1="2.5" y1="6.5" x2="13.5" y2="6.5" />
+      <line x1="8" y1="8.3" x2="8" y2="11.7" />
+      <line x1="6.3" y1="10" x2="9.7" y2="10" />
+    </svg>
+  )
+}

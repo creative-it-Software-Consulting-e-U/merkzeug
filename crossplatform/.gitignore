@@ -3,3 +3,5 @@ out/
 dist/
 *.log
 *.tsbuildinfo
+# kompilierter EventKit-Helfer (aus MerkzeugCalendar.swift)
+resources/calendar/merkzeug-calendar

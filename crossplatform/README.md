@@ -68,7 +68,13 @@ Mermaid-Diagrammen inkl. Zoom-Fenster, Navigationsmodus mit Historie
 Git-Integration (Status, Commit & Push, Push, Pull, Fehleranzeige ⚠ bei
 fehlgeschlagenen Aktionen), Hilfe in DE/EN (⌘? oder
 Hilfe-Button in der Toolbar) und
-Autosave. Bonus gegenüber der Mac-App: Suchen & Ersetzen in der aktuellen
+Autosave. Bonus gegenüber der Mac-App: Meeting-Notizen aus dem Kalender
+(⌃⌘N: listet laufende und kommende Termine aus den lokal eingebundenen
+Kalendern — macOS/EventKit, also alle Konten der Kalender-App ohne Cloud-API —
+mit „Frühere anzeigen“ und Suche ±90 Tage; ein Klick erzeugt eine fertig
+benannte Notiz mit Datum, Zeit, Ort, Organisator, Teilnehmern und erkanntem
+Teams/Zoom/Meet/Webex-Link im Frontmatter; Windows/Outlook und ICS-Fallback
+geplant), Suchen & Ersetzen in der aktuellen
 Notiz (⌘F bzw. ⌥⌘F, im Navigationsmodus nur Suchen), Slash-Menü („/“),
 Auswahl-Toolbar,
 Inhaltsverzeichnis-Dropdown in der Toolbar (springt zu Überschriften),
@@ -135,4 +141,8 @@ Beim Mehrfach-Export (`pdf:exportMulti`) wird die Variable als Zielordner
 interpretiert; vorhandene PDFs werden ohne Rückfrage überschrieben.
 `MERKZEUG_TEMPLATES_ROOT=/pfad` überschreibt den Vorlagen-Ordner,
 `MERKZEUG_PDF_TEMPLATE=Name` erzwingt eine Vorlage unabhängig von der
-Vault-Zuweisung.
+Vault-Zuweisung. `MERKZEUG_CALENDAR_FIXTURE=/pfad.json` liefert dem Dialog
+„Neue Meeting-Notiz“ Termine aus einer JSON-Datei (`{"events":[…]}` im Format
+des EventKit-Helfers `resources/calendar/MerkzeugCalendar.swift`) statt vom
+System — der Helfer wird im Entwicklungsmodus bei Bedarf automatisch mit
+`swiftc` kompiliert, beim Packen über das Skript `build:calhelper`.

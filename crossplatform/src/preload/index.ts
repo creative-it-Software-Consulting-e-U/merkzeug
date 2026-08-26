@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import type {
+  CalendarResult,
   FileNode,
   GitResult,
   GitStatus,
@@ -18,6 +19,10 @@ const api = {
   writeFile: (path: string, content: string): Promise<void> =>
     ipcRenderer.invoke('file:write', path, content),
   createNote: (dir: string): Promise<string> => ipcRenderer.invoke('file:createNote', dir),
+  createNoteFrom: (dir: string, base: string, content: string): Promise<string> =>
+    ipcRenderer.invoke('file:createNoteFrom', dir, base, content),
+  listCalendarEvents: (fromMs: number, toMs: number): Promise<CalendarResult> =>
+    ipcRenderer.invoke('calendar:list', fromMs, toMs),
   createFolder: (dir: string): Promise<string> => ipcRenderer.invoke('file:createFolder', dir),
   renamePath: (path: string, newName: string): Promise<string> =>
     ipcRenderer.invoke('file:rename', path, newName),

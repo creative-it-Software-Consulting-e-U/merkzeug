@@ -53,9 +53,21 @@ The sidebar on the left shows the vault as a hierarchical tree.
 - **Moving:** simply drag files and folders onto a folder.
 - **Folder overview:** shows the contents of a folder as cards in its own tab;
   clicking notes and subfolders navigates onward.
-- **Sidebar footer:** buttons for a new note and a new folder (left) plus a
-  reload button for re-reading the vault; the eye icon shows/hides
-  **asset folders** (⇧⌘R).
+- **Sidebar footer:** buttons for a new note, a new meeting note and a new
+  folder (left) plus a reload button for re-reading the vault; the eye icon
+  shows/hides **asset folders** (⇧⌘R).
+- **Meeting notes from the calendar:** **⌃⌘N** (menu "Ablage → Neue
+  Meeting-Notiz…" or the calendar button in the footer) lists the running
+  and upcoming events of the next 14 days from your locally configured
+  calendars — on macOS all accounts of the Calendar app (iCloud,
+  Exchange/Microsoft 365, Google, …), with no cloud API involved. **"Frühere
+  anzeigen"** reveals past events, **"Suchen"** searches titles, people and
+  locations within ±90 days. Clicking an event creates a ready-named note
+  with date, time, location, organizer, attendees and the detected meeting
+  link (Teams/Zoom/Meet/Webex) in the frontmatter, plus Agenda, Notes and
+  Tasks sections. The first time, macOS asks for permission to access the
+  calendar. On Windows and Linux the calendar integration is not available
+  yet.
 - **Automatic naming of new notes:** a new note is initially called
   "Neue Notiz". If it starts with a **heading 1**, the file is automatically
   named after the title when saving: all lowercase, spaces and special
@@ -331,6 +343,7 @@ the sidebar:
 | Shortcut | Function |
 | --- | --- |
 | ⌘N | New note |
+| ⌃⌘N | New meeting note |
 | ⇧⌘N | New folder |
 | ⌥⌘N | New window |
 | ⌘O | Open vault |

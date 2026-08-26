@@ -1593,3 +1593,136 @@ html:has(.pdf-app) #root {
   background: color-mix(in srgb, var(--accent) 55%, transparent);
   outline: 1px solid var(--accent);
 }
+
+/* ---- Dialog „Neue Meeting-Notiz" ---- */
+
+.meeting-dialog {
+  width: 560px;
+  max-width: calc(100vw - 60px);
+  max-height: 72vh;
+  outline: none;
+}
+
+.meeting-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.meeting-head h3 {
+  flex: 1;
+}
+
+.meeting-tool {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--text);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.meeting-tool:hover {
+  background: var(--bg-hover);
+}
+
+.meeting-tool.on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.meeting-list {
+  flex: 1;
+  min-height: 120px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+}
+
+.meeting-day {
+  padding: 8px 8px 3px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+
+.meeting-row {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding: 6px 8px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.meeting-row.active {
+  background: var(--bg-hover);
+}
+
+.meeting-row.past {
+  opacity: 0.6;
+}
+
+.meeting-time {
+  flex: none;
+  width: 88px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+}
+
+.meeting-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.meeting-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meeting-now {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 1px 6px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  vertical-align: 1px;
+}
+
+.meeting-meta {
+  font-size: 12px;
+  color: var(--text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meeting-status {
+  padding: 18px 14px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.meeting-foot .meeting-past-toggle {
+  margin-right: auto;
+}
