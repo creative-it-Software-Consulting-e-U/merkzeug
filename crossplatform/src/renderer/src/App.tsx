@@ -474,10 +474,12 @@ export function App(): React.JSX.Element {
       const sel = selectedRef.current
       const node = sel ? findNode(treeRef.current, sel) : null
       const dir = node ? (node.isDirectory ? node.path : dirname(node.path)) : v
+      // Windows liefert Teilnehmer und Meeting-Link erst auf Nachfrage
+      const full = await window.merkzeug.calendarEventDetail(ev)
       const path = await window.merkzeug.createNoteFrom(
         dir,
-        meetingNoteFileBase(ev),
-        meetingNoteContent(ev)
+        meetingNoteFileBase(full),
+        meetingNoteContent(full)
       )
       await refreshTree()
       expandFolder(dir)

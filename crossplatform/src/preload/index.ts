@@ -8,8 +8,7 @@ import type {
   PdfDoc,
   PdfExportProgress,
   PdfTemplate,
-  TemplateState
-} from '../shared/types'
+  TemplateState, CalendarEvent } from '../shared/types'
 
 const api = {
   getInitialVault: (): Promise<string | null> => ipcRenderer.invoke('app:getInitialVault'),
@@ -23,6 +22,8 @@ const api = {
     ipcRenderer.invoke('file:createNoteFrom', dir, base, content),
   listCalendarEvents: (fromMs: number, toMs: number): Promise<CalendarResult> =>
     ipcRenderer.invoke('calendar:list', fromMs, toMs),
+  calendarEventDetail: (event: CalendarEvent): Promise<CalendarEvent> =>
+    ipcRenderer.invoke('calendar:detail', event),
   createFolder: (dir: string): Promise<string> => ipcRenderer.invoke('file:createFolder', dir),
   renamePath: (path: string, newName: string): Promise<string> =>
     ipcRenderer.invoke('file:rename', path, newName),

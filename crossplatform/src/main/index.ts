@@ -3,7 +3,7 @@ import { pathToFileURL } from 'node:url'
 import { existsSync, mkdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
-import type { TemplateState } from '../shared/types'
+import type { TemplateState, CalendarEvent } from '../shared/types'
 import {
   createFolder,
   autoRenameNote,
@@ -43,7 +43,7 @@ import {
 } from './windows'
 import { watchVault } from './watcher'
 import { registerPdfIpc } from './pdfExport'
-import { listCalendarEvents } from './calendar'
+import { calendarEventDetail, listCalendarEvents } from './calendar'
 
 protocol.registerSchemesAsPrivileged([
   { scheme: 'vault-file', privileges: { stream: true, supportFetchAPI: true, bypassCSP: true } }
@@ -164,6 +164,7 @@ function registerIpc(): void {
   ipcMain.handle('calendar:list', (_e, fromMs: number, toMs: number) =>
     listCalendarEvents(fromMs, toMs)
   )
+  ipcMain.handle('calendar:detail', (_e, event: CalendarEvent) => calendarEventDetail(event))
   ipcMain.handle('file:rename', (_e, path: string, newName: string) => renamePath(path, newName))
   ipcMain.handle('file:autoRename', (_e, path: string, base: string) => autoRenameNote(path, base))
   ipcMain.handle('file:move', (_e, src: string, destDir: string) => movePath(src, destDir))

@@ -47,6 +47,8 @@ export interface CalendarEvent {
   calendar?: string
   organizer?: CalendarPerson
   attendees: CalendarPerson[]
+  /** Teilnehmerzahl, falls die Liste (noch) nicht geladen ist (Windows: erst beim Anklicken) */
+  attendeeCount?: number
   /** erkannter Besprechungs-Link (Teams/Zoom/Meet/Webex) */
   meetingUrl?: string
 }

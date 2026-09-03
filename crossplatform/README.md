@@ -74,12 +74,13 @@ fehlgeschlagenen Aktionen), Hilfe in DE/EN (⌘? oder
 Hilfe-Button in der Toolbar) und
 Autosave. Bonus gegenüber der Mac-App: Meeting-Notizen aus dem Kalender
 (⌃⌘N: listet laufende und kommende Termine aus den lokal eingebundenen
-Kalendern — macOS/EventKit, also alle Konten der Kalender-App ohne Cloud-API —
+Kalendern — macOS/EventKit, also alle Konten der Kalender-App, bzw. Windows:
+klassisches Outlook per COM-Objektmodell, jeweils ohne Cloud-API —
 ganztägige Termine per Checkbox zuschaltbar, mit „Frühere anzeigen“ und Suche
 ±90 Tage; ein Klick erzeugt eine fertig benannte Notiz mit den Termin-Daten
 inkl. erkanntem Teams/Zoom/Meet/Webex-Link im Frontmatter, Datum/Zeit und
-abhakbarer Teilnehmerliste im Text; Windows/Outlook und ICS-Fallback
-geplant), Suchen & Ersetzen in der aktuellen
+abhakbarer Teilnehmerliste im Text; ICS-Fallback für Linux und das „neue
+Outlook“ geplant), Suchen & Ersetzen in der aktuellen
 Notiz (⌘F bzw. ⌥⌘F, im Navigationsmodus nur Suchen), Slash-Menü („/“),
 Auswahl-Toolbar,
 Inhaltsverzeichnis-Dropdown in der Toolbar (springt zu Überschriften),
@@ -150,4 +151,12 @@ Vault-Zuweisung. `MERKZEUG_CALENDAR_FIXTURE=/pfad.json` liefert dem Dialog
 „Neue Meeting-Notiz“ Termine aus einer JSON-Datei (`{"events":[…]}` im Format
 des EventKit-Helfers `resources/calendar/MerkzeugCalendar.swift`) statt vom
 System — der Helfer wird im Entwicklungsmodus bei Bedarf automatisch mit
-`swiftc` kompiliert, beim Packen über das Skript `build:calhelper`.
+`swiftc` kompiliert, beim Packen über das Skript `build:calhelper`. Unter
+Windows übernimmt `resources/calendar/merkzeug-calendar.ps1` (Outlook-COM)
+dieselbe Rolle, in zwei Schritten: `list <von-epoch> <bis-epoch>` liefert die
+Terminliste schnell (nur Teilnehmerzahl), `detail <entry-id> <start-iso>`
+löst beim Anklicken Teilnehmer und Notizen eines Termins auf (Adressbuch-
+Zugriffe kosten ~100 ms pro Termin). Das Skript lässt sich zum Testen direkt
+aufrufen (`powershell -NoProfile -ExecutionPolicy Bypass -File
+merkzeug-calendar.ps1 list <von-epoch> <bis-epoch>`);
+`MERKZEUG_CALENDAR_TRACE=<datei>` schreibt einen Zeitverlauf mit.

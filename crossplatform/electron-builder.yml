@@ -33,6 +33,10 @@ mac:
   # übersprungen.
 win:
   icon: build/icon.png
+  # Outlook-COM-Helfer für „Neue Meeting-Notiz"
+  extraResources:
+    - from: resources/calendar/merkzeug-calendar.ps1
+      to: calendar/merkzeug-calendar.ps1
   target:
     - nsis
 linux:

@@ -37,8 +37,9 @@ function metaLabel(ev: CalendarEvent): string {
   const parts: string[] = []
   const organizer = ev.organizer?.name ?? ev.organizer?.email
   if (organizer) parts.push(organizer)
-  if (ev.attendees.length > 0) {
-    parts.push(ev.attendees.length === 1 ? '1 Teilnehmer' : `${ev.attendees.length} Teilnehmer`)
+  const count = ev.attendeeCount ?? ev.attendees.length
+  if (count > 0) {
+    parts.push(count === 1 ? '1 Teilnehmer' : `${count} Teilnehmer`)
   }
   if (ev.location) parts.push(ev.location)
   else if (ev.calendar) parts.push(ev.calendar)
@@ -200,12 +201,18 @@ export function MeetingNoteDialog({ onPick, onCancel }: MeetingNoteDialogProps):
       'Systemeinstellungen → Datenschutz & Sicherheit → Kalender und versuche es erneut.'
   } else if (error === 'unsupported') {
     status =
-      'Die Kalender-Anbindung ist derzeit nur unter macOS verfügbar. ' +
-      'Windows (Outlook) und ein ICS-Import folgen.'
+      navigator.platform.startsWith('Win')
+        ? 'Kein klassisches Outlook gefunden. Die Kalender-Anbindung unter Windows ' +
+          'nutzt das Outlook-Objektmodell; das „neue Outlook“ bietet keines. ' +
+          'Ein ICS-Import folgt.'
+        : 'Die Kalender-Anbindung ist derzeit nur unter macOS und Windows (klassisches ' +
+          'Outlook) verfügbar. Ein ICS-Import folgt.'
   } else if (error === 'failed') {
     status = `Kalender konnte nicht gelesen werden.${errorMessage ? ` (${errorMessage})` : ''}`
   } else if (loading && list.length === 0) {
-    status = 'Kalender wird gelesen … Beim ersten Mal fragt das System nach der Berechtigung.'
+    status = navigator.platform.startsWith('Win')
+      ? 'Kalender wird gelesen … Outlook wird bei Bedarf im Hintergrund gestartet.'
+      : 'Kalender wird gelesen … Beim ersten Mal fragt das System nach der Berechtigung.'
   } else if (list.length === 0) {
     status =
       searchOpen && query.trim()

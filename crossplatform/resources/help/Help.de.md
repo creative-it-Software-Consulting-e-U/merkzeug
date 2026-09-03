@@ -62,7 +62,9 @@ Links zeigt die Sidebar den Vault als hierarchischen Baum.
   Meeting-Notiz…“ oder der Kalender-Button in der Fußleiste) zeigt laufende
   und kommende Termine der nächsten 14 Tage aus den lokal eingebundenen
   Kalendern — unter macOS alle Konten der Kalender-App (iCloud,
-  Exchange/Microsoft 365, Google, …), ganz ohne Cloud-API. Ganztägige
+  Exchange/Microsoft 365, Google, …), unter Windows alle Kalender des
+  **klassischen Outlook** (über dessen Objektmodell; das „neue Outlook“
+  bietet keines), ganz ohne Cloud-API. Ganztägige
   Termine (Urlaube, Geburtstage, …) sind standardmäßig ausgeblendet und
   lassen sich über die Checkbox über der Liste einblenden. **„Frühere
   anzeigen“** blendet vergangene Termine ein, **„Suchen“** durchsucht Titel,
@@ -72,8 +74,11 @@ Links zeigt die Sidebar den Vault als hierarchischen Baum.
   Frontmatter; im Text stehen Datum/Uhrzeit unter der Überschrift, eine
   **abhakbare Teilnehmerliste** (wer war wirklich dabei?) sowie die
   Abschnitte Agenda, Notizen und Aufgaben. Beim
-  ersten Mal fragt macOS nach der Erlaubnis für den Kalender-Zugriff.
-  Unter Windows und Linux ist die Kalender-Anbindung noch nicht verfügbar.
+  ersten Mal fragt macOS nach der Erlaubnis für den Kalender-Zugriff. Unter
+  Windows startet Outlook bei Bedarf im Hintergrund; zeigt Outlook eine
+  Sicherheitsabfrage („Ein Programm versucht, auf … zuzugreifen“), erlaube
+  den Zugriff für ein paar Minuten. Unter Linux ist die Kalender-Anbindung
+  noch nicht verfügbar (ein ICS-Import folgt).
 - **Automatische Benennung neuer Notizen:** Eine neue Notiz heißt zunächst
   „Neue Notiz“. Beginnt sie mit einer **Überschrift 1**, wird die Datei beim
   Speichern automatisch nach dem Titel benannt: alles klein, Leerzeichen und
