@@ -11,7 +11,7 @@
     "build:calhelper": "swiftc -O resources/calendar/MerkzeugCalendar.swift -o resources/calendar/merkzeug-calendar",
     "package:mac": "npm run build:calhelper && electron-vite build && electron-builder --mac dir",
     "package:mac:dmg": "npm run build:calhelper && electron-vite build && electron-builder --mac dmg",
-    "package:win": "electron-vite build && electron-builder --win --x64 --arm64",
+    "package:win": "electron-vite build && ELECTRON_BUILDER_7Z_FILTER=BCJ2 electron-builder --win --x64 --arm64",
     "package:linux": "electron-vite build && electron-builder --linux --x64"
   },
   "keywords": [],

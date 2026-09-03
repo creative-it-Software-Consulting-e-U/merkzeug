@@ -19,6 +19,10 @@ npm run package:linux  # Linux x64: AppImage, .deb und .rpm – läuft auch auf 
 
 Der Windows-Installer lässt sich direkt auf dem Mac bauen (`package:win`);
 getestet wird er z. B. in einer Windows-11-VM (UTM, Parallels) oder per CI.
+Das Skript setzt `ELECTRON_BUILDER_7Z_FILTER=BCJ2`: Das aktuelle 7-Zip packt
+ARM64-Binaries sonst mit dem `ARM64`-Filter, den der 7z-Entpacker des
+NSIS-Installers nicht kennt — die Installation läuft dann scheinbar durch,
+legt aber weder `Merkzeug.exe` noch die DLLs ab.
 
 Für die Linux-Pakete (`package:linux`) werden auf dem Mac zusätzlich
 `gnu-tar`, `xz` (für .deb) und `rpm` (für .rpm) benötigt:
