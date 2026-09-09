@@ -19,7 +19,7 @@ env = dict(os.environ)
 env['ELECTRON_BUILDER_7Z_FILTER'] = 'BCJ2'
 env['CSC_IDENTITY_AUTO_DISCOVERY'] = 'false'
 config = {'extends': str(ROOT / 'crossplatform/electron-builder.yml'),
-          'artifactName': 'Merkzeug-${version}-${os}-${arch}.${ext}',
+          'artifactName': f'Merkzeug-${{version}}-${{os}}-{args.arch}.${{ext}}',
           'forceCodeSigning': args.signed and args.platform != 'linux'}
 if args.signed and args.platform in ['mac', 'win']:
     prefix = 'MAC' if args.platform == 'mac' else 'WINDOWS'

@@ -1,4 +1,5 @@
 import { rememberFolderAccess, restoreFolderAccess } from './sandboxAccess'
+import { FileRevisions } from './fileRevisions'
 import { t as translate, setLocale, getLocale } from '@merkzeug/core/i18n'
 import { app, BrowserWindow, dialog, ipcMain, nativeTheme, net, protocol, shell } from 'electron'
 import { pathToFileURL } from 'node:url'
@@ -12,12 +13,10 @@ import {
   createNote,
   createNoteFrom,
   movePath,
-  readTextFile,
   readTree,
   renamePath,
   saveImage,
-  trashPath,
-  writeTextFile
+  trashPath
 } from './vaultOps'
 import { gitCommitPush, gitPull, gitPush, gitStatus } from './git'
 import {
@@ -159,8 +158,17 @@ function registerIpc(): void {
   })
 
   ipcMain.handle('vault:tree', (_e, vault: string) => readTree(vault))
-  ipcMain.handle('file:read', (_e, path: string) => readTextFile(path))
-  ipcMain.handle('file:write', (_e, path: string, content: string) => writeTextFile(path, content))
+  const revisions = new Map<Electron.WebContents, FileRevisions>()
+  const filesFor = (sender: Electron.WebContents): FileRevisions => {
+    let files = revisions.get(sender)
+    if (!files) {
+      files = new FileRevisions(); revisions.set(sender, files)
+      sender.once('destroyed', () => revisions.delete(sender))
+    }
+    return files
+  }
+  ipcMain.handle('file:read', (event, path: string, options?: { peek?: boolean }) => filesFor(event.sender).read(path, options))
+  ipcMain.handle('file:write', (event, path: string, content: string) => filesFor(event.sender).write(path, content))
   ipcMain.handle('file:createNote', (_e, dir: string) => createNote(dir))
   ipcMain.handle('file:createNoteFrom', (_e, dir: string, base: string, content: string) =>
     createNoteFrom(dir, base, content)
@@ -170,9 +178,13 @@ function registerIpc(): void {
     listCalendarEvents(fromMs, toMs)
   )
   ipcMain.handle('calendar:detail', (_e, event: CalendarEvent) => calendarEventDetail(event))
-  ipcMain.handle('file:rename', (_e, path: string, newName: string) => renamePath(path, newName))
-  ipcMain.handle('file:autoRename', (_e, path: string, base: string) => autoRenameNote(path, base))
-  ipcMain.handle('file:move', (_e, src: string, destDir: string) => movePath(src, destDir))
+  const moved = (source: string, target: string): string => {
+    for (const files of revisions.values()) files.move(source, target)
+    return target
+  }
+  ipcMain.handle('file:rename', (_e, path: string, newName: string) => moved(path, renamePath(path, newName)))
+  ipcMain.handle('file:autoRename', (_e, path: string, base: string) => moved(path, autoRenameNote(path, base)))
+  ipcMain.handle('file:move', (_e, src: string, destDir: string) => moved(src, movePath(src, destDir)))
   ipcMain.handle('file:trash', (_e, path: string) => trashPath(path))
   ipcMain.handle('file:exists', (_e, path: string) => existsSync(path))
   ipcMain.handle('file:showInFolder', (_e, path: string) => shell.showItemInFolder(path))
@@ -240,7 +252,7 @@ function registerIpc(): void {
   // Synchrones Speichern für beforeunload (Fenster-/App-Schluss)
   ipcMain.on('file:writeSync', (event, path: string, content: string) => {
     try {
-      writeTextFile(path, content)
+      filesFor(event.sender).write(path, content)
       event.returnValue = true
     } catch {
       event.returnValue = false

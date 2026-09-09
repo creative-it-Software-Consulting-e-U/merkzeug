@@ -11,7 +11,7 @@
     "build:desktop": "npm run build -w merkzeug",
     "build:mobile": "npm run build -w merkzeug-mobile",
     "build:intellij": "python3 intellij/build.py",
-    "test": "node --experimental-strip-types --test packages/core/test/*.test.ts",
+    "test": "node --experimental-strip-types --test packages/core/test/*.test.ts scripts/tests/*.test.ts",
     "typecheck": "tsc -p crossplatform/tsconfig.node.json --noEmit && tsc -p crossplatform/tsconfig.web.json --noEmit && tsc -p mobile/tsconfig.json --noEmit && tsc -p intellij/web/tsconfig.json --noEmit",
     "check:version": "python3 scripts/version.py check",
     "test:release": "python3 -m unittest discover -s scripts/tests -v",

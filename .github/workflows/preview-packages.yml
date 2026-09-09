@@ -5,6 +5,10 @@ on:
     paths:
       - "scripts/*acceptance*"
       - "scripts/install-validation-package.py"
+      - "scripts/inspect-desktop-package.mjs"
+      - "scripts/package-desktop.py"
+      - "scripts/release-*.py"
+      - "scripts/check-release-protection.py"
       - ".github/workflows/preview-packages.yml"
 permissions:
   contents: read

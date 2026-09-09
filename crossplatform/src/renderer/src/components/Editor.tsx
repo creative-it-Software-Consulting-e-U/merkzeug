@@ -3,7 +3,7 @@ import { Editor as SharedEditor, type EditorProps, type EditorHandle } from '@me
 import type { EditorHost } from '@merkzeug/editor/host'
 export type { EditorHandle, FormatAction } from '@merkzeug/editor'
 const host: EditorHost = {
-  readFile: (path) => window.merkzeug.readFile(path),
+  readFile: (path, options) => window.merkzeug.readFile(path, options),
   writeFile: (path, text) => window.merkzeug.writeFile(path, text),
   writeFileSync: (path, text) => window.merkzeug.writeFileSync(path, text),
   saveImage: (path, data, ext) => window.merkzeug.saveImage(path, data, ext),
