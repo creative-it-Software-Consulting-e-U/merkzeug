@@ -1,0 +1,12 @@
+{
+  "en": {
+    "writing": {"title":"Your notes. Your files.","subtitle":"Write naturally. Keep ordinary Markdown."},
+    "diagram": {"title":"See the connections.","subtitle":"Follow links. Read diagrams right in your notes."},
+    "frontmatter": {"title":"Keep the context.","subtitle":"Titles, tags and metadata stay with your files."}
+  },
+  "de": {
+    "writing": {"title":"Deine Notizen. Deine Dateien.","subtitle":"Natürlich schreiben. Als Markdown behalten."},
+    "diagram": {"title":"Zusammenhänge sehen.","subtitle":"Links folgen. Diagramme direkt in Notizen lesen."},
+    "frontmatter": {"title":"Der Kontext bleibt.","subtitle":"Titel, Tags und Metadaten gehören zur Datei."}
+  }
+}
