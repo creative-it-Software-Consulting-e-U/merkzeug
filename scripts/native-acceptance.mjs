@@ -1,6 +1,6 @@
 /** Exercise the installed Electron package, not the development renderer. */
 import {_electron} from 'playwright';
-import {mkdtemp, mkdir, writeFile, readFile} from 'node:fs/promises';
+import {mkdtemp, mkdir, writeFile, readFile, chmod} from 'node:fs/promises';
 import {tmpdir, platform, arch, release} from 'node:os';
 import {resolve, join} from 'node:path';
 import {createHash} from 'node:crypto';
@@ -49,6 +49,22 @@ try {
  report.checks.editAndSave='passed';
  await app.close(); app=null; page=await start();
  assert.match(await page.locator('.ProseMirror').innerText(),/Saved acceptance marker/); report.checks.reopen='passed';
+ await page.locator('.ProseMirror').click(); await page.keyboard.press('ControlOrMeta+End'); await page.keyboard.insertText(' Undo acceptance marker');
+ await page.keyboard.press('ControlOrMeta+z');
+ assert.ok(!(await page.locator('.ProseMirror').innerText()).includes('Undo acceptance marker'));
+ await page.keyboard.press('ControlOrMeta+Shift+z');
+ assert.match(await page.locator('.ProseMirror').innerText(),/Undo acceptance marker/);
+ await eventually(async()=> (await readFile(note,'utf8')).includes('Undo acceptance marker'));
+ report.checks.undoRedo='passed';
+ await chmod(note,0o444);
+ const beforeReadOnly=await readFile(note,'utf8');
+ await page.keyboard.insertText(' Read-only retry marker');
+ await page.locator('.editor-conflict').filter({hasText:/Save failed|Speichern fehlgeschlagen/}).waitFor();
+ assert.equal(await readFile(note,'utf8'),beforeReadOnly);
+ await chmod(note,0o644);
+ await page.getByRole('button',{name:locale==='de'?'Erneut versuchen':'Try again',exact:true}).click();
+ await eventually(async()=> (await readFile(note,'utf8')).includes('Read-only retry marker'));
+ report.checks.readOnlyErrorAndRetry='passed';
  await page.locator('.ProseMirror').click(); await page.keyboard.press('ControlOrMeta+End'); await page.keyboard.insertText(' Local pending change');
  await writeFile(note,'# Acceptance\n\nExternal acceptance marker\n');
  await page.locator('.editor-conflict').filter({hasText:/outside|außerhalb/}).waitFor();

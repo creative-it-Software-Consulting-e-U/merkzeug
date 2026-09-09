@@ -64,7 +64,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: python3 scripts/check-release-protection.py
   desktop:
-    environment: release-signing
+    environment: ${{ needs.plan.outputs.preview == 'false' && matrix.platform != 'linux' && 'release-signing' || 'release-validation' }}
     needs: [checks, plan, protection]
     if: needs.plan.outputs.desktop == 'true'
     strategy:
@@ -96,13 +96,13 @@ jobs:
           PLATFORM: ${{ matrix.platform }}
           ARCH: ${{ matrix.arch }}
           PREVIEW: ${{ needs.plan.outputs.preview }}
-          MAC_CSC_LINK: ${{ secrets.MAC_CSC_LINK }}
-          MAC_CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_KEY_PASSWORD }}
-          WINDOWS_CSC_LINK: ${{ secrets.WINDOWS_CSC_LINK }}
-          WINDOWS_CSC_KEY_PASSWORD: ${{ secrets.WINDOWS_CSC_KEY_PASSWORD }}
-          APPLE_API_KEY_BASE64: ${{ secrets.APPLE_API_KEY_BASE64 }}
-          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
-          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          MAC_CSC_LINK: ${{ needs.plan.outputs.preview == 'false' && matrix.platform == 'mac' && secrets.MAC_CSC_LINK || '' }}
+          MAC_CSC_KEY_PASSWORD: ${{ needs.plan.outputs.preview == 'false' && matrix.platform == 'mac' && secrets.MAC_CSC_KEY_PASSWORD || '' }}
+          WINDOWS_CSC_LINK: ${{ needs.plan.outputs.preview == 'false' && matrix.platform == 'win' && secrets.WINDOWS_CSC_LINK || '' }}
+          WINDOWS_CSC_KEY_PASSWORD: ${{ needs.plan.outputs.preview == 'false' && matrix.platform == 'win' && secrets.WINDOWS_CSC_KEY_PASSWORD || '' }}
+          APPLE_API_KEY_BASE64: ${{ needs.plan.outputs.preview == 'false' && matrix.platform == 'mac' && secrets.APPLE_API_KEY_BASE64 || '' }}
+          APPLE_API_KEY_ID: ${{ needs.plan.outputs.preview == 'false' && matrix.platform == 'mac' && secrets.APPLE_API_KEY_ID || '' }}
+          APPLE_API_ISSUER: ${{ needs.plan.outputs.preview == 'false' && matrix.platform == 'mac' && secrets.APPLE_API_ISSUER || '' }}
         run: |
           if [[ "$PREVIEW" == false && "$PLATFORM" == mac ]]; then
             export APPLE_API_KEY="$RUNNER_TEMP/merkzeug-notarization.p8"
@@ -113,6 +113,9 @@ jobs:
           else
             python3 scripts/package-desktop.py "$PLATFORM" "$ARCH"
           fi
+      - name: Verify production publisher signatures
+        if: needs.plan.outputs.preview == 'false' && matrix.platform != 'linux'
+        run: python3 scripts/verify-desktop-signatures.py ${{ matrix.platform }} ${{ matrix.arch }}
       - name: Remove temporary notarization key
         if: always() && matrix.platform == 'mac'
         shell: bash
