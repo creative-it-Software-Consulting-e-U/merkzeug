@@ -26,7 +26,7 @@ if package.suffix=='.dmg':
     executable=target/'Contents/MacOS/Merkzeug'; method='Mounted read-only DMG and installed app by copying bundle'
 elif package.suffix=='.exe':
     # NSIS requires /D to be the final argument. This installs only on an ephemeral runner.
-    subprocess.run([str(package),'/S',f'/D={install}'],check=True)
+    subprocess.run([str(package),'/S',f'/D={install}'],check=True,timeout=180)
     executable=install/'Merkzeug.exe'; method='NSIS silent installation into isolated directory'
 elif package.suffix=='.deb':
     subprocess.run(['sudo','apt-get','install','-y',str(package)],check=True)
@@ -39,4 +39,4 @@ elif package.suffix=='.AppImage':
 else: raise ValueError('Native RPM installation requires a separate RPM-based system')
 (output/'installation.json').write_text(json.dumps({'package':package.name,'sha256':hashlib.sha256(package.read_bytes()).hexdigest(),'method':method,'executable':str(executable)},indent=2)+'\n')
 for locale in ('en','de'):
-    subprocess.run(['node','scripts/native-acceptance.mjs',str(executable),str(output/locale),a.arch,locale],check=True)
+    subprocess.run(['node','scripts/native-acceptance.mjs',str(executable),str(output/locale),a.arch,locale],check=True,timeout=300)
