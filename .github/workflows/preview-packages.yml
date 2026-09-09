@@ -45,7 +45,7 @@ jobs:
           # Chrome is not used for packaging; avoid its unrelated apt index.
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list /etc/apt/sources.list.d/google-chrome.sources
           sudo apt-get update
-          sudo apt-get install -y rpm libarchive-tools xvfb libnss3 libatk-bridge2.0-0 libgtk-3-0 libgbm1 libasound2t64
+          sudo apt-get install -y rpm libarchive-tools xvfb libnss3 libatk-bridge2.0-0 libgtk-3-0 libgbm1 libasound2t64 libfuse2t64
       - name: Build unsigned validation packages
         run: python scripts/package-desktop.py ${{ matrix.platform }} ${{ matrix.arch }}
       - name: Inspect packaged version, CPU architecture and notices
@@ -61,7 +61,10 @@ jobs:
           case "$PLATFORM" in
             mac) python3 scripts/install-validation-package.py "crossplatform/dist/Merkzeug-$version-mac-$ARCH.dmg" "release-artifacts/native-$PLATFORM-$ARCH" --arch "$ARCH" ;;
             win) python scripts/install-validation-package.py "crossplatform/dist/Merkzeug-$version-win-$ARCH.exe" "release-artifacts/native-$PLATFORM-$ARCH" --arch "$ARCH" ;;
-            linux) xvfb-run -a python3 scripts/install-validation-package.py "crossplatform/dist/Merkzeug-$version-linux-$ARCH.deb" "release-artifacts/native-$PLATFORM-$ARCH" --arch "$ARCH" ;;
+            linux)
+              xvfb-run -a python3 scripts/install-validation-package.py "crossplatform/dist/Merkzeug-$version-linux-$ARCH.deb" "release-artifacts/native-$PLATFORM-$ARCH/deb" --arch "$ARCH"
+              xvfb-run -a python3 scripts/install-validation-package.py "crossplatform/dist/Merkzeug-$version-linux-$ARCH.AppImage" "release-artifacts/native-$PLATFORM-$ARCH/appimage" --arch "$ARCH"
+              ;;
           esac
       - uses: actions/upload-artifact@v4
         if: always()

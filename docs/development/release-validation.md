@@ -15,7 +15,7 @@ The assembly job requires all expected filenames for the source version, bundles
 - macOS: read-only DMG mount, copy the app into an isolated directory, unmount, launch the copied executable.
 - Windows x64: actual silent NSIS installation into an isolated directory on the disposable runner.
 - Linux x64: actual DEB installation with dpkg on the disposable Ubuntu runner.
-- AppImage: optional extraction and runtime check. FUSE/desktop integration is **not** established by extraction.
+- AppImage: real FUSE launcher execution on the Ubuntu runner, with no extraction fallback. Desktop/menu integration still requires manual review.
 - RPM: native installation needs an RPM-based machine. Building the RPM does **not** prove installation there.
 
 Do not run the Linux installer on a personal machine unless you intend to install the package. The test creates an isolated fictional vault and Electron user profile; it does not replace the user's installed Mac app or edit their notes.
@@ -27,7 +27,7 @@ Review these separately and record actual results rather than marking them passe
 | Area | Required evidence |
 | --- | --- |
 | Windows ARM64 | Native installation and full test on ARM64; x64 cross-build is insufficient |
-| Linux AppImage | FUSE launch, desktop integration and native runtime acceptance |
+| Linux AppImage | Desktop/menu integration and distribution-specific security behavior |
 | Linux RPM | Native RPM-based install and runtime acceptance |
 | IntelliJ | Install the ZIP into supported IDEA/JCEF, edit/save/reopen, conflict handling, links and PDF; coordinate #19 |
 | iOS | Physical device / Files provider persistence, edits, conflicts and background/relaunch; screenshot simulator tests do not replace this |

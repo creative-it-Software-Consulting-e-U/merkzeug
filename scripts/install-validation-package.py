@@ -35,8 +35,7 @@ elif package.suffix=='.deb':
     method='Native dpkg installation on disposable Ubuntu runner'
 elif package.suffix=='.AppImage':
     package.chmod(package.stat().st_mode|0o111)
-    subprocess.run([str(package),'--appimage-extract'],cwd=install,check=True,stdout=subprocess.DEVNULL)
-    executable=install/'squashfs-root/merkzeug'; method='AppImage extraction and execution (FUSE integration not exercised)'
+    executable=package; method='Native AppImage execution through its FUSE launcher (no extraction fallback)'
 else: raise ValueError('Native RPM installation requires a separate RPM-based system')
 (output/'installation.json').write_text(json.dumps({'package':package.name,'sha256':hashlib.sha256(package.read_bytes()).hexdigest(),'method':method,'executable':str(executable)},indent=2)+'\n')
 for locale in ('en','de'):
