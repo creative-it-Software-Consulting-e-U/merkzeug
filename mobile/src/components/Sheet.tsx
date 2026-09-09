@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 export interface SheetAction {
   label: string
   danger?: boolean
@@ -29,7 +30,7 @@ export function Sheet({ title, actions, onClose }: SheetProps): React.JSX.Elemen
           </button>
         ))}
         <button className="sheet-btn sheet-cancel" onClick={onClose}>
-          Abbrechen
+          {translate("Cancel")}
         </button>
       </div>
     </div>

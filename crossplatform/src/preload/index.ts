@@ -11,6 +11,7 @@ import type {
   TemplateState, CalendarEvent } from '../shared/types'
 
 const api = {
+  locale: ipcRenderer.sendSync('app:locale') as string,
   getInitialVault: (): Promise<string | null> => ipcRenderer.invoke('app:getInitialVault'),
   pickVault: (): Promise<string | null> => ipcRenderer.invoke('dialog:pickVault'),
   readTree: (vault: string): Promise<FileNode> => ipcRenderer.invoke('vault:tree', vault),
@@ -59,6 +60,7 @@ const api = {
     docs: PdfDoc[]
     template: PdfTemplate | null
   }> => ipcRenderer.invoke('pdf:getDocs'),
+  pdfError: (message: string): void => ipcRenderer.send('pdf:error', message),
   pdfReady: (landscape: boolean): void => ipcRenderer.send('pdf:ready', landscape),
   pdfProgress: (done: number, total: number): void => ipcRenderer.send('pdf:progress', done, total),
   onPdfExportProgress: (handler: (progress: PdfExportProgress) => void): (() => void) => {

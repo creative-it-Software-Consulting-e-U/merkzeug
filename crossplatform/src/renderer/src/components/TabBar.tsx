@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 import type { Tab } from '../types'
 import { basename } from '../util/paths'
 
@@ -55,12 +56,12 @@ export function TabBar({
               if (e.button === 1) onClose(tab.id)
             }}
           >
-            {tab.navMode && <span className="tab-nav-badge" title="Navigationsmodus">📖</span>}
+            {tab.navMode && <span className="tab-nav-badge" title={translate("Navigation mode")}>📖</span>}
             <span className="tab-title">{title}</span>
             {dirtyTabs.has(tab.id) && <span className="tab-dirty">•</span>}
             <button
               className="tab-close"
-              title="Tab schließen"
+              title={translate("Close Tab")}
               onClick={(e) => {
                 e.stopPropagation()
                 onClose(tab.id)

@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Editor } from './components/Editor'
 import { FolderList } from './components/FolderList'
@@ -54,7 +55,7 @@ export default function App(): React.JSX.Element {
     try {
       setTree(await vault.readTree())
     } catch (err) {
-      console.warn('Baum konnte nicht gelesen werden', err)
+      console.warn(translate("Could not load the file tree"), err)
       setTree(null)
     }
   }, [])
@@ -65,6 +66,10 @@ export default function App(): React.JSX.Element {
         const restored = await vault.restoreVault()
         if (restored) {
           setVaultInfo(restored)
+          if (restored.initialPath) {
+            setStack(['/', restored.initialPath])
+            setStackIndex(1)
+          }
           await reloadTree()
         }
       } finally {
@@ -92,7 +97,7 @@ export default function App(): React.JSX.Element {
       setEditMode(false)
       await reloadTree()
     } catch (err) {
-      alert(`Vault konnte nicht geöffnet werden: ${String(err)}`)
+      alert(`${translate("Could not open vault:")} ${String(err)}`)
     }
   }, [reloadTree])
 
@@ -263,21 +268,21 @@ export default function App(): React.JSX.Element {
 
   const validName = (name: string): boolean => {
     if (!name || name === '.' || name === '..' || /[/\\:]/.test(name)) {
-      alert('Der Name darf keine Schrägstriche oder Doppelpunkte enthalten.')
+      alert(translate("The name must not contain slashes or colons."))
       return false
     }
     return true
   }
 
   const createNote = useCallback(async (): Promise<void> => {
-    const input = window.prompt('Name der neuen Notiz:')?.trim()
+    const input = window.prompt(translate("New note name:"))?.trim()
     if (!input) return
     if (!validName(input)) return
     const title = input.replace(/\.md$/i, '')
     const path = normalizePath(joinPath(stack[stackIndexRef.current], `${title}.md`))
     try {
       if (await vault.exists(path)) {
-        alert('Es gibt bereits eine Notiz mit diesem Namen.')
+        alert(translate("A note with this name already exists."))
         return
       }
       await vault.writeFile(path, `# ${title}\n`)
@@ -285,32 +290,32 @@ export default function App(): React.JSX.Element {
       navigateTo(path)
       setEditMode(true)
     } catch (err) {
-      alert(`Notiz konnte nicht angelegt werden: ${String(err)}`)
+      alert(`${translate("Could not create note:")} ${String(err)}`)
     }
   }, [navigateTo, reloadTree, stack])
 
   const createFolder = useCallback(async (): Promise<void> => {
-    const input = window.prompt('Name des neuen Ordners:')?.trim()
+    const input = window.prompt(translate("New folder name:"))?.trim()
     if (!input) return
     if (!validName(input)) return
     const path = normalizePath(joinPath(stack[stackIndexRef.current], input))
     try {
       if (await vault.exists(path)) {
-        alert('Es gibt bereits einen Eintrag mit diesem Namen.')
+        alert(translate("An item with this name already exists."))
         return
       }
       await vault.createFolder(path)
       await reloadTree()
       navigateTo(path)
     } catch (err) {
-      alert(`Ordner konnte nicht angelegt werden: ${String(err)}`)
+      alert(`${translate("Could not create folder:")} ${String(err)}`)
     }
   }, [navigateTo, reloadTree, stack])
 
   const renameItem = useCallback(
     async (node: FileNode): Promise<void> => {
       const currentName = node.isDirectory ? node.name : node.name.replace(/\.md$/i, '')
-      const input = window.prompt('Neuer Name:', currentName)?.trim()
+      const input = window.prompt(translate("New name:"), currentName)?.trim()
       if (!input || input === currentName) return
       if (!validName(input)) return
       const newName = node.isDirectory ? input : `${input.replace(/\.md$/i, '')}.md`
@@ -320,7 +325,7 @@ export default function App(): React.JSX.Element {
         pruneStack(node.path)
         await reloadTree()
       } catch (err) {
-        alert(`Umbenennen fehlgeschlagen: ${String(err)}`)
+        alert(`${translate("Rename failed:")} ${String(err)}`)
       }
     },
     [pruneStack, reloadTree]
@@ -329,15 +334,15 @@ export default function App(): React.JSX.Element {
   const deleteItem = useCallback(
     async (node: FileNode): Promise<void> => {
       const label = node.isDirectory
-        ? `Ordner „${node.name}" samt Inhalt wirklich löschen?`
-        : `Notiz „${node.name.replace(/\.md$/i, '')}" wirklich löschen?`
+        ? `${translate("Folder “")}${node.name}${translate("\" and all its contents?")}`
+        : `${translate("Note “")}${node.name.replace(/\.md$/i, '')}"?`
       if (!confirm(label)) return
       try {
         await vault.deleteItem(node.path)
         pruneStack(node.path)
         await reloadTree()
       } catch (err) {
-        alert(`Löschen fehlgeschlagen: ${String(err)}`)
+        alert(`${translate("Delete failed:")} ${String(err)}`)
       }
     },
     [pruneStack, reloadTree]
@@ -350,14 +355,13 @@ export default function App(): React.JSX.Element {
       <div className="start-screen">
         <h1>Merkzeug</h1>
         <p>
-          Wähle deinen Vault-Ordner – z.&nbsp;B. ein Repository, das Working&nbsp;Copy
-          bereitstellt.
+          {translate("Choose your vault folder, for example a repository provided by Working Copy.")}
         </p>
         <button className="primary-btn" onClick={() => void pickVault()}>
-          Vault-Ordner öffnen
+          {translate("Open vault folder")}
         </button>
         <button className="link-btn" onClick={() => setShowHelp(true)}>
-          Hilfe anzeigen
+          {translate("Show help")}
         </button>
         {showHelp && <HelpView onClose={() => setShowHelp(false)} />}
       </div>
@@ -370,14 +374,14 @@ export default function App(): React.JSX.Element {
   return (
     <div className="app">
       <header className="topbar">
-        <button className="bar-btn" onClick={goBack} disabled={stackIndex === 0} title="Zurück">
+        <button className="bar-btn" onClick={goBack} disabled={stackIndex === 0} title={translate("Back")}>
           ‹
         </button>
         <button
           className="bar-btn"
           onClick={goForward}
           disabled={stackIndex >= stack.length - 1}
-          title="Vorwärts"
+          title={translate("Forward")}
         >
           ›
         </button>
@@ -389,7 +393,7 @@ export default function App(): React.JSX.Element {
           <button
             className={`bar-btn${editMode ? ' active' : ''}`}
             onClick={() => setEditMode((v) => !v)}
-            title={editMode ? 'Nur lesen' : 'Bearbeiten'}
+            title={editMode ? translate("Read only") : translate("Edit")}
           >
             ✎
           </button>
@@ -397,21 +401,21 @@ export default function App(): React.JSX.Element {
           <button
             className="bar-btn"
             onClick={() => setSheet({ kind: 'create' })}
-            title="Neue Notiz oder neuer Ordner"
+            title={translate("New note or folder")}
           >
             ＋
           </button>
         )}
-        <button className="bar-btn" onClick={() => setSearching(true)} title="Suchen">
+        <button className="bar-btn" onClick={() => setSearching(true)} title={translate("Search")}>
           🔍
         </button>
-        <button className="bar-btn" onClick={() => void reloadTree()} title="Neu einlesen">
+        <button className="bar-btn" onClick={() => void reloadTree()} title={translate("Refresh")}>
           ↻
         </button>
-        <button className="bar-btn" onClick={() => setShowHelp(true)} title="Hilfe">
+        <button className="bar-btn" onClick={() => setShowHelp(true)} title={translate("Help")}>
           ?
         </button>
-        <button className="bar-btn" onClick={() => void pickVault()} title="Anderen Vault öffnen">
+        <button className="bar-btn" onClick={() => void pickVault()} title={translate("Open another vault")}>
           ⌂
         </button>
       </header>
@@ -445,11 +449,11 @@ export default function App(): React.JSX.Element {
       {showHelp && <HelpView onClose={() => setShowHelp(false)} />}
       {sheet?.kind === 'create' && (
         <Sheet
-          title="Neu anlegen"
+          title={translate("Create new")}
           onClose={() => setSheet(null)}
           actions={[
-            { label: 'Neue Notiz', onSelect: () => void createNote() },
-            { label: 'Neuer Ordner', onSelect: () => void createFolder() }
+            { label: translate("New note"), onSelect: () => void createNote() },
+            { label: translate("New folder"), onSelect: () => void createFolder() }
           ]}
         />
       )}
@@ -458,8 +462,8 @@ export default function App(): React.JSX.Element {
           title={sheet.node.isDirectory ? sheet.node.name : sheet.node.name.replace(/\.md$/i, '')}
           onClose={() => setSheet(null)}
           actions={[
-            { label: 'Umbenennen', onSelect: () => void renameItem(sheet.node) },
-            { label: 'Löschen', danger: true, onSelect: () => void deleteItem(sheet.node) }
+            { label: translate("Rename"), onSelect: () => void renameItem(sheet.node) },
+            { label: translate("Delete"), danger: true, onSelect: () => void deleteItem(sheet.node) }
           ]}
         />
       )}

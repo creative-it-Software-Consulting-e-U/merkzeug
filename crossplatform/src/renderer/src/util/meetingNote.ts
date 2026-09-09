@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 /** Erzeugt Dateiname und Inhalt einer Meeting-Notiz aus einem Kalendertermin. */
 
 import type { CalendarEvent, CalendarPerson } from '../../../shared/types'
@@ -17,7 +18,7 @@ export function localTime(d: Date): string {
 
 /** Zeit-Beschriftung eines Termins: "10:00–11:00" bzw. "ganztägig" */
 export function meetingTimeLabel(ev: CalendarEvent): string {
-  if (ev.allDay) return 'ganztägig'
+  if (ev.allDay) return translate("all day")
   return `${localTime(new Date(ev.start))}–${localTime(new Date(ev.end))}`
 }
 
@@ -35,9 +36,9 @@ export function meetingDateLine(ev: CalendarEvent): string {
     // Ganztägige Termine enden um Mitternacht nach dem letzten Tag
     const lastDay = new Date(Date.parse(ev.end) - 1)
     if (localDate(lastDay) !== localDate(start)) {
-      return `${bodyDayFormat.format(start)} – ${bodyDayFormat.format(lastDay)} · ganztägig`
+      return `${bodyDayFormat.format(start)} – ${bodyDayFormat.format(lastDay)} ${translate("· all day")}`
     }
-    return `${bodyDayFormat.format(start)} · ganztägig`
+    return `${bodyDayFormat.format(start)} ${translate("· all day")}`
   }
   return `${bodyDayFormat.format(start)} · ${meetingTimeLabel(ev)}`
 }

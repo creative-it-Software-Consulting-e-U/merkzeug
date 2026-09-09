@@ -1,3 +1,5 @@
+import { rememberFolderAccess, restoreFolderAccess } from './sandboxAccess'
+import { t as translate, setLocale, getLocale } from '@merkzeug/core/i18n'
 import { app, BrowserWindow, dialog, ipcMain, net, protocol, shell } from 'electron'
 import { pathToFileURL } from 'node:url'
 import { existsSync, mkdirSync, readFileSync } from 'node:fs'
@@ -63,13 +65,15 @@ function winFromEvent(event: Electron.IpcMainInvokeEvent): BrowserWindow | null 
 
 async function pickVault(win?: BrowserWindow): Promise<string | null> {
   const options: Electron.OpenDialogOptions = {
-    title: 'Vault-Ordner auswählen',
+    title: translate("Choose vault folder"),
+    securityScopedBookmarks: !!process.mas,
     properties: ['openDirectory', 'createDirectory']
   }
   const result = win
     ? await dialog.showOpenDialog(win, options)
     : await dialog.showOpenDialog(options)
   if (result.canceled || result.filePaths.length === 0) return null
+  rememberFolderAccess(result.filePaths[0], result.bookmarks?.[0])
   return result.filePaths[0]
 }
 
@@ -100,7 +104,7 @@ function rebuildMenu(): void {
     openVault: (win) => void openVaultViaDialog(win),
     openRecent: (win, path) => {
       if (!existsSync(path)) {
-        dialog.showErrorBox('Vault nicht gefunden', `Der Ordner existiert nicht mehr:\n${path}`)
+        dialog.showErrorBox(translate("Vault not found"), `${translate("The folder no longer exists:\\n")}${path}`)
         return
       }
       if (win) assignVault(win, path)
@@ -124,6 +128,7 @@ function templateState(): TemplateState {
 }
 
 function registerIpc(): void {
+  ipcMain.on('app:locale', event => { event.returnValue = getLocale() })
   ipcMain.handle('app:getInitialVault', (event) => {
     const win = winFromEvent(event)
     if (!win) return null
@@ -199,11 +204,15 @@ function registerIpc(): void {
   ipcMain.handle('tpl:pickRoot', async (event) => {
     const win = winFromEvent(event) ?? undefined
     const options: Electron.OpenDialogOptions = {
-      title: 'Vorlagen-Ordner auswählen',
-      properties: ['openDirectory', 'createDirectory']
+      title: translate("Choose templates folder"),
+      securityScopedBookmarks: !!process.mas,
+    properties: ['openDirectory', 'createDirectory']
     }
     const res = win ? await dialog.showOpenDialog(win, options) : await dialog.showOpenDialog(options)
-    if (!res.canceled && res.filePaths[0]) setStoredTemplatesRoot(res.filePaths[0])
+    if (!res.canceled && res.filePaths[0]) {
+      rememberFolderAccess(res.filePaths[0], res.bookmarks?.[0])
+      setStoredTemplatesRoot(res.filePaths[0])
+    }
     return templateState()
   })
   ipcMain.handle('tpl:create', (_e, name: string) => {
@@ -239,7 +248,15 @@ function registerIpc(): void {
   })
 }
 
+// Screenshot runs use an explicitly isolated profile, never the user's normal settings.
+if (process.env.MERKZEUG_SCREENSHOT && process.env.MERKZEUG_SCREENSHOT_PROFILE) {
+  mkdirSync(process.env.MERKZEUG_SCREENSHOT_PROFILE, { recursive: true })
+  app.setPath('userData', process.env.MERKZEUG_SCREENSHOT_PROFILE)
+}
+
 app.whenReady().then(() => {
+  setLocale(app.commandLine.getSwitchValue('lang') || app.getLocale())
+  restoreFolderAccess()
   electronApp.setAppUserModelId('com.creative-it.merkzeug')
 
   protocol.handle('vault-file', (request) => {
@@ -271,6 +288,7 @@ app.whenReady().then(() => {
   // "js:<code>" führt JS im Renderer aus, alles andere klickt den Baum-Eintrag an.
   if (process.env.MERKZEUG_SCREENSHOT) {
     const target = process.env.MERKZEUG_SCREENSHOT
+    mainWin.setContentSize(1280, 800)
     setTimeout(async () => {
       try {
         // warten, bis der Dateibaum gerendert ist
@@ -326,6 +344,19 @@ app.whenReady().then(() => {
         }
         mainWin.show()
         mainWin.focus()
+        const selector = process.env.MERKZEUG_SCREENSHOT_READY
+        if (selector) {
+          let ready = false
+          for (let attempt = 0; attempt < 40; attempt++) {
+            ready = await mainWin.webContents.executeJavaScript(
+              `Boolean(document.querySelector(${JSON.stringify(selector)}))`
+            )
+            if (ready) break
+            await new Promise(resolve => setTimeout(resolve, 1000))
+          }
+          if (!ready) throw new Error('Screenshot content did not finish rendering.')
+          await new Promise(resolve => setTimeout(resolve, 500))
+        }
         const { writeFileSync } = await import('node:fs')
         for (let attempt = 0; attempt < 5; attempt++) {
           try {

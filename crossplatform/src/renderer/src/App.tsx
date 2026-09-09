@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type {
   CalendarEvent,
@@ -608,7 +609,7 @@ export function App(): React.JSX.Element {
       for (const handle of editorRefs.current.values()) await handle?.flush()
       const result = await window.merkzeug.gitCommitPush(v, message)
       setGitBusy(false)
-      setGitMessage(result.ok ? 'Commit & Push erfolgreich.' : `Fehler: ${result.output}`)
+      setGitMessage(result.ok ? translate("Commit and push completed.") : `Fehler: ${result.output}`)
       setGitError(result.ok ? null : result.output)
       await refreshGit()
     },
@@ -622,7 +623,7 @@ export function App(): React.JSX.Element {
     setGitMessage(null)
     const result = await window.merkzeug.gitPush(v)
     setGitBusy(false)
-    setGitMessage(result.ok ? 'Push erfolgreich.' : `Fehler: ${result.output}`)
+    setGitMessage(result.ok ? translate("Push completed.") : `Fehler: ${result.output}`)
     setGitError(result.ok ? null : result.output)
     await refreshGit()
   }, [refreshGit])
@@ -634,7 +635,7 @@ export function App(): React.JSX.Element {
     setGitMessage(null)
     const result = await window.merkzeug.gitPull(v)
     setGitBusy(false)
-    setGitMessage(result.ok ? 'Pull erfolgreich.' : `Fehler: ${result.output}`)
+    setGitMessage(result.ok ? translate("Pull completed.") : `Fehler: ${result.output}`)
     setGitError(result.ok ? null : result.output)
     await refreshTree()
     await refreshGit()
@@ -902,13 +903,13 @@ export function App(): React.JSX.Element {
       <div className="welcome">
         <div className="welcome-drag-region" />
         <h1>Merkzeug</h1>
-        <p>Wähle einen Vault-Ordner mit Markdown-Notizen.</p>
+        <p>{translate("Choose a vault folder containing Markdown notes.")}</p>
         <button className="primary" onClick={() => void window.merkzeug.pickVault()}>
-          Vault öffnen …
+          {translate("Open vault …")}
         </button>
         {vaultMissing && recents.length > 0 && (
           <div className="welcome-recents">
-            <h2>Zuletzt geöffnet</h2>
+            <h2>{translate("Recently opened")}</h2>
             {recents.map((r) => (
               <button key={r} onClick={() => void loadVault(r)}>
                 {r}
@@ -1030,7 +1031,7 @@ export function App(): React.JSX.Element {
           }}
           onPointerUp={() => setSidebarResizing(false)}
           onDoubleClick={() => setSidebarWidth(SIDEBAR_DEFAULT_WIDTH)}
-          title="Ziehen zum Anpassen, Doppelklick für Standardbreite"
+          title={translate("Drag to resize; double-click to reset")}
         />
         <div className={`panes${split ? ' split' : ''}`}>
           <PaneView {...paneProps(0)} />
@@ -1046,10 +1047,10 @@ export function App(): React.JSX.Element {
         <div className="pdf-progress-toast">
           <span className="pdf-progress-label">
             {pdfProgress.phase === 'print'
-              ? 'PDF-Export: PDF wird erzeugt …'
+              ? translate("PDF export: generating PDF …")
               : pdfProgress.phase === 'render' && pdfProgress.done
-                ? `PDF-Export: Dokument ${Math.min(pdfProgress.done, pdfProgress.total - 1)} von ${pdfProgress.total - 1} gerendert …`
-                : 'PDF-Export: Dokumente werden gerendert …'}
+                ? `${translate("PDF export: document")} ${Math.min(pdfProgress.done, pdfProgress.total - 1)} von ${pdfProgress.total - 1} ${translate("rendered …")}`
+                : translate("PDF export: rendering documents …")}
           </span>
           <div className="pdf-progress-track">
             <div

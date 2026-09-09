@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 import type { FileNode, GitStatus } from '../../../shared/types'
 import { basename } from '../util/paths'
 import { FileTree } from './FileTree'
@@ -75,33 +76,33 @@ export function Sidebar(props: SidebarProps): React.JSX.Element {
         onPull={props.onGitPull}
       />
       <div className="sidebar-footer">
-        <button className="toolbar-btn icon" data-tip="Neue Notiz (⌘N)" onClick={props.onNewNote}>
+        <button className="toolbar-btn icon" data-tip={translate("New note (⌘N)")} onClick={props.onNewNote}>
           <IconNewNote />
         </button>
         <button
           className="toolbar-btn icon"
-          data-tip="Neue Meeting-Notiz (⌃⌘N)"
+          data-tip={translate("New meeting note (⌃⌘N)")}
           onClick={props.onNewMeetingNote}
         >
           <IconMeetingNote />
         </button>
         <button
           className="toolbar-btn icon"
-          data-tip="Neuer Ordner (⇧⌘N)"
+          data-tip={translate("New folder (⇧⌘N)")}
           onClick={props.onNewFolder}
         >
           <IconNewFolder />
         </button>
         <div className="toolbar-spacer" />
-        <button className="toolbar-btn icon" data-tip="Neu einlesen" onClick={props.onReload}>
+        <button className="toolbar-btn icon" data-tip={translate("Refresh")} onClick={props.onReload}>
           <IconReload />
         </button>
         <button
           className="toolbar-btn icon"
           data-tip={
             props.assetsVisible
-              ? 'Ressourcen ausblenden (⇧⌘R)'
-              : 'Ressourcen einblenden (⇧⌘R)'
+              ? translate("Hide asset folders (⇧⌘R)")
+              : translate("Show asset folders (⇧⌘R)")
           }
           onClick={props.onToggleAssets}
         >

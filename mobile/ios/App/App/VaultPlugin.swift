@@ -33,6 +33,23 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
     // MARK: - Vault wählen / wiederherstellen
 
     @objc func restoreVault(_ call: CAPPluginCall) {
+        #if DEBUG && targetEnvironment(simulator)
+        // Reproducible screenshot fixture, absent from device and Release builds.
+        if ProcessInfo.processInfo.environment["MERKZEUG_DEMO_MODE"] == "1",
+           let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let demo = documents.appendingPathComponent("Demo Vault", isDirectory: true)
+            if FileManager.default.fileExists(atPath: demo.path) {
+                vaultURL = demo
+                var result: [String: Any] = ["name": "Demo Vault"]
+                if let note = ProcessInfo.processInfo.environment["MERKZEUG_DEMO_NOTE"],
+                   ["/Welcome.md", "/Projects/Garden.md", "/Willkommen.md", "/Projekte/Garten.md"].contains(note) {
+                    result["initialPath"] = note
+                }
+                call.resolve(result)
+                return
+            }
+        }
+        #endif
         guard let data = UserDefaults.standard.data(forKey: Self.bookmarkKey) else {
             call.resolve([:])
             return
@@ -69,7 +86,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
         guard let call = pendingPick else { return }
         pendingPick = nil
         guard let url = urls.first, url.startAccessingSecurityScopedResource() else {
-            call.reject("Zugriff auf den Ordner wurde verweigert.")
+            call.reject(localized("Access to the folder was denied.", "Zugriff auf den Ordner wurde verweigert."))
             return
         }
         if let old = vaultURL, old != url {
@@ -93,14 +110,14 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
     /// Pfade außerhalb des Vaults werden abgewiesen.
     private func fileURL(for path: String, call: CAPPluginCall) -> URL? {
         guard let vault = vaultURL else {
-            call.reject("Kein Vault geöffnet.")
+            call.reject(localized("No vault is open.", "Kein Vault geöffnet."))
             return nil
         }
         let trimmed = path.hasPrefix("/") ? String(path.dropFirst()) : path
         let url = vault.appendingPathComponent(trimmed).standardizedFileURL
         guard url.path == vault.standardizedFileURL.path
             || url.path.hasPrefix(vault.standardizedFileURL.path + "/") else {
-            call.reject("Pfad liegt außerhalb des Vaults.")
+            call.reject(localized("Path is outside the vault.", "Pfad liegt außerhalb des Vaults."))
             return nil
         }
         return url
@@ -110,7 +127,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
 
     @objc func readTree(_ call: CAPPluginCall) {
         guard let vault = vaultURL else {
-            call.reject("Kein Vault geöffnet.")
+            call.reject(localized("No vault is open.", "Kein Vault geöffnet."))
             return
         }
         let tree = Self.scanDirectory(vault, relPath: "/", name: vault.lastPathComponent)
@@ -154,7 +171,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
     private func coordinatedRead(_ url: URL) throws -> Data {
         var coordinatorError: NSError?
         var result: Result<Data, Error> = .failure(
-            NSError(domain: "Merkzeug", code: 1, userInfo: [NSLocalizedDescriptionKey: "Lesen fehlgeschlagen"])
+            NSError(domain: "Merkzeug", code: 1, userInfo: [NSLocalizedDescriptionKey: localized("Read failed", "Lesen fehlgeschlagen")])
         )
         NSFileCoordinator().coordinate(readingItemAt: url, options: [], error: &coordinatorError) { actual in
             do {
@@ -194,18 +211,18 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
 
     @objc func readFile(_ call: CAPPluginCall) {
         guard let path = call.getString("path"), let url = fileURL(for: path, call: call) else {
-            if call.getString("path") == nil { call.reject("Parameter 'path' fehlt.") }
+            if call.getString("path") == nil { call.reject(localized("Missing parameter: 'path'.", "Parameter 'path' fehlt.")) }
             return
         }
         do {
             let data = try coordinatedRead(url)
             guard let content = String(data: data, encoding: .utf8) else {
-                call.reject("Datei ist kein UTF-8-Text.")
+                call.reject(localized("File is not UTF-8 text.", "Datei ist kein UTF-8-Text."))
                 return
             }
             call.resolve(["content": content, "mtime": Self.mtimeMs(url) ?? 0])
         } catch {
-            call.reject("Lesen fehlgeschlagen: \(error.localizedDescription)")
+            call.reject(localized("Read failed: \(error.localizedDescription)", "Lesen fehlgeschlagen: \(error.localizedDescription)"))
         }
     }
 
@@ -213,7 +230,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
         guard let path = call.getString("path"),
               let content = call.getString("content"),
               let url = fileURL(for: path, call: call) else {
-            call.reject("Parameter 'path'/'content' fehlen.")
+            call.reject(localized("Missing parameters: 'path'/'content'.", "Parameter 'path'/'content' fehlen."))
             return
         }
         // Stale-Check: Wurde die Datei seit dem Laden extern geändert (z. B.
@@ -221,27 +238,27 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
         if let expected = call.getDouble("expectedMtime"),
            let onDisk = Self.mtimeMs(url),
            onDisk > expected + 1 {
-            call.reject("Die Datei wurde außerhalb von Merkzeug geändert.", "CONFLICT")
+            call.reject(localized("The file was changed outside Merkzeug.", "Die Datei wurde außerhalb von Merkzeug geändert."), "CONFLICT")
             return
         }
         do {
             try coordinatedWrite(Data(content.utf8), to: url)
             call.resolve(["mtime": Self.mtimeMs(url) ?? 0])
         } catch {
-            call.reject("Speichern fehlgeschlagen: \(error.localizedDescription)")
+            call.reject(localized("Save failed: \(error.localizedDescription)", "Speichern fehlgeschlagen: \(error.localizedDescription)"))
         }
     }
 
     @objc func readFileBase64(_ call: CAPPluginCall) {
         guard let path = call.getString("path"), let url = fileURL(for: path, call: call) else {
-            if call.getString("path") == nil { call.reject("Parameter 'path' fehlt.") }
+            if call.getString("path") == nil { call.reject(localized("Missing parameter: 'path'.", "Parameter 'path' fehlt.")) }
             return
         }
         do {
             let data = try coordinatedRead(url)
             call.resolve(["data": data.base64EncodedString()])
         } catch {
-            call.reject("Lesen fehlgeschlagen: \(error.localizedDescription)")
+            call.reject(localized("Read failed: \(error.localizedDescription)", "Lesen fehlgeschlagen: \(error.localizedDescription)"))
         }
     }
 
@@ -250,7 +267,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
               let base64 = call.getString("base64"),
               let ext = call.getString("ext"),
               let data = Data(base64Encoded: base64) else {
-            call.reject("Parameter 'notePath'/'base64'/'ext' fehlen oder sind ungültig.")
+            call.reject(localized("Missing or invalid parameters: 'notePath'/'base64'/'ext'.", "Parameter 'notePath'/'base64'/'ext' fehlen oder sind ungültig."))
             return
         }
         let noteDir = (notePath as NSString).deletingLastPathComponent
@@ -262,13 +279,13 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
             try coordinatedWrite(data, to: url)
             call.resolve(["relPath": "assets/\(fileName)"])
         } catch {
-            call.reject("Bild konnte nicht gespeichert werden: \(error.localizedDescription)")
+            call.reject(localized("Could not save image: \(error.localizedDescription)", "Bild konnte nicht gespeichert werden: \(error.localizedDescription)"))
         }
     }
 
     @objc func exists(_ call: CAPPluginCall) {
         guard let path = call.getString("path"), let url = fileURL(for: path, call: call) else {
-            if call.getString("path") == nil { call.reject("Parameter 'path' fehlt.") }
+            if call.getString("path") == nil { call.reject(localized("Missing parameter: 'path'.", "Parameter 'path' fehlt.")) }
             return
         }
         call.resolve(["exists": FileManager.default.fileExists(atPath: url.path)])
@@ -276,7 +293,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
 
     @objc func stat(_ call: CAPPluginCall) {
         guard let path = call.getString("path"), let url = fileURL(for: path, call: call) else {
-            if call.getString("path") == nil { call.reject("Parameter 'path' fehlt.") }
+            if call.getString("path") == nil { call.reject(localized("Missing parameter: 'path'.", "Parameter 'path' fehlt.")) }
             return
         }
         var isDir: ObjCBool = false
@@ -292,7 +309,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
 
     @objc func createFolder(_ call: CAPPluginCall) {
         guard let path = call.getString("path"), let url = fileURL(for: path, call: call) else {
-            if call.getString("path") == nil { call.reject("Parameter 'path' fehlt.") }
+            if call.getString("path") == nil { call.reject(localized("Missing parameter: 'path'.", "Parameter 'path' fehlt.")) }
             return
         }
         var coordinatorError: NSError?
@@ -305,7 +322,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
             }
         }
         if let err = coordinatorError ?? (opError as NSError?) {
-            call.reject("Ordner konnte nicht angelegt werden: \(err.localizedDescription)")
+            call.reject(localized("Could not create folder: \(err.localizedDescription)", "Ordner konnte nicht angelegt werden: \(err.localizedDescription)"))
             return
         }
         call.resolve()
@@ -313,11 +330,11 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
 
     @objc func deleteItem(_ call: CAPPluginCall) {
         guard let path = call.getString("path"), let url = fileURL(for: path, call: call) else {
-            if call.getString("path") == nil { call.reject("Parameter 'path' fehlt.") }
+            if call.getString("path") == nil { call.reject(localized("Missing parameter: 'path'.", "Parameter 'path' fehlt.")) }
             return
         }
         guard url.standardizedFileURL.path != vaultURL?.standardizedFileURL.path else {
-            call.reject("Der Vault-Ordner selbst kann nicht gelöscht werden.")
+            call.reject(localized("The vault folder itself cannot be deleted.", "Der Vault-Ordner selbst kann nicht gelöscht werden."))
             return
         }
         var coordinatorError: NSError?
@@ -330,7 +347,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
             }
         }
         if let err = coordinatorError ?? (opError as NSError?) {
-            call.reject("Löschen fehlgeschlagen: \(err.localizedDescription)")
+            call.reject(localized("Delete failed: \(err.localizedDescription)", "Löschen fehlgeschlagen: \(err.localizedDescription)"))
             return
         }
         call.resolve()
@@ -342,12 +359,12 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
               let fromURL = fileURL(for: from, call: call),
               let toURL = fileURL(for: to, call: call) else {
             if call.getString("from") == nil || call.getString("to") == nil {
-                call.reject("Parameter 'from'/'to' fehlen.")
+                call.reject(localized("Missing parameters: 'from'/'to'.", "Parameter 'from'/'to' fehlen."))
             }
             return
         }
         guard !FileManager.default.fileExists(atPath: toURL.path) else {
-            call.reject("Es gibt bereits eine Datei oder einen Ordner mit diesem Namen.")
+            call.reject(localized("A file or folder with this name already exists.", "Es gibt bereits eine Datei oder einen Ordner mit diesem Namen."))
             return
         }
         var coordinatorError: NSError?
@@ -368,7 +385,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
             }
         }
         if let err = coordinatorError ?? (opError as NSError?) {
-            call.reject("Umbenennen fehlgeschlagen: \(err.localizedDescription)")
+            call.reject(localized("Rename failed: \(err.localizedDescription)", "Umbenennen fehlgeschlagen: \(err.localizedDescription)"))
             return
         }
         call.resolve()
@@ -380,7 +397,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
     /// Läuft im Hintergrund, damit die UI nicht blockiert.
     @objc func search(_ call: CAPPluginCall) {
         guard let vault = vaultURL else {
-            call.reject("Kein Vault geöffnet.")
+            call.reject(localized("No vault is open.", "Kein Vault geöffnet."))
             return
         }
         guard let query = call.getString("query"), !query.isEmpty else {
@@ -419,4 +436,9 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
             call.resolve(["results": results])
         }
     }
+}
+
+private func localized(_ english: String, _ german: String) -> String {
+    let language = Locale.preferredLanguages.first?.lowercased() ?? "en"
+    return language == "de" || language.hasPrefix("de-") ? german : english
 }

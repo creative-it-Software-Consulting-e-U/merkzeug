@@ -1,0 +1,169 @@
+name: Build release draft
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  checks:
+    uses: ./.github/workflows/ci.yml
+  plan:
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      preview: ${{ steps.version.outputs.preview }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - id: version
+        shell: bash
+        env:
+          REF_TYPE: ${{ github.ref_type }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          if [[ "$REF_TYPE" != tag ]]; then
+            echo 'Run this workflow against an existing version tag.' >&2
+            exit 1
+          fi
+          version=$(python3 scripts/version.py check --tag "$REF_NAME")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if [[ "$version" == *-* ]]; then
+            echo 'preview=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'preview=false' >> "$GITHUB_OUTPUT"
+          fi
+  desktop:
+    environment: release-signing
+    needs: [checks, plan]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {os: macos-15, platform: mac, arch: arm64}
+          - {os: macos-15-intel, platform: mac, arch: x64}
+          - {os: windows-2025, platform: win, arch: x64}
+          - {os: windows-2025, platform: win, arch: arm64}
+          - {os: ubuntu-24.04, platform: linux, arch: x64}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - if: matrix.platform == 'linux'
+        run: sudo apt-get update && sudo apt-get install -y rpm libarchive-tools
+      - name: Build binaries (publishing disabled)
+        shell: bash
+        env:
+          PLATFORM: ${{ matrix.platform }}
+          ARCH: ${{ matrix.arch }}
+          PREVIEW: ${{ needs.plan.outputs.preview }}
+          MAC_CSC_LINK: ${{ secrets.MAC_CSC_LINK }}
+          MAC_CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_KEY_PASSWORD }}
+          WINDOWS_CSC_LINK: ${{ secrets.WINDOWS_CSC_LINK }}
+          WINDOWS_CSC_KEY_PASSWORD: ${{ secrets.WINDOWS_CSC_KEY_PASSWORD }}
+          APPLE_API_KEY_BASE64: ${{ secrets.APPLE_API_KEY_BASE64 }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+        run: |
+          if [[ "$PREVIEW" == false && "$PLATFORM" == mac ]]; then
+            export APPLE_API_KEY="$RUNNER_TEMP/merkzeug-notarization.p8"
+            python3 -c 'import os,base64,pathlib; pathlib.Path(os.environ["APPLE_API_KEY"]).write_bytes(base64.b64decode(os.environ["APPLE_API_KEY_BASE64"], validate=True))'
+          fi
+          if [[ "$PREVIEW" == false ]]; then
+            python3 scripts/package-desktop.py "$PLATFORM" "$ARCH" --signed
+          else
+            python3 scripts/package-desktop.py "$PLATFORM" "$ARCH"
+          fi
+      - name: Remove temporary notarization key
+        if: always() && matrix.platform == 'mac'
+        shell: bash
+        run: rm -f "$RUNNER_TEMP/merkzeug-notarization.p8"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: desktop-${{ matrix.platform }}-${{ matrix.arch }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            crossplatform/dist/*.dmg
+            crossplatform/dist/*.exe
+            crossplatform/dist/*.AppImage
+            crossplatform/dist/*.deb
+            crossplatform/dist/*.rpm
+  intellij:
+    needs: [checks, plan]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - name: Fetch checksum-pinned IDE SDK
+        run: python3 scripts/fetch-intellij-sdk.py "$RUNNER_TEMP/merkzeug-sdk"
+      - name: Build plugin
+        shell: bash
+        run: IDEA_HOME="$RUNNER_TEMP/merkzeug-sdk" npm run build:intellij
+      - uses: actions/upload-artifact@v4
+        with:
+          name: intellij
+          path: intellij/dist/*.zip
+          if-no-files-found: error
+          retention-days: 14
+  draft:
+    needs: [plan, desktop, intellij]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+          merge-multiple: true
+      - name: Assemble documentation and verify complete asset matrix
+        env:
+          MERKZEUG_RELEASE_SIGNING: ${{ needs.plan.outputs.preview == 'true' && 'Unsigned preview binaries; no macOS notarization or Windows publisher signature. IntelliJ ZIP is unsigned.' || 'Desktop macOS signing/notarization and Windows signing required by build; IntelliJ ZIP is unsigned.' }}
+        run: python3 scripts/release-artifacts.py release-artifacts --complete
+      - name: Create a draft (never overwrite an existing release)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+          VERSION: ${{ needs.plan.outputs.version }}
+          PREVIEW: ${{ needs.plan.outputs.preview }}
+        shell: bash
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo 'A release already exists for this tag. Review it manually; artifacts were not overwritten.' >&2
+            exit 1
+          fi
+          args=(--draft --verify-tag --title "Merkzeug $VERSION" --notes-file release-artifacts/release-notes.md)
+          if [[ "$PREVIEW" == true ]]; then args+=(--prerelease); fi
+          files=()
+          for file in release-artifacts/*; do
+            [[ "$file" == */release-notes.md ]] || files+=("$file")
+          done
+          gh release create "$TAG" "${args[@]}" "${files[@]}"

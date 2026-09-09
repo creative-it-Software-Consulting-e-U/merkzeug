@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 import { app } from 'electron'
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, extname, join } from 'node:path'
@@ -107,93 +108,56 @@ export function loadTemplate(name: string): PdfTemplate | null {
   return template
 }
 
-const DEFAULT_HEADER = `<!-- Kopfzeile: erscheint auf jeder Seite (außer Deckblatt-Höhe zählt mit).
-     Wichtig: nur Inline-CSS, keine externen Ressourcen.
-     Logo einbinden: Bilddatei (z. B. logo.png) in diesen Vorlagen-Ordner legen und
-     <img src="logo.png" style="height: 8mm"> einfügen — Merkzeug bettet sie beim Export ein.
-     Platzhalter: {{titel}}, {{datum}} sowie
-     <span class="pageNumber"></span> und <span class="totalPages"></span> -->
-<div style="width: 100%; margin: 0 10mm; padding-bottom: 2mm; border-bottom: 0.5pt solid #999;
-            font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 9px; color: #666;
-            display: flex; justify-content: space-between; align-items: flex-end;">
-  <span>{{titel}}</span>
-  <span>Meine Firma GmbH</span>
-</div>
-`
+const DEFAULT_HEADER = `<!-- Header: use inline CSS. Relative image URLs are embedded on export. -->
+<div style="width:100%;margin:0 10mm;font:9px Arial;color:#666;display:flex;justify-content:space-between">
+  <span>{{titel}}</span><span>Your organization</span>
+</div>`
+const DEFAULT_FOOTER = `<div style="width:100%;margin:0 10mm;font:9px Arial;color:#666;display:flex;justify-content:space-between">
+  <span>{{datum}}</span><span>Page <span class="pageNumber"></span> of <span class="totalPages"></span></span>
+</div>`
+const DEFAULT_COVER_EXAMPLE = `<!-- Rename to deckblatt.html to enable this cover. -->
+<div class="cover" style="padding-top:70mm;text-align:center;font-family:Arial,sans-serif">
+  <h1>{{titel}}</h1><p>{{datum}}</p>
+</div>`
+const DEFAULT_CSS = `/* Optional PDF content styles, for example:
+.pdf-content .milkdown .ProseMirror { font-size: 11pt; }
+html.pdf-landscape .cover { padding-top: 30mm !important; }
+*/`
+const DEFAULT_CONFIG = '{"margins":{"top":24,"bottom":18,"left":10,"right":10}}\n'
+const DEFAULT_README = `# Merkzeug PDF template
 
-const DEFAULT_FOOTER = `<!-- Fußzeile: erscheint auf jeder Seite. Gleiche Regeln wie kopfzeile.html. -->
-<div style="width: 100%; margin: 0 10mm; padding-top: 2mm; border-top: 0.5pt solid #999;
-            font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 9px; color: #666;
-            display: flex; justify-content: space-between;">
-  <span>{{datum}}</span>
-  <span>Seite <span class="pageNumber"></span> von <span class="totalPages"></span></span>
-</div>
-`
+All files are optional. Existing German filenames remain part of the file format:
 
-const DEFAULT_COVER_EXAMPLE = `<!-- Deckblatt-Beispiel: In „deckblatt.html" umbenennen, dann erscheint es
-     als erste Seite des PDFs. Platzhalter: {{titel}}, {{datum}} -->
-<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;
-            height: 240mm; text-align: center; font-family: 'Helvetica Neue', Arial, sans-serif;">
-  <!-- <img src="logo.png" style="height: 20mm"> -->
-  <h1 style="font-size: 28pt; margin: 0 0 8pt;">{{titel}}</h1>
-  <p style="color: #666; margin: 0;">{{datum}}</p>
-</div>
-`
+- kopfzeile.html: page header
+- fusszeile.html: page footer
+- deckblatt.html: cover page (rename deckblatt-beispiel.html to enable it)
+- stil.css: additional content styles
+- vorlage.json: page margins in millimetres
 
-const DEFAULT_CSS = `/* Zusatz-CSS für den Dokumentinhalt im PDF (optional).
-   Beispiel: Grundschrift verkleinern —
-   .pdf-content .milkdown .ProseMirror { font-size: 11pt; } */
-`
+HTML placeholders: {{titel}} is the export title; {{datum}} is the export date.
+Use pageNumber and totalPages span classes in headers and footers for page numbers.
+Place logo images here and reference them with relative URLs. Headers and footers
+require inline CSS. Use html.pdf-landscape in stil.css for landscape-specific rules.
 
-const DEFAULT_CONFIG = `{
-  "margins": { "top": 24, "bottom": 18, "left": 10, "right": 10 }
-}
-`
-
-const DEFAULT_README = `# PDF-Vorlage
-
-Dieser Ordner ist eine PDF-Vorlage für Merkzeug. Alle Dateien sind optional:
-
-- \`kopfzeile.html\` — Kopfzeile auf jeder Seite
-- \`fusszeile.html\` — Fußzeile auf jeder Seite
-- \`deckblatt.html\` — Deckblatt als erste Seite (Beispiel: \`deckblatt-beispiel.html\` umbenennen)
-- \`stil.css\` — Zusatz-CSS für den Dokumentinhalt
-- \`vorlage.json\` — Seitenränder in Millimetern
-
-Platzhalter in den HTML-Dateien: \`{{titel}}\` (\`title:\` aus dem
-YAML-Frontmatter, sonst die erste Überschrift 1 der Notiz, sonst der
-Dateiname) und \`{{datum}}\` (Exportdatum). In Kopf- und Fußzeile zusätzlich
-\`<span class="pageNumber"></span>\` und \`<span class="totalPages"></span>\` für
-Seitenzahlen.
-
-Bilder (Logo usw.): Bilddatei mit in diesen Ordner legen und relativ referenzieren,
-z. B. \`<img src="logo.png" style="height: 8mm">\` — Merkzeug bettet sie beim Export
-automatisch ein. In Kopf- und Fußzeile ist nur Inline-CSS möglich.
-
-Querformat: Erzeugt Merkzeug das PDF automatisch im Querformat (wegen breiter
-Tabellen), trägt das Dokument die Klasse \`pdf-landscape\` am \`<html>\`-Element.
-\`stil.css\` kann darauf reagieren, z. B. ein hohes Deckblatt niedriger machen:
-\`html.pdf-landscape .cover { height: 150mm; }\`.
-
-Die Vorlage wird einem Vault über Merkzeug → Einstellungen zugewiesen
-(gespeichert in \`.merkzeug/settings.json\` im Vault).
+Assign this template through Merkzeug Settings, or choose this folder in IntelliJ.
+Desktop assignments are stored in .merkzeug/settings.json inside the vault.
 `
 
 /** Legt eine neue Vorlage mit Beispieldateien an. Wirft bei Namenskonflikt. */
 export function createTemplate(name: string): string {
   const clean = name.trim()
   if (!clean || /[/\\:]/.test(clean) || clean.startsWith('.')) {
-    throw new Error('Ungültiger Vorlagen-Name.')
+    throw new Error(translate("Invalid template name."))
   }
   const dir = join(templatesRoot(), clean)
-  if (existsSync(dir)) throw new Error(`Die Vorlage „${clean}“ existiert bereits.`)
+  if (existsSync(dir)) throw new Error(`${translate("The template “")}${clean}${translate("” already exists.")}`)
   mkdirSync(dir, { recursive: true })
   writeFileSync(join(dir, 'kopfzeile.html'), DEFAULT_HEADER)
   writeFileSync(join(dir, 'fusszeile.html'), DEFAULT_FOOTER)
   writeFileSync(join(dir, 'deckblatt-beispiel.html'), DEFAULT_COVER_EXAMPLE)
   writeFileSync(join(dir, 'stil.css'), DEFAULT_CSS)
   writeFileSync(join(dir, 'vorlage.json'), DEFAULT_CONFIG)
-  writeFileSync(join(dir, 'LIESMICH.md'), DEFAULT_README)
+  writeFileSync(join(dir, 'README.md'), DEFAULT_README)
   return dir
 }
 

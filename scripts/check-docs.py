@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+"""Check local Markdown file links in maintained documentation (not remote availability)."""
+import re
+import sys
+from pathlib import Path
+from urllib.parse import unquote
+
+ROOT=Path(__file__).resolve().parents[1]
+files=list((ROOT/'docs').rglob('*.md'))+list((ROOT/'store').rglob('*.md'))+[ROOT/name for name in ['README.md','CONTRIBUTING.md','SECURITY.md','CHANGELOG.md','crossplatform/README.md','mobile/README.md','intellij/README.md','legacy/README.md']]
+errors=[]
+for file in files:
+    text=re.sub(r'```[\s\S]*?```','',file.read_text())
+    text=re.sub(r'`[^`\n]+`','',text)
+    for target in re.findall(r'\[[^\]]*\]\(([^)]+)\)',text):
+        target=target.split('#')[0].strip('<>')
+        if not target or re.match(r'[a-zA-Z][a-zA-Z\d+.-]*:',target):continue
+        target=unquote(target)
+        resolved=(file.parent/target).resolve()
+        if not resolved.exists():errors.append(f'{file.relative_to(ROOT)}: missing {target}')
+if errors:
+    print('\n'.join(errors),file=sys.stderr);sys.exit(1)
+print(f'Checked local file links in {len(files)} documentation files.')

@@ -1,3 +1,5 @@
+import { t as translate } from '@merkzeug/core/i18n'
+import { collectLinkedDocs as collectShared, fillTemplate } from '@merkzeug/core/exportPlan'
 import { BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, dirname, isAbsolute, join, normalize, relative, resolve } from 'node:path'
@@ -14,6 +16,7 @@ const pendingDocs = new Map<
 >()
 /** Auflöser für das "fertig gerendert"-Signal je PDF-Fenster (Wert: Querformat?) */
 const readyResolvers = new Map<number, (landscape: boolean) => void>()
+const readyRejectors = new Map<number, (error: Error) => void>()
 /**
  * Auslösendes Fenster je PDF-Fenster, für die Fortschrittsanzeige.
  * `base` verschiebt den Fortschritt beim Multi-Export: `done` bereits
@@ -28,91 +31,11 @@ function sendProgress(win: BrowserWindow, progress: PdfExportProgress): void {
   if (!win.isDestroyed()) win.webContents.send('pdf:exportProgress', progress)
 }
 
-function isWithin(dir: string, path: string): boolean {
-  const rel = relative(dir, path)
-  return rel !== '' && !rel.startsWith('..') && !isAbsolute(rel)
+async function collectLinkedDocs(indexPath: string, vault: string | null): Promise<string[]> {
+  return collectShared(indexPath, readFileSync(indexPath, 'utf8'), vault, async (path) => existsSync(path))
 }
-
-/**
- * Sammelt alle aus der Index-Datei verlinkten Markdown-Dateien, die in derselben
- * Hierarchie (Ordner der Index-Datei oder darunter) liegen — alphabetisch
- * sortiert. Dokumente aus der `pdf-exclude:`-Liste im Frontmatter der
- * Index-Datei (Pfade wie in Links: relativ zur Datei, mit `/` vault-relativ,
- * `.md` optional) werden ausgelassen.
- */
-export function collectLinkedDocs(indexPath: string, vault: string | null): string[] {
-  const md = readFileSync(indexPath, 'utf8')
-  // Links in Codeblöcken/Inline-Code sind nur Beispieltext
-  const scannable = md.replace(/```[\s\S]*?```/g, '').replace(/`[^`\n]*`/g, '')
-  const dir = dirname(indexPath)
-  const found = new Set<string>()
-
-  const excluded = new Set<string>()
-  for (const entry of frontmatterList(splitFrontmatter(md).frontmatter, 'pdf-exclude')) {
-    let abs = normalize(entry.startsWith('/') && vault ? join(vault, entry) : join(dir, entry))
-    if (!abs.toLowerCase().endsWith('.md')) abs += '.md'
-    excluded.add(resolve(abs))
-  }
-
-  const targets: string[] = []
-  // Inline-Links [Text](ziel) — Bilder (![...]) auslassen
-  for (const m of scannable.matchAll(/(!?)\[[^\]]*\]\(\s*<?([^)>\s]+)>?[^)]*\)/g)) {
-    if (m[1] !== '!') targets.push(m[2])
-  }
-  // Referenz-Definitionen [ref]: ziel
-  for (const m of scannable.matchAll(/^\[[^\]]+\]:\s*(\S+)/gm)) {
-    targets.push(m[1])
-  }
-
-  for (const target of targets) {
-    if (/^(https?|mailto|ftp|tel|file):/i.test(target)) continue
-    let raw: string
-    try {
-      raw = decodeURI(target).replace(/[?#].*$/, '')
-    } catch {
-      continue
-    }
-    if (!raw) continue
-    let abs = normalize(raw.startsWith('/') && vault ? join(vault, raw) : join(dir, raw))
-    if (!abs.toLowerCase().endsWith('.md')) {
-      if (existsSync(`${abs}.md`)) abs = `${abs}.md`
-      else continue
-    }
-    if (!existsSync(abs)) continue
-    abs = resolve(abs)
-    if (abs === resolve(indexPath)) continue
-    if (!isWithin(dir, abs)) continue
-    if (excluded.has(abs)) continue
-    found.add(abs)
-  }
-  return [...found].sort((a, b) => a.localeCompare(b, 'de', { numeric: true }))
-}
-
-/** Ersetzt {{titel}}/{{datum}} in den HTML-Teilen der Vorlage */
-function applyPlaceholders(
-  template: PdfTemplate,
-  notePath: string,
-  withLinked: boolean
-): PdfTemplate {
-  let titel = basename(notePath, '.md')
-  try {
-    titel = pdfExportTitle(readFileSync(notePath, 'utf8'), titel, withLinked)
-  } catch {
-    /* Datei nicht lesbar → Dateiname als Titel */
-  }
-  const datum = new Date().toLocaleDateString('de-DE', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  })
-  const fill = (s?: string): string | undefined =>
-    s?.split('{{titel}}').join(titel).split('{{datum}}').join(datum)
-  return {
-    ...template,
-    header: fill(template.header),
-    footer: fill(template.footer),
-    cover: fill(template.cover)
-  }
+function applyPlaceholders(template: PdfTemplate, notePath: string, withLinked: boolean): PdfTemplate {
+  return fillTemplate(template, readFileSync(notePath, 'utf8'), basename(notePath, '.md'), withLinked)
 }
 
 const mmToInch = (mm: number): number => mm / 25.4
@@ -139,12 +62,13 @@ async function renderPdf(
   try {
     pendingDocs.set(pdfWin.webContents.id, { vault, docs, template })
     sourceWindows.set(pdfWin.webContents.id, { win: sourceWin, base: progressBase })
-    const ready = new Promise<boolean>((resolveReady) => {
-      // Notbremse: notfalls unfertig drucken; großzügig, skaliert mit der Dokumentzahl
+    const ready = new Promise<boolean>((resolveReady, rejectReady) => {
+      // Rendering abbrechen, statt unvollständige Dokumente zu drucken.
       const timer = setTimeout(() => {
         readyResolvers.delete(pdfWin.webContents.id)
-        resolveReady(false)
+        rejectReady(new Error(translate("PDF rendering timed out")))
       }, 60_000 + docs.length * 5_000)
+      readyRejectors.set(pdfWin.webContents.id, error => { clearTimeout(timer); rejectReady(error) })
       readyResolvers.set(pdfWin.webContents.id, (landscape) => {
         clearTimeout(timer)
         resolveReady(landscape)
@@ -186,6 +110,7 @@ async function renderPdf(
     }
     return await pdfWin.webContents.printToPDF(options)
   } finally {
+    readyRejectors.delete(pdfWin.webContents.id)
     pendingDocs.delete(pdfWin.webContents.id)
     readyResolvers.delete(pdfWin.webContents.id)
     sourceWindows.delete(pdfWin.webContents.id)
@@ -207,11 +132,11 @@ async function exportPdf(win: BrowserWindow, notePath: string): Promise<void> {
     if (!template && !debugTarget) {
       const { response } = await dialog.showMessageBox(win, {
         type: 'warning',
-        title: 'PDF-Vorlage nicht gefunden',
-        message: `Die zugewiesene Vorlage „${templateName}“ liegt nicht im Vorlagen-Ordner.`,
+        title: translate("PDF template not found"),
+        message: `${translate("The assigned template “")}${templateName}${translate("” is not in the templates folder.")}`,
         detail:
-          'Der Export wird ohne Vorlage erstellt. Vorlagen werden unter Merkzeug → Einstellungen (⌘,) verwaltet.',
-        buttons: ['Ohne Vorlage exportieren', 'Abbrechen'],
+          translate("The PDF will use the default layout. Manage templates in Merkzeug → Settings (⌘,)."),
+        buttons: [translate("Export without a template"), translate("Cancel")],
         defaultId: 0,
         cancelId: 1
       })
@@ -221,7 +146,7 @@ async function exportPdf(win: BrowserWindow, notePath: string): Promise<void> {
 
   let linked: string[] = []
   try {
-    linked = collectLinkedDocs(notePath, vault)
+    linked = await collectLinkedDocs(notePath, vault)
   } catch {
     /* Datei nicht lesbar → wie "keine Links" behandeln */
   }
@@ -233,12 +158,12 @@ async function exportPdf(win: BrowserWindow, notePath: string): Promise<void> {
     } else {
       const { response } = await dialog.showMessageBox(win, {
         type: 'question',
-        title: 'Als PDF exportieren',
-        message: 'Was soll das PDF enthalten?',
-        detail: `„${basename(notePath, '.md')}“ verlinkt ${linked.length} weitere ${
-          linked.length === 1 ? 'Dokument' : 'Dokumente'
-        } in derselben Hierarchie. Verlinkte Dokumente werden alphabetisch angehängt.`,
-        buttons: ['Nur diese Datei', `Mit verlinkten Dokumenten (${linked.length + 1})`, 'Abbrechen'],
+        title: translate("Export as PDF"),
+        message: translate("What should the PDF include?"),
+        detail: `„${basename(notePath, '.md')}${translate("” links to")} ${linked.length} weitere ${
+          linked.length === 1 ? translate("Document") : translate("documents")
+        } ${translate("in the same hierarchy. Linked documents are appended alphabetically.")}`,
+        buttons: [translate("This file only"), `${translate("Include linked documents (")}${linked.length + 1})`, translate("Cancel")],
         defaultId: 1,
         cancelId: 2
       })
@@ -256,7 +181,7 @@ async function exportPdf(win: BrowserWindow, notePath: string): Promise<void> {
     // (zuletzt verwendetes Verzeichnis, wie unter macOS üblich) — ein
     // kompletter Pfad würde den Dialog jedes Mal in denselben Ordner zwingen
     const res = await dialog.showSaveDialog(win, {
-      title: 'PDF sichern',
+      title: translate("Save PDF"),
       defaultPath: `${basename(notePath, '.md')}.pdf`,
       filters: [{ name: 'PDF', extensions: ['pdf'] }]
     })
@@ -271,7 +196,7 @@ async function exportPdf(win: BrowserWindow, notePath: string): Promise<void> {
     writeFileSync(target, await renderPdf(vault, docs, template, win))
   } catch (err) {
     sendProgress(win, { phase: 'error' })
-    dialog.showErrorBox('PDF-Export fehlgeschlagen', String(err))
+    dialog.showErrorBox(translate("PDF export failed"), String(err))
     return
   }
   sendProgress(win, { phase: 'done' })
@@ -297,11 +222,11 @@ async function exportPdfMulti(win: BrowserWindow, notePaths: string[]): Promise<
     if (!template && !debugTarget) {
       const { response } = await dialog.showMessageBox(win, {
         type: 'warning',
-        title: 'PDF-Vorlage nicht gefunden',
-        message: `Die zugewiesene Vorlage „${templateName}“ liegt nicht im Vorlagen-Ordner.`,
+        title: translate("PDF template not found"),
+        message: `${translate("The assigned template “")}${templateName}${translate("” is not in the templates folder.")}`,
         detail:
-          'Der Export wird ohne Vorlage erstellt. Vorlagen werden unter Merkzeug → Einstellungen (⌘,) verwaltet.',
-        buttons: ['Ohne Vorlage exportieren', 'Abbrechen'],
+          translate("The PDF will use the default layout. Manage templates in Merkzeug → Settings (⌘,)."),
+        buttons: [translate("Export without a template"), translate("Cancel")],
         defaultId: 0,
         cancelId: 1
       })
@@ -312,8 +237,8 @@ async function exportPdfMulti(win: BrowserWindow, notePaths: string[]): Promise<
   let chosenDir = debugTarget ?? null
   if (!chosenDir) {
     const res = await dialog.showOpenDialog(win, {
-      title: 'Zielordner für den PDF-Export wählen',
-      buttonLabel: 'Exportieren',
+      title: translate("Choose a PDF export folder"),
+      buttonLabel: translate("Export"),
       properties: ['openDirectory', 'createDirectory']
     })
     if (res.canceled || res.filePaths.length === 0) return
@@ -327,13 +252,13 @@ async function exportPdfMulti(win: BrowserWindow, notePaths: string[]): Promise<
   if (existing.length > 0 && !debugTarget) {
     const { response } = await dialog.showMessageBox(win, {
       type: 'warning',
-      title: 'Vorhandene PDFs überschreiben?',
+      title: translate("Overwrite existing PDFs?"),
       message:
         existing.length === 1
-          ? `„${basename(targetFor(existing[0]))}“ ist im Zielordner bereits vorhanden.`
-          : `${existing.length} der PDF-Dateien sind im Zielordner bereits vorhanden.`,
-      detail: 'Beim Export werden sie überschrieben.',
-      buttons: ['Überschreiben', 'Abbrechen'],
+          ? `„${basename(targetFor(existing[0]))}${translate("” already exists in the destination.")}`
+          : `${existing.length} ${translate("PDF files already exist in the destination.")}`,
+      detail: translate("Exporting will overwrite them."),
+      buttons: [translate("Overwrite"), translate("Cancel")],
       defaultId: 0,
       cancelId: 1
     })
@@ -354,7 +279,7 @@ async function exportPdfMulti(win: BrowserWindow, notePaths: string[]): Promise<
     }
   } catch (err) {
     sendProgress(win, { phase: 'error' })
-    dialog.showErrorBox('PDF-Export fehlgeschlagen', String(err))
+    dialog.showErrorBox(translate("PDF export failed"), String(err))
     return
   }
   sendProgress(win, { phase: 'done' })
@@ -362,6 +287,7 @@ async function exportPdfMulti(win: BrowserWindow, notePaths: string[]): Promise<
 }
 
 export function registerPdfIpc(): void {
+  ipcMain.on('pdf:error', (event, message: string) => readyRejectors.get(event.sender.id)?.(new Error(message)))
   ipcMain.handle('pdf:export', async (event, notePath: string) => {
     const win = BrowserWindow.fromWebContents(event.sender)
     if (win) await exportPdf(win, notePath)

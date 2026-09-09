@@ -1,3 +1,4 @@
+import { t as translate, getLocale } from '@merkzeug/core/i18n'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Crepe } from '@milkdown/crepe'
 import { jumpToFragment } from './util/anchors'
@@ -7,7 +8,7 @@ import '@milkdown/crepe/theme/frame.css'
 
 /** Hilfe-Fenster: rendert Help.de.md / Help.en.md schreibgeschützt. */
 export function HelpApp(): React.JSX.Element {
-  const [lang, setLang] = useState<'de' | 'en'>('de')
+  const [lang, setLang] = useState<'de' | 'en'>(getLocale().toLowerCase().startsWith('de') ? 'de' : 'en')
   const rootRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -61,7 +62,7 @@ export function HelpApp(): React.JSX.Element {
   return (
     <div className="help-app">
       <div className="help-header">
-        <span className="help-title">Merkzeug-Hilfe</span>
+        <span className="help-title">{translate("Merkzeug Help")}</span>
         <div className="help-lang">
           <button className={lang === 'de' ? 'toggled' : ''} onClick={() => setLang('de')}>
             Deutsch

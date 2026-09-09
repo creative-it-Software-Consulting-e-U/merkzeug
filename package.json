@@ -1,0 +1,31 @@
+{
+  "name": "merkzeug-workspace",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "crossplatform",
+    "mobile",
+    "intellij/web"
+  ],
+  "scripts": {
+    "build:desktop": "npm run build -w merkzeug",
+    "build:mobile": "npm run build -w merkzeug-mobile",
+    "build:intellij": "python3 intellij/build.py",
+    "test": "node --experimental-strip-types --test packages/core/test/*.test.ts",
+    "typecheck": "tsc -p crossplatform/tsconfig.node.json --noEmit && tsc -p crossplatform/tsconfig.web.json --noEmit && tsc -p mobile/tsconfig.json --noEmit && tsc -p intellij/web/tsconfig.json --noEmit",
+    "check:version": "python3 scripts/version.py check",
+    "test:release": "python3 -m unittest discover -s scripts/tests -v",
+    "check:docs": "python3 scripts/check-docs.py",
+    "check:secrets": "python3 scripts/check-secrets.py"
+  },
+  "devDependencies": {
+    "@types/node": "^26.5.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "typescript": "^7.0.2"
+  },
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=24 <25"
+  }
+}

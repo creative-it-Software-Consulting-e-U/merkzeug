@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 import { useEffect, useRef, useState } from 'react'
 import { basename, dirname } from '../util/paths'
 import { vault, type SearchResult } from '../vault'
@@ -54,18 +55,18 @@ export function SearchView({ onOpen, onClose }: SearchViewProps): React.JSX.Elem
           ref={inputRef}
           className="search-input"
           type="search"
-          placeholder="Vault durchsuchen …"
+          placeholder={translate("Search vault …")}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           autoCapitalize="off"
           autoCorrect="off"
         />
         <button className="bar-btn" onClick={onClose}>
-          Fertig
+          {translate("Done")}
         </button>
       </div>
       {query.trim() && !busy && results.length === 0 ? (
-        <div className="folder-empty">Keine Treffer.</div>
+        <div className="folder-empty">{translate("No matches.")}</div>
       ) : (
         <ul className="folder-list search-results">
           {results.map((result) => (

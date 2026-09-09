@@ -1,51 +1,44 @@
-# Merkzeug – Hinweise für Claude
+# Merkzeug contributor instructions
 
-WYSIWYG-Markdown-Editor für einen Vault-Ordner, in zwei Varianten:
+Merkzeug is a visual Markdown editor with shared TypeScript packages and platform adapters.
 
-- `crossplatform/` — **die aktuelle App**: Electron + Milkdown, eine Codebasis
-  für macOS, Windows und Linux (siehe `crossplatform/README.md`).
-  Änderungen und neue Features landen hier.
-- `legacy/` — die frühere native macOS-App (SwiftUI + AppKit, SwiftPM, siehe
-  `legacy/README.md`). Nur noch pflegen, wenn explizit gewünscht.
+- `crossplatform/`: active Electron desktop application.
+- `mobile/`: active Capacitor iOS application.
+- `intellij/`: IntelliJ plugin preview.
+- `packages/`: shared core, editor and PDF rendering.
+- `legacy/`: archived native macOS implementation; only modify when explicitly requested.
 
-## Bauen & Testen
+## Language and documentation
 
-Aktuelle App (in `crossplatform/`):
+English is the primary source language for project documentation and UI messages. The UI uses German on German systems and falls back to English otherwise. Maintain the shared German translation catalog and native adapter translations. Never translate persisted keys or user documents.
 
-```bash
-npm install
-npm run dev            # Entwicklungsmodus mit Hot Reload
-npm run build          # electron-vite build (auch für Type-Fehler-Check)
-npm run package:mac    # macOS-App nach dist/mac-arm64/Merkzeug.app
-npm run package:win    # Windows-Installer (NSIS, x64 + arm64 kombiniert)
-npm run package:linux  # Linux x64: AppImage, .deb, .rpm
+For each feature or behavior change, update the affected user guides and both bundled help languages:
+
+- Desktop: `crossplatform/resources/help/Help.en.md` and `Help.de.md`.
+- iOS: `mobile/src/help/Help.en.md` and `Help.de.md`.
+- IntelliJ: `docs/user/intellij.md`.
+
+Update shortcut references when shortcuts change. Avoid Mermaid examples in bundled help views that do not render diagrams. Keep developer READMEs focused on development; user instructions belong in `docs/user/` or the bundled manuals.
+
+## Build and test
+
+Run `npm ci` from the repository root. Use the shared lockfile.
+
+```sh
+npm test
+npm run typecheck
+npm run check:version
+npm run check:docs
+npm run test:release
+npm run build:desktop
+npm run build:mobile
+npm run build:intellij
 ```
 
-Legacy-App (in `legacy/`):
+The IntelliJ build requires the pinned SDK. Native behavior needs native tests, not just successful web builds. Do not run a GUI IDE in a filesystem sandbox that prevents OS application registration.
 
-```bash
-swift build          # Debug-Build
-swift test           # alle Tests
-make install         # Release-Build als App-Bundle nach /Applications
-```
+## Releases
 
-Achtung: `make install` der Legacy-App überschreibt `/Applications/Merkzeug.app`
-— dort ist normalerweise die aktuelle (Electron-)App installiert.
+Use `scripts/version.py` to update active versions, then regenerate the root lockfile. Follow `docs/development/releases.md`. Build scripts must not publish implicitly. Never commit signing credentials, SDK downloads or generated binaries.
 
-## WICHTIG: Hilfe aktuell halten
-
-Beide Apps enthalten eine vollständige Benutzer-Hilfe in zwei Sprachen:
-
-- Aktuelle App: `crossplatform/resources/help/Help.de.md` und `Help.en.md`
-- Legacy-App: `legacy/Sources/Merkzeug/Resources/Help.de.md` und `Help.en.md`
-
-**Bei jedem neuen Feature und jeder Verhaltensänderung (auch geänderte
-Tastaturkürzel, Menüs oder UI-Umbauten) muss geprüft werden, ob die Hilfe der
-betroffenen App anzupassen ist — und zwar immer beide Sprachen synchron.** Die
-Tabelle der Tastaturkürzel am Ende beider Dateien ebenfalls aktualisieren. Die
-Hilfe wird über Menü „Hilfe → Merkzeug-Hilfe" (⌘?) angezeigt und mit der
-jeweils app-eigenen Markdown-Engine gerendert (Legacy: `HelpView.swift`);
-Mermaid-Blöcke dort vermeiden, da das Hilfe-Fenster keine Diagramme rendert.
-
-Das gleiche gilt sinngemäß für den Funktionsüberblick in der jeweiligen
-`README.md`.
+The legacy `make install` replaces `/Applications/Merkzeug.app`; do not run it during active desktop development.

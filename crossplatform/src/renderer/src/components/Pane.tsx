@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 import { useState, type RefObject } from 'react'
 import type { FileNode } from '../../../shared/types'
 import type { Pane as PaneState, Tab } from '../types'
@@ -72,15 +73,15 @@ export function PaneView(props: PaneProps): React.JSX.Element {
 
   const headingEntries: MenuEntry[] = [
     { label: 'Text', onClick: () => format('text') },
-    { label: 'Überschrift 1', onClick: () => format('h1') },
-    { label: 'Überschrift 2', onClick: () => format('h2') },
-    { label: 'Überschrift 3', onClick: () => format('h3') }
+    { label: translate("Heading 1"), onClick: () => format('h1') },
+    { label: translate("Heading 2"), onClick: () => format('h2') },
+    { label: translate("Heading 3"), onClick: () => format('h3') }
   ]
 
   /** Einträge des Inhaltsverzeichnis-Dropdowns, beim Öffnen aus dem Dokument gelesen. */
   const tocEntries = (): MenuEntry[] => {
     const headings = editor()?.getHeadings() ?? []
-    if (headings.length === 0) return [{ label: 'Keine Überschriften im Dokument' }]
+    if (headings.length === 0) return [{ label: translate("No headings in this document") }]
     return headings.map((h) => ({
       // Einrückung je Ebene über Geviert-Leerzeichen
       label: '\u2003'.repeat(Math.max(0, h.level - 1)) + h.text,
@@ -89,16 +90,16 @@ export function PaneView(props: PaneProps): React.JSX.Element {
   }
 
   const tableEntries: MenuEntry[] = [
-    { label: 'Tabelle einfügen (3×3)', onClick: () => editor()?.insertTable(3, 3) },
-    { label: 'Tabelle einfügen (2×2)', onClick: () => editor()?.insertTable(2, 2) },
+    { label: translate("Insert table (3×3)"), onClick: () => editor()?.insertTable(3, 3) },
+    { label: translate("Insert table (2×2)"), onClick: () => editor()?.insertTable(2, 2) },
     { label: '', separator: true },
-    { label: 'Zeile darunter einfügen', onClick: () => editor()?.tableCommand('rowBelow') },
-    { label: 'Zeile darüber einfügen', onClick: () => editor()?.tableCommand('rowAbove') },
-    { label: 'Spalte rechts einfügen', onClick: () => editor()?.tableCommand('colAfter') },
-    { label: 'Spalte links einfügen', onClick: () => editor()?.tableCommand('colBefore') },
+    { label: translate("Insert Row Below"), onClick: () => editor()?.tableCommand('rowBelow') },
+    { label: translate("Insert Row Above"), onClick: () => editor()?.tableCommand('rowAbove') },
+    { label: translate("Insert column to the right"), onClick: () => editor()?.tableCommand('colAfter') },
+    { label: translate("Insert column to the left"), onClick: () => editor()?.tableCommand('colBefore') },
     { label: '', separator: true },
-    { label: 'Zeile löschen', onClick: () => editor()?.tableCommand('deleteRow') },
-    { label: 'Spalte löschen', onClick: () => editor()?.tableCommand('deleteCol') }
+    { label: translate("Delete Row"), onClick: () => editor()?.tableCommand('deleteRow') },
+    { label: translate("Delete Column"), onClick: () => editor()?.tableCommand('deleteCol') }
   ]
 
   const fmtBtn = (
@@ -136,7 +137,7 @@ export function PaneView(props: PaneProps): React.JSX.Element {
         <div className="pane-toolbar">
           <button
             className="toolbar-btn icon"
-            data-tip="Zurück (⌘[)"
+            data-tip={translate("Back (⌘[)")}
             disabled={!activeTab.navMode || activeTab.historyIndex <= 0}
             onClick={() => props.onNavBack(activeTab.id)}
           >
@@ -144,7 +145,7 @@ export function PaneView(props: PaneProps): React.JSX.Element {
           </button>
           <button
             className="toolbar-btn icon"
-            data-tip="Vorwärts (⌘])"
+            data-tip={translate("Forward (⌘])")}
             disabled={!activeTab.navMode || activeTab.historyIndex >= activeTab.history.length - 1}
             onClick={() => props.onNavForward(activeTab.id)}
           >
@@ -155,7 +156,7 @@ export function PaneView(props: PaneProps): React.JSX.Element {
               <div className="toolbar-divider" />
               <button
                 className="toolbar-btn icon"
-                data-tip="Inhaltsverzeichnis: zu einer Überschrift springen"
+                data-tip={translate("Table of contents: jump to a heading")}
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={(e) => openMenu('toc', e)}
               >
@@ -164,7 +165,7 @@ export function PaneView(props: PaneProps): React.JSX.Element {
               </button>
               <div className="toolbar-divider" />
               {fmtBtn(
-                'Absatzformat',
+                translate("Paragraph style"),
                 <>
                   <IconHeading />
                   <IconCaret />
@@ -172,33 +173,33 @@ export function PaneView(props: PaneProps): React.JSX.Element {
                 (e) => openMenu('heading', e)
               )}
               <div className="toolbar-divider" />
-              {fmtBtn('Fett (⌘B)', <IconBold />, () => format('bold'))}
-              {fmtBtn('Kursiv (⌘I)', <IconItalic />, () => format('italic'))}
-              {fmtBtn('Durchgestrichen (⌥⌘X)', <IconStrike />, () => format('strike'))}
-              {fmtBtn('Inline-Code (⌘E)', <IconInlineCode />, () => format('inlineCode'))}
+              {fmtBtn(translate("Bold (⌘B)"), <IconBold />, () => format('bold'))}
+              {fmtBtn(translate("Italic (⌘I)"), <IconItalic />, () => format('italic'))}
+              {fmtBtn(translate("Strikethrough (⌥⌘X)"), <IconStrike />, () => format('strike'))}
+              {fmtBtn(translate("Inline code (⌘E)"), <IconInlineCode />, () => format('inlineCode'))}
               <div className="toolbar-divider" />
-              {fmtBtn('Aufzählung (⌥⌘8)', <IconBulletList />, () => format('bulletList'))}
-              {fmtBtn('Nummerierte Liste (⌥⌘7)', <IconOrderedList />, () => format('orderedList'))}
-              {fmtBtn('Zitat (⇧⌘B)', <IconQuote />, () => format('quote'))}
-              {fmtBtn('Codeblock (⌥⌘C)', <IconCodeBlock />, () => format('codeBlock'))}
+              {fmtBtn(translate("Bullet list (⌥⌘8)"), <IconBulletList />, () => format('bulletList'))}
+              {fmtBtn(translate("Numbered list (⌥⌘7)"), <IconOrderedList />, () => format('orderedList'))}
+              {fmtBtn(translate("Quote (⇧⌘B)"), <IconQuote />, () => format('quote'))}
+              {fmtBtn(translate("Code block (⌥⌘C)"), <IconCodeBlock />, () => format('codeBlock'))}
               <div className="toolbar-divider" />
-              {fmtBtn('Link einfügen (⌘K)', <IconLink />, () => props.onInsertLink())}
-              {fmtBtn('Bild einfügen', <IconImage />, () => editor()?.openImagePicker())}
+              {fmtBtn(translate("Insert link (⌘K)"), <IconLink />, () => props.onInsertLink())}
+              {fmtBtn(translate("Insert image"), <IconImage />, () => editor()?.openImagePicker())}
               {fmtBtn(
-                'Tabelle',
+                translate("Table"),
                 <>
                   <IconTable />
                   <IconCaret />
                 </>,
                 (e) => openMenu('table', e)
               )}
-              {fmtBtn('Trennlinie', <IconHr />, () => format('hr'))}
+              {fmtBtn(translate("Divider"), <IconHr />, () => format('hr'))}
             </>
           )}
           <div className="toolbar-spacer" />
           <button
             className="toolbar-btn icon"
-            data-tip="Merkzeug-Hilfe (⌘?)"
+            data-tip={translate("Merkzeug Help (⌘?)")}
             onClick={() => void window.merkzeug.openHelp()}
           >
             <IconHelp />
@@ -207,8 +208,8 @@ export function PaneView(props: PaneProps): React.JSX.Element {
             className={`toolbar-btn icon${activeTab.navMode ? ' toggled' : ''}`}
             data-tip={
               activeTab.navMode
-                ? 'Navigationsmodus verlassen (⌘R)'
-                : 'Navigationsmodus: read-only, Links öffnen im selben Tab (⌘R)'
+                ? translate("Exit navigation mode (⌘R)")
+                : translate("Navigation mode: read-only, links open in the same tab (⌘R)")
             }
             onClick={() => props.onToggleNavMode(activeTab.id)}
           >
@@ -233,8 +234,8 @@ export function PaneView(props: PaneProps): React.JSX.Element {
       <div className="pane-content">
         {pane.tabs.length === 0 && (
           <div className="pane-empty">
-            <p>Keine Notiz geöffnet.</p>
-            <p className="pane-empty-hint">Wähle links eine Notiz oder erstelle mit ⌘N eine neue.</p>
+            <p>{translate("No note is open.")}</p>
+            <p className="pane-empty-hint">{translate("Select a note on the left or create one with ⌘N.")}</p>
           </div>
         )}
         {pane.tabs.map((tab) => {

@@ -4,13 +4,25 @@
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "jsx": "react-jsx",
     "strict": true,
     "skipLibCheck": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "useDefineForClassFields": true
+    "useDefineForClassFields": true,
+    "allowImportingTsExtensions": true
   },
-  "include": ["src/renderer/src/**/*", "src/shared/**/*", "src/preload/index.d.ts"]
+  "include": [
+    "src/renderer/src/**/*",
+    "src/shared/**/*",
+    "src/preload/index.d.ts",
+    "../packages/core/src/**/*.ts",
+    "../packages/editor/src/**/*",
+    "../packages/export/src/**/*"
+  ]
 }

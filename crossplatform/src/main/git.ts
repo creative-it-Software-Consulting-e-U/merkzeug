@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 import { execFile } from 'node:child_process'
 import type { GitResult, GitStatus } from '../shared/types'
 
@@ -61,14 +62,14 @@ export async function gitCommitPush(vault: string, message: string): Promise<Git
     if (commit.code !== 0) return { ok: false, output: commit.out }
   }
   const remotes = (await git(vault, ['remote'])).out
-  if (remotes.length === 0) return { ok: true, output: 'Commit erstellt (kein Remote zum Pushen).' }
+  if (remotes.length === 0) return { ok: true, output: translate("Commit created (no remote configured for pushing).") }
   return doPush(vault, remotes)
 }
 
 /** Nur pushen, ohne neuen Commit — um einen fehlgeschlagenen Push nachzuholen. */
 export async function gitPush(vault: string): Promise<GitResult> {
   const remotes = (await git(vault, ['remote'])).out
-  if (remotes.length === 0) return { ok: false, output: 'Kein Remote zum Pushen konfiguriert.' }
+  if (remotes.length === 0) return { ok: false, output: translate("No remote is configured for pushing.") }
   return doPush(vault, remotes)
 }
 

@@ -1,7 +1,9 @@
 # Merkzeug – Help
 
+The interface and this help use German on a German system and English otherwise. You can switch the help language independently.
+
 Merkzeug is a Notion-style editor for Markdown notes – this edition runs on
-**macOS and Windows**. You edit your notes **WYSIWYG** (formatted, without
+**macOS, Windows and Linux**. You edit your notes **WYSIWYG** (formatted, without
 visible Markdown syntax), but everything is always saved as clean, portable
 Markdown. All notes live as `.md` files in an ordinary folder – the **vault**.
 
@@ -263,7 +265,7 @@ For browsing linked notes there is a per-tab **navigation mode** – toggled wit
   (e.g. `language: en`) sets the heading of the table of contents ("Table of
   Contents" instead of the German "Inhaltsverzeichnis"; supported: de, en,
   fr, es, it, pt, nl — other languages get the English title) and the
-  hyphenation used in the PDF. Without it, German is used as before.
+  hyphenation used in the PDF. Without it, the interface language (German or English) is used.
 - The PDF is always rendered in the light theme (regardless of the system
   appearance) and includes tables, images and Mermaid diagrams. Web links,
   files outside the hierarchy and unlinked files are not appended.
@@ -374,3 +376,11 @@ the sidebar:
 | ⌘? | This help |
 
 *(Windows: ⌘ = Ctrl, ⌥ = Alt, ⇧ = Shift)*
+
+## Shared editor and save conflicts
+
+Desktop, iOS and IntelliJ use the same Merkzeug editor. Frontmatter is preserved and can be opened in the editor. Failed saves leave changes marked as unsaved. When external changes conflict with your edits, reload the external version or explicitly keep your own version.
+
+## Mac App Store preview builds
+
+Experimental Mac App Store builds request persistent access when you select a vault or PDF-template folder. If macOS revokes access or the folder moves, select it again. Store-build sandbox validation is still in progress.

@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "sync": "npm run build && cap sync ios",
+    "sync": "npm run build && cap sync ios && python3 ../scripts/prepare-ios-runtime.py",
     "open": "cap open ios"
   },
   "author": "Günther Wieser <guenther.wieser@creative-it.com>",
@@ -18,7 +18,9 @@
     "@milkdown/kit": "^7.22.0",
     "mermaid": "^11.16.1",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "@merkzeug/core": "0.1.0",
+    "@merkzeug/editor": "0.1.0"
   },
   "devDependencies": {
     "@capacitor/cli": "^8.5.0",

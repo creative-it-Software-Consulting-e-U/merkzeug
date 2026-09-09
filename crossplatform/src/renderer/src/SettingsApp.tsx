@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 import { useCallback, useEffect, useState } from 'react'
 import type { TemplateState } from '../../shared/types'
 
@@ -17,7 +18,7 @@ export function SettingsApp(): React.JSX.Element {
   }, [])
 
   useEffect(() => {
-    document.title = 'Einstellungen'
+    document.title = translate("Settings")
     refresh()
     const offRefresh = window.merkzeug.onSettingsRefresh(refresh)
     // Vorlagen werden im Finder/Explorer bearbeitet: beim Zurückwechseln neu einlesen
@@ -57,35 +58,33 @@ export function SettingsApp(): React.JSX.Element {
           <span className="settings-path" title={state.templatesRoot}>
             {state.templatesRoot}
           </span>
-          <button onClick={() => run(() => window.merkzeug.pickTemplatesRoot())}>Ändern…</button>
-          <button onClick={() => void window.merkzeug.showTemplatesRoot()}>Anzeigen</button>
+          <button onClick={() => run(() => window.merkzeug.pickTemplatesRoot())}>{translate("Change…")}</button>
+          <button onClick={() => void window.merkzeug.showTemplatesRoot()}>{translate("Show")}</button>
         </div>
         <p className="settings-hint">
-          Jede Vorlage ist ein Unterordner. Liegt der Vorlagen-Ordner in iCloud Drive, Google
-          Drive, OneDrive oder Dropbox, werden die Vorlagen automatisch auf allen Geräten
-          synchronisiert.
+          {translate("Each template has its own subfolder. Store the templates folder in iCloud Drive, Google Drive, OneDrive or Dropbox to sync templates across devices.")}
         </p>
       </section>
 
       <section className="settings-section">
-        <h2>Vorlagen</h2>
+        <h2>{translate("Templates")}</h2>
         <div className="settings-list">
           {state.templates.length === 0 && (
             <div className="settings-empty">
-              Noch keine Vorlagen — unten eine neue Vorlage anlegen.
+              {translate("No templates yet. Create a template below.")}
             </div>
           )}
           {state.templates.map((name) => (
             <div key={name} className="settings-list-row">
               <span>{name}</span>
-              <button onClick={() => void window.merkzeug.showTemplate(name)}>Bearbeiten</button>
+              <button onClick={() => void window.merkzeug.showTemplate(name)}>{translate("Edit")}</button>
             </div>
           ))}
         </div>
         <div className="settings-new">
           <input
             type="text"
-            placeholder="Name der neuen Vorlage"
+            placeholder={translate("New template name")}
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             onKeyDown={(e) => {
@@ -93,20 +92,19 @@ export function SettingsApp(): React.JSX.Element {
             }}
           />
           <button onClick={handleCreate} disabled={!newName.trim()}>
-            Anlegen
+            {translate("Create")}
           </button>
         </div>
         <p className="settings-hint">
-          Eine neue Vorlage wird mit Beispieldateien angelegt (Kopfzeile, Fußzeile, Deckblatt,
-          Stil) und im Datei-Manager geöffnet. Logo als Bilddatei dazulegen und in{' '}
-          <code>kopfzeile.html</code> referenzieren — Details in der LIESMICH.md der Vorlage.
+          {translate("Create a template with example header, footer, cover and style files, then open it in your file manager. Add a logo image and")}{' '}
+          <code>kopfzeile.html</code> {translate("reference it there. See the template README for details.")}
         </p>
         {error && <p className="settings-error">{error}</p>}
       </section>
 
       {state.vault && (
         <section className="settings-section">
-          <h2>Vorlage für diesen Vault</h2>
+          <h2>{translate("Template for this vault")}</h2>
           <div className="settings-row">
             <span className="settings-path" title={state.vault}>
               {vaultName}
@@ -116,7 +114,7 @@ export function SettingsApp(): React.JSX.Element {
               value={state.assigned ?? ''}
               onChange={(e) => run(() => window.merkzeug.assignTemplate(e.target.value || null))}
             >
-              <option value="">Keine Vorlage</option>
+              <option value="">{translate("No template")}</option>
               {state.templates.map((name) => (
                 <option key={name} value={name}>
                   {name}
@@ -128,9 +126,7 @@ export function SettingsApp(): React.JSX.Element {
             </select>
           </div>
           <p className="settings-hint">
-            Die Zuweisung wird im Vault gespeichert (<code>.merkzeug/settings.json</code>) und
-            wandert per Git auf alle Geräte mit. Der Export „Als PDF exportieren…“ (⌘P) verwendet
-            sie automatisch.
+            {translate("The selection is stored in the vault (")}<code>.merkzeug/settings.json</code>{translate(") and travels with Git to your other devices. Export as PDF (⌘P) uses it automatically.")}
           </p>
         </section>
       )}

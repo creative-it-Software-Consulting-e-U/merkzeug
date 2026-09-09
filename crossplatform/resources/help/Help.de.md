@@ -1,5 +1,7 @@
 # Merkzeug – Hilfe
 
+Auf einem deutschen System erscheinen Oberfläche und Hilfe auf Deutsch, andernfalls auf Englisch. Die Sprache dieser Hilfe lässt sich unabhängig umschalten.
+
 Merkzeug ist ein Editor für Markdown-Notizen im Stil von Notion – diese Version
 läuft auf **macOS und Windows**. Du bearbeitest deine Notizen **WYSIWYG**
 (formatiert, ohne sichtbare Markdown-Syntax), gespeichert wird aber immer
@@ -276,7 +278,7 @@ in der Toolbar.
   `language: en`) bestimmt die Überschrift des Inhaltsverzeichnisses
   („Table of Contents“ statt „Inhaltsverzeichnis“; unterstützt: de, en, fr,
   es, it, pt, nl — andere Sprachen erhalten den englischen Titel) und die
-  Silbentrennung im PDF. Ohne Angabe bleibt es bei Deutsch.
+  Silbentrennung im PDF. Ohne Angabe wird die Sprache der Oberfläche (Deutsch oder Englisch) verwendet.
 - Das PDF wird immer hell gerendert (unabhängig vom System-Design) und enthält
   Tabellen, Bilder und Mermaid-Diagramme. Web-Links, Dateien außerhalb der
   Hierarchie und nicht verlinkte Dateien werden nicht angehängt.
@@ -387,3 +389,11 @@ Ist der Vault ein **Git-Repository**, erscheint unten in der Sidebar eine Status
 | ⌘? | Diese Hilfe |
 
 *(Windows: ⌘ = Strg, ⌥ = Alt, ⇧ = Umschalt)*
+
+## Gemeinsamer Editor und Speicherkonflikte
+
+Desktop, iOS und IntelliJ verwenden denselben Merkzeug-Editor. Frontmatter bleibt beim Bearbeiten erhalten und kann im Editor geöffnet werden. Scheitert das Speichern, bleibt die Änderung als ungespeichert markiert. Bei gleichzeitigen externen Änderungen kannst du die externe Fassung neu laden oder ausdrücklich deine eigene Version behalten.
+
+## Mac-App-Store-Testversionen
+
+Experimentelle Mac-App-Store-Versionen merken sich die Zugriffsberechtigung beim Auswählen eines Vaults oder PDF-Vorlagenordners. Wenn macOS den Zugriff entzieht oder der Ordner verschoben wird, wähle ihn erneut aus. Die Sandbox-Prüfung dieser Versionen ist noch nicht abgeschlossen.

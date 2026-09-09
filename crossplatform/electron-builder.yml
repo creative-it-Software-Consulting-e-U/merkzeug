@@ -6,7 +6,12 @@ directories:
 files:
   - out/**
   - package.json
+artifactName: Merkzeug-${version}-${os}-${arch}.${ext}
 extraResources:
+  - from: ../LICENSE
+    to: LICENSE
+  - from: resources/THIRD_PARTY_NOTICES.txt
+    to: THIRD_PARTY_NOTICES.txt
   - from: resources/help
     to: help
 mac:
@@ -19,9 +24,9 @@ mac:
       to: calendar/merkzeug-calendar
   extendInfo:
     NSCalendarsUsageDescription: >-
-      Merkzeug liest deine Kalendertermine, um daraus Meeting-Notizen zu erstellen.
+      Merkzeug reads calendar events to create meeting notes.
     NSCalendarsFullAccessUsageDescription: >-
-      Merkzeug liest deine Kalendertermine, um daraus Meeting-Notizen zu erstellen.
+      Merkzeug reads calendar events to create meeting notes.
   # Signiert automatisch mit dem "Developer ID Application"-Zertifikat
   # (Team 3BNJ4M9R56) aus dem Login-Schlüsselbund.
   hardenedRuntime: true

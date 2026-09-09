@@ -1,0 +1,120 @@
+/* ---- PDF-Export (unsichtbares Fenster, #pdf) ---- */
+
+/* Ohne festes 100%-Layout mit overflow:hidden, sonst kann der Druck nicht paginieren */
+html:has(.pdf-app),
+html:has(.pdf-app) body,
+html:has(.pdf-app) #root {
+  height: auto;
+  overflow: visible;
+  background: #fff;
+}
+
+.pdf-app {
+  background: #fff;
+  color: #1a1a1a;
+  color-scheme: light;
+}
+
+/* Deckblatt aus der Vorlage: eigene erste Seite */
+.pdf-cover {
+  display: block;
+  break-after: page;
+  page-break-after: always;
+}
+
+/* Inhaltsverzeichnis (pdf-toc: im Frontmatter): eigene Seite vor dem Inhalt */
+.pdf-toc {
+  display: block;
+  break-after: page;
+  page-break-after: always;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.pdf-toc-title {
+  margin: 0 0 18px;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.pdf-toc ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pdf-toc li {
+  margin: 5px 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* mindestens so spezifisch wie ".pdf-toc li", sonst gewinnt dessen margin-Shorthand */
+.pdf-toc li.pdf-toc-l1 {
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.pdf-toc li.pdf-toc-l2 {
+  padding-left: 18px;
+}
+
+.pdf-toc li.pdf-toc-l3 {
+  padding-left: 36px;
+}
+
+.pdf-toc a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* jedes weitere Dokument beginnt auf einer neuen Seite */
+.pdf-doc {
+  display: block;
+  break-after: page;
+  page-break-after: always;
+}
+
+.pdf-doc:last-child {
+  break-after: auto;
+}
+
+.pdf-content .milkdown {
+  background: #fff;
+}
+
+/* Seitenränder kommen vom PDF-Druck, nicht vom Editor-Inset */
+.pdf-content .milkdown .ProseMirror {
+  padding: 0 0 12px;
+}
+
+/* Editor-Bedienelemente (Codeblock-Buttons, Sprachwahl usw.) gehören nicht ins PDF */
+.pdf-app button {
+  display: none !important;
+}
+
+/* Scrollbalken (z. B. unter breiten Codeblöcken) nicht mitdrucken */
+.pdf-app ::-webkit-scrollbar {
+  display: none;
+}
+
+/* Mermaid-Diagramme: nicht über Seitengrenzen umbrechen (der ganze Codeblock
+   mitsamt Hintergrund, nicht nur das SVG). Kein Flex-Layout — Chromium malt
+   SVGs in umbrochenen Flex-Containern beim Drucken winzig
+   (die Größe kommt aus fixSvgPrintSize in der PdfApp). */
+.pdf-app .milkdown-code-block:has(.mermaid-preview) {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.pdf-app .mermaid-preview {
+  display: block;
+  text-align: center;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.pdf-app .mermaid-preview svg {
+  max-width: none;
+  height: auto;
+}
+

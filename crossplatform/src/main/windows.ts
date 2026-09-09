@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 import { BrowserWindow, shell } from 'electron'
 import { join } from 'node:path'
 import { is } from '@electron-toolkit/utils'
@@ -65,7 +66,7 @@ export function openHelpWindow(): void {
   helpWindow = new BrowserWindow({
     width: 760,
     height: 820,
-    title: 'Merkzeug-Hilfe',
+    title: translate("Merkzeug Help"),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
@@ -102,7 +103,7 @@ export function openSettingsWindow(vault: string | null): void {
     height: 660,
     minWidth: 460,
     minHeight: 400,
-    title: 'Einstellungen',
+    title: translate("Settings"),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
@@ -122,7 +123,7 @@ export function openMermaidZoom(svg: string): void {
   const zoom = new BrowserWindow({
     width: 900,
     height: 700,
-    title: 'Diagramm',
+    title: translate("Diagram"),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
@@ -135,7 +136,7 @@ export function openMermaidZoom(svg: string): void {
     zoom.loadFile(join(__dirname, '../renderer/index.html'), { hash: 'zoom' })
   }
   zoom.webContents.once('did-finish-load', () => {
-    zoom.setTitle('Diagramm')
+    zoom.setTitle(translate("Diagram"))
     zoom.webContents.send('zoom:svg', payload)
   })
 }

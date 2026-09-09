@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 /**
  * Kalender-Anbindung für „Neue Meeting-Notiz“: liest Termine aus lokal
  * konfigurierten Kalendern – ohne Cloud-APIs.
@@ -108,7 +109,7 @@ async function devHelperPath(): Promise<string> {
 async function listMac(fromMs: number, toMs: number): Promise<CalendarResult> {
   const helper = app.isPackaged ? join(helperDir(), HELPER_NAME) : await devHelperPath()
   if (!existsSync(helper)) {
-    return { ok: false, error: 'failed', message: 'Kalender-Helfer fehlt.', events: [] }
+    return { ok: false, error: 'failed', message: translate("Calendar helper is missing."), events: [] }
   }
   return parseHelperOutput(await run(helper, epochArgs(fromMs, toMs)))
 }
@@ -132,7 +133,7 @@ function powershellPath(): string {
 async function runWindowsHelper(args: string[]): Promise<CalendarResult> {
   const script = join(helperDir(), HELPER_PS1)
   if (!existsSync(script)) {
-    return { ok: false, error: 'failed', message: 'Kalender-Helfer fehlt.', events: [] }
+    return { ok: false, error: 'failed', message: translate("Calendar helper is missing."), events: [] }
   }
   const stdout = await run(powershellPath(), [
     '-NoProfile',

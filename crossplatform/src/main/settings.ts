@@ -5,6 +5,7 @@ import { join, dirname } from 'node:path'
 interface Settings {
   lastVault?: string
   recentVaults: string[]
+  folderBookmarks?: Record<string, string>
   /** Ordner mit den PDF-Vorlagen (je Vorlage ein Unterordner) */
   templatesRoot?: string
 }
@@ -26,7 +27,7 @@ export function loadSettings(): Settings {
   return cache!
 }
 
-function saveSettings(): void {
+export function saveSettings(): void {
   if (!cache) return
   const p = settingsPath()
   mkdirSync(dirname(p), { recursive: true })

@@ -1,0 +1,139 @@
+{
+  "status": "reviewed candidates, not approved for store submission",
+  "appVersion": "0.1.0",
+  "capturedOn": "2026-09-09",
+  "sourceCommit": "1e34e1985858629fa4f8fee9d2db8eba0a6989c7",
+  "workingTreeModified": true,
+  "provenance": {
+    "macos": "Electron 43.3.0 desktop development build, not signed MAS",
+    "iphone": "Xcode 27 beta / iOS 27 Simulator, iPhone 17 Pro Max, Debug",
+    "ipad": "Xcode 27 beta / iPadOS 27 Simulator, iPad Pro 13-inch (M5), Debug"
+  },
+  "limitations": [
+    "Validate fidelity to final submitted builds; recapture if the UI differs.",
+    "iPad system status text retains German simulator locale in English app captures.",
+    "Synthetic demo notes only; no personal vault content."
+  ],
+  "screenshots": [
+    {
+      "file": "macos-en-writing.png",
+      "platform": "macos",
+      "locale": "en",
+      "scene": "writing",
+      "width": 2560,
+      "height": 1600,
+      "sha256": "e865176634e8a75f245e5907bedbc73be0ee568f1a47ad17242c656c99152c43",
+      "visuallyReviewed": true
+    },
+    {
+      "file": "macos-en-diagram.png",
+      "platform": "macos",
+      "locale": "en",
+      "scene": "diagram",
+      "width": 2560,
+      "height": 1600,
+      "sha256": "5c73af65590cd79728199c9932f62c84fa4cd48fb1903f4a43d5c586468a24e4",
+      "visuallyReviewed": true
+    },
+    {
+      "file": "macos-de-writing.png",
+      "platform": "macos",
+      "locale": "de",
+      "scene": "writing",
+      "width": 2560,
+      "height": 1600,
+      "sha256": "d2ac183004dae9ff83f40439a98a0da8980607f8ed37f0ea52950559a30ecff5",
+      "visuallyReviewed": true
+    },
+    {
+      "file": "macos-de-diagram.png",
+      "platform": "macos",
+      "locale": "de",
+      "scene": "diagram",
+      "width": 2560,
+      "height": 1600,
+      "sha256": "b9f2250de0065e8feab244099b9fbe9187f24c86f0e8c5e0871598a55722b581",
+      "visuallyReviewed": true
+    },
+    {
+      "file": "iphone-en-writing.png",
+      "platform": "iphone",
+      "locale": "en",
+      "scene": "writing",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "54a0dc148a712bccea1c9dd072036fda6b8236539a3575f54dd0f54d3f25e40d",
+      "visuallyReviewed": true
+    },
+    {
+      "file": "iphone-en-diagram.png",
+      "platform": "iphone",
+      "locale": "en",
+      "scene": "diagram",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "b829558de1818217b558fdfe7b989e14a7c46fe2e6290e4aef86f8a7f4577441",
+      "visuallyReviewed": true
+    },
+    {
+      "file": "iphone-de-writing.png",
+      "platform": "iphone",
+      "locale": "de",
+      "scene": "writing",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "40ce1411e7782e97b5a042f3b8111e13168e9b363bf6f15459cd1f16c8e5141a",
+      "visuallyReviewed": true
+    },
+    {
+      "file": "iphone-de-diagram.png",
+      "platform": "iphone",
+      "locale": "de",
+      "scene": "diagram",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "7e28cb15a6b853324b9af4a6a79516efc2926c7da8420228b43077b0a5930bf6",
+      "visuallyReviewed": true
+    },
+    {
+      "file": "ipad-en-writing.png",
+      "platform": "ipad",
+      "locale": "en",
+      "scene": "writing",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "221c0f7abd5e32fbbe4c19962913cad5481bfe8753f57fea3edc0c657c7655f5",
+      "visuallyReviewed": true
+    },
+    {
+      "file": "ipad-en-diagram.png",
+      "platform": "ipad",
+      "locale": "en",
+      "scene": "diagram",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "7f3af474419893841c06ae81a9abe18ccb05d25ea9d1eb884301b08499925a03",
+      "visuallyReviewed": true
+    },
+    {
+      "file": "ipad-de-writing.png",
+      "platform": "ipad",
+      "locale": "de",
+      "scene": "writing",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "f0f175a153d869aaf089589275a5e6378f2cc343a04e4a6ec0b9f1461f3d3b5e",
+      "visuallyReviewed": true
+    },
+    {
+      "file": "ipad-de-diagram.png",
+      "platform": "ipad",
+      "locale": "de",
+      "scene": "diagram",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "dc4bcde8a0afd566b76b0f016f94e4a3f300cd4ab61baaf95eb1009c61968eef",
+      "visuallyReviewed": true
+    }
+  ]
+}

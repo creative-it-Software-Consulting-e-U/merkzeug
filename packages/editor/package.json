@@ -1,0 +1,20 @@
+{
+  "name": "@merkzeug/editor",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/Editor.tsx",
+    "./*.css": "./src/*.css",
+    "./*": "./src/*.ts"
+  },
+  "dependencies": {
+    "@merkzeug/core": "0.1.0"
+  },
+  "peerDependencies": {
+    "react": "^19.2.8",
+    "@milkdown/crepe": "^7.22.0",
+    "@milkdown/kit": "^7.22.0",
+    "mermaid": "^11.16.1"
+  }
+}

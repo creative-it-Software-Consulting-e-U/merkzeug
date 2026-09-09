@@ -1,0 +1,35 @@
+name: Checks
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: npm run check:secrets
+      - run: npm ci
+      - run: npm run check:version
+      - run: npm run check:docs
+      - run: npm test
+      - run: npm run test:release
+      - run: npm run typecheck
+      - run: npm run build:desktop
+      - run: npm run build:mobile
+      - run: npm run build -w merkzeug-intellij-web

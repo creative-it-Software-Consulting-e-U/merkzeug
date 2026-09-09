@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 import { useRef } from 'react'
 import type { FileNode } from '../vault'
 
@@ -45,7 +46,7 @@ export function FolderList({ node, onOpen, onItemMenu }: FolderListProps): React
     }
   }
 
-  if (!node) return <div className="folder-empty">Ordner nicht gefunden.</div>
+  if (!node) return <div className="folder-empty">{translate("Folder not found.")}</div>
   const children = [...(node.children ?? [])].sort((a, b) => {
     if (a.isDirectory !== b.isDirectory) return a.isDirectory ? -1 : 1
     return a.name.localeCompare(b.name, 'de')
@@ -54,7 +55,7 @@ export function FolderList({ node, onOpen, onItemMenu }: FolderListProps): React
     (c) => c.isDirectory || c.name.toLowerCase().endsWith('.md')
   )
   if (visible.length === 0) {
-    return <div className="folder-empty">Keine Notizen in diesem Ordner.</div>
+    return <div className="folder-empty">{translate("No notes in this folder.")}</div>
   }
   return (
     <ul className="folder-list">
