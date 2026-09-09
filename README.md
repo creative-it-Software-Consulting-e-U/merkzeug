@@ -1,5 +1,7 @@
 # Merkzeug
 
+[Website and guides](https://merkzeug.creative-it.com/) · [App Support](https://support.apps.creative-it.com/?app=merkzeug&lang=en)
+
 **Write Markdown visually. Keep ordinary files. Export documents as PDF.**
 
 Merkzeug is a WYSIWYG editor for Markdown notes stored in a regular folder, called a *vault*. It supports tables, images, Mermaid diagrams and YAML frontmatter. Your notes stay portable `.md` files.
