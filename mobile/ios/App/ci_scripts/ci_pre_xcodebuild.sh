@@ -1,6 +1,12 @@
 #!/bin/bash
 # Fail before archiving if the post-clone web build is missing.
 set -euo pipefail
+# Cloud's test workers receive built products, not post-clone web resources.
+# Their UI-test fixtures are already embedded in the test bundle.
+if [[ "${CI_XCODEBUILD_ACTION:-}" == test-without-building ]]; then
+  echo 'Using validated build-for-testing products on the test worker.'
+  exit 0
+fi
 SCRIPT_DIR="$(cd -- "$(dirname -- "$0")" && pwd)"
 APP_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 test -s "$APP_DIR/App/public/index.html"
