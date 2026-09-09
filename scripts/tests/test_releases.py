@@ -103,3 +103,18 @@ class ReleaseProtection(unittest.TestCase):
         protection.validate(environment,policy)
         with self.assertRaises(ValueError): protection.validate({},policy)
         with self.assertRaises(ValueError): protection.validate(environment,{'branch_policies':[{'name':'*','type':'branch'}]})
+
+class DocumentationSafety(unittest.TestCase):
+    def test_untracked_store_files_never_enter_documentation_archive(self):
+        import subprocess
+        import zipfile
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp)/'source'; (root/'store').mkdir(parents=True)
+            (root/'README.md').write_text('Reviewed documentation')
+            (root/'store/private.key').write_text('must never be archived')
+            output=Path(temp)/'out'
+            tracked=subprocess.CompletedProcess([],0,stdout='README.md\0',stderr='')
+            with patch.object(artifacts,'ROOT',root), patch.object(artifacts.subprocess,'run',return_value=tracked), patch.object(artifacts.subprocess,'check_output',side_effect=['abc123\n','']):
+                artifacts.assemble(output)
+            with zipfile.ZipFile(next(output.glob('*documentation.zip'))) as archive:
+                self.assertEqual(archive.namelist(),['README.md'])

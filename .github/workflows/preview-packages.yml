@@ -44,6 +44,8 @@ jobs:
           sudo apt-get install -y rpm libarchive-tools xvfb libnss3 libatk-bridge2.0-0 libgtk-3-0 libgbm1 libasound2t64
       - name: Build unsigned validation packages
         run: python scripts/package-desktop.py ${{ matrix.platform }} ${{ matrix.arch }}
+      - name: Inspect packaged version, CPU architecture and notices
+        run: node scripts/inspect-desktop-package.mjs ${{ matrix.platform }} ${{ matrix.arch }} release-artifacts/native-${{ matrix.platform }}-${{ matrix.arch }}
       - name: Install and exercise native candidate
         if: matrix.platform != 'win' || matrix.arch == 'x64'
         shell: bash

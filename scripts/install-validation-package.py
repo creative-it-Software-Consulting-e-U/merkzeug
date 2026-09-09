@@ -39,4 +39,5 @@ elif package.suffix=='.AppImage':
     executable=install/'squashfs-root/merkzeug'; method='AppImage extraction and execution (FUSE integration not exercised)'
 else: raise ValueError('Native RPM installation requires a separate RPM-based system')
 (output/'installation.json').write_text(json.dumps({'package':package.name,'sha256':hashlib.sha256(package.read_bytes()).hexdigest(),'method':method,'executable':str(executable)},indent=2)+'\n')
-subprocess.run(['node','scripts/native-acceptance.mjs',str(executable),str(output),a.arch],check=True)
+for locale in ('en','de'):
+    subprocess.run(['node','scripts/native-acceptance.mjs',str(executable),str(output/locale),a.arch,locale],check=True)

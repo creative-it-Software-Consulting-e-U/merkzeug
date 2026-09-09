@@ -36,6 +36,8 @@ def assemble(directory: Path, complete=False, editions=None):
                 ROOT / 'mobile/src/help/Help.en.md', ROOT / 'mobile/src/help/Help.de.md',
                 ROOT / 'crossplatform/README.md', ROOT / 'intellij/README.md', ROOT / 'mobile/README.md']
     sources += [p for p in (ROOT / 'store').rglob('*') if p.is_file()]
+    tracked = set(subprocess.run(['git','ls-files','-z'],cwd=ROOT,check=True,capture_output=True,text=True).stdout.split('\0'))
+    sources = [source for source in sources if source.relative_to(ROOT).as_posix() in tracked]
     with zipfile.ZipFile(docs, 'w', zipfile.ZIP_DEFLATED) as archive:
         for source in sorted(set(sources)):
             archive.write(source, source.relative_to(ROOT).as_posix())
@@ -48,7 +50,8 @@ def assemble(directory: Path, complete=False, editions=None):
         if actual != expected: raise ValueError(f'Release asset mismatch: missing={sorted(expected-actual)}, unexpected={sorted(actual-expected)}')
     entries = []
     for asset in assets:
-        if version not in asset.name: raise ValueError(f'Artifact has wrong version: {asset.name}')
+        known = {name.format(version=version) for names in EDITIONS.values() for name in names} | {docs.name}
+        if asset.name not in known: raise ValueError(f'Unexpected artifact or wrong version: {asset.name}')
         with asset.open('rb') as stream:
             digest = hashlib.file_digest(stream, 'sha256').hexdigest()
         entries.append({'file':asset.name,'bytes':asset.stat().st_size,'sha256':digest})
