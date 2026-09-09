@@ -16,6 +16,7 @@ export function setWindowVault(winId: number, vault: string | null): void {
 
 export function createMainWindow(vault: string | null): BrowserWindow {
   const win = new BrowserWindow({
+    enableLargerThanScreen: Boolean(process.env.MERKZEUG_SCREENSHOT && process.env.MERKZEUG_SCREENSHOT_PROFILE),
     width: 1280,
     height: 850,
     minWidth: 720,

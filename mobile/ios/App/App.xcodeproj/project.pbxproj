@@ -5,6 +5,42 @@
 	};
 	objectVersion = 60;
 	objects = {
+		AA5700000000000000000001 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScreenshotTests/ScreenshotTests.swift"; sourceTree = SOURCE_ROOT; };
+
+		AA570000000000000000000B = { isa = PBXBuildFile; fileRef = AA5700000000000000000001; };
+
+		AA5700000000000000000002 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "../../../store/automation/ScreenshotFrame.swift"; sourceTree = SOURCE_ROOT; };
+
+		AA570000000000000000000C = { isa = PBXBuildFile; fileRef = AA5700000000000000000002; };
+
+		AA5700000000000000000003 = { isa = PBXFileReference; lastKnownFileType = folder; path = "../../../store/demo"; sourceTree = SOURCE_ROOT; };
+
+		AA570000000000000000000D = { isa = PBXBuildFile; fileRef = AA5700000000000000000003; };
+
+		AA5700000000000000000004 = { isa = PBXFileReference; lastKnownFileType = text.json; path = "../../../store/automation/captions.json"; sourceTree = SOURCE_ROOT; };
+
+		AA570000000000000000000E = { isa = PBXBuildFile; fileRef = AA5700000000000000000004; };
+
+		AA5700000000000000000014 = { isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = ScreenshotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+
+		AA5700000000000000000015 = { isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (AA570000000000000000000B, AA570000000000000000000C,); runOnlyForDeploymentPostprocessing = 0; };
+
+		AA5700000000000000000016 = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (AA570000000000000000000D, AA570000000000000000000E,); runOnlyForDeploymentPostprocessing = 0; };
+
+		AA5700000000000000000017 = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+
+		AA5700000000000000000018 = { isa = PBXContainerItemProxy; containerPortal = 504EC2FC1FED79650016851F; proxyType = 1; remoteGlobalIDString = 504EC3031FED79650016851F; remoteInfo = App; };
+
+		AA5700000000000000000019 = { isa = PBXTargetDependency; target = 504EC3031FED79650016851F; targetProxy = AA5700000000000000000018; };
+
+		AA570000000000000000001A = { isa = XCBuildConfiguration; buildSettings = { CODE_SIGN_STYLE = Automatic; DEVELOPMENT_TEAM = 3BNJ4M9R56; GENERATE_INFOPLIST_FILE = YES; IPHONEOS_DEPLOYMENT_TARGET = 15.0; PRODUCT_BUNDLE_IDENTIFIER = com.creative-it.merkzeug.screenshots; PRODUCT_NAME = "$(TARGET_NAME)"; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2"; TEST_TARGET_NAME = App; }; name = Debug; };
+
+		AA570000000000000000001B = { isa = XCBuildConfiguration; buildSettings = { CODE_SIGN_STYLE = Automatic; DEVELOPMENT_TEAM = 3BNJ4M9R56; GENERATE_INFOPLIST_FILE = YES; IPHONEOS_DEPLOYMENT_TARGET = 15.0; PRODUCT_BUNDLE_IDENTIFIER = com.creative-it.merkzeug.screenshots; PRODUCT_NAME = "$(TARGET_NAME)"; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2"; TEST_TARGET_NAME = App; }; name = Release; };
+
+		AA570000000000000000001C = { isa = XCConfigurationList; buildConfigurations = (AA570000000000000000001A, AA570000000000000000001B,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Debug; };
+
+		AA570000000000000000001D = { isa = PBXNativeTarget; buildConfigurationList = AA570000000000000000001C; buildPhases = (AA5700000000000000000015, AA5700000000000000000017, AA5700000000000000000016,); buildRules = (); dependencies = (AA5700000000000000000019,); name = ScreenshotTests; productName = ScreenshotTests; productReference = AA5700000000000000000014; productType = "com.apple.product-type.bundle.ui-testing"; };
+
 
 /* Begin PBXBuildFile section */
         FA1CE0000000000000000006 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = FA1CE0000000000000000005 /* PrivacyInfo.xcprivacy */; };
@@ -63,6 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				504EC3041FED79650016851F /* App.app */,
+AA5700000000000000000014,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -141,6 +178,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+AA570000000000000000001D,
 				504EC3031FED79650016851F /* App */,
 			);
 		};

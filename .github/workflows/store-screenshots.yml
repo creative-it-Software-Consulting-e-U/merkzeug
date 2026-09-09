@@ -1,0 +1,37 @@
+name: Store screenshot candidates
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/store-screenshots.yml'
+      - 'scripts/*screenshot*'
+      - 'scripts/capture-mac-demo.py'
+      - 'store/automation/**'
+      - 'store/demo/**'
+permissions:
+  contents: read
+jobs:
+  macos:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build:desktop
+      - name: Capture isolated synthetic notebook
+        run: python3 scripts/capture-mac-demo.py "$RUNNER_TEMP/raw-macos"
+      - name: Compose localized store artwork and provenance
+        run: python3 scripts/frame-store-screenshots.py "$RUNNER_TEMP/raw-macos" "$RUNNER_TEMP/store-macos" --edition macos
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: macos-screenshot-candidates
+          path: |
+            ${{ runner.temp }}/raw-macos
+            ${{ runner.temp }}/store-macos
+          if-no-files-found: error
+          retention-days: 30

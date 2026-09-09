@@ -38,6 +38,19 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
         if ProcessInfo.processInfo.environment["MERKZEUG_DEMO_MODE"] == "1",
            let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             let demo = documents.appendingPathComponent("Demo Vault", isDirectory: true)
+            if let json = ProcessInfo.processInfo.environment["MERKZEUG_DEMO_FILES"],
+               let data = json.data(using: .utf8),
+               let files = try? JSONDecoder().decode([String: String].self, from: data) {
+                do {
+                    if FileManager.default.fileExists(atPath: demo.path) { try FileManager.default.removeItem(at: demo) }
+                    for (path, contents) in files {
+                        guard !path.hasPrefix("/"), !path.split(separator: "/").contains(".."), path.hasSuffix(".md") else { throw CocoaError(.fileReadInvalidFileName) }
+                        let target = demo.appendingPathComponent(path)
+                        try FileManager.default.createDirectory(at: target.deletingLastPathComponent(), withIntermediateDirectories: true)
+                        try contents.write(to: target, atomically: true, encoding: .utf8)
+                    }
+                } catch { call.reject("Could not prepare screenshot fixtures"); return }
+            }
             if FileManager.default.fileExists(atPath: demo.path) {
                 vaultURL = demo
                 var result: [String: Any] = ["name": "Demo Vault"]

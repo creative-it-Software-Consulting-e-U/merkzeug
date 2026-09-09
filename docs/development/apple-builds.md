@@ -23,7 +23,7 @@ Open `mobile/ios/App/App.xcodeproj` and select the shared **Merkzeug** scheme. I
 5. `ci_pre_xcodebuild.sh` verifies the generated resources and uses `CI_BUILD_NUMBER` for the archive's build number. Set Xcode Cloud's next build number above every number already uploaded for this app; marketing versions remain controlled by `VERSION`.
 6. Use automatic/cloud-managed signing. There is no certificate export step in these scripts.
 
-The current scheme has no native XCTest target: adding a Test action alone does not produce UI-test coverage. Simulator screenshot scripts are available separately in [store preparation](../../store/README.md).
+The native `ScreenshotTests` UI-test target and shared `Merkzeug-Screenshots` scheme produce raw and captioned DE/EN images as XCTest attachments. See the [reproducible screenshot pipeline](../../store/automation/README.md) for local runs, Cloud Test actions and result export. Archive signing remains separate.
 
 Local archive check (no distribution/signature claim):
 

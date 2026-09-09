@@ -36,3 +36,7 @@ The first set has two scenes per platform/language: formatted writing with links
 Confirm the supported device families, current Apple screenshot dimensions, UI language, text readability, privacy, and fidelity to the submitted build. Choose final ordering and optionally add truthful localized captions. Supply real support/privacy URLs in App Store Connect. Upload manually for the first release; automation can follow once the listing is accepted. No upload credentials or fake service URLs are included here.
 
 [Apple screenshot specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/)
+
+## Automated localized screenshot artwork
+
+See [the screenshot pipeline](automation/README.md) for real iPhone/iPad UI tests, shared native caption rendering, macOS capture, CI artifacts and Xcode Cloud result export. These are review candidates, not an automatic Store submission.

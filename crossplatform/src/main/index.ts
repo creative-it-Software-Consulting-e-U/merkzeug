@@ -1,6 +1,6 @@
 import { rememberFolderAccess, restoreFolderAccess } from './sandboxAccess'
 import { t as translate, setLocale, getLocale } from '@merkzeug/core/i18n'
-import { app, BrowserWindow, dialog, ipcMain, net, protocol, shell } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, nativeTheme, net, protocol, shell } from 'electron'
 import { pathToFileURL } from 'node:url'
 import { existsSync, mkdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -252,6 +252,7 @@ function registerIpc(): void {
 if (process.env.MERKZEUG_SCREENSHOT && process.env.MERKZEUG_SCREENSHOT_PROFILE) {
   mkdirSync(process.env.MERKZEUG_SCREENSHOT_PROFILE, { recursive: true })
   app.setPath('userData', process.env.MERKZEUG_SCREENSHOT_PROFILE)
+  nativeTheme.themeSource = 'light'
 }
 
 app.whenReady().then(() => {
