@@ -14,7 +14,7 @@ The assembly job requires all expected filenames for the source version, bundles
 
 - macOS: read-only DMG mount, copy the app into an isolated directory, unmount, launch the copied executable.
 - Windows x64: actual silent NSIS installation into an isolated directory on the disposable runner.
-- Linux x64: actual DEB installation with dpkg on the disposable Ubuntu runner.
+- Linux x64: actual DEB installation with APT dependency resolution on the disposable Ubuntu runner.
 - AppImage: real FUSE launcher execution on the Ubuntu runner, with no extraction fallback. Desktop/menu integration still requires manual review.
 - RPM: native installation needs an RPM-based machine. Building the RPM does **not** prove installation there.
 

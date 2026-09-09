@@ -29,10 +29,10 @@ elif package.suffix=='.exe':
     subprocess.run([str(package),'/S',f'/D={install}'],check=True)
     executable=install/'Merkzeug.exe'; method='NSIS silent installation into isolated directory'
 elif package.suffix=='.deb':
-    subprocess.run(['sudo','dpkg','-i',str(package)],check=True)
+    subprocess.run(['sudo','apt-get','install','-y',str(package)],check=True)
     files=subprocess.check_output(['dpkg','-L','merkzeug'],text=True).splitlines()
     executable=next(Path(f) for f in files if f.endswith('/merkzeug') and Path(f).is_file())
-    method='Native dpkg installation on disposable Ubuntu runner'
+    method='Native APT/DEB installation with dependency resolution on disposable Ubuntu runner'
 elif package.suffix=='.AppImage':
     package.chmod(package.stat().st_mode|0o111)
     executable=package; method='Native AppImage execution through its FUSE launcher (no extraction fallback)'
