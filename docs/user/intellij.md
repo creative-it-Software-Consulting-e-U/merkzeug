@@ -36,3 +36,7 @@ The PDF uses the current IntelliJ document content, including edits already acce
 - This is a local preview distribution; JetBrains Marketplace publication is not configured.
 
 For failures, see [troubleshooting](troubleshooting.md). Contributors can use the [plugin development guide](../../intellij/README.md).
+
+## Contact support
+
+Choose **Help → Merkzeug: Contact Support…**. The browser opens the support form with Merkzeug, the system language (German or English), IntelliJ and the plugin version selected. You can omit the app details before submitting. Note contents and repository paths are not included.

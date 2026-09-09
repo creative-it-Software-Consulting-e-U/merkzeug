@@ -1,5 +1,6 @@
+import { supportUrl } from '@merkzeug/core/support'
 import { t as translate } from '@merkzeug/core/i18n'
-import { app, BrowserWindow, Menu, type MenuItemConstructorOptions } from 'electron'
+import { app, shell, BrowserWindow, Menu, type MenuItemConstructorOptions } from 'electron'
 import type { MenuAction } from '../shared/types'
 import { getRecentVaults } from './settings'
 
@@ -153,6 +154,10 @@ export function buildMenu(hooks: MenuHooks): void {
           label: translate("Merkzeug Help"),
           accelerator: 'Cmd+?',
           click: () => hooks.openHelp()
+        },
+        {
+          label: translate("Contact Support…"),
+          click: () => { void shell.openExternal(supportUrl(app.getLocale(), `desktop-${process.platform}`, app.getVersion())) }
         }
       ]
     }

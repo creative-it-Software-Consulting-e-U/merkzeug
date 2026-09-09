@@ -74,4 +74,6 @@ Desktop, iOS and IntelliJ use the same Merkzeug editor. Frontmatter is preserved
 
 ## Support and feedback
 
+Open **Help** and choose **Contact Support…** to open the support form with Merkzeug, your language, edition and app version selected. You can deselect the app details before sending. No note contents or file paths are attached automatically.
+
 [Contact Merkzeug App Support](https://support.apps.creative-it.com/?app=merkzeug&lang=en). Include your app version, operating system and steps to reproduce the issue. Use fictional examples and avoid confidential notes.
