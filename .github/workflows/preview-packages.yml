@@ -30,7 +30,11 @@ jobs:
           python-version: '3.12'
       - run: npm ci
       - if: matrix.platform == 'linux'
-        run: sudo apt-get update && sudo apt-get install -y rpm libarchive-tools
+        run: |
+          # Chrome is not used for packaging; avoid its unrelated apt index.
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.list /etc/apt/sources.list.d/google-chrome.sources
+          sudo apt-get update
+          sudo apt-get install -y rpm libarchive-tools
       - name: Build unsigned validation packages
         run: python scripts/package-desktop.py ${{ matrix.platform }} ${{ matrix.arch }}
       - uses: actions/upload-artifact@v4
