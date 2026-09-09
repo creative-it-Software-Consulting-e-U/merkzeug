@@ -397,3 +397,8 @@ Desktop, iOS und IntelliJ verwenden denselben Merkzeug-Editor. Frontmatter bleib
 ## Mac-App-Store-Testversionen
 
 Experimentelle Mac-App-Store-Versionen merken sich die Zugriffsberechtigung beim Auswählen eines Vaults oder PDF-Vorlagenordners. Wenn macOS den Zugriff entzieht oder der Ordner verschoben wird, wähle ihn erneut aus. Die Sandbox-Prüfung dieser Versionen ist noch nicht abgeschlossen.
+
+
+## Support und Rückmeldungen
+
+[Merkzeug App Support kontaktieren](https://support.apps.creative-it.com/?app=merkzeug&lang=de). Nenne App-Version, Betriebssystem und Schritte zum Nachstellen des Problems. Verwende fiktive Beispiele und sende keine vertraulichen Notizen.

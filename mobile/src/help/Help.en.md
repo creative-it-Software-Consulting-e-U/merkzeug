@@ -70,3 +70,8 @@ accidental changes. The pencil **✎** switches to edit mode:
 ## Shared editor and save conflicts
 
 Desktop, iOS and IntelliJ use the same Merkzeug editor. Frontmatter is preserved and can be opened in the editor. Failed saves leave changes marked as unsaved. When external changes conflict with your edits, reload the external version or explicitly keep your own version.
+
+
+## Support and feedback
+
+[Contact Merkzeug App Support](https://support.apps.creative-it.com/?app=merkzeug&lang=en). Include your app version, operating system and steps to reproduce the issue. Use fictional examples and avoid confidential notes.
