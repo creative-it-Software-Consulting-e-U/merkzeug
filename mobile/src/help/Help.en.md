@@ -1,5 +1,7 @@
 # Merkzeug for iOS & iPadOS
 
+The interface and this help use German on a German system and English otherwise. You can switch the help language independently.
+
 Merkzeug displays and edits a **vault** – a folder full of Markdown
 notes. On iPhone and iPad the app deliberately does not do Git itself:
 cloning, committing, pushing and pulling is handled by the
@@ -64,3 +66,7 @@ accidental changes. The pencil **✎** switches to edit mode:
 - No tabs and no split views – one note at a time.
 - No Git inside the app (see above – this is intentional).
 - Very large images can slow down rendering.
+
+## Shared editor and save conflicts
+
+Desktop, iOS and IntelliJ use the same Merkzeug editor. Frontmatter is preserved and can be opened in the editor. Failed saves leave changes marked as unsaved. When external changes conflict with your edits, reload the external version or explicitly keep your own version.

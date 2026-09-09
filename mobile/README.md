@@ -1,74 +1,34 @@
-# Merkzeug Mobile – iOS/iPadOS
+# Merkzeug for iOS and iPadOS
 
-Port von Merkzeug auf iOS/iPadOS: **Capacitor**-Schale um den
-gleichen Milkdown/Crepe-Editor wie in `crossplatform/`. Git übernimmt die App
-bewusst **nicht** selbst — der Vault-Ordner kommt von
-[Working Copy](https://apps.apple.com/app/working-copy-git-client/id896694807)
-(oder ist ein beliebiger Ordner in der Dateien-App); committen/pushen/pullen
-passiert dort.
+A Capacitor shell around the shared Milkdown editor. Files come from a folder selected in the Files app, including folders provided by Working Copy. Git operations remain in the external Git app.
 
-## Funktionen
+See the [iOS user guide](../docs/user/ios.md) and [bundled reference manual](src/help/Help.en.md). PDF export is not implemented on iOS. There is no public TestFlight distribution yet.
 
-- Ordner-Navigation mit Zurück/Vorwärts-Stack, Kanten-Wischgesten mit
-  Mitzieh-Animation, Link-Navigation zwischen Notizen.
-- Standardmäßig **Lesemodus**; ✎ schaltet Bearbeitung ein. Autosave mit
-  **Stale-Check**: Wurde eine Notiz extern geändert (z. B. Pull in
-  Working Copy), wird nicht blind überschrieben, sondern nachgefragt.
-- Notizen und Ordner **anlegen (＋), umbenennen und löschen** (Eintrag
-  gedrückt halten).
-- **Suche** (🔍) über Dateinamen und Inhalte aller Notizen.
-- **In-App-Hilfe** (?, Deutsch/Englisch je nach Systemsprache).
-- Mermaid-Vorschau, Bilder als data-URIs, Einfügen legt sie unter
-  `assets/` neben der Notiz ab.
-- Nach einem Pull in Working Copy laden Ordnerliste und geöffnete
-  (unveränderte) Notizen beim App-Wechsel automatisch neu; ↻ erzwingt es.
+## Develop
 
-## Architektur
+From the repository root:
 
-- `src/` – React-App (Vite).
-- `src/vault.ts` – `VaultBackend`-Interface. Nativ: Capacitor-Plugin `Vault`;
-  im Browser (`npm run dev`): In-Memory-Demo-Vault.
-- `src/help/Help.de.md` / `Help.en.md` – die In-App-Hilfe (beide Sprachen
-  synchron halten, siehe `../CLAUDE.md`).
-- `ios/App/App/VaultPlugin.swift` – natives Plugin: Ordner-Picker
-  (`UIDocumentPickerViewController`), security-scoped Bookmark (überlebt
-  App-Neustarts), Dateibaum-Scan, Lesen/Schreiben/Umbenennen/Löschen mit
-  `NSFileCoordinator` (Pflicht bei File-Provider-Ordnern wie denen von
-  Working Copy), mtime-basierter Konflikt-Check, Volltextsuche.
-- Pfade sind im JS-Teil immer **Vault-relativ** (`/Projekte/Ideen.md`).
-
-## Entwicklung
-
-```bash
-npm install
-npm run dev      # Browser-Dev-Modus mit Demo-Vault (ohne native Funktionen)
-npm run build    # Type-Check + Vite-Build nach dist/
-npm run sync     # Build + Web-Assets/Plugins nach ios/ synchronisieren
-npm run open     # Xcode öffnen
+```sh
+npm ci
+npm run dev -w merkzeug-mobile
+npm run build:mobile
+npm run sync -w merkzeug-mobile
+npm run open -w merkzeug-mobile
 ```
 
-Das iOS-Projekt nutzt **Swift Package Manager** (kein CocoaPods nötig).
+The browser development mode uses an in-memory demo vault and cannot validate native file-provider access. The iOS project uses Swift Package Manager rather than CocoaPods.
 
-## Auf dem Gerät ausprobieren
+In Xcode, select your own development team under Signing & Capabilities, connect a device and run. The checked-in project may contain the maintainer's team identifier; contributors should use their own signing identity. In the simulator, select a local Files folder; Working Copy integration needs a device/provider setup.
 
-1. `npm run sync && npm run open`
-2. In Xcode: Team (3BNJ4M9R56) unter *Signing & Capabilities* wählen,
-   Gerät anschließen, Run. (Fürs private Testen reicht ein Development-Profil,
-   kein App-Store-Review.)
-3. Auf dem Gerät: In **Working Copy** das Vault-Repo klonen.
-4. In **Merkzeug** „Vault-Ordner öffnen“ → im Picker *Durchsuchen → Working
-   Copy → \<Repo\>* wählen. Die Freigabe merkt sich die App dauerhaft.
-5. Nach einem Pull in Working Copy genügt ein Wechsel zurück zu Merkzeug
-   (oder ↻), um den neuen Stand zu sehen.
+## Layout and behavior
 
-Im Simulator gibt es kein Working Copy — dort stattdessen einen Ordner unter
-„Auf meinem iPhone“ anlegen und den auswählen.
+- `src`: React shell and mobile navigation.
+- `src/vault.ts`: vault interface, native Capacitor implementation and browser demo.
+- `ios/App/App/VaultPlugin.swift`: system folder picker, persistent security-scoped bookmark, coordinated file access, modification-time conflict checks and search.
+- `src/help`: English and German user help, selected from system language with a manual selector.
 
-## Bewusste Grenzen
+JavaScript paths are vault-relative, such as `/projects/plan.md`. Native file access uses `NSFileCoordinator` for file-provider compatibility. Files refresh on app activation or manual refresh; there is no continuous filesystem watcher. Image data is loaded as data URIs, which can be expensive for large images.
 
-- Kein Git in der App (Commit/Push/Pull → Working Copy).
-- Kein Datei-Watcher: neu eingelesen wird beim App-Wechsel oder per ↻.
-- Bilder aus dem Vault werden als data-URIs geladen (gut für Notizen,
-  ungeeignet für sehr große Bilder).
-- Keine Tabs/Panes wie am Desktop — eine Notiz zur Zeit, Navigation über
-  den Zurück/Vorwärts-Stack.
+Before distributing a build, test on a device: folder permissions after restart, creation/rename/deletion, external changes after a pull, saving on navigation and backgrounding, and English/German system languages. The shared editor migration has passed web builds; device testing is still required.
+
+For version/build numbers and TestFlight, see [release management](../docs/development/releases.md).

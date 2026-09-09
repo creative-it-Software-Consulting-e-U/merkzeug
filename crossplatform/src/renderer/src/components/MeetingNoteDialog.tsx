@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { CalendarEvent, CalendarResult } from '../../../shared/types'
 import { localDate, meetingTimeLabel } from '../util/meetingNote'
@@ -27,9 +28,9 @@ const dayFormat = new Intl.DateTimeFormat('de-DE', {
 
 function dayLabel(start: string, now: number): string {
   const date = localDate(new Date(start))
-  if (date === localDate(new Date(now))) return 'Heute'
-  if (date === localDate(new Date(now + DAY))) return 'Morgen'
-  if (date === localDate(new Date(now - DAY))) return 'Gestern'
+  if (date === localDate(new Date(now))) return translate("Today")
+  if (date === localDate(new Date(now + DAY))) return translate("Tomorrow")
+  if (date === localDate(new Date(now - DAY))) return translate("Yesterday")
   return dayFormat.format(new Date(start))
 }
 
@@ -39,7 +40,7 @@ function metaLabel(ev: CalendarEvent): string {
   if (organizer) parts.push(organizer)
   const count = ev.attendeeCount ?? ev.attendees.length
   if (count > 0) {
-    parts.push(count === 1 ? '1 Teilnehmer' : `${count} Teilnehmer`)
+    parts.push(count === 1 ? translate("1 attendee") : `${count} ${translate("attendees")}`)
   }
   if (ev.location) parts.push(ev.location)
   else if (ev.calendar) parts.push(ev.calendar)
@@ -185,7 +186,7 @@ export function MeetingNoteDialog({ onPick, onCancel }: MeetingNoteDialogProps):
         <span className="meeting-time">{meetingTimeLabel(ev)}</span>
         <span className="meeting-main">
           <span className="meeting-title">
-            {isRunning && <span className="meeting-now">läuft</span>}
+            {isRunning && <span className="meeting-now">{translate("in progress")}</span>}
             {ev.title}
           </span>
           {metaLabel(ev) && <span className="meeting-meta">{metaLabel(ev)}</span>}
@@ -197,27 +198,27 @@ export function MeetingNoteDialog({ onPick, onCancel }: MeetingNoteDialogProps):
   let status: string | null = null
   if (error === 'denied') {
     status =
-      'Merkzeug darf nicht auf den Kalender zugreifen. Erlaube den Zugriff unter ' +
-      'Systemeinstellungen → Datenschutz & Sicherheit → Kalender und versuche es erneut.'
+      translate("Merkzeug cannot access your calendar. Grant access in ") +
+      translate("System Settings → Privacy & Security → Calendars, then try again.")
   } else if (error === 'unsupported') {
     status =
       navigator.platform.startsWith('Win')
-        ? 'Kein klassisches Outlook gefunden. Die Kalender-Anbindung unter Windows ' +
-          'nutzt das Outlook-Objektmodell; das „neue Outlook“ bietet keines. ' +
-          'Ein ICS-Import folgt.'
-        : 'Die Kalender-Anbindung ist derzeit nur unter macOS und Windows (klassisches ' +
-          'Outlook) verfügbar. Ein ICS-Import folgt.'
+        ? translate("Classic Outlook was not found. Calendar integration on Windows ") +
+          translate("uses the Outlook object model; “new Outlook” does not provide it. ") +
+          translate("ICS import is not available yet.")
+        : translate("Calendar integration is currently available only on macOS and Windows (classic ") +
+          translate("Outlook). ICS import is not available yet.")
   } else if (error === 'failed') {
-    status = `Kalender konnte nicht gelesen werden.${errorMessage ? ` (${errorMessage})` : ''}`
+    status = `${translate("Could not read the calendar.")}${errorMessage ? ` (${errorMessage})` : ''}`
   } else if (loading && list.length === 0) {
     status = navigator.platform.startsWith('Win')
-      ? 'Kalender wird gelesen … Outlook wird bei Bedarf im Hintergrund gestartet.'
-      : 'Kalender wird gelesen … Beim ersten Mal fragt das System nach der Berechtigung.'
+      ? translate("Reading calendars … Outlook will start in the background if needed.")
+      : translate("Reading calendars … The system will request permission on first use.")
   } else if (list.length === 0) {
     status =
       searchOpen && query.trim()
-        ? 'Keine Termine gefunden.'
-        : `Keine Termine in den nächsten ${UPCOMING_DAYS} Tagen.`
+        ? translate("No events found.")
+        : `${translate("No events in the next")} ${UPCOMING_DAYS} Tagen.`
   }
 
   return (
@@ -227,16 +228,16 @@ export function MeetingNoteDialog({ onPick, onCancel }: MeetingNoteDialogProps):
         if (el && !el.contains(document.activeElement)) el.focus()
       }}>
         <div className="meeting-head">
-          <h3>Neue Meeting-Notiz</h3>
+          <h3>{translate("New meeting note")}</h3>
           <button
             className={`meeting-tool${searchOpen ? ' on' : ''}`}
-            data-tip="Termine durchsuchen"
+            data-tip={translate("Search events")}
             onClick={() => {
               setSearchOpen((prev) => !prev)
               setQuery('')
             }}
           >
-            Suchen
+            {translate("Search")}
           </button>
         </div>
         {searchOpen && (
@@ -244,7 +245,7 @@ export function MeetingNoteDialog({ onPick, onCancel }: MeetingNoteDialogProps):
             ref={searchRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder={`Titel, Person oder Ort – ±${SEARCH_DAYS} Tage`}
+            placeholder={`${translate("Title, person or location — ±")}${SEARCH_DAYS} ${translate("days")}`}
           />
         )}
         <label className="meeting-allday">
@@ -253,20 +254,20 @@ export function MeetingNoteDialog({ onPick, onCancel }: MeetingNoteDialogProps):
             checked={showAllDay}
             onChange={(e) => setShowAllDay(e.target.checked)}
           />
-          Ganztägige Termine anzeigen
+          {translate("Show all-day events")}
         </label>
         <div className="meeting-list" ref={listRef}>
           {rows}
           {status && <div className="meeting-status">{status}</div>}
         </div>
         <p className="dialog-hint">
-          Ein Klick übernimmt Titel, Zeit, Organisator und Teilnehmer in eine neue Notiz.
+          {translate("Select an event to create a note with its title, time, organizer and attendees.")}
         </p>
         <div className="dialog-buttons meeting-foot">
           <button className="meeting-past-toggle" onClick={() => setShowPast((prev) => !prev)}>
-            {showPast ? 'Frühere ausblenden' : 'Frühere anzeigen'}
+            {showPast ? translate("Hide earlier events") : translate("Show earlier events")}
           </button>
-          <button onClick={onCancel}>Abbrechen</button>
+          <button onClick={onCancel}>{translate("Cancel")}</button>
         </div>
       </div>
     </div>

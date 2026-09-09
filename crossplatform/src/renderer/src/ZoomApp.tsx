@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 import { useEffect, useRef, useState } from 'react'
 
 /** Zoom-Fenster für Mermaid-Diagramme: +/−/0-Tasten, Pinch/Scroll, Esc schließt. */
@@ -51,7 +52,7 @@ export function ZoomApp(): React.JSX.Element {
       onMouseUp={() => (dragging.current = null)}
       onMouseLeave={() => (dragging.current = null)}
     >
-      <div className="zoom-hint">Zoomen: Pinch, ⌘+Scroll oder +/− · Zurücksetzen: 0 · Schließen: Esc</div>
+      <div className="zoom-hint">{translate("Zoom: pinch, ⌘+scroll or +/− · Reset: 0 · Close: Esc")}</div>
       {svg && (
         <div
           className="zoom-canvas"

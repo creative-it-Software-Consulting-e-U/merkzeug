@@ -1,5 +1,7 @@
 # Merkzeug für iOS & iPadOS
 
+Auf einem deutschen System erscheinen Oberfläche und Hilfe auf Deutsch, andernfalls auf Englisch. Die Sprache dieser Hilfe lässt sich unabhängig umschalten.
+
 Merkzeug zeigt und bearbeitet einen **Vault** – einen Ordner voller
 Markdown-Notizen. Auf dem iPhone und iPad übernimmt die App bewusst kein
 Git: Das Klonen, Committen, Pushen und Pullen erledigt die App
@@ -68,3 +70,7 @@ Bearbeitungsmodus:
 - Keine Tabs und keine geteilten Ansichten – eine Notiz zur Zeit.
 - Kein Git in der App (siehe oben – das ist Absicht).
 - Sehr große Bilder können die Anzeige verlangsamen.
+
+## Gemeinsamer Editor und Speicherkonflikte
+
+Desktop, iOS und IntelliJ verwenden denselben Merkzeug-Editor. Frontmatter bleibt beim Bearbeiten erhalten und kann im Editor geöffnet werden. Scheitert das Speichern, bleibt die Änderung als ungespeichert markiert. Bei gleichzeitigen externen Änderungen kannst du die externe Fassung neu laden oder ausdrücklich deine eigene Version behalten.

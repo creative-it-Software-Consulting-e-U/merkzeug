@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 import { useState } from 'react'
 import type { GitStatus } from '../../../shared/types'
 
@@ -26,7 +27,7 @@ export function GitBar({
 
   const changeCount = status.changes.length
   const summaryParts: string[] = []
-  if (changeCount > 0) summaryParts.push(`${changeCount} geändert`)
+  if (changeCount > 0) summaryParts.push(`${changeCount} ${translate("changed")}`)
   if (status.ahead > 0) summaryParts.push(`${status.ahead}↑`)
   if (status.behind > 0) summaryParts.push(`${status.behind}↓`)
 
@@ -35,7 +36,7 @@ export function GitBar({
       <button
         className="git-summary"
         onClick={() => setExpanded((v) => !v)}
-        title={error ? `Letzte Git-Aktion fehlgeschlagen: ${error}` : 'Git-Status anzeigen'}
+        title={error ? `${translate("Last Git operation failed:")} ${error}` : translate("Show Git status")}
       >
         <span className="git-branch">⎇ {status.branch}</span>
         <span className={`git-changes${changeCount > 0 ? ' has-changes' : ''}`}>
@@ -47,7 +48,7 @@ export function GitBar({
         <div className="git-detail">
           {error && (
             <div className="git-error" title={error}>
-              ⚠ Letzte Git-Aktion fehlgeschlagen: {error}
+              {translate("⚠ Last Git operation failed:")} {error}
             </div>
           )}
           {changeCount > 0 && (
@@ -57,7 +58,7 @@ export function GitBar({
                   <code>{c.code.trim() || '·'}</code> {c.path}
                 </li>
               ))}
-              {changeCount > 12 && <li>… und {changeCount - 12} weitere</li>}
+              {changeCount > 12 && <li>{translate("… and")} {changeCount - 12} weitere</li>}
             </ul>
           )}
           <input
@@ -76,7 +77,7 @@ export function GitBar({
             <button
               disabled={busy || (changeCount === 0 && status.ahead === 0) || !message.trim() && changeCount > 0}
               onClick={() => {
-                onCommitPush(message.trim() || 'Änderungen')
+                onCommitPush(message.trim() || translate("Changes"))
                 setMessage('')
               }}
             >
@@ -84,7 +85,7 @@ export function GitBar({
             </button>
             <button
               disabled={busy || !status.hasRemote || status.ahead === 0}
-              title="Bereits committete, aber noch nicht gepushte Commits zum Server übertragen"
+              title={translate("Push local commits to the remote")}
               onClick={onPush}
             >
               Push

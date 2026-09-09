@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 import { shell } from 'electron'
 import {
   readFileSync,
@@ -83,7 +84,7 @@ function uniquePath(dir: string, base: string, ext: string): string {
 }
 
 export function createNote(dir: string): string {
-  const path = uniquePath(dir, 'Neue Notiz', '.md')
+  const path = uniquePath(dir, translate("New note"), '.md')
   writeFileSync(path, '', 'utf8')
   return path
 }
@@ -93,14 +94,14 @@ export function createNote(dir: string): string {
  * Bei Namenskollision wird " 2", " 3", … angehängt. Liefert den Pfad.
  */
 export function createNoteFrom(dir: string, base: string, content: string): string {
-  const safeBase = base.replace(/[/\\:]/g, '-').trim() || 'Neue Notiz'
+  const safeBase = base.replace(/[/\\:]/g, '-').trim() || translate("New note")
   const path = uniquePath(dir, safeBase, '.md')
   writeFileSync(path, content, 'utf8')
   return path
 }
 
 export function createFolder(dir: string): string {
-  const path = uniquePath(dir, 'Neuer Ordner', '')
+  const path = uniquePath(dir, translate("New folder"), '')
   mkdirSync(path)
   return path
 }
@@ -145,7 +146,7 @@ export function renamePath(path: string, newName: string): string {
   const stat = statSync(path)
   if (stat.isDirectory() || extname(path) !== '.md') {
     const target = join(dir, newName)
-    if (existsSync(target)) throw new Error(`Es existiert bereits „${newName}“.`)
+    if (existsSync(target)) throw new Error(`${translate("Already exists: “")}${newName}“.`)
     renameSync(path, target)
     return target
   }
@@ -153,7 +154,7 @@ export function renamePath(path: string, newName: string): string {
   const newBase = newName.endsWith('.md') ? basename(newName, '.md') : newName
   const target = join(dir, `${newBase}.md`)
   if (target === path) return path
-  if (existsSync(target)) throw new Error(`Es existiert bereits „${newBase}.md“.`)
+  if (existsSync(target)) throw new Error(`${translate("Already exists: “")}${newBase}.md“.`)
   renameSync(path, target)
   const oldAssets = join(dir, `${oldBase}.assets`)
   if (existsSync(oldAssets)) {
@@ -171,10 +172,10 @@ export function movePath(src: string, destDir: string): string {
   const name = basename(src)
   const target = join(destDir, name)
   if (resolve(src) === resolve(target)) return src
-  if (existsSync(target)) throw new Error(`Im Zielordner existiert bereits „${name}“.`)
+  if (existsSync(target)) throw new Error(`${translate("The destination already contains “")}${name}“.`)
   const srcStat = statSync(src)
   if (srcStat.isDirectory() && (resolve(destDir) + sep).startsWith(resolve(src) + sep)) {
-    throw new Error('Ein Ordner kann nicht in sich selbst verschoben werden.')
+    throw new Error(translate("A folder cannot be moved into itself."))
   }
   renameSync(src, target)
   if (extname(src) === '.md') {

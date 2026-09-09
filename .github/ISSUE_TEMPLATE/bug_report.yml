@@ -1,0 +1,22 @@
+name: Bug report
+description: Report a reproducible problem in Merkzeug.
+body:
+  - type: textarea
+    id: environment
+    attributes:
+      label: Version and environment
+      description: Merkzeug version/edition, OS and CPU; IntelliJ build or iOS device when relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps, expected result and actual result
+      description: Include a minimal Markdown/template example if possible. Remove private data.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Errors or screenshots
+      description: Redact credentials, private notes and unrelated log entries. Report security vulnerabilities privately.

@@ -1,0 +1,8 @@
+{
+  "name": "Merkzeug",
+  "subtitle": "Deine Notizen in Markdown.",
+  "keywords": "Markdown,Notizen,Schreiben,Editor,Wissen,Diagramme,Notizbuch",
+  "description_ios": "Halte deine Ideen in Markdown-Dateien fest, die du selbst verwaltest. Merkzeug macht deine Notizen auf iPhone und iPad visuell bearbeitbar.\n\nSchreibe mit Überschriften, Listen und Tabellen. Verbinde Notizen mit Links, füge Bilder hinzu und stelle Mermaid-Diagramme dar. Öffne einen Ordner über die Dateien-App, auch bei unterstützten Dateianbietern wie Working Copy.\n\nOberfläche und integrierte Hilfe gibt es auf Deutsch und Englisch.\n\nPDF-Export gibt es in der Desktop-Ausgabe, nicht in dieser iOS-Ausgabe. Verfügbare Dateianbieter hängen von den installierten Apps ab.",
+  "description_macos": "Schreibe, verbinde und teile deine Notizen mit Merkzeug, einem visuellen Markdown-Editor.\n\nOrganisiere gewöhnliche Markdown-Dateien in Ordnern. Nutze Überschriften, Listen, Tabellen, Bilder und Mermaid-Diagramme. Exportiere einzelne oder miteinander verlinkte Notizen als PDF mit wiederverwendbaren Vorlagen.\n\nOberfläche und integrierte Hilfe gibt es auf Deutsch und Englisch. Deine Notizen bleiben gewöhnliche Dateien, die du mit anderen Markdown-Werkzeugen öffnen kannst.",
+  "status": "draft; review against signed target-platform builds before upload"
+}

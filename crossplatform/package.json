@@ -12,7 +12,12 @@
     "package:mac": "npm run build:calhelper && electron-vite build && electron-builder --mac dir",
     "package:mac:dmg": "npm run build:calhelper && electron-vite build && electron-builder --mac dmg",
     "package:win": "electron-vite build && ELECTRON_BUILDER_7Z_FILTER=BCJ2 electron-builder --win --x64 --arm64",
-    "package:linux": "electron-vite build && electron-builder --linux --x64"
+    "package:linux": "electron-vite build && electron-builder --linux --x64",
+    "notices": "node ../scripts/third-party-notices.mjs",
+    "prepackage:mac": "npm run notices",
+    "prepackage:mac:dmg": "npm run notices",
+    "prepackage:win": "npm run notices",
+    "prepackage:linux": "npm run notices"
   },
   "keywords": [],
   "author": "Günther Wieser <guenther.wieser@creative-it.com>",
@@ -35,7 +40,10 @@
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "typescript": "^7.0.2",
-    "vite": "^7.3.6"
+    "vite": "^7.3.6",
+    "@merkzeug/core": "0.1.0",
+    "@merkzeug/editor": "0.1.0",
+    "@merkzeug/export": "0.1.0"
   },
   "dependencies": {
     "@electron-toolkit/utils": "^4.0.0",

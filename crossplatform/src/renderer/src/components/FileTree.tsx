@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 import { useCallback, useState } from 'react'
 import type { FileNode } from '../../../shared/types'
 import { ContextMenu, type MenuEntry } from './ContextMenu'
@@ -61,7 +62,7 @@ export function FileTree(props: FileTreeProps): React.JSX.Element {
       const paths = [...props.selectedPaths]
       return [
         {
-          label: `${paths.length} Dateien als PDF exportieren…`,
+          label: `${paths.length} ${translate("files as PDF…")}`,
           onClick: () => props.onExportPdfMulti(paths)
         }
       ]
@@ -69,22 +70,22 @@ export function FileTree(props: FileTreeProps): React.JSX.Element {
     const entries: MenuEntry[] = []
     if (node.isDirectory) {
       entries.push(
-        { label: 'Neue Notiz', onClick: () => props.onCreateNote(node.path) },
-        { label: 'Neuer Ordner', onClick: () => props.onCreateFolder(node.path) },
+        { label: translate("New note"), onClick: () => props.onCreateNote(node.path) },
+        { label: translate("New folder"), onClick: () => props.onCreateFolder(node.path) },
         { separator: true, label: '' }
       )
     }
     if (!node.isDirectory && node.name.endsWith('.md')) {
       entries.push(
-        { label: 'Als PDF exportieren…', onClick: () => props.onExportPdf(node.path) },
+        { label: translate("Export as PDF…"), onClick: () => props.onExportPdf(node.path) },
         { separator: true, label: '' }
       )
     }
     entries.push(
-      { label: 'Umbenennen', onClick: () => startRename(node) },
-      { label: 'Im Finder zeigen', onClick: () => props.onShowInFolder(node.path) },
+      { label: translate("Rename"), onClick: () => startRename(node) },
+      { label: translate("Show in file manager"), onClick: () => props.onShowInFolder(node.path) },
       { separator: true, label: '' },
-      { label: 'In den Papierkorb legen', danger: true, onClick: () => props.onTrash(node.path) }
+      { label: translate("Move to Trash"), danger: true, onClick: () => props.onTrash(node.path) }
     )
     return entries
   }

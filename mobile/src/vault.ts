@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 import { Capacitor, registerPlugin } from '@capacitor/core'
 
 /** Dateibaum, Pfade sind Vault-relativ und beginnen mit "/" (Wurzel = "/"). */
@@ -9,6 +10,7 @@ export interface FileNode {
 }
 
 export interface VaultInfo {
+  initialPath?: string
   name: string
 }
 
@@ -65,7 +67,7 @@ export interface VaultBackend {
 }
 
 interface VaultPlugin {
-  restoreVault(): Promise<{ name: string | null }>
+  restoreVault(): Promise<{ name: string | null; initialPath?: string }>
   pickVault(): Promise<{ name: string | null }>
   readTree(): Promise<{ tree: FileNode }>
   readFile(options: { path: string }): Promise<{ content: string; mtime: number }>
@@ -92,8 +94,8 @@ const Vault = registerPlugin<VaultPlugin>('Vault')
 
 const nativeBackend: VaultBackend = {
   async restoreVault() {
-    const { name } = await Vault.restoreVault()
-    return name ? { name } : null
+    const { name, initialPath } = await Vault.restoreVault()
+    return name ? { name, initialPath } : null
   },
   async pickVault() {
     const { name } = await Vault.pickVault()
@@ -201,19 +203,19 @@ const mockBackend: VaultBackend = {
     const content = demoFiles.get(path)
     return content !== undefined
       ? Promise.resolve({ content, mtime: mockMtime(path) })
-      : Promise.reject(new Error(`Datei nicht gefunden: ${path}`))
+      : Promise.reject(new Error(`${translate("File not found:")} ${path}`))
   },
   writeFile: (path, content, expectedMtime) => {
     if (expectedMtime !== undefined && mockMtime(path) > expectedMtime + 1) {
-      return Promise.reject(new Error('CONFLICT: Die Datei wurde extern geändert.'))
+      return Promise.reject(new Error(translate("CONFLICT: The file was changed externally.")))
     }
     demoFiles.set(path, content)
     const mtime = Date.now()
     demoMtimes.set(path, mtime)
     return Promise.resolve(mtime)
   },
-  readFileBase64: () => Promise.reject(new Error('Im Dev-Modus nicht verfügbar')),
-  saveImage: () => Promise.reject(new Error('Im Dev-Modus nicht verfügbar')),
+  readFileBase64: () => Promise.reject(new Error(translate("Not available in development mode"))),
+  saveImage: () => Promise.reject(new Error(translate("Not available in development mode"))),
   exists: (path) => Promise.resolve(demoFiles.has(path) || mockIsFolder(path)),
   stat: (path) => {
     if (demoFiles.has(path)) {

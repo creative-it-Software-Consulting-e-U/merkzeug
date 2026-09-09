@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 import { app, BrowserWindow, Menu, type MenuItemConstructorOptions } from 'electron'
 import type { MenuAction } from '../shared/types'
 import { getRecentVaults } from './settings'
@@ -30,48 +31,48 @@ export function buildMenu(hooks: MenuHooks): void {
     {
       label: 'Merkzeug',
       submenu: [
-        { role: 'about', label: 'Über Merkzeug' },
+        { role: 'about', label: translate("About Merkzeug") },
         { type: 'separator' },
         {
-          label: 'Einstellungen…',
+          label: translate("Settings…"),
           accelerator: 'Cmd+,',
           click: () => hooks.openSettings(BrowserWindow.getFocusedWindow() ?? undefined)
         },
         { type: 'separator' },
-        { role: 'hide', label: 'Merkzeug ausblenden' },
-        { role: 'hideOthers', label: 'Andere ausblenden' },
-        { role: 'unhide', label: 'Alle einblenden' },
+        { role: 'hide', label: translate("Hide Merkzeug") },
+        { role: 'hideOthers', label: translate("Hide Others") },
+        { role: 'unhide', label: translate("Show All") },
         { type: 'separator' },
-        { role: 'quit', label: 'Merkzeug beenden' }
+        { role: 'quit', label: translate("Quit Merkzeug") }
       ]
     },
     {
-      label: 'Ablage',
+      label: translate("File"),
       submenu: [
         {
-          label: 'Neues Fenster',
+          label: translate("New Window"),
           accelerator: 'Alt+Cmd+N',
           click: () => hooks.newWindow()
         },
-        item('Neue Notiz', 'newNote', 'Cmd+N'),
-        item('Neue Meeting-Notiz…', 'newMeetingNote', 'Ctrl+Cmd+N'),
-        item('Neuer Ordner', 'newFolder', 'Shift+Cmd+N'),
+        item(translate("New note"), 'newNote', 'Cmd+N'),
+        item(translate("New Meeting Note…"), 'newMeetingNote', 'Ctrl+Cmd+N'),
+        item(translate("New folder"), 'newFolder', 'Shift+Cmd+N'),
         { type: 'separator' },
-        item('Sichern', 'saveNote', 'Cmd+S'),
-        item('Alle sichern', 'saveAll', 'Alt+Cmd+S'),
+        item(translate("Save"), 'saveNote', 'Cmd+S'),
+        item(translate("Save All"), 'saveAll', 'Alt+Cmd+S'),
         { type: 'separator' },
-        item('Als PDF exportieren…', 'exportPdf', 'Cmd+P'),
+        item(translate("Export as PDF…"), 'exportPdf', 'Cmd+P'),
         { type: 'separator' },
         {
-          label: 'Vault öffnen…',
+          label: translate("Open Vault…"),
           accelerator: 'Cmd+O',
           click: () => hooks.openVault(BrowserWindow.getFocusedWindow() ?? undefined)
         },
         {
-          label: 'Zuletzt geöffnete Vaults',
+          label: translate("Recent Vaults"),
           submenu:
             recents.length === 0
-              ? [{ label: 'Keine Einträge', enabled: false }]
+              ? [{ label: translate("No entries"), enabled: false }]
               : recents.map((path) => ({
                   label: path,
                   click: () =>
@@ -79,77 +80,77 @@ export function buildMenu(hooks: MenuHooks): void {
                 }))
         },
         { type: 'separator' },
-        item('Tab schließen', 'closeTab', 'Cmd+W'),
-        { role: 'close', label: 'Fenster schließen', accelerator: 'Shift+Cmd+W' }
+        item(translate("Close Tab"), 'closeTab', 'Cmd+W'),
+        { role: 'close', label: translate("Close Window"), accelerator: 'Shift+Cmd+W' }
       ]
     },
     {
-      label: 'Bearbeiten',
+      label: translate("Edit"),
       submenu: [
-        item('Widerrufen', 'undo', 'Cmd+Z'),
-        item('Wiederholen', 'redo', 'Shift+Cmd+Z'),
+        item(translate("Undo"), 'undo', 'Cmd+Z'),
+        item(translate("Redo"), 'redo', 'Shift+Cmd+Z'),
         { type: 'separator' },
-        { role: 'cut', label: 'Ausschneiden' },
-        { role: 'copy', label: 'Kopieren' },
-        { role: 'paste', label: 'Einsetzen' },
-        { role: 'selectAll', label: 'Alles auswählen' },
+        { role: 'cut', label: translate("Cut") },
+        { role: 'copy', label: translate("Copy") },
+        { role: 'paste', label: translate("Paste") },
+        { role: 'selectAll', label: translate("Select All") },
         { type: 'separator' },
-        item('Suchen…', 'find', 'Cmd+F'),
-        item('Suchen und Ersetzen…', 'findReplace', 'Alt+Cmd+F'),
+        item(translate("Find…"), 'find', 'Cmd+F'),
+        item(translate("Find and Replace…"), 'findReplace', 'Alt+Cmd+F'),
         { type: 'separator' },
-        item('Link einfügen…', 'insertLink', 'Cmd+K'),
-        item('Bild einfügen…', 'insertImage'),
-        item('Tabelle einfügen', 'insertTable', 'Alt+Cmd+T')
+        item(translate("Insert Link…"), 'insertLink', 'Cmd+K'),
+        item(translate("Insert Image…"), 'insertImage'),
+        item(translate("Insert Table"), 'insertTable', 'Alt+Cmd+T')
       ]
     },
     {
-      label: 'Tabelle',
+      label: translate("Table"),
       submenu: [
-        item('Zeile darüber einfügen', 'tableRowAbove'),
-        item('Zeile darunter einfügen', 'tableRowBelow'),
-        item('Spalte davor einfügen', 'tableColBefore'),
-        item('Spalte danach einfügen', 'tableColAfter'),
+        item(translate("Insert Row Above"), 'tableRowAbove'),
+        item(translate("Insert Row Below"), 'tableRowBelow'),
+        item(translate("Insert Column Before"), 'tableColBefore'),
+        item(translate("Insert Column After"), 'tableColAfter'),
         { type: 'separator' },
-        item('Zeile löschen', 'tableDeleteRow'),
-        item('Spalte löschen', 'tableDeleteCol')
+        item(translate("Delete Row"), 'tableDeleteRow'),
+        item(translate("Delete Column"), 'tableDeleteCol')
       ]
     },
     {
-      label: 'Ansicht',
+      label: translate("View"),
       submenu: [
-        item('Navigationsmodus', 'toggleNavMode', 'Cmd+R'),
-        item('Zurück', 'navBack', 'Cmd+['),
-        item('Vorwärts', 'navForward', 'Cmd+]'),
+        item(translate("Navigation mode"), 'toggleNavMode', 'Cmd+R'),
+        item(translate("Back"), 'navBack', 'Cmd+['),
+        item(translate("Forward"), 'navForward', 'Cmd+]'),
         { type: 'separator' },
-        item('Zwei Sektionen', 'toggleSplit', 'Cmd+\\'),
-        item('Tab in andere Sektion verschieben', 'moveTabOtherPane', 'Shift+Cmd+\\'),
+        item(translate("Two Panes"), 'toggleSplit', 'Cmd+\\'),
+        item(translate("Move Tab to Other Pane"), 'moveTabOtherPane', 'Shift+Cmd+\\'),
         { type: 'separator' },
-        item('Ressourcen-Ordner ein-/ausblenden', 'toggleAssets', 'Shift+Cmd+R'),
+        item(translate("Show/Hide Asset Folders"), 'toggleAssets', 'Shift+Cmd+R'),
         ...(isDev
           ? ([
               { type: 'separator' },
-              { role: 'reload', label: 'Neu laden (Dev)', accelerator: 'Alt+Cmd+R' },
-              { role: 'toggleDevTools', label: 'Entwicklertools', accelerator: 'Alt+Cmd+I' }
+              { role: 'reload', label: translate("Reload (Dev)"), accelerator: 'Alt+Cmd+R' },
+              { role: 'toggleDevTools', label: translate("Developer Tools"), accelerator: 'Alt+Cmd+I' }
             ] as MenuItemConstructorOptions[])
           : [])
       ]
     },
     {
-      label: 'Fenster',
+      label: translate("Window"),
       role: 'windowMenu',
       submenu: [
-        { role: 'minimize', label: 'Im Dock ablegen' },
-        { role: 'zoom', label: 'Zoomen' },
+        { role: 'minimize', label: translate("Minimize") },
+        { role: 'zoom', label: translate("Zoom") },
         { type: 'separator' },
-        { role: 'front', label: 'Alle nach vorne bringen' }
+        { role: 'front', label: translate("Bring All to Front") }
       ]
     },
     {
-      label: 'Hilfe',
+      label: translate("Help"),
       role: 'help',
       submenu: [
         {
-          label: 'Merkzeug-Hilfe',
+          label: translate("Merkzeug Help"),
           accelerator: 'Cmd+?',
           click: () => hooks.openHelp()
         }

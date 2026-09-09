@@ -1,3 +1,4 @@
+import { t as translate } from '@merkzeug/core/i18n'
 import type { FileNode } from '../../../shared/types'
 import { basename } from '../util/paths'
 
@@ -33,7 +34,7 @@ export function FolderOverview({
 }: FolderOverviewProps): React.JSX.Element {
   const node = findNode(tree, folderPath)
   if (!node) {
-    return <div className="folder-overview-empty">Ordner nicht gefunden: {folderPath}</div>
+    return <div className="folder-overview-empty">{translate("Folder not found:")} {folderPath}</div>
   }
   const children = (node.children ?? []).filter(
     (c) => (c.isDirectory && !c.name.endsWith('.assets')) || c.name.endsWith('.md')
@@ -41,7 +42,7 @@ export function FolderOverview({
   return (
     <div className="folder-overview">
       <h1>📁 {basename(folderPath)}</h1>
-      {children.length === 0 && <p className="folder-overview-empty">Dieser Ordner ist leer.</p>}
+      {children.length === 0 && <p className="folder-overview-empty">{translate("This folder is empty.")}</p>}
       <div className="folder-grid">
         {children.map((child) => (
           <button
@@ -56,7 +57,7 @@ export function FolderOverview({
               {child.isDirectory ? child.name : basename(child.name, '.md')}
             </span>
             {child.isDirectory && (
-              <span className="folder-card-meta">{countNotes(child)} Notizen</span>
+              <span className="folder-card-meta">{countNotes(child)} {translate("Notes")}</span>
             )}
           </button>
         ))}

@@ -1,0 +1,8 @@
+{
+  "name": "Merkzeug",
+  "subtitle": "Your notes. Plain Markdown.",
+  "keywords": "markdown,notes,writing,editor,knowledge,diagrams,notebook",
+  "description_ios": "Keep your ideas in Markdown files you control. Merkzeug brings visual editing to your notes on iPhone and iPad.\n\nWrite with headings, lists and tables. Connect notes with links, add images and display Mermaid diagrams. Open a folder through the Files app, including supported file providers such as Working Copy.\n\nThe interface and built-in help are available in English and German.\n\nPDF export is available in the desktop edition, not in this iOS edition. File-provider availability depends on the apps installed on your device.",
+  "description_macos": "Write, connect and share your notes with Merkzeug, a visual Markdown editor.\n\nOrganize ordinary Markdown files in folders. Work with headings, lists, tables, images and Mermaid diagrams. Export a note or a collection of linked notes as a PDF with reusable templates.\n\nThe interface and built-in help are available in English and German. Your notes remain ordinary files you can open with other Markdown tools.",
+  "status": "draft; review against signed target-platform builds before upload"
+}
