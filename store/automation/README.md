@@ -23,7 +23,7 @@ xcodebuild -project mobile/ios/App/App.xcodeproj -scheme Merkzeug-Screenshots \
   -parallel-testing-enabled NO -resultBundlePath /tmp/Merkzeug.xcresult test
 ```
 
-The configured **Store Screenshots** Cloud workflow uses Xcode 26.6 (17F113), macOS Tahoe 26.6.2, iPhone 17 Pro Max and iPad Pro 13-inch (M5). It starts automatically on main changes and permits manual branch builds. Its currently selected **Merkzeug** scheme includes the same screenshot tests; the dedicated **Merkzeug-Screenshots** scheme can be selected after Cloud discovers it. A successful Cloud Test run must be verified separately from local tests. A successful Build action does not generate screenshots. Captioned images remain candidates until reviewed against the submitted Release app.
+The configured **Store Screenshots** Cloud workflow uses Xcode 26.6 (17F113), macOS Tahoe 26.6.2, iPhone 17 Pro Max and iPad Pro 13-inch (M5). It starts automatically on main changes and permits manual branch builds. Its currently selected **Merkzeug** scheme includes the same screenshot tests; the dedicated **Merkzeug-Screenshots** scheme can be selected after Cloud discovers it. Cloud build 8 passed both languages on both destinations at `c7e40d7`. Cloud test workers skip source-resource validation during `test-without-building`; the build phase still requires generated web resources. A successful Build action does not generate screenshots. Captioned images remain candidates until reviewed against the submitted Release app.
 
 ## macOS: Electron capture and composition
 
@@ -34,7 +34,7 @@ python3 scripts/capture-mac-demo.py /tmp/merkzeug-raw
 python3 scripts/frame-store-screenshots.py /tmp/merkzeug-raw /tmp/merkzeug-store --edition macos
 ```
 
-Alternatively use **Store screenshot candidates** in GitHub Actions (manual dispatch or a pull request changing screenshot automation). It runs on macOS, isolates every scene's profile and vault, captures the real Electron app and saves raw images, composed images and provenance in a 30-day build artifact. It never modifies the installed app. Output dimensions must be an accepted macOS 16:10 screenshot size.
+Alternatively use **Store screenshot candidates** in GitHub Actions (manual dispatch or a pull request changing screenshot automation). The end-to-end workflow first succeeded in run `34396519467`. It runs on macOS, isolates every scene's profile and vault, captures the real Electron app and saves raw images, composed images and provenance in a 30-day build artifact. It never modifies the installed app. Output dimensions must be an accepted macOS 16:10 screenshot size.
 
 The current macOS app is Electron, not an Xcode app target. Its capture needs Electron and a usable graphical session. Do not claim that the iOS Cloud workflow builds/signs/tests the Mac app. A macOS Xcode Cloud runner/wrapper and actual capture there remain unvalidated. Keep this working independent pipeline until that is demonstrated; compare the visuals with the signed MAS build before upload.
 

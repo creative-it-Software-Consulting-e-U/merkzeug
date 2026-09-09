@@ -21,12 +21,13 @@ enum ScreenshotFrame {
             ])
             let line = CTLineCreateWithAttributedString(attributed)
             guard CTLineGetTypographicBounds(line, nil, nil, nil) <= Double(width - margin * 2) else { throw Failure.textOverflow(value) }
+            ctx.textMatrix = .identity
             ctx.textPosition = CGPoint(x: margin, y: y)
             CTLineDraw(line, ctx)
         }
         let ink = CGColor(gray: 0.1, alpha: 1), muted = CGColor(gray: 0.35, alpha: 1)
         let landscape = w > h
-        try text("MERKZEUG", y: height * 0.957, size: width * 0.018, font: "Menlo", color: muted)
+        try text("MERKZEUG", y: height * 0.957, size: width * 0.018, font: "Menlo-Regular", color: muted)
         try text(title, y: height * (landscape ? 0.884 : 0.905), size: width * 0.049, font: "Georgia-Bold", color: ink)
         try text(subtitle, y: height * (landscape ? 0.824 : 0.87), size: width * 0.026, font: "Helvetica", color: muted)
         let available = CGRect(x: margin, y: height * 0.035, width: width - margin * 2, height: height * (landscape ? 0.74 : 0.79))
