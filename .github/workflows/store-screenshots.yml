@@ -1,6 +1,13 @@
 name: Store screenshot candidates
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/store-screenshots.yml'
+      - 'scripts/*screenshot*'
+      - 'scripts/capture-mac-demo.py'
+      - 'store/automation/**'
+      - 'store/demo/**'
 permissions:
   contents: read
 jobs:
