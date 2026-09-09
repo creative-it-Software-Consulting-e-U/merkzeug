@@ -90,6 +90,8 @@ try {
  passed('conflictReloadWithoutOverwrite');
  await page.locator('.tree-label').filter({hasText:/^PDF$/}).click();
  await page.locator('.mermaid-preview svg').waitFor();
+ await eventually(()=>page.locator('.ProseMirror img').evaluateAll(images=>images.length>0 && images.every(img=>img.complete && img.naturalWidth>0)));
+ passed('localImageRendering');
  await page.screenshot({path:join(dest,'native-editor.png')});
  await bounded(page.evaluate(async path=>window.merkzeug.exportPdf(path),pdfNote),120000,'PDF export');
  const pdf=await readFile(join(dest,'acceptance.pdf')); assert.equal(pdf.subarray(0,5).toString(),'%PDF-'); assert.ok(pdf.length>10000);

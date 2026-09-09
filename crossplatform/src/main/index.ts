@@ -1,5 +1,6 @@
 import { rememberFolderAccess, restoreFolderAccess } from './sandboxAccess'
 import { FileRevisions } from './fileRevisions'
+import { vaultFilePath } from '@merkzeug/core/vaultFileUrl'
 import { t as translate, setLocale, getLocale } from '@merkzeug/core/i18n'
 import { app, BrowserWindow, dialog, ipcMain, nativeTheme, net, protocol, shell } from 'electron'
 import { pathToFileURL } from 'node:url'
@@ -273,8 +274,7 @@ app.whenReady().then(() => {
   electronApp.setAppUserModelId('com.creative-it.merkzeug')
 
   protocol.handle('vault-file', (request) => {
-    const url = new URL(request.url)
-    const path = decodeURIComponent(url.pathname)
+    const path = vaultFilePath(request.url, process.platform)
     if (!/\.(png|jpe?g|gif|webp|svg|bmp|tiff?|avif|heic)$/i.test(path)) {
       return new Response('Forbidden', { status: 403 })
     }
