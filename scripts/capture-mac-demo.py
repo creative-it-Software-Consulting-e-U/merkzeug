@@ -14,7 +14,7 @@ parser.add_argument('--locale', choices=['en', 'de'])
 parser.add_argument('--scene', choices=['writing', 'diagram', 'frontmatter'])
 args = parser.parse_args()
 args.output.mkdir(parents=True, exist_ok=True)
-electron = ROOT / 'crossplatform/node_modules/electron/dist/Electron.app/Contents/MacOS/Electron'
+electron = Path(subprocess.check_output(['node', '-p', "require('electron')"], cwd=ROOT/'crossplatform', text=True).strip())
 if not electron.exists(): raise SystemExit('Install dependencies and run npm run build:desktop first.')
 for language, scenes in {'en': {'writing': 'Welcome', 'diagram': 'Projects;;Garden', 'frontmatter': "Welcome;;js:document.querySelector('.frontmatter-toggle')?.click()"},
                          'de': {'writing': 'Willkommen', 'diagram': 'Projekte;;Garten', 'frontmatter': "Willkommen;;js:document.querySelector('.frontmatter-toggle')?.click()"}}.items():
