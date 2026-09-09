@@ -196,6 +196,7 @@ async function exportPdf(win: BrowserWindow, notePath: string): Promise<void> {
     writeFileSync(target, await renderPdf(vault, docs, template, win))
   } catch (err) {
     sendProgress(win, { phase: 'error' })
+    if (debugTarget) throw err
     dialog.showErrorBox(translate("PDF export failed"), String(err))
     return
   }
@@ -279,6 +280,7 @@ async function exportPdfMulti(win: BrowserWindow, notePaths: string[]): Promise<
     }
   } catch (err) {
     sendProgress(win, { phase: 'error' })
+    if (debugTarget) throw err
     dialog.showErrorBox(translate("PDF export failed"), String(err))
     return
   }

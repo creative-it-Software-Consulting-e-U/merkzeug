@@ -24,7 +24,7 @@ The public repository contains source code, reproducible build scripts, dependen
 
 Use Apple's cloud-managed signing where the Xcode Cloud integration supports it. For other release systems, keep credentials in the CI provider's secret storage and use a temporary runner keychain or the selected cloud signing provider. Prefer short-lived workload authentication when supported. Never include credentials in artifacts or print them from custom build scripts. Local exported credentials and recovery material belong in a private credential vault, outside the checkout.
 
-Before adding production credentials to GitHub, configure protected release environments and restrict release refs and who can modify/run signing workflows. The existing workflow is an initial draft: the desktop job now references `release-signing`, but the remote environment protection rules have not been configured. Contributor checks must run without signing or store-upload credentials. Ignored filenames are only an accidental-commit safeguard; inspect tracked files, Git history, logs and artifacts before making the repository public. A historical leak requires credential rotation as well as repository cleanup. A Gitleaks scan of local Git history and the current source passed on 2026-09-09. One exact historical false positive (an App Store Connect issuer UUID, not a credential) is recorded in `.gitleaksignore`. Repeat `npm run check:secrets` before publication; automated scanning is not proof that no secret exists.
+Before adding production credentials to GitHub, configure protected release environments and restrict release refs and who can modify/run signing workflows. The existing workflow is an initial draft: the desktop job now references `release-signing`, but the remote required-reviewer setup is currently blocked by the private-repository billing plan. Stable signed builds now fail closed until the required reviewer and version-tag policies exist. Contributor checks must run without signing or store-upload credentials. Ignored filenames are only an accidental-commit safeguard; inspect tracked files, Git history, logs and artifacts before making the repository public. A historical leak requires credential rotation as well as repository cleanup. A Gitleaks scan of local Git history and the current source passed on 2026-09-09. One exact historical false positive (an App Store Connect issuer UUID, not a credential) is recorded in `.gitleaksignore`. Repeat `npm run check:secrets` before publication; automated scanning is not proof that no secret exists.
 
 ### Xcode Cloud responsibilities
 
@@ -75,7 +75,7 @@ Use an unused tag. Do not move released tags or replace published binary assets.
 | IntelliJ | Linux; checksum-pinned IDEA SDK | `merkzeug-VERSION.zip` |
 | Documentation | Release assembly job | `merkzeug-VERSION-documentation.zip` |
 
-The assembly job requires the entire expected matrix, rejects mismatched versions and writes `SHA256SUMS.txt` and `release-manifest.json`. Checksums detect changed downloads; they are not a substitute for publisher signatures. The manifest records the source commit, workflow run, signing policy and hashes. An existing release is never overwritten by the workflow; inspect its state before retrying.
+The assembly job requires the requested edition matrix (all by default), rejects mismatched versions and writes `SHA256SUMS.txt` and `release-manifest.json`. Checksums detect changed downloads; they are not a substitute for publisher signatures. The manifest records the source commit, workflow run, signing policy and hashes. An existing release is never overwritten by the workflow; inspect its state before retrying.
 
 Artifacts from failed/unfinished runs are temporary Actions artifacts, not releases. Runtime validation for Windows ARM64, Linux packaging and each native UI remains part of the checklist even when cross-compilation succeeds.
 
@@ -115,7 +115,7 @@ cp intellij/dist/merkzeug-*.zip release-artifacts/
 python3 scripts/release-artifacts.py release-artifacts
 ```
 
-The first command makes an unsigned local preview. Use `--signed` with the documented environment variables for signed desktop packages. Local assembly may contain a subset of platforms; CI uses `--complete` to require every binary. Review the manifest's `workingTreeModified` field for local builds.
+The first command makes an unsigned local preview. Use `--signed` with the documented environment variables for signed desktop packages. Local assembly may contain a subset of platforms; Candidate validation uses `--complete` to require every binary. Release assembly can use `--editions` to require an exact independently selected subset. Review the manifest's `workingTreeModified` field for local builds.
 
 The SDK version, build and Linux archive checksum are pinned in `intellij/sdk.json`. Updating the SDK is a reviewed compatibility change: update the pin, plugin build range if necessary, compile, and run the IDE smoke test. CI downloads only this SDK, never a moving “latest” URL.
 
@@ -146,9 +146,10 @@ See [Apple build setup and local validation](apple-builds.md) for the implemente
 
 ## Packaging validation without Apple
 
-Run the manual `Validate non-Apple packages` workflow on the intended source ref
-to exercise Windows x64/ARM64, Linux x64 and IntelliJ packaging. It uses no signing
+Run `Validate release candidates` on a fixed source ref to exercise macOS ARM64/x64, Windows x64/ARM64, Linux x64 and IntelliJ packaging, with installed-package runtime tests on supported native runners. It uses no signing
 credentials, creates no version tag or GitHub release, and retains private workflow
 artifacts for 14 days. These unsigned packages are validation candidates, not a
 public release or proof of native installation/runtime acceptance. Production
 Windows signing still requires the maintainer's chosen signing identity/provider.
+
+See [the release validation runbook](release-validation.md) for native coverage, independent edition selection, protected signing, retained evidence and unresolved acceptance requirements.

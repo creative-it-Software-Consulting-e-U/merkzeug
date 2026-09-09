@@ -15,7 +15,7 @@ const api = {
   getInitialVault: (): Promise<string | null> => ipcRenderer.invoke('app:getInitialVault'),
   pickVault: (): Promise<string | null> => ipcRenderer.invoke('dialog:pickVault'),
   readTree: (vault: string): Promise<FileNode> => ipcRenderer.invoke('vault:tree', vault),
-  readFile: (path: string): Promise<string> => ipcRenderer.invoke('file:read', path),
+  readFile: (path: string, options?: { peek?: boolean }): Promise<string> => ipcRenderer.invoke('file:read', path, options),
   writeFile: (path: string, content: string): Promise<void> =>
     ipcRenderer.invoke('file:write', path, content),
   createNote: (dir: string): Promise<string> => ipcRenderer.invoke('file:createNote', dir),
