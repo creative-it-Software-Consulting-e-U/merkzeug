@@ -3,6 +3,11 @@ on:
   push:
     tags: ['v*']
   workflow_dispatch:
+    inputs:
+      editions:
+        description: 'Comma-separated editions (empty means complete matrix)'
+        type: string
+        default: ''
 permissions:
   contents: read
 concurrency:
@@ -16,6 +21,10 @@ jobs:
     outputs:
       version: ${{ steps.version.outputs.version }}
       preview: ${{ steps.version.outputs.preview }}
+      editions: ${{ steps.editions.outputs.editions }}
+      desktop: ${{ steps.editions.outputs.desktop }}
+      intellij: ${{ steps.editions.outputs.intellij }}
+      matrix: ${{ steps.editions.outputs.matrix }}
     steps:
       - uses: actions/checkout@v6
         with:
@@ -37,18 +46,30 @@ jobs:
           else
             echo 'preview=false' >> "$GITHUB_OUTPUT"
           fi
+      - id: editions
+        env:
+          RELEASE_EDITIONS: ${{ inputs.editions }}
+        run: python3 scripts/release-plan.py
+  protection:
+    needs: plan
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      deployments: read
+    steps:
+      - uses: actions/checkout@v6
+      - name: Require protected signing for stable signed desktop editions
+        if: needs.plan.outputs.preview == 'false' && (contains(needs.plan.outputs.editions, 'mac-') || contains(needs.plan.outputs.editions, 'win-'))
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/check-release-protection.py
   desktop:
     environment: release-signing
-    needs: [checks, plan]
+    needs: [checks, plan, protection]
+    if: needs.plan.outputs.desktop == 'true'
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - {os: macos-15, platform: mac, arch: arm64}
-          - {os: macos-15-intel, platform: mac, arch: x64}
-          - {os: windows-2025, platform: win, arch: x64}
-          - {os: windows-2025, platform: win, arch: arm64}
-          - {os: ubuntu-24.04, platform: linux, arch: x64}
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     steps:
@@ -109,6 +130,7 @@ jobs:
             crossplatform/dist/*.rpm
   intellij:
     needs: [checks, plan]
+    if: needs.plan.outputs.intellij == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:
@@ -135,7 +157,8 @@ jobs:
           if-no-files-found: error
           retention-days: 14
   draft:
-    needs: [plan, desktop, intellij]
+    needs: [checks, plan, protection, desktop, intellij]
+    if: always() && needs.checks.result == 'success' && needs.plan.result == 'success' && needs.protection.result == 'success' && (needs.desktop.result == 'success' || needs.desktop.result == 'skipped') && (needs.intellij.result == 'success' || needs.intellij.result == 'skipped')
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -147,10 +170,10 @@ jobs:
         with:
           path: release-artifacts
           merge-multiple: true
-      - name: Assemble documentation and verify complete asset matrix
+      - name: Assemble documentation and verify selected asset matrix
         env:
           MERKZEUG_RELEASE_SIGNING: ${{ needs.plan.outputs.preview == 'true' && 'Unsigned preview binaries; no macOS notarization or Windows publisher signature. IntelliJ ZIP is unsigned.' || 'Desktop macOS signing/notarization and Windows signing required by build; IntelliJ ZIP is unsigned.' }}
-        run: python3 scripts/release-artifacts.py release-artifacts --complete
+        run: python3 scripts/release-artifacts.py release-artifacts --editions "${{ needs.plan.outputs.editions }}"
       - name: Create a draft (never overwrite an existing release)
         env:
           GH_TOKEN: ${{ github.token }}

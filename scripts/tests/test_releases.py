@@ -73,3 +73,33 @@ class Artifacts(unittest.TestCase):
             self.assertTrue(manifest['workingTreeModified'])
             self.assertFalse(manifest['completeMatrix'])
             self.assertIn(item['sha256'] + '  ' + name, (directory / 'SHA256SUMS.txt').read_text())
+
+class IndependentEditions(unittest.TestCase):
+    def test_unknown_duplicate_or_empty_editions_are_rejected(self):
+        for value in ['mac-arm64,mac-arm64', 'unknown', ',']:
+            with self.assertRaises(ValueError): artifacts.selected_editions(value)
+
+    def test_subset_requires_all_of_its_formats_and_rejects_unselected_assets(self):
+        with tempfile.TemporaryDirectory() as temp:
+            directory=Path(temp)
+            with self.assertRaisesRegex(ValueError, 'Release asset mismatch'):
+                artifacts.assemble(directory, editions='linux-x64')
+            for name in artifacts.EDITIONS['linux-x64']:
+                (directory/name.format(version=version.check())).write_bytes(b'candidate')
+            artifacts.assemble(directory, editions='linux-x64')
+            manifest=json.loads((directory/'release-manifest.json').read_text())
+            self.assertEqual(manifest['selectedEditions'],['linux-x64'])
+            self.assertFalse(manifest['completeMatrix'])
+            (directory/f'merkzeug-{version.check()}.zip').write_bytes(b'extra')
+            with self.assertRaisesRegex(ValueError, 'unexpected'):
+                artifacts.assemble(directory, editions='linux-x64')
+
+class ReleaseProtection(unittest.TestCase):
+    def test_missing_reviewers_or_branch_access_is_rejected(self):
+        spec=importlib.util.spec_from_file_location('protection',SCRIPTS/'check-release-protection.py')
+        protection=importlib.util.module_from_spec(spec);spec.loader.exec_module(protection)
+        environment={'protection_rules':[{'type':'required_reviewers','reviewers':[{'id':1}]}], 'deployment_branch_policy':{'custom_branch_policies':True}}
+        policy={'branch_policies':[{'name':'v*','type':'tag'}]}
+        protection.validate(environment,policy)
+        with self.assertRaises(ValueError): protection.validate({},policy)
+        with self.assertRaises(ValueError): protection.validate(environment,{'branch_policies':[{'name':'*','type':'branch'}]})
