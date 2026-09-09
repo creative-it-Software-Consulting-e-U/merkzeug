@@ -1,0 +1,464 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Ein visueller Markdown-Editor für Gedanken, die einen eigenen Platz verdienen."><title>Merkzeug Desktop – Hilfe</title><link rel="stylesheet" href="style.css"><link rel="icon" href="assets/icon.png"><link rel="canonical" href="https://merkzeug.creative-it.com/help-de.html"><meta property="og:type" content="website"><meta property="og:image" content="https://merkzeug.creative-it.com/assets/mac-de.png"></head><body><a class="skip" href="#content">Zum Inhalt</a><header><a class="brand" href="de.html"><img src="assets/icon.png" alt="" width="36" height="36"><strong>Merkzeug</strong></a><nav aria-label="Hauptnavigation"><a href="help-de.html">Hilfe</a><a href="https://support.apps.creative-it.com/?app=merkzeug&amp;lang=de">Support</a><a href="help-en.html" lang="en">English</a></nav></header><main id="content" class="guide"><p class="notice">Hilfe zur aktuellen Entwicklungsversion. Die erste App-Store-Version wird vorbereitet.</p><p><a href="help-de.html">Desktop</a> · <a href="help-ios-de.html">iPhone &amp; iPad</a></p><h1 id="merkzeug-hilfe">Merkzeug – Hilfe</h1>
+<p>Auf einem deutschen System erscheinen Oberfläche und Hilfe auf Deutsch, andernfalls auf Englisch. Die Sprache dieser Hilfe lässt sich unabhängig umschalten.</p>
+<p>Merkzeug ist ein Editor für Markdown-Notizen im Stil von Notion – diese Version
+läuft auf <strong>macOS und Windows</strong>. Du bearbeitest deine Notizen <strong>WYSIWYG</strong>
+(formatiert, ohne sichtbare Markdown-Syntax), gespeichert wird aber immer
+sauberes, portables Markdown. Alle Notizen liegen als <code>.md</code>-Dateien in einem
+gewöhnlichen Ordner – dem <strong>Vault</strong>.</p>
+<p>Alle Kürzel gelten mit <strong>⌘</strong> auf dem Mac; unter Windows entspricht ⌘ der
+<strong>Strg</strong>-Taste und ⌥ der <strong>Alt</strong>-Taste.</p>
+<p><strong>Inhalt:</strong> <a href="#1-erste-schritte">1. Erste Schritte</a> ·
+<a href="#2-sidebar-amp-dateibaum">2. Sidebar &amp; Dateibaum</a> ·
+<a href="#3-tabs-sektionen-amp-fenster">3. Tabs, Sektionen &amp; Fenster</a> ·
+<a href="#4-editor-amp-formatierung">4. Editor &amp; Formatierung</a> ·
+<a href="#5-links">5. Links</a> ·
+<a href="#6-navigationsmodus-lesen-amp-blättern">6. Navigationsmodus</a> ·
+<a href="#7-mermaid-diagramme">7. Mermaid-Diagramme</a> ·
+<a href="#8-bild-ressourcen">8. Bild-Ressourcen</a> ·
+<a href="#9-pdf-export">9. PDF-Export</a> ·
+<a href="#10-git-integration">10. Git-Integration</a> ·
+<a href="#11-tastaturkürzel">11. Tastaturkürzel</a></p>
+<hr>
+<h2 id="1-erste-schritte">1. Erste Schritte</h2>
+<ul>
+<li>Beim ersten Start wählst du einen <strong>Vault-Ordner</strong> (einen beliebigen Ordner mit
+Markdown-Dateien). Die Auswahl wird gemerkt.</li>
+<li>Über <strong>Ablage → Vault öffnen…</strong> (⌘O) wechselst du den Vault des aktuellen Fensters.</li>
+<li><strong>Ablage → Zuletzt geöffnete Vaults</strong> listet die letzten zehn Vaults zum schnellen
+Wechsel.</li>
+<li><strong>Autosave:</strong> Änderungen werden eine Sekunde nach der letzten Eingabe automatisch
+gespeichert, außerdem beim Schließen von Tabs und beim Beenden der App.
+Manuell: <strong>⌘S</strong> (aktive Notiz) bzw. <strong>⌥⌘S</strong> (alle offenen Notizen).</li>
+<li>Der Vault kann auch per Umgebungsvariable <code>MERKZEUG_VAULT</code> vorgegeben werden.</li>
+</ul>
+<h2 id="2-sidebar-amp-dateibaum">2. Sidebar &amp; Dateibaum</h2>
+<p>Links zeigt die Sidebar den Vault als hierarchischen Baum.</p>
+<ul>
+<li><strong>Klick auf eine Notiz</strong> öffnet sie in einem Tab; Klick auf einen Ordner klappt
+ihn auf/zu. <strong>Doppelklick auf einen Ordner</strong> öffnet die Ordnerübersicht.</li>
+<li><strong>Breite anpassen:</strong> Die Trennlinie zwischen Sidebar und Editorbereich lässt
+sich mit der Maus ziehen; Doppelklick darauf stellt die Standardbreite wieder
+her. Reicht der Platz für lange Namen oder tiefe Hierarchien nicht, kann der
+Baum horizontal und vertikal gescrollt werden.</li>
+<li><strong>Kontextmenü</strong> (Rechtsklick): neue Notiz, neuer Ordner, als PDF exportieren,
+Umbenennen, in den Papierkorb legen, im Finder/Explorer zeigen.</li>
+<li><strong>Mehrfachauswahl:</strong> ⌘-Klick (Windows/Linux: Ctrl-Klick) nimmt weitere
+Notizen in die Auswahl auf bzw. wieder heraus, ⇧-Klick wählt den Bereich
+bis zur angeklickten Notiz — beides nur unter Notizen <strong>desselben Ordners</strong>.
+Rechtsklick auf die Auswahl bietet dann <strong>„N Dateien als PDF
+exportieren…“</strong> an (siehe Abschnitt PDF-Export).</li>
+<li><strong>Verschieben:</strong> Dateien und Ordner einfach per Drag &amp; Drop auf einen Ordner ziehen.</li>
+<li><strong>Ordnerübersicht:</strong> zeigt den Inhalt eines Ordners als Karten in einem eigenen
+Tab; Klicks auf Notizen und Unterordner navigieren weiter.</li>
+<li><strong>Fußleiste der Sidebar:</strong> Buttons für neue Notiz, neue Meeting-Notiz und
+neuen Ordner (links) sowie zum Neu-Einlesen des Vaults; das Augen-Symbol
+blendet die <strong>Ressourcen-Ordner</strong> ein/aus (⇧⌘R).</li>
+<li><strong>Meeting-Notizen aus dem Kalender:</strong> <strong>⌃⌘N</strong> (Menü „Ablage → Neue
+Meeting-Notiz…“ oder der Kalender-Button in der Fußleiste) zeigt laufende
+und kommende Termine der nächsten 14 Tage aus den lokal eingebundenen
+Kalendern — unter macOS alle Konten der Kalender-App (iCloud,
+Exchange/Microsoft 365, Google, …), unter Windows alle Kalender des
+<strong>klassischen Outlook</strong> (über dessen Objektmodell; das „neue Outlook“
+bietet keines), ganz ohne Cloud-API. Ganztägige
+Termine (Urlaube, Geburtstage, …) sind standardmäßig ausgeblendet und
+lassen sich über die Checkbox über der Liste einblenden. <strong>„Frühere
+anzeigen“</strong> blendet vergangene Termine ein, <strong>„Suchen“</strong> durchsucht Titel,
+Personen und Orte im Zeitraum ±90 Tage. Ein Klick auf einen Termin erzeugt
+eine fertig benannte Notiz: Die Termin-Daten (Datum, Uhrzeit, Ort,
+Organisator, Teilnehmer, erkannter Teams/Zoom/Meet/Webex-Link) landen im
+Frontmatter; im Text stehen Datum/Uhrzeit unter der Überschrift, eine
+<strong>abhakbare Teilnehmerliste</strong> (wer war wirklich dabei?) sowie die
+Abschnitte Agenda, Notizen und Aufgaben. Beim
+ersten Mal fragt macOS nach der Erlaubnis für den Kalender-Zugriff. Unter
+Windows startet Outlook bei Bedarf im Hintergrund; zeigt Outlook eine
+Sicherheitsabfrage („Ein Programm versucht, auf … zuzugreifen“), erlaube
+den Zugriff für ein paar Minuten. Unter Linux ist die Kalender-Anbindung
+noch nicht verfügbar (ein ICS-Import folgt).</li>
+<li><strong>Automatische Benennung neuer Notizen:</strong> Eine neue Notiz heißt zunächst
+„Neue Notiz“. Beginnt sie mit einer <strong>Überschrift 1</strong>, wird die Datei beim
+Speichern automatisch nach dem Titel benannt: alles klein, Leerzeichen und
+Sonderzeichen werden zu „-“, Umlaute bleiben erhalten — aus
+„2026-08-11 BPP Call Gerulf &amp; Alois - Neustrukturierung“ wird
+<code>2026-08-11-bpp-call-gerulf-alois-neustrukturierung.md</code>. Ändert sich die
+Überschrift, zieht der Dateiname nach. Sobald du die Datei einmal <strong>manuell
+umbenennst</strong>, bleibt dein Name unangetastet.</li>
+<li>Änderungen, die außerhalb der App am Vault gemacht werden (Finder/Explorer,
+Terminal, Sync), erkennt die App automatisch. Das gilt auch für <strong>offene
+Notizen</strong>: Ändert sich die Datei auf der Platte, lädt der Tab sie neu und
+zeigt einen Hinweis mit Uhrzeit („Neu geladen um …“) über dem Editor.
+Hast du dort gerade ungespeicherte Änderungen, erscheint stattdessen ein
+Banner mit der Wahl <strong>„Neu laden“</strong> (Stand von der Platte übernehmen) oder
+<strong>„Meine Version behalten“</strong> (eigene Änderungen speichern); bis zur
+Entscheidung wird nichts überschrieben.</li>
+<li><strong>Versteckte und technische Ordner:</strong> Einträge, die mit einem Punkt beginnen
+(z. B. <code>.git</code>), sowie Abhängigkeits- und Build-Ordner aus Software-Projekten
+werden ausgeblendet und nicht überwacht — <code>node_modules</code>, <code>__pycache__</code>,
+Python-virtualenvs sowie <code>target</code>, <code>build</code>, <code>dist</code> und <code>out</code>, wenn daneben
+die passende Build-Datei liegt (z. B. <code>pom.xml</code> oder <code>package.json</code>). So
+bleibt die App auch flüssig, wenn ein großes Code-Repository als Vault
+geöffnet wird.</li>
+</ul>
+<h2 id="3-tabs-sektionen-amp-fenster">3. Tabs, Sektionen &amp; Fenster</h2>
+<ul>
+<li>Jede Notiz öffnet in einem eigenen <strong>Tab</strong>; <strong>⌘W</strong> schließt den aktiven Tab,
+<strong>⇧⌘W</strong> das Fenster.</li>
+<li><strong>Zwei Sektionen</strong> nebeneinander: **⌘** teilt den Editor-Bereich. Tabs lassen sich
+per Drag &amp; Drop auf die andere Tab-Leiste ziehen oder mit **⇧⌘** verschieben.</li>
+<li><strong>Mehrere Fenster:</strong> <strong>⌥⌘N</strong> öffnet ein neues Fenster (übernimmt zunächst den Vault
+des aktuellen Fensters; per ⌘O kann jedes Fenster einen anderen Vault anzeigen).</li>
+</ul>
+<h2 id="4-editor-amp-formatierung">4. Editor &amp; Formatierung</h2>
+<p>Der Editor zeigt die Notiz formatiert an; gespeichert wird Markdown.</p>
+<ul>
+<li><strong>Toolbar:</strong> Die Leiste über dem Editor bietet Absatzformat, fett/kursiv/
+durchgestrichen/Inline-Code, Listen, Zitat, Codeblock, Link, Bild, Tabelle
+und Trennlinie — plus Zurück/Vorwärts sowie rechts den Hilfe-Button
+(Fragezeichen, öffnet diese Hilfe) und den Navigationsmodus (Buch-Symbol).</li>
+<li><strong>Inhaltsverzeichnis-Dropdown:</strong> Der Listen-Button links in der Toolbar
+zeigt alle Überschriften der Notiz (eingerückt nach Ebene); ein Klick
+springt direkt zur jeweiligen Überschrift. Funktioniert auch im
+Navigationsmodus.</li>
+<li><strong>Slash-Menü:</strong> Tippe <strong>„/“</strong> in einer leeren Zeile für alle Block-Typen
+(Überschriften, Listen, Zitat, Codeblock, Tabelle, Bild …).</li>
+<li><strong>Auswahl-Toolbar:</strong> Text markieren zeigt eine schwebende Leiste für fett,
+kursiv, durchgestrichen, Inline-Code und Links.</li>
+<li><strong>Zeichenformate:</strong> fett (⌘B), kursiv (⌘I), Inline-Code (⌘E),
+durchgestrichen (⌥⌘X).</li>
+<li><strong>Absatzformate:</strong> normaler Text (⌥⌘0), Überschriften 1–6 (⌥⌘1–⌥⌘6),
+Zitat (⇧⌘B), Codeblock (⌥⌘C).</li>
+<li><strong>Listen:</strong> Aufzählung (⌥⌘8), nummerierte Liste (⌥⌘7) und Aufgabenlisten;
+verschachteln mit Tab/⇧Tab, automatische Fortführung beim Enter und
+automatische Neunummerierung.</li>
+<li><strong>Auto-Formatierung beim Tippen:</strong> <code># </code>, <code>## </code>, <code>- </code>, <code>1. </code>, <code>&gt; </code> am Zeilenanfang
+sowie <code>```</code> erzeugen das jeweilige Format sofort; <code>-&gt;</code> wird zu einem
+Pfeil „→“.</li>
+<li><strong>Tabellen:</strong> Einfügen über ⌥⌘T, das Slash-Menü oder Menü „Bearbeiten“. Mit Tab
+von Zelle zu Zelle springen; Zeilen/Spalten über die Tabellen-Steuerung direkt
+an der Tabelle oder das Menü <strong>Tabelle</strong> einfügen und löschen.</li>
+<li><strong>Bilder:</strong> per Einfügen aus der Zwischenablage, Drag &amp; Drop, Slash-Menü oder
+Menü „Bearbeiten → Bild einfügen…“.</li>
+<li><strong>Undo/Redo</strong> wie gewohnt (⌘Z / ⇧⌘Z).</li>
+<li><strong>Suchen &amp; Ersetzen:</strong> <strong>⌘F</strong> öffnet die Suchleiste rechts oben im Editor,
+<strong>⌥⌘F</strong> zusätzlich die Ersetzen-Zeile (auch über <strong>Bearbeiten → Suchen…</strong>).
+Gesucht wird in der aktuellen Notiz ohne Beachtung der Groß-/Kleinschreibung;
+eine markierte Textstelle wird als Suchbegriff übernommen. <strong>↩</strong> springt zum
+nächsten, <strong>⇧↩</strong> zum vorherigen Treffer, <strong>Esc</strong> schließt die Leiste.
+„Ersetzen“ ersetzt den aktuellen Treffer, „Alle“ sämtliche Treffer. Im
+Navigationsmodus ist nur Suchen möglich, nicht Ersetzen.</li>
+<li><strong>Blöcke verschieben:</strong> Der Griff links neben einem Block (erscheint beim
+Überfahren) erlaubt Verschieben per Drag &amp; Drop.</li>
+<li><strong>YAML-Frontmatter:</strong> Ein <code>---</code>-Block am Dateianfang (z. B. mit <code>title:</code>,
+<code>tags:</code> …) erscheint nicht im Text, sondern hinter dem grauen, aufklappbaren
+Balken <strong>„Frontmatter“</strong> ganz oben im Editor. Dort lässt er sich direkt
+bearbeiten; wird das Feld geleert, entfällt der Block beim Speichern.
+<code>title:</code> bestimmt den Titel beim PDF-Export.</li>
+<li><strong>Welche Felder wertet Merkzeug aus?</strong> Das Menü <strong>„+ Feld“</strong> rechts im
+Frontmatter-Balken listet sie mit Erklärung auf (derzeit <code>title:</code>,
+<code>pdf-linked-title:</code>, <code>pdf-exclude:</code>, <code>pdf-toc:</code> und <code>language:</code>) und fügt per Klick eine
+Vorlagen-Zeile ein. Eigene Felder darüber hinaus werden gespeichert, aber
+nicht ausgewertet.</li>
+</ul>
+<h2 id="5-links">5. Links</h2>
+<ul>
+<li><strong>⌘K</strong> öffnet den Link-Dialog zum Einfügen eines formatierten Links; bestehende
+Links bearbeitest du über den Tooltip, der beim Klick auf den Link erscheint.</li>
+<li>Als Adresse sind möglich: <code>https://…</code>-Adressen, Pfade <strong>relativ zur aktuellen
+Datei</strong>, Pfade <strong>relativ zur Vault-Wurzel</strong> (führender „/“) und absolute Pfade.</li>
+<li><strong>Links auf <code>.md</code>-Dateien</strong> öffnen die Notiz in einem Tab. <strong>Links auf Ordner</strong>
+klappen den Ordner in der Sidebar auf und öffnen die Ordnerübersicht.
+Externe Links öffnen im Browser bzw. Standardprogramm.</li>
+<li><strong>Links auf Überschriften:</strong> Hänge <code>#überschrift</code> an das Ziel an, um direkt zu
+einer Überschrift zu springen – z. B. <code>notiz.md#erste-schritte</code>. Nur
+<code>#erste-schritte</code> springt zur Überschrift <strong>in derselben Notiz</strong>. Das Fragment
+ist der Überschriftentext in Kleinbuchstaben mit <code>-</code> statt Leerzeichen;
+Groß-/Kleinschreibung und Satzzeichen werden beim Springen tolerant behandelt.
+Die Ziel-Überschrift wird nach dem Sprung kurz hervorgehoben. Zeigt das
+Fragment auf keine vorhandene Überschrift, öffnet die Notiz am Anfang.</li>
+</ul>
+<h2 id="6-navigationsmodus-lesen-amp-blättern">6. Navigationsmodus (Lesen &amp; Blättern)</h2>
+<p>Zum Stöbern in verlinkten Notizen gibt es pro Tab einen <strong>Navigationsmodus</strong> –
+umschaltbar mit <strong>⌘R</strong>, über <strong>Ansicht → Navigationsmodus</strong> oder das Buch-Symbol
+in der Toolbar.</p>
+<ul>
+<li>Im Navigationsmodus ist die Notiz <strong>schreibgeschützt</strong>; Klicks auf Vault-Links
+laden das Ziel <strong>im selben Tab</strong> (statt einen neuen Tab zu öffnen).</li>
+<li>Auch <strong>Ordner-Links</strong> bleiben im selben Tab: Der Tab zeigt die Ordnerübersicht,
+und Klicks auf deren Einträge navigieren im selben Tab weiter.</li>
+<li><strong>Zurück/Vorwärts:</strong> Pfeil-Buttons in der Toolbar, <strong>⌘[</strong> / <strong>⌘]</strong>, die
+Zurück-/Vorwärts-Tasten der Maus oder Wischgesten auf dem Trackpad
+(horizontales Wischen mit zwei Fingern, unter macOS auch mit drei Fingern,
+wenn „Zwischen Seiten blättern&quot; entsprechend eingestellt ist).</li>
+<li>Beim Zurück-/Vorwärtsgehen landest du wieder an der <strong>Stelle, an der du die
+Notiz verlassen hast</strong> (bzw. am verlinkten Anker, wenn du dort nicht gescrollt
+hattest).</li>
+<li>Die <strong>Historie bleibt pro Tab erhalten</strong>, auch wenn du den Modus verlässt, die
+Notiz bearbeitest und den Modus später wieder einschaltest.</li>
+</ul>
+<h2 id="7-mermaid-diagramme">7. Mermaid-Diagramme</h2>
+<ul>
+<li>Codeblöcke mit der Sprache <code>mermaid</code> werden direkt im Editor <strong>als Diagramm
+gerendert</strong> (offline, mermaid.js ist in der App enthalten).</li>
+<li>Der Button <strong>„Bearbeiten“</strong> am Diagramm zeigt den Quelltext; <strong>„Diagramm“</strong>
+wechselt zurück zur gerenderten Ansicht. In der Datei bleibt immer der
+<code>```mermaid</code>-Block erhalten.</li>
+<li><strong>Zoom-Vorschau:</strong> die Lupe (erscheint beim Überfahren des Diagramms) oder
+⌘-Klick öffnen ein eigenes Fenster – zoomen mit ⌘+Scrollen bzw. Pinch oder den
+Tasten <strong>+/−/0</strong>, schließen mit <strong>Esc</strong>.</li>
+</ul>
+<h2 id="8-bild-ressourcen">8. Bild-Ressourcen</h2>
+<ul>
+<li>Jede Notiz hat einen eigenen Ressourcen-Ordner <strong><code>Notizname.assets/</code></strong> neben der
+Datei; eingefügte Bilder werden dort abgelegt.</li>
+<li>Beim <strong>Umbenennen</strong> der Notiz wird der Ordner mit umbenannt (inkl. Anpassung der
+Bildpfade in der Notiz), beim <strong>Verschieben</strong> wandert er mit, beim <strong>Löschen</strong>
+landet er mit im Papierkorb.</li>
+<li>Ressourcen-Ordner sind im Dateibaum standardmäßig ausgeblendet (⇧⌘R zeigt sie).</li>
+</ul>
+<h2 id="9-pdf-export">9. PDF-Export</h2>
+<ul>
+<li><p><strong>Ablage → Als PDF exportieren…</strong> (⌘P) exportiert die aktive Notiz als PDF;
+alternativ per Rechtsklick auf eine Notiz im Dateibaum.</p>
+</li>
+<li><p>Verlinkt die Notiz weitere Markdown-Dateien <strong>in derselben Hierarchie</strong> (im
+eigenen Ordner oder darunter), fragt die App: <strong>„Nur diese Datei“</strong> oder
+<strong>„Mit verlinkten Dokumenten“</strong>. Letzteres ist für Index-Dateien wie eine
+<code>README</code> mit Inhaltsverzeichnis gedacht: Zuerst kommt die Index-Datei,
+danach alle direkt verlinkten Dokumente in alphabetischer Reihenfolge –
+jedes beginnt auf einer neuen Seite.</p>
+</li>
+<li><p><strong>Mehrere Notizen einzeln exportieren:</strong> Nach einer Mehrfachauswahl im
+Dateibaum (⌘/Ctrl- bzw. ⇧-Klick, siehe Abschnitt 2) bietet das Kontextmenü
+<strong>„N Dateien als PDF exportieren…“</strong> an. Man wählt einen <strong>Zielordner</strong>,
+dann wird jede ausgewählte Notiz als <strong>eigenes PDF</strong> (Dateiname der Notiz
+mit <code>.pdf</code>) dorthin exportiert — ohne Nachfrage zu verlinkten Dokumenten,
+jede Datei für sich. Vorhandene gleichnamige PDFs werden nach Rückfrage
+überschrieben. Eine zugewiesene PDF-Vorlage gilt für alle Dateien.</p>
+</li>
+<li><p><strong>Dokumente ausschließen:</strong> Eine <code>pdf-exclude:</code>-Liste im Frontmatter der
+Index-Datei nimmt einzelne verlinkte Dokumente vom Export aus, z. B.:</p>
+<pre><code>---
+pdf-exclude:
+  - intern
+  - unterordner/entwurf.md
+---
+</code></pre>
+<p>Pfade wie in Links: relativ zur Index-Datei, mit führendem <code>/</code> relativ zum
+Vault; <code>.md</code> ist optional. Auch die Kurzform <code>pdf-exclude: [intern, entwurf]</code>
+ist möglich. Ausgeschlossene Dokumente zählen in der Nachfrage nicht mit.</p>
+</li>
+<li><p><strong>Eigener Titel für den Gesamt-Export:</strong> <code>pdf-linked-title:</code> im Frontmatter
+der Index-Datei setzt den Dokumenttitel für den Export <strong>mit verlinkten
+Dokumenten</strong> — nützlich, wenn die Index-Datei allein z. B. ein „Management
+Summary“ ist, das Gesamtdokument aber „Full Report“ heißen soll:</p>
+<pre><code>---
+title: Management Summary
+pdf-linked-title: Full Report
+---
+</code></pre>
+<p>Beim Export „Nur diese Datei“ gilt weiterhin <code>title:</code> (bzw. die erste
+Überschrift). Der Titel erscheint in den PDF-Metadaten, im
+<code>{{titel}}</code>-Platzhalter von Vorlagen und in Chromiums <code>&lt;span class=&quot;title&quot;&gt;</code>
+in Kopf-/Fußzeilen.</p>
+</li>
+<li><p><strong>Inhaltsverzeichnis:</strong> <code>pdf-toc: true</code> im Frontmatter der exportierten
+(Index-)Datei stellt dem PDF ein klickbares Inhaltsverzeichnis voran —
+Überschriften 1–3 aller enthaltenen Dokumente auf einer eigenen Seite nach
+dem Deckblatt (mit Deckblatt also ab Seite 2).</p>
+</li>
+<li><p><strong>Dokumentsprache:</strong> <code>language:</code> im Frontmatter der (Index-)Datei (z. B.
+<code>language: en</code>) bestimmt die Überschrift des Inhaltsverzeichnisses
+(„Table of Contents“ statt „Inhaltsverzeichnis“; unterstützt: de, en, fr,
+es, it, pt, nl — andere Sprachen erhalten den englischen Titel) und die
+Silbentrennung im PDF. Ohne Angabe wird die Sprache der Oberfläche (Deutsch oder Englisch) verwendet.</p>
+</li>
+<li><p>Das PDF wird immer hell gerendert (unabhängig vom System-Design) und enthält
+Tabellen, Bilder und Mermaid-Diagramme. Web-Links, Dateien außerhalb der
+Hierarchie und nicht verlinkte Dateien werden nicht angehängt.</p>
+</li>
+<li><p><strong>Mermaid im PDF:</strong> Diagramme werden nie über einen Seitenumbruch geteilt —
+passt ein Diagramm nicht mehr auf die aktuelle Seite, beginnt es auf der
+nächsten; ein Diagramm, das höher als eine Seite wäre, wird passend
+verkleinert.</p>
+</li>
+<li><p><strong>Automatisches Querformat:</strong> Enthält eines der exportierten Dokumente eine
+Tabelle, die nicht auf eine A4-Seite im Hochformat passt, wird das gesamte
+PDF im Querformat erzeugt.</p>
+</li>
+<li><p><strong>Links im PDF:</strong> Links zwischen den exportierten Dokumenten (z. B. vom
+Inhaltsverzeichnis) springen im PDF direkt zur jeweiligen Seite; Web-Links
+bleiben klickbar. Vault-Links auf Dateien, die nicht im PDF enthalten sind,
+erscheinen als normaler Text.</p>
+</li>
+<li><p>Während des Exports zeigt eine <strong>Fortschrittsanzeige</strong> unten im Fenster den
+Stand („Dokument 3 von 15 gerendert …“, danach „PDF wird erzeugt …“).</p>
+</li>
+<li><p>Nach dem Export wird die erzeugte Datei im Finder/Explorer gezeigt.</p>
+</li>
+</ul>
+<h3 id="pdf-vorlagen-briefkopf-kopf-und-fußzeile">PDF-Vorlagen (Briefkopf, Kopf- und Fußzeile)</h3>
+<p>Mit Vorlagen bekommt das PDF ein Firmen-Layout: Logo und Kopfzeile auf jeder
+Seite, Fußzeile mit Seitenzahlen sowie optional ein Deckblatt.</p>
+<ul>
+<li>Verwaltet werden Vorlagen unter <strong>Merkzeug → Einstellungen…</strong> (⌘,). Dort wird
+der <strong>Vorlagen-Ordner</strong> festgelegt; jede Vorlage ist ein Unterordner darin.</li>
+<li><strong>„Anlegen“</strong> erzeugt eine neue Vorlage mit Beispieldateien und öffnet sie im
+Finder/Explorer. Eine Vorlage besteht aus (alle Dateien optional):<ul>
+<li><code>kopfzeile.html</code> – Kopfzeile auf jeder Seite</li>
+<li><code>fusszeile.html</code> – Fußzeile auf jeder Seite</li>
+<li><code>deckblatt.html</code> – Deckblatt als erste Seite</li>
+<li><code>stil.css</code> – Zusatz-CSS für den Dokumentinhalt</li>
+<li><code>vorlage.json</code> – Seitenränder in Millimetern</li>
+</ul>
+</li>
+<li><strong>Platzhalter:</strong> <code>{{titel}}</code> (<code>title:</code> aus dem YAML-Frontmatter, sonst die
+erste Überschrift 1 der Notiz, sonst der Dateiname; beim Export mit
+verlinkten Dokumenten hat <code>pdf-linked-title:</code> Vorrang) und <code>{{datum}}</code>
+(Exportdatum);
+in Kopf-/Fußzeile zusätzlich <code>&lt;span class=&quot;pageNumber&quot;&gt;&lt;/span&gt;</code> und
+<code>&lt;span class=&quot;totalPages&quot;&gt;&lt;/span&gt;</code> für Seitenzahlen.</li>
+<li><strong>Logo:</strong> Bilddatei (z. B. <code>logo.png</code>) mit in den Vorlagen-Ordner legen und
+relativ referenzieren (<code>&lt;img src=&quot;logo.png&quot; style=&quot;height: 8mm&quot;&gt;</code>) – sie wird
+beim Export automatisch eingebettet. In Kopf- und Fußzeile ist nur
+Inline-CSS möglich. Details stehen in der <code>LIESMICH.md</code> jeder Vorlage.</li>
+<li><strong>Querformat erkennen:</strong> Wird das PDF automatisch im Querformat erzeugt,
+trägt das Dokument die Klasse <code>pdf-landscape</code> am <code>&lt;html&gt;</code>-Element. <code>stil.css</code>
+kann darauf reagieren, z. B. ein hohes Deckblatt niedriger machen:
+<code>html.pdf-landscape .cover { height: 150mm; }</code>.</li>
+<li><strong>Zuweisung pro Vault:</strong> In den Einstellungen wird dem aktuellen Vault eine
+Vorlage zugewiesen. Die Zuweisung liegt im Vault
+(<code>.merkzeug/settings.json</code>) und wandert per Git auf alle Geräte mit; der
+Export verwendet sie automatisch. Ohne Zuweisung wird wie bisher ohne
+Vorlage exportiert.</li>
+<li><strong>Sync zwischen Geräten:</strong> Liegt der Vorlagen-Ordner in <strong>iCloud Drive,
+Google Drive, OneDrive oder Dropbox</strong>, synchronisiert der jeweilige
+Cloud-Client die Vorlagen automatisch auf alle Rechner.</li>
+</ul>
+<h2 id="10-git-integration">10. Git-Integration</h2>
+<p>Ist der Vault ein <strong>Git-Repository</strong>, erscheint unten in der Sidebar eine Statuszeile:</p>
+<ul>
+<li><strong>Branch-Name</strong>, Anzahl geänderter Dateien, <strong>n↑</strong> = lokale Commits, die noch
+nicht gepusht wurden, <strong>n↓</strong> = neue Commits auf dem Server, Häkchen = alles
+committet und gepusht.</li>
+<li>Der Status aktualisiert sich automatisch – auch wenn du außerhalb der App
+committest oder pullst.</li>
+<li><strong>Klick auf die Statuszeile</strong> klappt die Details auf: Liste der geänderten
+Dateien, Eingabefeld für die Commit-Nachricht sowie die Buttons
+<strong>Commit &amp; Push</strong>, <strong>Push</strong> und <strong>Pull</strong>.</li>
+<li><strong>Commit &amp; Push</strong> sichert zuerst alle offenen Notizen, dann <code>git add</code>, Commit und
+Push. Ohne konfigurierten Upstream wird dieser automatisch gesetzt; ohne
+Remote wird nur lokal committet (mit Hinweis).</li>
+<li><strong>Push</strong> überträgt bereits committete, aber noch nicht gepushte Commits
+(<strong>n↑</strong> in der Statuszeile) zum Server – etwa um einen fehlgeschlagenen Push
+nachzuholen, wenn der Server zwischenzeitlich nicht erreichbar war.</li>
+<li><strong>Pull</strong> holt Änderungen vom Server; Merge-Konflikte löst du außerhalb der App.</li>
+<li>Schlägt eine Git-Aktion fehl (z. B. weil der Server nicht erreichbar ist),
+zeigt die Statuszeile ein <strong>⚠</strong>-Zeichen. Die Fehlermeldung steht in den
+aufgeklappten Details; das Zeichen verschwindet, sobald eine Git-Aktion
+wieder gelingt.</li>
+<li>Die App nutzt die Git-Zugangsdaten deines Systems (SSH-Schlüssel oder Credential
+Helper). Wäre eine interaktive Anmeldung nötig, bricht der Vorgang mit einer
+Fehlermeldung ab statt zu warten.</li>
+</ul>
+<h2 id="11-tastaturkürzel">11. Tastaturkürzel</h2>
+<table>
+<thead>
+<tr>
+<th>Kürzel</th>
+<th>Funktion</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>⌘N</td>
+<td>Neue Notiz</td>
+</tr>
+<tr>
+<td>⌃⌘N</td>
+<td>Neue Meeting-Notiz</td>
+</tr>
+<tr>
+<td>⇧⌘N</td>
+<td>Neuer Ordner</td>
+</tr>
+<tr>
+<td>⌥⌘N</td>
+<td>Neues Fenster</td>
+</tr>
+<tr>
+<td>⌘O</td>
+<td>Vault öffnen</td>
+</tr>
+<tr>
+<td>⌘W / ⇧⌘W</td>
+<td>Tab schließen / Fenster schließen</td>
+</tr>
+<tr>
+<td>⌘S / ⌥⌘S</td>
+<td>Sichern / Alle sichern</td>
+</tr>
+<tr>
+<td>⌘P</td>
+<td>Als PDF exportieren</td>
+</tr>
+<tr>
+<td>⌘,</td>
+<td>Einstellungen (PDF-Vorlagen)</td>
+</tr>
+<tr>
+<td>⌘B / ⌘I / ⌥⌘X / ⌘E</td>
+<td>Fett / Kursiv / Durchgestrichen / Inline-Code</td>
+</tr>
+<tr>
+<td>⌥⌘0 … ⌥⌘6</td>
+<td>Text / Überschrift 1–6</td>
+</tr>
+<tr>
+<td>⌥⌘8 / ⌥⌘7</td>
+<td>Aufzählung / Nummerierte Liste</td>
+</tr>
+<tr>
+<td>⇧⌘B / ⌥⌘C</td>
+<td>Zitat / Codeblock</td>
+</tr>
+<tr>
+<td>⌘K</td>
+<td>Link einfügen</td>
+</tr>
+<tr>
+<td>⌥⌘T</td>
+<td>Tabelle einfügen</td>
+</tr>
+<tr>
+<td>⌘F / ⌥⌘F</td>
+<td>Suchen / Suchen und Ersetzen</td>
+</tr>
+<tr>
+<td>⌘R</td>
+<td>Navigationsmodus ein/aus</td>
+</tr>
+<tr>
+<td>⌘[ / ⌘]</td>
+<td>Zurück / Vorwärts</td>
+</tr>
+<tr>
+<td>⌘\</td>
+<td>Zweite Sektion ein-/ausblenden</td>
+</tr>
+<tr>
+<td>⇧⌘\</td>
+<td>Tab in andere Sektion verschieben</td>
+</tr>
+<tr>
+<td>⇧⌘R</td>
+<td>Ressourcen ein-/ausblenden</td>
+</tr>
+<tr>
+<td>⌘?</td>
+<td>Diese Hilfe</td>
+</tr>
+</tbody></table>
+<p><em>(Windows: ⌘ = Strg, ⌥ = Alt, ⇧ = Umschalt)</em></p>
+<h2 id="gemeinsamer-editor-und-speicherkonflikte">Gemeinsamer Editor und Speicherkonflikte</h2>
+<p>Desktop, iOS und IntelliJ verwenden denselben Merkzeug-Editor. Frontmatter bleibt beim Bearbeiten erhalten und kann im Editor geöffnet werden. Scheitert das Speichern, bleibt die Änderung als ungespeichert markiert. Bei gleichzeitigen externen Änderungen kannst du die externe Fassung neu laden oder ausdrücklich deine eigene Version behalten.</p>
+<h2 id="mac-app-store-testversionen">Mac-App-Store-Testversionen</h2>
+<p>Experimentelle Mac-App-Store-Versionen merken sich die Zugriffsberechtigung beim Auswählen eines Vaults oder PDF-Vorlagenordners. Wenn macOS den Zugriff entzieht oder der Ordner verschoben wird, wähle ihn erneut aus. Die Sandbox-Prüfung dieser Versionen ist noch nicht abgeschlossen.</p>
+</main><footer><span>© 2026 creative-it Software Consulting e.U.</span><nav aria-label="Weitere Links"><a href="privacy-de.html">Datenschutz</a><a href="legal-de.html">Impressum</a><a href="https://www.creative-it.com/">creative-it</a></nav></footer></body></html>

@@ -25,7 +25,7 @@ Dark-theme contrast in the IntelliJ preview's file dialogs is a known issue. It 
 
 ## Report a problem
 
-Use the repository's [issue tracker](https://github.com/creative-it-Software-Consulting-e-U/merkzeug/issues). Include:
+Use [Merkzeug App Support](https://support.apps.creative-it.com/?app=merkzeug&lang=en). The repository issue tracker will become an additional option when the source is public. Include:
 
 1. Merkzeug version and edition, OS version and CPU architecture; for IntelliJ, the full IDE build.
 2. Steps to reproduce, expected result and actual result.

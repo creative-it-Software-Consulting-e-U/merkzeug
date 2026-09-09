@@ -27,6 +27,8 @@ jobs:
       - run: npm ci
       - run: npm run check:version
       - run: npm run check:docs
+      - run: node scripts/build-website.mjs
+      - run: python3 scripts/check-website.py
       - run: npm test
       - run: npm run test:release
       - run: npm run typecheck

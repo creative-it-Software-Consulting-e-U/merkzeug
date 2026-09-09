@@ -1,0 +1,72 @@
+name: Validate non-Apple packages
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  checks:
+    uses: ./.github/workflows/ci.yml
+  desktop:
+    needs: checks
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {os: windows-2025, platform: win, arch: x64}
+          - {os: windows-2025, platform: win, arch: arm64}
+          - {os: ubuntu-24.04, platform: linux, arch: x64}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - if: matrix.platform == 'linux'
+        run: sudo apt-get update && sudo apt-get install -y rpm libarchive-tools
+      - name: Build unsigned validation packages
+        run: python scripts/package-desktop.py ${{ matrix.platform }} ${{ matrix.arch }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: unsigned-validation-${{ matrix.platform }}-${{ matrix.arch }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            crossplatform/dist/*.exe
+            crossplatform/dist/*.AppImage
+            crossplatform/dist/*.deb
+            crossplatform/dist/*.rpm
+  intellij:
+    needs: checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - name: Fetch checksum-pinned IDE SDK
+        run: python3 scripts/fetch-intellij-sdk.py "$RUNNER_TEMP/merkzeug-sdk"
+      - name: Build plugin
+        shell: bash
+        run: IDEA_HOME="$RUNNER_TEMP/merkzeug-sdk" npm run build:intellij
+      - uses: actions/upload-artifact@v4
+        with:
+          name: intellij
+          path: intellij/dist/*.zip
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,71 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Ein visueller Markdown-Editor für Gedanken, die einen eigenen Platz verdienen."><title>Merkzeug iPhone & iPad – Hilfe</title><link rel="stylesheet" href="style.css"><link rel="icon" href="assets/icon.png"><link rel="canonical" href="https://merkzeug.creative-it.com/help-ios-de.html"><meta property="og:type" content="website"><meta property="og:image" content="https://merkzeug.creative-it.com/assets/mac-de.png"></head><body><a class="skip" href="#content">Zum Inhalt</a><header><a class="brand" href="de.html"><img src="assets/icon.png" alt="" width="36" height="36"><strong>Merkzeug</strong></a><nav aria-label="Hauptnavigation"><a href="help-de.html">Hilfe</a><a href="https://support.apps.creative-it.com/?app=merkzeug&amp;lang=de">Support</a><a href="help-ios-en.html" lang="en">English</a></nav></header><main id="content" class="guide"><p class="notice">Hilfe zur aktuellen Entwicklungsversion. Die erste App-Store-Version wird vorbereitet.</p><p><a href="help-de.html">Desktop</a> · <a href="help-ios-de.html">iPhone &amp; iPad</a></p><h1 id="merkzeug-für-ios-amp-ipados">Merkzeug für iOS &amp; iPadOS</h1>
+<p>Auf einem deutschen System erscheinen Oberfläche und Hilfe auf Deutsch, andernfalls auf Englisch. Die Sprache dieser Hilfe lässt sich unabhängig umschalten.</p>
+<p>Merkzeug zeigt und bearbeitet einen <strong>Vault</strong> – einen Ordner voller
+Markdown-Notizen. Auf dem iPhone und iPad übernimmt die App bewusst kein
+Git: Das Klonen, Committen, Pushen und Pullen erledigt die App
+<strong>Working Copy</strong>, Merkzeug arbeitet direkt auf deren Ordner.</p>
+<h2 id="vault-öffnen">Vault öffnen</h2>
+<ol>
+<li>In <strong>Working Copy</strong> das gewünschte Repository klonen.</li>
+<li>In Merkzeug auf <strong>„Vault-Ordner öffnen&quot;</strong> tippen.</li>
+<li>Im Datei-Picker <em>Durchsuchen → Working Copy → &lt;Repository&gt;</em> wählen.</li>
+</ol>
+<p>Merkzeug merkt sich die Freigabe dauerhaft – auch nach einem Neustart der
+App ist der Vault sofort wieder da. Über die Schaltfläche <strong>⌂</strong> kannst du
+jederzeit einen anderen Ordner wählen. Statt eines Working-Copy-Repos
+funktioniert auch jeder andere Ordner aus der Dateien-App.</p>
+<h2 id="navigieren">Navigieren</h2>
+<ul>
+<li>Die Ordneransicht zeigt Unterordner und Notizen als Liste; Antippen
+öffnet den Eintrag.</li>
+<li>Links in Notizen führen direkt zur verlinkten Notiz oder zum Ordner.</li>
+<li><strong>Zurück und vorwärts</strong>: mit den Pfeiltasten ‹ › oben links – oder per
+Wischgeste von der linken bzw. rechten Bildschirmkante.</li>
+<li><strong>Suche 🔍</strong>: durchsucht Dateinamen und Inhalte aller Notizen; ein
+Tippen auf einen Treffer öffnet die Notiz.</li>
+</ul>
+<h2 id="lesen-und-bearbeiten">Lesen und Bearbeiten</h2>
+<p>Notizen öffnen sich <strong>schreibgeschützt</strong> – ideal zum Nachschlagen ohne
+versehentliche Änderungen. Das Stift-Symbol <strong>✎</strong> schaltet in den
+Bearbeitungsmodus:</p>
+<ul>
+<li>Gespeichert wird automatisch (kurz nach der letzten Eingabe sowie beim
+Verlassen der Notiz und beim Wechsel in eine andere App). Ein Punkt •
+neben dem Titel zeigt ungespeicherte Änderungen.</li>
+<li>„/&quot; am Zeilenanfang öffnet das Einfüge-Menü (Überschriften, Listen,
+Tabellen, Bilder, Codeblöcke …).</li>
+<li>Bilder aus der Foto-Mediathek werden beim Einfügen automatisch im
+Unterordner <code>assets/</code> neben der Notiz abgelegt.</li>
+<li>Mermaid-Codeblöcke zeigen eine Diagramm-Vorschau.</li>
+</ul>
+<h2 id="anlegen-umbenennen-löschen">Anlegen, Umbenennen, Löschen</h2>
+<ul>
+<li><strong>＋</strong> in der Ordneransicht legt eine neue Notiz oder einen neuen
+Ordner an. Neue Notizen öffnen sich direkt im Bearbeitungsmodus.</li>
+<li><strong>Eintrag gedrückt halten</strong> öffnet das Menü mit <em>Umbenennen</em> und
+<em>Löschen</em>. Beim Löschen eines Ordners verschwindet sein gesamter
+Inhalt – in Working Copy lässt sich das bis zum nächsten Commit
+rückgängig machen.</li>
+</ul>
+<h2 id="synchronisieren-mit-working-copy">Synchronisieren mit Working Copy</h2>
+<ul>
+<li>Nach einem <strong>Pull</strong> in Working Copy reicht der Wechsel zurück zu
+Merkzeug – die Ordnerliste und geöffnete (unveränderte) Notizen laden
+den neuen Stand automatisch. <strong>↻</strong> liest den Vault jederzeit manuell
+neu ein.</li>
+<li><strong>Commit und Push</strong> passieren in Working Copy; Merkzeug zeigt dort
+geänderte Dateien nicht selbst an.</li>
+<li>Wurde eine Notiz gleichzeitig in Merkzeug bearbeitet <strong>und</strong> extern
+geändert, fragt Merkzeug beim Speichern nach, ob deine Version den
+externen Stand überschreiben soll oder verworfen wird – es geht also
+nichts stillschweigend verloren.</li>
+</ul>
+<h2 id="grenzen-gegenüber-der-desktop-app">Grenzen gegenüber der Desktop-App</h2>
+<ul>
+<li>Keine Tabs und keine geteilten Ansichten – eine Notiz zur Zeit.</li>
+<li>Kein Git in der App (siehe oben – das ist Absicht).</li>
+<li>Sehr große Bilder können die Anzeige verlangsamen.</li>
+</ul>
+<h2 id="gemeinsamer-editor-und-speicherkonflikte">Gemeinsamer Editor und Speicherkonflikte</h2>
+<p>Desktop, iOS und IntelliJ verwenden denselben Merkzeug-Editor. Frontmatter bleibt beim Bearbeiten erhalten und kann im Editor geöffnet werden. Scheitert das Speichern, bleibt die Änderung als ungespeichert markiert. Bei gleichzeitigen externen Änderungen kannst du die externe Fassung neu laden oder ausdrücklich deine eigene Version behalten.</p>
+</main><footer><span>© 2026 creative-it Software Consulting e.U.</span><nav aria-label="Weitere Links"><a href="privacy-de.html">Datenschutz</a><a href="legal-de.html">Impressum</a><a href="https://www.creative-it.com/">creative-it</a></nav></footer></body></html>
