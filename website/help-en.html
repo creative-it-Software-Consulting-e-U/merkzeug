@@ -1,0 +1,453 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="A visual Markdown editor for ideas that deserve a place of their own."><title>Merkzeug Desktop Guide</title><link rel="stylesheet" href="style.css"><link rel="icon" href="assets/icon.png"><link rel="canonical" href="https://merkzeug.creative-it.com/help-en.html"><meta property="og:type" content="website"><meta property="og:image" content="https://merkzeug.creative-it.com/assets/mac-en.png"></head><body><a class="skip" href="#content">Skip to content</a><header><a class="brand" href="index.html"><img src="assets/icon.png" alt="" width="36" height="36"><strong>Merkzeug</strong></a><nav aria-label="Main navigation"><a href="help-en.html">Help</a><a href="https://support.apps.creative-it.com/?app=merkzeug&amp;lang=en">Support</a><a href="help-de.html" lang="de">Deutsch</a></nav></header><main id="content" class="guide"><p class="notice">Guide to the current development version. The first App Store release is being prepared.</p><p><a href="help-en.html">Desktop</a> · <a href="help-ios-en.html">iPhone &amp; iPad</a></p><h1 id="merkzeug-help">Merkzeug – Help</h1>
+<p>The interface and this help use German on a German system and English otherwise. You can switch the help language independently.</p>
+<p>Merkzeug is a Notion-style editor for Markdown notes – this edition runs on
+<strong>macOS, Windows and Linux</strong>. You edit your notes <strong>WYSIWYG</strong> (formatted, without
+visible Markdown syntax), but everything is always saved as clean, portable
+Markdown. All notes live as <code>.md</code> files in an ordinary folder – the <strong>vault</strong>.</p>
+<p>All shortcuts use <strong>⌘</strong> on the Mac; on Windows, ⌘ corresponds to the <strong>Ctrl</strong>
+key and ⌥ to the <strong>Alt</strong> key.</p>
+<p><strong>Contents:</strong> <a href="#1-getting-started">1. Getting started</a> ·
+<a href="#2-sidebar-amp-file-tree">2. Sidebar &amp; file tree</a> ·
+<a href="#3-tabs-sections-amp-windows">3. Tabs, sections &amp; windows</a> ·
+<a href="#4-editor-amp-formatting">4. Editor &amp; formatting</a> ·
+<a href="#5-links">5. Links</a> ·
+<a href="#6-navigation-mode-reading-amp-browsing">6. Navigation mode</a> ·
+<a href="#7-mermaid-diagrams">7. Mermaid diagrams</a> ·
+<a href="#8-image-assets">8. Image assets</a> ·
+<a href="#9-pdf-export">9. PDF export</a> ·
+<a href="#10-git-integration">10. Git integration</a> ·
+<a href="#11-keyboard-shortcuts">11. Keyboard shortcuts</a></p>
+<hr>
+<h2 id="1-getting-started">1. Getting started</h2>
+<ul>
+<li>On first launch you pick a <strong>vault folder</strong> (any folder containing Markdown
+files). Your choice is remembered.</li>
+<li>Use <strong>File → Open Vault…</strong> (⌘O) to switch the vault of the current window.</li>
+<li><strong>File → Recent Vaults</strong> lists the last ten vaults for quick switching.</li>
+<li><strong>Autosave:</strong> changes are saved automatically one second after the last edit,
+as well as when closing tabs and when quitting the app.
+Manually: <strong>⌘S</strong> (active note) or <strong>⌥⌘S</strong> (all open notes).</li>
+<li>The vault can also be preset via the <code>MERKZEUG_VAULT</code> environment variable.</li>
+</ul>
+<h2 id="2-sidebar-amp-file-tree">2. Sidebar &amp; file tree</h2>
+<p>The sidebar on the left shows the vault as a hierarchical tree.</p>
+<ul>
+<li><strong>Clicking a note</strong> opens it in a tab; clicking a folder expands/collapses it.
+<strong>Double-clicking a folder</strong> opens the folder overview.</li>
+<li><strong>Adjusting the width:</strong> drag the divider between the sidebar and the editor
+area with the mouse; double-clicking it restores the default width. If there
+is not enough room for long names or deep hierarchies, the tree can be
+scrolled horizontally and vertically.</li>
+<li><strong>Context menu</strong> (right-click): new note, new folder, export as PDF, rename,
+move to trash, show in Finder/Explorer.</li>
+<li><strong>Multi-selection:</strong> ⌘-click (Windows/Linux: Ctrl-click) adds further notes
+to the selection or removes them again, ⇧-click selects the range up to the
+clicked note — both only among notes of the <strong>same folder</strong>. Right-clicking
+the selection then offers <strong>&quot;Export N files as PDF…&quot;</strong> (see the PDF export
+section).</li>
+<li><strong>Moving:</strong> simply drag files and folders onto a folder.</li>
+<li><strong>Folder overview:</strong> shows the contents of a folder as cards in its own tab;
+clicking notes and subfolders navigates onward.</li>
+<li><strong>Sidebar footer:</strong> buttons for a new note, a new meeting note and a new
+folder (left) plus a reload button for re-reading the vault; the eye icon
+shows/hides <strong>asset folders</strong> (⇧⌘R).</li>
+<li><strong>Meeting notes from the calendar:</strong> <strong>⌃⌘N</strong> (menu &quot;Ablage → Neue
+Meeting-Notiz…&quot; or the calendar button in the footer) lists the running
+and upcoming events of the next 14 days from your locally configured
+calendars — on macOS all accounts of the Calendar app (iCloud,
+Exchange/Microsoft 365, Google, …), on Windows all calendars of
+<strong>classic Outlook</strong> (via its object model; the &quot;new Outlook&quot; has none),
+with no cloud API involved. All-day
+events (vacations, birthdays, …) are hidden by default and can be shown
+via the checkbox above the list. <strong>&quot;Frühere
+anzeigen&quot;</strong> reveals past events, <strong>&quot;Suchen&quot;</strong> searches titles, people and
+locations within ±90 days. Clicking an event creates a ready-named note:
+the event data (date, time, location, organizer, attendees, detected
+Teams/Zoom/Meet/Webex link) goes into the frontmatter; the body contains
+date and time below the heading, a <strong>checkable attendee list</strong> (who
+actually showed up?) and the Agenda, Notes and Tasks sections. The first
+time, macOS asks for permission to access the calendar. On Windows,
+Outlook is started in the background if needed; if Outlook shows a
+security prompt (&quot;A program is trying to access …&quot;), allow access for a
+few minutes. On Linux the calendar integration is not available yet (an
+ICS import will follow).</li>
+<li><strong>Automatic naming of new notes:</strong> a new note is initially called
+&quot;Neue Notiz&quot;. If it starts with a <strong>heading 1</strong>, the file is automatically
+named after the title when saving: all lowercase, spaces and special
+characters become &quot;-&quot;, umlauts are kept — so
+&quot;2026-08-11 BPP Call Gerulf &amp; Alois - Neustrukturierung&quot; becomes
+<code>2026-08-11-bpp-call-gerulf-alois-neustrukturierung.md</code>. When the heading
+changes, the file name follows. As soon as you <strong>rename the file manually</strong>,
+your name is left untouched.</li>
+<li>Changes made to the vault outside the app (Finder/Explorer, terminal, sync)
+are detected automatically. This also applies to <strong>open notes</strong>: when the
+file changes on disk, the tab reloads it and shows a notice with the time
+(&quot;Reloaded at ...&quot;) above the editor. If you have unsaved changes there,
+a banner appears instead, offering <strong>&quot;Reload&quot;</strong> (take the version from disk)
+or <strong>&quot;Keep my version&quot;</strong> (save your own changes); nothing is overwritten
+until you decide.</li>
+<li><strong>Hidden and technical folders:</strong> entries starting with a dot (e.g. <code>.git</code>)
+as well as dependency and build folders from software projects are hidden
+and not watched — <code>node_modules</code>, <code>__pycache__</code>, Python virtualenvs, and
+<code>target</code>, <code>build</code>, <code>dist</code> and <code>out</code> when the matching build file sits next
+to them (e.g. <code>pom.xml</code> or <code>package.json</code>). This keeps the app responsive
+even when a large code repository is opened as a vault.</li>
+</ul>
+<h2 id="3-tabs-sections-amp-windows">3. Tabs, sections &amp; windows</h2>
+<ul>
+<li>Every note opens in its own <strong>tab</strong>; <strong>⌘W</strong> closes the active tab,
+<strong>⇧⌘W</strong> closes the window.</li>
+<li><strong>Two sections</strong> side by side: **⌘** splits the editor area. Drag tabs onto
+the other tab bar or move them with **⇧⌘**.</li>
+<li><strong>Multiple windows:</strong> <strong>⌥⌘N</strong> opens a new window (initially inheriting the
+current window&#39;s vault; each window can show a different vault via ⌘O).</li>
+</ul>
+<h2 id="4-editor-amp-formatting">4. Editor &amp; formatting</h2>
+<p>The editor shows the note formatted; what is saved is Markdown.</p>
+<ul>
+<li><strong>Toolbar:</strong> the bar above the editor offers paragraph format, bold/italic/
+strikethrough/inline code, lists, quote, code block, link, image, table and
+divider — plus back/forward as well as, on the right, the help button
+(question mark, opens this help) and navigation mode (book icon).</li>
+<li><strong>Table-of-contents dropdown:</strong> the list button on the left of the toolbar
+shows all headings of the note (indented by level); clicking one jumps
+straight to that heading. Also works in navigation mode.</li>
+<li><strong>Slash menu:</strong> type <strong>&quot;/&quot;</strong> on an empty line for all block types (headings,
+lists, quote, code block, table, image …).</li>
+<li><strong>Selection toolbar:</strong> selecting text shows a floating bar for bold, italic,
+strikethrough, inline code and links.</li>
+<li><strong>Character formats:</strong> bold (⌘B), italic (⌘I), inline code (⌘E),
+strikethrough (⌥⌘X).</li>
+<li><strong>Paragraph formats:</strong> plain text (⌥⌘0), headings 1–6 (⌥⌘1–⌥⌘6),
+quote (⇧⌘B), code block (⌥⌘C).</li>
+<li><strong>Lists:</strong> bullet list (⌥⌘8), numbered list (⌥⌘7) and task lists; nest with
+Tab/⇧Tab, automatic continuation on Enter and automatic renumbering.</li>
+<li><strong>Auto-formatting while typing:</strong> <code># </code>, <code>## </code>, <code>- </code>, <code>1. </code>, <code>&gt; </code> at the start
+of a line and <code>```</code> immediately create the corresponding format; <code>-&gt;</code>
+becomes an arrow &quot;→&quot;.</li>
+<li><strong>Tables:</strong> insert via ⌥⌘T, the slash menu or the Edit menu. Jump from cell to
+cell with Tab; add and delete rows/columns via the table controls right at the
+table or the <strong>Table</strong> menu.</li>
+<li><strong>Images:</strong> paste from the clipboard, drag &amp; drop, slash menu or
+<strong>Edit → Insert Image…</strong>.</li>
+<li><strong>Undo/redo</strong> as usual (⌘Z / ⇧⌘Z).</li>
+<li><strong>Find &amp; replace:</strong> <strong>⌘F</strong> opens the search bar at the top right of the
+editor, <strong>⌥⌘F</strong> additionally shows the replace row (also via
+<strong>Edit → Find…</strong>). The search covers the current note and is
+case-insensitive; selected text is taken over as the search term. <strong>↩</strong>
+jumps to the next match, <strong>⇧↩</strong> to the previous one, <strong>Esc</strong> closes the
+bar. &quot;Ersetzen&quot; replaces the current match, &quot;Alle&quot; replaces all matches.
+In navigation mode you can search but not replace.</li>
+<li><strong>Moving blocks:</strong> the handle to the left of a block (appears on hover)
+allows drag &amp; drop reordering.</li>
+<li><strong>YAML frontmatter:</strong> a <code>---</code> block at the top of the file (e.g. with
+<code>title:</code>, <code>tags:</code> …) does not appear in the text; instead it sits behind the
+gray, collapsible <strong>&quot;Frontmatter&quot;</strong> bar at the very top of the editor, where
+it can be edited directly. Clearing the field removes the block on save.
+<code>title:</code> sets the title used by the PDF export.</li>
+<li><strong>Which fields does Merkzeug interpret?</strong> The <strong>&quot;+ Feld&quot;</strong> menu on the right
+of the frontmatter bar lists them with an explanation (currently <code>title:</code>,
+<code>pdf-linked-title:</code>, <code>pdf-exclude:</code>, <code>pdf-toc:</code> and <code>language:</code>) and inserts a template line on
+click. Any other fields are preserved but not interpreted.</li>
+</ul>
+<h2 id="5-links">5. Links</h2>
+<ul>
+<li><strong>⌘K</strong> opens the link dialog for inserting a formatted link; edit existing
+links via the tooltip that appears when clicking a link.</li>
+<li>Possible addresses: <code>https://…</code> URLs, paths <strong>relative to the current file</strong>,
+paths <strong>relative to the vault root</strong> (leading &quot;/&quot;) and absolute paths.</li>
+<li><strong>Links to <code>.md</code> files</strong> open the note in a tab. <strong>Links to folders</strong> expand
+the folder in the sidebar and open the folder overview. External links open
+in the browser or default application.</li>
+<li><strong>Links to headings:</strong> append <code>#heading</code> to the target to jump straight to a
+heading – e.g. <code>note.md#getting-started</code>. Just <code>#getting-started</code> jumps to the
+heading <strong>within the same note</strong>. The fragment is the heading text in lower
+case with <code>-</code> instead of spaces; case and punctuation are treated leniently
+when jumping. The target heading is briefly highlighted after the jump. If the
+fragment does not match any heading, the note opens at the top.</li>
+</ul>
+<h2 id="6-navigation-mode-reading-amp-browsing">6. Navigation mode (reading &amp; browsing)</h2>
+<p>For browsing linked notes there is a per-tab <strong>navigation mode</strong> – toggled with
+<strong>⌘R</strong>, via <strong>View → Navigation Mode</strong> or the book icon in the toolbar.</p>
+<ul>
+<li>In navigation mode the note is <strong>read-only</strong>; clicking vault links loads the
+target <strong>in the same tab</strong> (instead of opening a new tab).</li>
+<li><strong>Folder links</strong> also stay in the same tab: the tab shows the folder overview,
+and clicks on its entries continue navigating in the same tab.</li>
+<li><strong>Back/forward:</strong> arrow buttons in the toolbar, <strong>⌘[</strong> / <strong>⌘]</strong>, the
+back/forward mouse buttons, or trackpad swipe gestures (horizontal
+two-finger swipe; on macOS also three fingers if &quot;Swipe between pages&quot;
+is configured accordingly).</li>
+<li>Going back/forward returns you to the <strong>position where you left the note</strong>
+(or to the linked anchor if you had not scrolled there).</li>
+<li>The <strong>history is kept per tab</strong>, even if you leave the mode, edit the note and
+re-enable the mode later.</li>
+</ul>
+<h2 id="7-mermaid-diagrams">7. Mermaid diagrams</h2>
+<ul>
+<li>Code blocks with the language <code>mermaid</code> are rendered <strong>as diagrams</strong> directly
+in the editor (offline, mermaid.js is bundled with the app).</li>
+<li>The <strong>&quot;Edit&quot;</strong> button on the diagram shows the source; <strong>&quot;Diagram&quot;</strong> switches
+back to the rendered view. The file always keeps the <code>```mermaid</code> block.</li>
+<li><strong>Zoom preview:</strong> the magnifier (appears when hovering the diagram) or
+⌘-click opens a separate window – zoom with ⌘+scroll or pinch or the
+<strong>+/−/0</strong> keys, close with <strong>Esc</strong>.</li>
+</ul>
+<h2 id="8-image-assets">8. Image assets</h2>
+<ul>
+<li>Every note has its own asset folder <strong><code>NoteName.assets/</code></strong> next to the file;
+inserted images are stored there.</li>
+<li>When <strong>renaming</strong> the note the folder is renamed too (including updating the
+image paths inside the note), when <strong>moving</strong> it moves along, when
+<strong>deleting</strong> it goes to the trash as well.</li>
+<li>Asset folders are hidden in the file tree by default (⇧⌘R shows them).</li>
+</ul>
+<h2 id="9-pdf-export">9. PDF export</h2>
+<ul>
+<li><p><strong>File → Export as PDF…</strong> (⌘P) exports the active note as a PDF;
+alternatively right-click a note in the file tree.</p>
+</li>
+<li><p>If the note links to other Markdown files <strong>in the same hierarchy</strong> (its own
+folder or below), the app asks: <strong>&quot;Only this file&quot;</strong> or <strong>&quot;With linked
+documents&quot;</strong>. The latter is meant for index files such as a <code>README</code> with a
+table of contents: the index file comes first, followed by all directly
+linked documents in alphabetical order – each starting on a new page.</p>
+</li>
+<li><p><strong>Exporting several notes individually:</strong> after a multi-selection in the
+file tree (⌘/Ctrl- or ⇧-click, see section 2) the context menu offers
+<strong>&quot;Export N files as PDF…&quot;</strong>. You choose a <strong>target folder</strong>, then each
+selected note is exported there as its <strong>own PDF</strong> (note&#39;s file name with
+<code>.pdf</code>) — without the linked-documents prompt, each file on its own.
+Existing PDFs with the same name are overwritten after confirmation. An
+assigned PDF template applies to all files.</p>
+</li>
+<li><p><strong>Excluding documents:</strong> a <code>pdf-exclude:</code> list in the index file&#39;s
+frontmatter leaves individual linked documents out of the export, e.g.:</p>
+<pre><code>---
+pdf-exclude:
+  - internal
+  - subfolder/draft.md
+---
+</code></pre>
+<p>Paths work like in links: relative to the index file, with a leading <code>/</code>
+relative to the vault; <code>.md</code> is optional. The short form
+<code>pdf-exclude: [internal, draft]</code> also works. Excluded documents are not
+counted in the export prompt.</p>
+</li>
+<li><p><strong>Separate title for the combined export:</strong> <code>pdf-linked-title:</code> in the index
+file&#39;s frontmatter sets the document title for the export <strong>with linked
+documents</strong> — useful when the index file on its own is, say, a &quot;Management
+Summary&quot; while the combined document should be called &quot;Full Report&quot;:</p>
+<pre><code>---
+title: Management Summary
+pdf-linked-title: Full Report
+---
+</code></pre>
+<p>The &quot;Only this file&quot; export keeps using <code>title:</code> (or the first heading). The
+title appears in the PDF metadata, in the <code>{{titel}}</code> placeholder of
+templates and in Chromium&#39;s <code>&lt;span class=&quot;title&quot;&gt;</code> in headers/footers.</p>
+</li>
+<li><p><strong>Table of contents:</strong> <code>pdf-toc: true</code> in the frontmatter of the exported
+(index) file prepends a clickable table of contents to the PDF — headings
+1–3 of all included documents on a page of its own after the cover (so
+starting on page 2 when there is a cover).</p>
+</li>
+<li><p><strong>Document language:</strong> <code>language:</code> in the frontmatter of the (index) file
+(e.g. <code>language: en</code>) sets the heading of the table of contents (&quot;Table of
+Contents&quot; instead of the German &quot;Inhaltsverzeichnis&quot;; supported: de, en,
+fr, es, it, pt, nl — other languages get the English title) and the
+hyphenation used in the PDF. Without it, the interface language (German or English) is used.</p>
+</li>
+<li><p>The PDF is always rendered in the light theme (regardless of the system
+appearance) and includes tables, images and Mermaid diagrams. Web links,
+files outside the hierarchy and unlinked files are not appended.</p>
+</li>
+<li><p><strong>Mermaid in the PDF:</strong> diagrams are never split across a page break — if a
+diagram no longer fits on the current page it starts on the next one, and a
+diagram taller than a page is scaled down to fit.</p>
+</li>
+<li><p><strong>Automatic landscape:</strong> if any exported document contains a table that
+does not fit on an A4 page in portrait orientation, the entire PDF is
+generated in landscape.</p>
+</li>
+<li><p><strong>Links in the PDF:</strong> links between the exported documents (e.g. from the
+table of contents) jump directly to the respective page inside the PDF;
+web links stay clickable. Vault links to files not included in the PDF
+appear as plain text.</p>
+</li>
+<li><p>While exporting, a <strong>progress indicator</strong> at the bottom of the window shows
+the status (&quot;document 3 of 15 rendered …&quot;, then &quot;generating PDF …&quot;).</p>
+</li>
+<li><p>After the export the generated file is revealed in Finder/Explorer.</p>
+</li>
+</ul>
+<h3 id="pdf-templates-letterhead-header-and-footer">PDF templates (letterhead, header and footer)</h3>
+<p>Templates give the PDF a company layout: a logo and header on every page, a
+footer with page numbers, and an optional cover page.</p>
+<ul>
+<li>Templates are managed under <strong>Merkzeug → Settings…</strong> (⌘,). That is where the
+<strong>templates folder</strong> is chosen; each template is a subfolder inside it.</li>
+<li><strong>&quot;Anlegen&quot;</strong> (create) sets up a new template with example files and opens it
+in Finder/Explorer. A template consists of (all files optional):<ul>
+<li><code>kopfzeile.html</code> – header on every page</li>
+<li><code>fusszeile.html</code> – footer on every page</li>
+<li><code>deckblatt.html</code> – cover page (first page)</li>
+<li><code>stil.css</code> – additional CSS for the document content</li>
+<li><code>vorlage.json</code> – page margins in millimetres</li>
+</ul>
+</li>
+<li><strong>Placeholders:</strong> <code>{{titel}}</code> (<code>title:</code> from the YAML frontmatter, otherwise
+the first level-1 heading of the note, otherwise the file name; when
+exporting with linked documents, <code>pdf-linked-title:</code> takes precedence) and
+<code>{{datum}}</code> (export date); in
+header and footer additionally <code>&lt;span class=&quot;pageNumber&quot;&gt;&lt;/span&gt;</code> and
+<code>&lt;span class=&quot;totalPages&quot;&gt;&lt;/span&gt;</code> for page numbers.</li>
+<li><strong>Logo:</strong> put an image file (e.g. <code>logo.png</code>) into the template folder and
+reference it relatively (<code>&lt;img src=&quot;logo.png&quot; style=&quot;height: 8mm&quot;&gt;</code>) – it is
+embedded automatically on export. Header and footer support inline CSS only.
+Details are in each template&#39;s <code>LIESMICH.md</code>.</li>
+<li><strong>Detecting landscape:</strong> when the PDF is generated in landscape
+automatically, the document carries the class <code>pdf-landscape</code> on the
+<code>&lt;html&gt;</code> element. <code>stil.css</code> can react to it, e.g. to make a tall cover page
+shorter: <code>html.pdf-landscape .cover { height: 150mm; }</code>.</li>
+<li><strong>Per-vault assignment:</strong> in the settings a template is assigned to the
+current vault. The assignment is stored inside the vault
+(<code>.merkzeug/settings.json</code>) and travels to all devices via Git; the export
+uses it automatically. Without an assignment the PDF is exported without a
+template, as before.</li>
+<li><strong>Sync between devices:</strong> if the templates folder lives in <strong>iCloud Drive,
+Google Drive, OneDrive or Dropbox</strong>, the respective cloud client syncs the
+templates to all machines automatically.</li>
+</ul>
+<h2 id="10-git-integration">10. Git integration</h2>
+<p>If the vault is a <strong>Git repository</strong>, a status line appears at the bottom of
+the sidebar:</p>
+<ul>
+<li><strong>Branch name</strong>, number of changed files, <strong>n↑</strong> = local commits not yet
+pushed, <strong>n↓</strong> = new commits on the server, check mark = everything committed
+and pushed.</li>
+<li>The status refreshes automatically – even when you commit or pull outside the
+app.</li>
+<li><strong>Clicking the status line</strong> expands the details: list of changed files, an
+input field for the commit message and the <strong>Commit &amp; Push</strong>, <strong>Push</strong> and
+<strong>Pull</strong> buttons.</li>
+<li><strong>Commit &amp; Push</strong> first saves all open notes, then runs <code>git add</code>, commit and
+push. Without a configured upstream it is set automatically; without a remote
+only a local commit is created (with a note).</li>
+<li><strong>Push</strong> uploads commits that are already committed but not yet pushed
+(<strong>n↑</strong> in the status line) – for example to retry a push that failed
+because the server was temporarily unreachable.</li>
+<li><strong>Pull</strong> fetches changes from the server; merge conflicts are resolved outside
+the app.</li>
+<li>If a Git operation fails (e.g. because the server is unreachable), the
+status line shows a <strong>⚠</strong> sign. The error message appears in the expanded
+details; the sign disappears as soon as a Git operation succeeds again.</li>
+<li>The app uses your system&#39;s Git credentials (SSH keys or credential helper).
+If an interactive login were required, the operation aborts with an error
+message instead of hanging.</li>
+</ul>
+<h2 id="11-keyboard-shortcuts">11. Keyboard shortcuts</h2>
+<table>
+<thead>
+<tr>
+<th>Shortcut</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>⌘N</td>
+<td>New note</td>
+</tr>
+<tr>
+<td>⌃⌘N</td>
+<td>New meeting note</td>
+</tr>
+<tr>
+<td>⇧⌘N</td>
+<td>New folder</td>
+</tr>
+<tr>
+<td>⌥⌘N</td>
+<td>New window</td>
+</tr>
+<tr>
+<td>⌘O</td>
+<td>Open vault</td>
+</tr>
+<tr>
+<td>⌘W / ⇧⌘W</td>
+<td>Close tab / Close window</td>
+</tr>
+<tr>
+<td>⌘S / ⌥⌘S</td>
+<td>Save / Save all</td>
+</tr>
+<tr>
+<td>⌘P</td>
+<td>Export as PDF</td>
+</tr>
+<tr>
+<td>⌘,</td>
+<td>Settings (PDF templates)</td>
+</tr>
+<tr>
+<td>⌘B / ⌘I / ⌥⌘X / ⌘E</td>
+<td>Bold / Italic / Strikethrough / Inline code</td>
+</tr>
+<tr>
+<td>⌥⌘0 … ⌥⌘6</td>
+<td>Text / Heading 1–6</td>
+</tr>
+<tr>
+<td>⌥⌘8 / ⌥⌘7</td>
+<td>Bullet list / Numbered list</td>
+</tr>
+<tr>
+<td>⇧⌘B / ⌥⌘C</td>
+<td>Quote / Code block</td>
+</tr>
+<tr>
+<td>⌘K</td>
+<td>Insert link</td>
+</tr>
+<tr>
+<td>⌥⌘T</td>
+<td>Insert table</td>
+</tr>
+<tr>
+<td>⌘F / ⌥⌘F</td>
+<td>Find / Find and replace</td>
+</tr>
+<tr>
+<td>⌘R</td>
+<td>Toggle navigation mode</td>
+</tr>
+<tr>
+<td>⌘[ / ⌘]</td>
+<td>Back / Forward</td>
+</tr>
+<tr>
+<td>⌘\</td>
+<td>Toggle second section</td>
+</tr>
+<tr>
+<td>⇧⌘\</td>
+<td>Move tab to other section</td>
+</tr>
+<tr>
+<td>⇧⌘R</td>
+<td>Show/hide assets</td>
+</tr>
+<tr>
+<td>⌘?</td>
+<td>This help</td>
+</tr>
+</tbody></table>
+<p><em>(Windows: ⌘ = Ctrl, ⌥ = Alt, ⇧ = Shift)</em></p>
+<h2 id="shared-editor-and-save-conflicts">Shared editor and save conflicts</h2>
+<p>Desktop, iOS and IntelliJ use the same Merkzeug editor. Frontmatter is preserved and can be opened in the editor. Failed saves leave changes marked as unsaved. When external changes conflict with your edits, reload the external version or explicitly keep your own version.</p>
+<h2 id="mac-app-store-preview-builds">Mac App Store preview builds</h2>
+<p>Experimental Mac App Store builds request persistent access when you select a vault or PDF-template folder. If macOS revokes access or the folder moves, select it again. Store-build sandbox validation is still in progress.</p>
+<h2 id="support-and-feedback">Support and feedback</h2>
+<p><a href="https://support.apps.creative-it.com/?app=merkzeug&lang=en">Contact Merkzeug App Support</a>. Include your app version, operating system and steps to reproduce the issue. Use fictional examples and avoid confidential notes.</p>
+</main><footer><span>© 2026 creative-it Software Consulting e.U.</span><nav aria-label="Footer"><a href="privacy-en.html">Privacy</a><a href="legal-en.html">Legal notice</a><a href="https://www.creative-it.com/">creative-it</a></nav></footer></body></html>

@@ -384,3 +384,8 @@ Desktop, iOS and IntelliJ use the same Merkzeug editor. Frontmatter is preserved
 ## Mac App Store preview builds
 
 Experimental Mac App Store builds request persistent access when you select a vault or PDF-template folder. If macOS revokes access or the folder moves, select it again. Store-build sandbox validation is still in progress.
+
+
+## Support and feedback
+
+[Contact Merkzeug App Support](https://support.apps.creative-it.com/?app=merkzeug&lang=en). Include your app version, operating system and steps to reproduce the issue. Use fictional examples and avoid confidential notes.

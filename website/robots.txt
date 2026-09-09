@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://merkzeug.creative-it.com/sitemap.xml

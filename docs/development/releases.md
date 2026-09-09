@@ -10,7 +10,7 @@ The workflow never publishes a draft, changes repository visibility, submits to 
 
 ## Apple distribution decision
 
-Both iOS/iPadOS and macOS are intended for App Store distribution under the maintainer's existing Apple Developer account. Keep the shared bundle identifier `com.creative-it.merkzeug`, already configured in Electron, Capacitor and the iOS targets. Use one App Store Connect app record with iOS and macOS platforms (universal purchase), with separate builds, signing/provisioning and platform-specific store metadata. The account's registered identifier and app record still need verification; local configuration does not confirm their existence.
+Both iOS/iPadOS and macOS are intended for App Store distribution under the maintainer's existing Apple Developer account. Keep the shared bundle identifier `com.creative-it.merkzeug`, already configured in Electron, Capacitor and the iOS targets. Use one App Store Connect app record with iOS and macOS platforms (universal purchase), with separate builds, signing/provisioning and platform-specific store metadata. The registered identifier and shared App Store Connect record 6799114334 have been verified; iOS and macOS drafts exist.
 
 The current DMG pipeline is a direct-download build, not a Mac App Store build. Store readiness requires a separate Electron MAS target, App Sandbox entitlements, persistent access to user-selected folders, and verification of Git subprocesses, calendar helpers and PDF export inside the sandbox. iOS requires a signed archive, device testing, TestFlight and App Review. Neither store submission is automated or complete yet.
 
@@ -143,3 +143,12 @@ There is no automated iOS signing or TestFlight upload job yet. Select your own 
 For artifact storage behavior, see [GitHub's workflow artifacts documentation](https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts). These short-lived artifacts and a published GitHub Release serve different purposes.
 
 See [Apple build setup and local validation](apple-builds.md) for the implemented Cloud scripts, MAS packaging and remaining native checks.
+
+## Packaging validation without Apple
+
+Run the manual `Validate non-Apple packages` workflow on the intended source ref
+to exercise Windows x64/ARM64, Linux x64 and IntelliJ packaging. It uses no signing
+credentials, creates no version tag or GitHub release, and retains private workflow
+artifacts for 14 days. These unsigned packages are validation candidates, not a
+public release or proof of native installation/runtime acceptance. Production
+Windows signing still requires the maintainer's chosen signing identity/provider.

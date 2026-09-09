@@ -1,0 +1,69 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="A visual Markdown editor for ideas that deserve a place of their own."><title>Merkzeug iPhone & iPad Guide</title><link rel="stylesheet" href="style.css"><link rel="icon" href="assets/icon.png"><link rel="canonical" href="https://merkzeug.creative-it.com/help-ios-en.html"><meta property="og:type" content="website"><meta property="og:image" content="https://merkzeug.creative-it.com/assets/mac-en.png"></head><body><a class="skip" href="#content">Skip to content</a><header><a class="brand" href="index.html"><img src="assets/icon.png" alt="" width="36" height="36"><strong>Merkzeug</strong></a><nav aria-label="Main navigation"><a href="help-en.html">Help</a><a href="https://support.apps.creative-it.com/?app=merkzeug&amp;lang=en">Support</a><a href="help-ios-de.html" lang="de">Deutsch</a></nav></header><main id="content" class="guide"><p class="notice">Guide to the current development version. The first App Store release is being prepared.</p><p><a href="help-en.html">Desktop</a> · <a href="help-ios-en.html">iPhone &amp; iPad</a></p><h1 id="merkzeug-for-ios-amp-ipados">Merkzeug for iOS &amp; iPadOS</h1>
+<p>The interface and this help use German on a German system and English otherwise. You can switch the help language independently.</p>
+<p>Merkzeug displays and edits a <strong>vault</strong> – a folder full of Markdown
+notes. On iPhone and iPad the app deliberately does not do Git itself:
+cloning, committing, pushing and pulling is handled by the
+<strong>Working Copy</strong> app; Merkzeug works directly on its folder.</p>
+<h2 id="opening-a-vault">Opening a vault</h2>
+<ol>
+<li>Clone the repository you want in <strong>Working Copy</strong>.</li>
+<li>In Merkzeug, tap <strong>&quot;Open vault folder&quot;</strong>.</li>
+<li>In the file picker choose <em>Browse → Working Copy → &lt;repository&gt;</em>.</li>
+</ol>
+<p>Merkzeug remembers the permission permanently – the vault is available
+again right after an app restart. Use the <strong>⌂</strong> button to switch to a
+different folder at any time. Any other folder from the Files app works
+just as well as a Working Copy repository.</p>
+<h2 id="navigating">Navigating</h2>
+<ul>
+<li>The folder view lists subfolders and notes; tap an entry to open it.</li>
+<li>Links inside notes take you straight to the linked note or folder.</li>
+<li><strong>Back and forward</strong>: with the ‹ › buttons at the top left – or by
+swiping from the left or right edge of the screen.</li>
+<li><strong>Search 🔍</strong>: searches file names and the contents of all notes;
+tapping a result opens the note.</li>
+</ul>
+<h2 id="reading-and-editing">Reading and editing</h2>
+<p>Notes open <strong>read-only</strong> – ideal for looking things up without
+accidental changes. The pencil <strong>✎</strong> switches to edit mode:</p>
+<ul>
+<li>Saving happens automatically (shortly after the last input, when
+leaving the note, and when switching to another app). A dot • next to
+the title indicates unsaved changes.</li>
+<li>Typing &quot;/&quot; at the start of a line opens the insert menu (headings,
+lists, tables, images, code blocks …).</li>
+<li>Images from your photo library are stored automatically in the
+<code>assets/</code> subfolder next to the note when inserted.</li>
+<li>Mermaid code blocks show a diagram preview.</li>
+</ul>
+<h2 id="creating-renaming-deleting">Creating, renaming, deleting</h2>
+<ul>
+<li><strong>＋</strong> in the folder view creates a new note or folder. New notes open
+directly in edit mode.</li>
+<li><strong>Press and hold an entry</strong> to open the menu with <em>Rename</em> and
+<em>Delete</em>. Deleting a folder removes its entire contents – in Working
+Copy this can be undone until the next commit.</li>
+</ul>
+<h2 id="syncing-with-working-copy">Syncing with Working Copy</h2>
+<ul>
+<li>After a <strong>pull</strong> in Working Copy, simply switch back to Merkzeug – the
+folder list and open (unmodified) notes load the new state
+automatically. <strong>↻</strong> re-reads the vault manually at any time.</li>
+<li><strong>Commit and push</strong> happen in Working Copy; Merkzeug does not show
+changed files itself.</li>
+<li>If a note was edited in Merkzeug <strong>and</strong> changed externally at the
+same time, Merkzeug asks on save whether your version should
+overwrite the external state or be discarded – nothing is ever lost
+silently.</li>
+</ul>
+<h2 id="limitations-compared-to-the-desktop-app">Limitations compared to the desktop app</h2>
+<ul>
+<li>No tabs and no split views – one note at a time.</li>
+<li>No Git inside the app (see above – this is intentional).</li>
+<li>Very large images can slow down rendering.</li>
+</ul>
+<h2 id="shared-editor-and-save-conflicts">Shared editor and save conflicts</h2>
+<p>Desktop, iOS and IntelliJ use the same Merkzeug editor. Frontmatter is preserved and can be opened in the editor. Failed saves leave changes marked as unsaved. When external changes conflict with your edits, reload the external version or explicitly keep your own version.</p>
+<h2 id="support-and-feedback">Support and feedback</h2>
+<p><a href="https://support.apps.creative-it.com/?app=merkzeug&lang=en">Contact Merkzeug App Support</a>. Include your app version, operating system and steps to reproduce the issue. Use fictional examples and avoid confidential notes.</p>
+</main><footer><span>© 2026 creative-it Software Consulting e.U.</span><nav aria-label="Footer"><a href="privacy-en.html">Privacy</a><a href="legal-en.html">Legal notice</a><a href="https://www.creative-it.com/">creative-it</a></nav></footer></body></html>
