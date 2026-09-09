@@ -27,7 +27,8 @@ def main():
     expected = {f'{args.edition}-{lang}-{scene}.png' for lang in ('en','de') for scene in ('writing','diagram','frontmatter')}
     if {p.name for p in args.raw.glob('*.png')} != expected: parser.error('Require exactly six expected localized scene PNGs in raw folder')
     for name in expected:
-        if inspect(args.raw/name)[:2] not in SIZES[args.edition]: parser.error(f'Unexpected store dimensions: {name}')
+        dimensions = inspect(args.raw/name)[:2]
+        if dimensions not in SIZES[args.edition]: parser.error(f'Unexpected store dimensions: {name}: {dimensions}')
     if args.output.exists() and any(args.output.iterdir()): parser.error('Use an empty output folder to avoid mixing builds')
     with tempfile.TemporaryDirectory(prefix='merkzeug-frame-') as temporary:
         executable = Path(temporary)/'frame'

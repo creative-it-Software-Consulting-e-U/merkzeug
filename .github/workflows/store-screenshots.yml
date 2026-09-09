@@ -27,6 +27,7 @@ jobs:
       - name: Compose localized store artwork and provenance
         run: python3 scripts/frame-store-screenshots.py "$RUNNER_TEMP/raw-macos" "$RUNNER_TEMP/store-macos" --edition macos
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: macos-screenshot-candidates
           path: |
