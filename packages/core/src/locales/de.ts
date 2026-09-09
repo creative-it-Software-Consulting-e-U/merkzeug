@@ -1,5 +1,6 @@
 /** German translations; English message text is the stable source key. */
 export const de: Readonly<Record<string, string>> = {
+  "Contact Support…": "Support kontaktieren…",
   "macOS did not grant persistent access to the selected folder.": "macOS hat keinen dauerhaften Zugriff auf den ausgewählten Ordner gewährt.",
   "Cancel": "Abbrechen",
   "File": "Ablage",

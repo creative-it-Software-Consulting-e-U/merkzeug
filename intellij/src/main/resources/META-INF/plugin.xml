@@ -10,4 +10,9 @@
   <extensions defaultExtensionNs="com.intellij">
     <fileEditorProvider implementation="com.creativeit.merkzeug.MerkzeugEditorProvider"/>
   </extensions>
+  <actions>
+    <action id="Merkzeug.ContactSupport" class="com.creativeit.merkzeug.ContactSupportAction" text="Merkzeug: Contact Support…">
+      <add-to-group group-id="HelpMenu" anchor="last"/>
+    </action>
+  </actions>
 </idea-plugin>

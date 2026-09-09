@@ -401,4 +401,6 @@ Experimentelle Mac-App-Store-Versionen merken sich die Zugriffsberechtigung beim
 
 ## Support und Rückmeldungen
 
+Wähle **Hilfe → Support kontaktieren…**, um das Supportformular mit Merkzeug, Sprache, Variante und App-Version zu öffnen. Die App-Informationen kannst du vor dem Senden abwählen. Notizinhalte und Dateipfade werden nicht automatisch angehängt.
+
 [Merkzeug App Support kontaktieren](https://support.apps.creative-it.com/?app=merkzeug&lang=de). Nenne App-Version, Betriebssystem und Schritte zum Nachstellen des Problems. Verwende fiktive Beispiele und sende keine vertraulichen Notizen.
