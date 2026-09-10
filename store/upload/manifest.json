@@ -15,7 +15,14 @@
     "macos": {
       "manifestSHA256": "fbe42cc52a3bc00e437de98c7d0b09308c013aed6f96cd25a175a7fbccbad61e",
       "commit": "08199c5aa70af352047d44e96bd20a6b82f9178c",
-      "source": "Electron CI"
+      "source": "Electron CI",
+      "updatedScenes": {
+        "pdf": {
+          "source": "Actual app PDF export composed with PDFKit; visually reviewed",
+          "sourceCommit": "203bcc566c66af384934900459a8be108b286d10",
+          "cloudBuild": 41
+        }
+      }
     }
   },
   "groups": [
@@ -150,7 +157,7 @@
         {
           "scene": "pdf",
           "file": "images/macos-en-pdf.png",
-          "sha256": "a84631617ecab84aff4d930a646afc6e5f4c7b8f61c20cd00de050c7a6e975a9"
+          "sha256": "0498f6f389e9302bc2d31ea3bbb6904e02603f1279532210d9dfeb704c9b9a7a"
         },
         {
           "scene": "git",
@@ -187,7 +194,7 @@
         {
           "scene": "pdf",
           "file": "images/macos-de-pdf.png",
-          "sha256": "a2c2f4277010c70df8480a8703d093110240b775ec4d7ff3cb0a4b12651baa46"
+          "sha256": "5a91042075fb4c1284ed091f98000127bdf9f07146c539c58c984495dabf8434"
         },
         {
           "scene": "git",
