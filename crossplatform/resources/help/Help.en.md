@@ -99,6 +99,7 @@ The sidebar on the left shows the vault as a hierarchical tree.
   `target`, `build`, `dist` and `out` when the matching build file sits next
   to them (e.g. `pom.xml` or `package.json`). This keeps the app responsive
   even when a large code repository is opened as a vault.
+  Meeting-note headings and date labels follow the app language; event titles and participant names remain unchanged.
 
 ## 3. Tabs, sections & windows
 

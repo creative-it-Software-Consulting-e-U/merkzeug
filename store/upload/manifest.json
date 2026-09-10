@@ -3,18 +3,18 @@
   "appId": "6799114334",
   "provenance": {
     "iphone": {
-      "manifestSHA256": "25901a5e377f704a4fb070def842b877fce82a8f286f6e57b97ee52dd51d9b72",
+      "manifestSHA256": "4445df80ebbc4fc553a691671324fc38809576882d8353082bfa6ce37f137e3d",
       "commit": null,
       "source": "Xcode Cloud xcresult"
     },
     "ipad": {
-      "manifestSHA256": "25901a5e377f704a4fb070def842b877fce82a8f286f6e57b97ee52dd51d9b72",
+      "manifestSHA256": "4445df80ebbc4fc553a691671324fc38809576882d8353082bfa6ce37f137e3d",
       "commit": null,
       "source": "Xcode Cloud xcresult"
     },
     "macos": {
-      "manifestSHA256": "8ee556b504384f8e35ab27f488eb0c44c07cf2967a9743a4323c965342794ee3",
-      "commit": "61e79ac2642e4f8fa2f0a7d634543d93298d925c",
+      "manifestSHA256": "48f0853aba46d6c43e34f1f3ee7d24bbbb73fe1c3d3ac1e7f5cc4387d2d9e601",
+      "commit": "ba5f3cd37bd0b687bddffeff093152f5b4a06290",
       "source": "Electron CI"
     }
   },
@@ -25,14 +25,19 @@
       "displayType": "APP_IPHONE_67",
       "images": [
         {
-          "scene": "diagram",
-          "file": "images/iphone-en-diagram.png",
-          "sha256": "8f55630e2f128bc62914b514fba9e9c3fb14b8faa02747e99b7dc9f4ede56299"
-        },
-        {
           "scene": "writing",
           "file": "images/iphone-en-writing.png",
           "sha256": "507853f5cbd7fb60875ba42a6f55e83ce40649ad1ad27d503e84e67f307fefcf"
+        },
+        {
+          "scene": "diagram",
+          "file": "images/iphone-en-diagram.png",
+          "sha256": "d16664ada964fb3b2428df582b7a27135c1fe8a77e57043e4b42dd91881f1607"
+        },
+        {
+          "scene": "git",
+          "file": "images/iphone-en-git.png",
+          "sha256": "8f55630e2f128bc62914b514fba9e9c3fb14b8faa02747e99b7dc9f4ede56299"
         },
         {
           "scene": "frontmatter",
@@ -47,14 +52,19 @@
       "displayType": "APP_IPHONE_67",
       "images": [
         {
-          "scene": "diagram",
-          "file": "images/iphone-de-diagram.png",
-          "sha256": "7cfe7a30e65c6c85d9897c062b06aef2729fcc45588247ded88680aa96937f9a"
-        },
-        {
           "scene": "writing",
           "file": "images/iphone-de-writing.png",
           "sha256": "c2965c8ab21fe660e5dca51f02a11e4742b7d04ed55f1158863b2936adf18e09"
+        },
+        {
+          "scene": "diagram",
+          "file": "images/iphone-de-diagram.png",
+          "sha256": "b9ccff5541d29c4cee15532a8ed9caf0f2b71c9a6b14dbe55657cb9e4108b193"
+        },
+        {
+          "scene": "git",
+          "file": "images/iphone-de-git.png",
+          "sha256": "7cfe7a30e65c6c85d9897c062b06aef2729fcc45588247ded88680aa96937f9a"
         },
         {
           "scene": "frontmatter",
@@ -69,14 +79,19 @@
       "displayType": "APP_IPAD_PRO_3GEN_129",
       "images": [
         {
-          "scene": "diagram",
-          "file": "images/ipad-en-diagram.png",
-          "sha256": "2e2bb43c4f5b9ec568b63e6f7cd4a807a6aefb7b41cac1090dabe760ff931362"
-        },
-        {
           "scene": "writing",
           "file": "images/ipad-en-writing.png",
           "sha256": "e10c0c1b4363bc58423df2ceba4d9ba668fd2ea67801020db9972d05416fac3b"
+        },
+        {
+          "scene": "diagram",
+          "file": "images/ipad-en-diagram.png",
+          "sha256": "477d397537461afbe00959be22c9a9473aba36068145d3c00458bc74c1e7f15d"
+        },
+        {
+          "scene": "git",
+          "file": "images/ipad-en-git.png",
+          "sha256": "2e2bb43c4f5b9ec568b63e6f7cd4a807a6aefb7b41cac1090dabe760ff931362"
         },
         {
           "scene": "frontmatter",
@@ -91,14 +106,19 @@
       "displayType": "APP_IPAD_PRO_3GEN_129",
       "images": [
         {
-          "scene": "diagram",
-          "file": "images/ipad-de-diagram.png",
-          "sha256": "0b67a25483c2a90b16fb7aeb0ded7858a9b29384a7829da9aa51ef4871eb1441"
-        },
-        {
           "scene": "writing",
           "file": "images/ipad-de-writing.png",
           "sha256": "6d49e496ac2ea9c1d806ad948df210960b3672cec457577fde18c4dc80e581ba"
+        },
+        {
+          "scene": "diagram",
+          "file": "images/ipad-de-diagram.png",
+          "sha256": "417b33ea59d1f518d482bce97d45471815dbdce125b2c74cabeaf632ff299e50"
+        },
+        {
+          "scene": "git",
+          "file": "images/ipad-de-git.png",
+          "sha256": "0b67a25483c2a90b16fb7aeb0ded7858a9b29384a7829da9aa51ef4871eb1441"
         },
         {
           "scene": "frontmatter",
@@ -113,16 +133,6 @@
       "displayType": "APP_DESKTOP",
       "images": [
         {
-          "scene": "git",
-          "file": "images/macos-en-git.png",
-          "sha256": "81ead072d61703504295f5ea8532d0f94c4034ab668307313af278e4a727a934"
-        },
-        {
-          "scene": "pdf",
-          "file": "images/macos-en-pdf.png",
-          "sha256": "4a82a36cb925fa9f002c0077d9f9952143813f02130145b60bf309de8c965e61"
-        },
-        {
           "scene": "writing",
           "file": "images/macos-en-writing.png",
           "sha256": "967776c6e3a327b644dc9b5dea38fc334e30154d681ad1b58a06bd4160ab2cc6"
@@ -131,6 +141,21 @@
           "scene": "diagram",
           "file": "images/macos-en-diagram.png",
           "sha256": "ff66ee627a5b0d43e0f80ea8310cedcfe4c1ad5c6ba84e2da4dc41d7c9dd4597"
+        },
+        {
+          "scene": "calendar",
+          "file": "images/macos-en-calendar.png",
+          "sha256": "525423dbbfe0432f84b0d894d94086b6ff539a90312cdad4d02870ca731863b7"
+        },
+        {
+          "scene": "pdf",
+          "file": "images/macos-en-pdf.png",
+          "sha256": "4a82a36cb925fa9f002c0077d9f9952143813f02130145b60bf309de8c965e61"
+        },
+        {
+          "scene": "git",
+          "file": "images/macos-en-git.png",
+          "sha256": "81ead072d61703504295f5ea8532d0f94c4034ab668307313af278e4a727a934"
         },
         {
           "scene": "frontmatter",
@@ -145,16 +170,6 @@
       "displayType": "APP_DESKTOP",
       "images": [
         {
-          "scene": "git",
-          "file": "images/macos-de-git.png",
-          "sha256": "ad7a46644865116b52d589ef651e8b80e641677c616492addbba92e726781ba0"
-        },
-        {
-          "scene": "pdf",
-          "file": "images/macos-de-pdf.png",
-          "sha256": "4f2a4f01733f3a22ce678c37d724aa3bb87e8fbcffff33799c85c7b1b5fa6c1c"
-        },
-        {
           "scene": "writing",
           "file": "images/macos-de-writing.png",
           "sha256": "10f17149117ecaaca4495b0d86d3332641a773b86164e80eb185a899c5d42412"
@@ -163,6 +178,21 @@
           "scene": "diagram",
           "file": "images/macos-de-diagram.png",
           "sha256": "636de88874951cc90076773879f9287c7e9dce2e959c5ec01a47be76728d89fe"
+        },
+        {
+          "scene": "calendar",
+          "file": "images/macos-de-calendar.png",
+          "sha256": "c8550f304ffe960ae8923c212b89f05304e3d3caa596142d2dfc36e9d2cbfb77"
+        },
+        {
+          "scene": "pdf",
+          "file": "images/macos-de-pdf.png",
+          "sha256": "4f2a4f01733f3a22ce678c37d724aa3bb87e8fbcffff33799c85c7b1b5fa6c1c"
+        },
+        {
+          "scene": "git",
+          "file": "images/macos-de-git.png",
+          "sha256": "ad7a46644865116b52d589ef651e8b80e641677c616492addbba92e726781ba0"
         },
         {
           "scene": "frontmatter",

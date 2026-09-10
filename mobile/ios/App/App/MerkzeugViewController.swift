@@ -22,7 +22,7 @@ class MerkzeugViewController: CAPBridgeViewController {
         (() => {
           const editor = document.querySelector('.ProseMirror');
           if (!editor || !editor.querySelector('h1') || document.fonts.status !== 'loaded') return false;
-          if ('\(scene)' === 'diagram' && !document.querySelector('.mermaid-preview svg')) return false;
+          if (['diagram','git'].includes('\(scene)') && !document.querySelector('.mermaid-preview svg')) return false;
           if ('\(scene)' === 'frontmatter') {
             const button = [...document.querySelectorAll('button')].find(b => b.textContent.includes('Frontmatter'));
             if (button && !document.querySelector('.frontmatter-input')) { button.click(); return false; }

@@ -18,8 +18,8 @@ final class ScreenshotTests: XCTestCase {
         let app = XCUIApplication()
         app.launchArguments = ["-AppleLanguages", "(\(locale))", "-AppleLocale", locale == "de" ? "de_AT" : "en_US"]
         app.launchEnvironment = ["MERKZEUG_DEMO_MODE": "1", "MERKZEUG_DEMO_FILES": String(data: try JSONSerialization.data(withJSONObject: files), encoding: .utf8)!, "MERKZEUG_DEMO_LOCALE": locale]
-        for scene in ["writing", "diagram", "frontmatter"] {
-            app.launchEnvironment["MERKZEUG_DEMO_NOTE"] = scene == "diagram" ? (locale == "de" ? "/Projekte/Garten.md" : "/Projects/Garden.md") : (locale == "de" ? "/Willkommen.md" : "/Welcome.md")
+        for scene in ["writing", "diagram", "git", "frontmatter"] {
+            app.launchEnvironment["MERKZEUG_DEMO_NOTE"] = ["diagram", "git"].contains(scene) ? (locale == "de" ? "/Projekte/Garten.md" : "/Projects/Garden.md") : (locale == "de" ? "/Willkommen.md" : "/Welcome.md")
             app.launchEnvironment["MERKZEUG_DEMO_SCENE"] = scene
             app.launch()
             XCTAssertTrue(app.otherElements["merkzeug-screenshot-ready"].waitForExistence(timeout: 60), "Editor, fonts and diagram must finish rendering")
@@ -28,7 +28,7 @@ final class ScreenshotTests: XCTestCase {
             let name = "\(edition)-\(locale)-\(scene)"
             let attachment = XCTAttachment(screenshot: raw)
             attachment.name = "raw-" + name; attachment.lifetime = .keepAlways; add(attachment)
-            let caption = try XCTUnwrap(captions[locale]?[scene == "diagram" ? "repository" : scene])
+            let caption = try XCTUnwrap(captions[locale]?[scene == "git" ? "repository" : scene])
             let framed = try ScreenshotFrame.render(try XCTUnwrap(raw.image.cgImage), title: caption.title, subtitle: caption.subtitle)
             let store = XCTAttachment(data: framed, uniformTypeIdentifier: "public.png")
             store.name = "store-" + name; store.lifetime = .keepAlways; add(store)

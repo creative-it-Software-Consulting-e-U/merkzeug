@@ -1,4 +1,4 @@
-import { t as translate } from '@merkzeug/core/i18n'
+import { t as translate, getLocale } from '@merkzeug/core/i18n'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { CalendarEvent, CalendarResult } from '../../../shared/types'
 import { localDate, meetingTimeLabel } from '../util/meetingNote'
@@ -19,7 +19,7 @@ const SEARCH_DAYS = 90
 /** Schlüssel zum Deduplizieren (Serientermine haben dieselbe id je Vorkommen nicht) */
 const eventKey = (ev: CalendarEvent): string => `${ev.id}@${ev.start}`
 
-const dayFormat = new Intl.DateTimeFormat('de-DE', {
+const dayFormat = new Intl.DateTimeFormat(getLocale(), {
   weekday: 'short',
   day: '2-digit',
   month: '2-digit',

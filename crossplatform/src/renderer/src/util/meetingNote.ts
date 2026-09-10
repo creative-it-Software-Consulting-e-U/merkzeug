@@ -1,4 +1,4 @@
-import { t as translate } from '@merkzeug/core/i18n'
+import { t as translate, getLocale } from '@merkzeug/core/i18n'
 /** Erzeugt Dateiname und Inhalt einer Meeting-Notiz aus einem Kalendertermin. */
 
 import type { CalendarEvent, CalendarPerson } from '../../../shared/types'
@@ -22,7 +22,7 @@ export function meetingTimeLabel(ev: CalendarEvent): string {
   return `${localTime(new Date(ev.start))}–${localTime(new Date(ev.end))}`
 }
 
-const bodyDayFormat = new Intl.DateTimeFormat('de-DE', {
+const bodyDayFormat = new Intl.DateTimeFormat(getLocale(), {
   weekday: 'short',
   day: '2-digit',
   month: '2-digit',
@@ -84,7 +84,7 @@ export function meetingNoteContent(ev: CalendarEvent): string {
   // Organisator zuerst, ohne Dublette, falls er auch als Teilnehmer geführt wird
   const checklist: string[] = []
   const organizerName = ev.organizer?.name ?? ev.organizer?.email
-  if (organizerName) checklist.push(`${organizerName} (Organisator)`)
+  if (organizerName) checklist.push(`${organizerName} (${translate("Organizer")})`)
   for (const a of ev.attendees) {
     const name = a.name ?? a.email
     if (!name) continue
@@ -93,10 +93,10 @@ export function meetingNoteContent(ev: CalendarEvent): string {
     if (!isOrganizer) checklist.push(name)
   }
   if (checklist.length > 0) {
-    lines.push('## Teilnehmer', '')
+    lines.push(`## ${translate('Attendees')}`, '')
     for (const name of checklist) lines.push(`- [ ] ${name}`)
     lines.push('')
   }
-  lines.push('## Agenda', '', '## Notizen', '', '## Aufgaben', '')
+  lines.push('## Agenda', '', `## ${translate('Notes')}`, '', `## ${translate('Tasks')}`, '')
   return lines.join('\n')
 }
