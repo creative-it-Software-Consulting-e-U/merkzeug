@@ -28,7 +28,7 @@ Before adding production credentials to GitHub, configure protected release envi
 
 ### Xcode Cloud responsibilities
 
-- iOS: **iOS App Store** uses the shared `Merkzeug` scheme, public Xcode 26.6, preparation scripts, Apple-managed signing and an internal TestFlight post-action. Start it manually from reviewed `main`.
+- iOS: **iOS App Store** uses the shared `Merkzeug` scheme, public Xcode 26.6, preparation scripts, Apple-managed signing and an internal TestFlight post-action. It starts automatically on every new commit to `main`, with no path filter.
 - macOS: **macOS App Store** uses the archive-capable `crossplatform/macos/Merkzeug.xcodeproj` target to package the universal Electron MAS app. Cloud verifies the real payload and applies managed distribution signing, followed by automatic TestFlight upload. See the validation evidence in [Apple build setup](apple-builds.md).
 - Windows, Linux and IntelliJ: GitHub Actions remains the planned build service.
 

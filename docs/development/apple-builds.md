@@ -117,7 +117,9 @@ The **macOS App Store** workflow (`9eea4c72-17b1-45d8-b8b7-5f7dc4269090`) uses `
 - Post-build verifies the archived app identity, Cloud build number, both architectures, signature, help/notices and payload hash.
 - The Archive action targets any Mac and requests App Store eligible distribution. Its TestFlight post-action uploads the managed-signed export automatically. Store build selection and App Review submission remain manual.
 
-The workflow is initially manual, so documentation-only commits do not consume distribution build numbers. Start **macOS App Store** on the reviewed `main` branch from Xcode Cloud in App Store Connect. The workflow uses a **TestFlight Internal Testing** post-action for the **Merkzeug Internal** group. Both distribution workflows are manually started from `main`; App Review submission is a separate owner action.
+Both **macOS App Store** and **iOS App Store** start automatically on every new commit to `main`, including documentation-only changes. There is no file/folder filter, and newer commits do not automatically cancel running builds. Each workflow archives, signs with Apple-managed credentials and delivers an App Store-eligible build through its existing **TestFlight Internal Testing** post-action for **Merkzeug Internal**. No manual build start or upload is required. Manual starts remain available for retries. App Store version/build selection and App Review submission remain separate from this build-and-upload automation.
+
+The triggers are configured in Xcode Cloud, not in GitHub Actions: `branchStartCondition.source` matches exactly `main`, `filesAndFoldersRule` is absent, and `autoCancel` is false. Both workflows must remain enabled. This configuration was applied and read back through the App Store Connect API on 10 September 2026.
 
 Local archive reproduction after `npm ci`:
 
