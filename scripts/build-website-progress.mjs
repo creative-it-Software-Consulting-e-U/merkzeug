@@ -15,7 +15,12 @@ for(const lang of ['en','de']){
   return `<div class="roadmap-group"><h3>${label}</h3><ul class="roadmap-list">${items}</ul></div>`;
  }).join('');
  const roadmapHtml=`<section id="roadmap" class="feature-section"><p class="eyebrow">${en?'What comes next':'Was als Nächstes kommt'}</p><h2>${en?'A tool that keeps growing.':'Ein Werkzeug, das weiterwächst.'}</h2><p>${en?'Our next steps, in plain language. Plans can change; these are not promised release dates. Each item links to its GitHub issue.':'Unsere nächsten Schritte, kurz und verständlich. Pläne können sich ändern; feste Veröffentlichungstermine sind damit nicht verbunden. Jeder Eintrag verlinkt das zugehörige GitHub-Ticket.'}</p>${groups}<p class="caption">${en?'Last reviewed':'Zuletzt abgeglichen'}: <time datetime="${roadmap.updated}">${roadmap.updated}</time> · <a href="${roadmap.source}">${en?'Full roadmap on GitHub':'Vollständige Roadmap auf GitHub'}</a></p></section>`;
- const teaser=`<section id="release-notes" class="feature-section"><p class="eyebrow">Release Notes</p><h2>${en?'What’s new in Merkzeug.':'Was sich in Merkzeug tut.'}</h2><p>${en?'Version 1.0 for Mac, iPhone and iPad is being prepared. Read what is included in the first release; published updates will appear here as they become available.':'Version 1.0 für Mac, iPhone und iPad wird vorbereitet. Hier findest du die Inhalte der ersten Version; veröffentlichte Updates kommen hinzu, sobald sie verfügbar sind.'}</p><a class="button secondary" href="${name}">${en?'Read the release notes':'Release Notes lesen'}</a></section>`;
+ const latest=releases[0];
+ const latestVersion=escape(latest.version);
+ const teaserText=latest.status==='released'
+  ? (en?`Merkzeug ${latestVersion} is available. Read what changed in this release and earlier updates.`:`Merkzeug ${latestVersion} ist verfügbar. Lies, was diese Version und frühere Updates mitbringen.`)
+  : (en?`Version ${latestVersion} is being prepared. Read what is included; published updates will appear here as they become available.`:`Version ${latestVersion} wird vorbereitet. Hier findest du die vorgesehenen Inhalte; veröffentlichte Updates kommen hinzu, sobald sie verfügbar sind.`);
+ const teaser=`<section id="release-notes" class="feature-section"><p class="eyebrow">Release Notes</p><h2>${en?'What’s new in Merkzeug.':'Was sich in Merkzeug tut.'}</h2><p>${teaserText}</p><a class="button secondary" href="${name}">${en?'Read the release notes':'Release Notes lesen'}</a></section>`;
  base=base.replace(/<!-- progress:start -->[\s\S]*?<!-- progress:end -->/,`<!-- progress:start -->${roadmapHtml}${teaser}<!-- progress:end -->`);
  await writeFile(new URL(home,root),base);
  const entries=releases.map(r=>{
