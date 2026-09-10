@@ -1,6 +1,7 @@
 // Build the public manuals from the same Markdown shipped in the apps.
 import {readFile,writeFile} from 'node:fs/promises';
 import {marked} from 'marked';
+await import('./build-website-progress.mjs');
 const root = new URL('../', import.meta.url);
 const read = p => readFile(new URL(p,root),'utf8');
 const slug = text => text.replace(/<[^>]+>/g,'').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,'-').replace(/^-|-$/g,'');
@@ -34,7 +35,7 @@ for(const lang of ['en','de']) {
   pages.push(name);
  }
 }
-const files=['','de.html','privacy-en.html','privacy-de.html','legal-en.html','legal-de.html',...pages];
+const files=['','de.html','release-notes-en.html','release-notes-de.html','privacy-en.html','privacy-de.html','legal-en.html','legal-de.html',...pages];
 await writeFile(new URL('website/sitemap.xml',root),'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+files.map(p=>`<url><loc>https://merkzeug.creative-it.com/${p}</loc></url>`).join('')+'</urlset>\n');
 await writeFile(new URL('website/robots.txt',root),'User-agent: *\nAllow: /\nSitemap: https://merkzeug.creative-it.com/sitemap.xml\n');
 console.log('Built four localized manuals and sitemap.');

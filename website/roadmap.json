@@ -1,0 +1,139 @@
+{
+  "updated": "2026-09-10",
+  "source": "https://github.com/orgs/creative-it-Software-Consulting-e-U/projects/2",
+  "items": [
+    {
+      "issues": [
+        17
+      ],
+      "status": "review",
+      "title": {
+        "en": "First App Store release",
+        "de": "Erste App-Store-Version"
+      },
+      "platform": "macOS · iOS"
+    },
+    {
+      "issues": [
+        18
+      ],
+      "status": "planned",
+      "title": {
+        "en": "Light & dark themes",
+        "de": "Helle & dunkle Designs"
+      },
+      "platform": "All editions / Alle Editionen"
+    },
+    {
+      "issues": [
+        19
+      ],
+      "status": "planned",
+      "title": {
+        "en": "IntelliJ plugin",
+        "de": "IntelliJ-Plugin"
+      },
+      "platform": "IntelliJ"
+    },
+    {
+      "issues": [
+        20,
+        21
+      ],
+      "status": "planned",
+      "title": {
+        "en": "Windows downloads",
+        "de": "Windows-Downloads"
+      },
+      "platform": "Windows"
+    },
+    {
+      "issues": [
+        22
+      ],
+      "status": "planned",
+      "title": {
+        "en": "Linux packages",
+        "de": "Linux-Pakete"
+      },
+      "platform": "Linux"
+    },
+    {
+      "issues": [
+        36
+      ],
+      "status": "planned",
+      "title": {
+        "en": "Meeting notes on iPhone & iPad",
+        "de": "Meeting-Notizen auf iPhone & iPad"
+      },
+      "platform": "iOS · iPadOS"
+    },
+    {
+      "issues": [
+        30
+      ],
+      "status": "planned",
+      "title": {
+        "en": "Ready-to-use PDF templates",
+        "de": "PDF-Vorlagen zum Loslegen"
+      },
+      "platform": "Desktop"
+    },
+    {
+      "issues": [
+        35
+      ],
+      "status": "planned",
+      "title": {
+        "en": "Template styles while editing",
+        "de": "Vorlagen-Design beim Bearbeiten"
+      },
+      "platform": "Desktop"
+    },
+    {
+      "issues": [
+        25
+      ],
+      "status": "planned",
+      "title": {
+        "en": "Working Copy actions",
+        "de": "Working-Copy-Aktionen"
+      },
+      "platform": "iOS · iPadOS"
+    },
+    {
+      "issues": [
+        24
+      ],
+      "status": "planned",
+      "title": {
+        "en": "More calendar sources",
+        "de": "Weitere Kalenderquellen"
+      },
+      "platform": "All editions / Alle Editionen"
+    },
+    {
+      "issues": [
+        23
+      ],
+      "status": "planned",
+      "title": {
+        "en": "Better guidance for coding agents",
+        "de": "Bessere Hinweise für Coding-Agenten"
+      },
+      "platform": "Vaults & repositories / Vaults & Repositories"
+    },
+    {
+      "issues": [
+        26
+      ],
+      "status": "exploring",
+      "title": {
+        "en": "More iOS Git clients",
+        "de": "Weitere iOS-Git-Clients"
+      },
+      "platform": "iOS · iPadOS"
+    }
+  ]
+}
