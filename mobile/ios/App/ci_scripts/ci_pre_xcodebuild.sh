@@ -14,6 +14,11 @@ test -s "$APP_DIR/App/capacitor.config.json"
 # Cloud build numbers increase independently of the marketing version.
 if [[ "${CI_XCODEBUILD_ACTION:-}" == archive ]]; then
   [[ "${CI_BUILD_NUMBER:-}" =~ ^[1-9][0-9]*$ ]] || { echo 'Missing positive Xcode Cloud build number.' >&2; exit 1; }
+  REPOSITORY="${CI_PRIMARY_REPOSITORY_PATH:-$(cd "$APP_DIR/../../.." && pwd)}"
+  STORE_VERSION="$(tr -d '[:space:]' < "$REPOSITORY/VERSION")"
+  # Match the existing 1.0 Store record while preserving source SemVer 1.0.0.
+  [[ "$STORE_VERSION" != '1.0.0' ]] || STORE_VERSION='1.0'
   cd "$APP_DIR"
+  xcrun agvtool new-marketing-version "$STORE_VERSION"
   xcrun agvtool new-version -all "$CI_BUILD_NUMBER"
 fi
