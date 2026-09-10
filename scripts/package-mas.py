@@ -32,6 +32,9 @@ def main():
               'forceCodeSigning': not args.unsigned,
               'mac': {'hardenedRuntime': False, 'notarize': False},
               'mas': {'hardenedRuntime': False, 'sign': str(ROOT / 'crossplatform/build/sign-mas.cjs'),
+                      # Cloud packages unsigned and lets Xcode sign, so osx-sign's
+                      # automatic ElectronTeamID/app-group setup never runs there.
+                      'extendInfo': {'ElectronTeamID': '3BNJ4M9R56'},
                       'entitlements': 'build/entitlements.mas.plist',
                       'entitlementsInherit': 'build/entitlements.mas.inherit.plist',
                       'binaries': ['Resources/calendar/merkzeug-calendar']}}

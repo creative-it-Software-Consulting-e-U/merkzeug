@@ -14,6 +14,14 @@ if info.get('CFBundleIdentifier') != 'com.creative-it.merkzeug' or info.get('CFB
     raise SystemExit('Archive app identity or build number differs from the Cloud run')
 if info.get('ITSAppUsesNonExemptEncryption') is not False:
     raise SystemExit('Archive is missing the existing export-compliance declaration')
+if info.get('ElectronTeamID') != '3BNJ4M9R56':
+    raise SystemExit('Archive is missing ElectronTeamID for sandbox Mach IPC')
+entitlements = plistlib.loads(subprocess.check_output([
+    'codesign', '--display', '--entitlements', ':-', str(app)]))
+if (entitlements.get('com.apple.security.app-sandbox') is not True or
+        '3BNJ4M9R56.com.creative-it.merkzeug' not in
+        entitlements.get('com.apple.security.application-groups', [])):
+    raise SystemExit('Archive is missing the Electron sandbox app group for Mach IPC')
 for name in ['Contents/MacOS/Merkzeug', 'Contents/Resources/calendar/merkzeug-calendar']:
     architectures = subprocess.check_output(['xcrun', 'lipo', '-archs', str(app / name)], text=True).split()
     if set(architectures) != {'arm64', 'x86_64'}: raise SystemExit(f'Archive is not universal: {name}')

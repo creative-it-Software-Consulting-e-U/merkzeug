@@ -1,5 +1,8 @@
 """Exercise Cloud worker lifecycle without an Xcode installation or real signing."""
 import os
+import plistlib
+import runpy
+from unittest.mock import patch
 from pathlib import Path
 import shutil
 import subprocess
@@ -72,3 +75,42 @@ class MacCloudPreparation(unittest.TestCase):
         script = ROOT / 'crossplatform/macos/ci_scripts/ci_post_xcodebuild.sh'
         result = subprocess.run(['bash', str(script)], env=dict(os.environ, CI_XCODEBUILD_ACTION='build'), capture_output=True)
         self.assertEqual(result.returncode, 0)
+
+
+class MacArchiveSandbox(unittest.TestCase):
+    def test_archive_requires_matching_electron_ipc_configuration(self):
+        with tempfile.TemporaryDirectory() as folder:
+            archive = Path(folder)
+            contents = archive / 'Products/Applications/Merkzeug.app/Contents'
+            resources = contents / 'Resources'
+            (resources / 'help').mkdir(parents=True)
+            for name in ['app.asar', 'LICENSE', 'THIRD_PARTY_NOTICES.txt', 'help/Help.en.md', 'help/Help.de.md']:
+                (resources / name).write_text('fixture')
+            base = {'CFBundleIdentifier': 'com.creative-it.merkzeug',
+                    'CFBundleVersion': '42', 'CFBundleShortVersionString': '1.0',
+                    'ITSAppUsesNonExemptEncryption': False}
+            group = '3BNJ4M9R56.com.creative-it.merkzeug'
+            for team, groups, sandbox, error in [
+                (None, [], True, 'ElectronTeamID'),
+                ('WRONG', [group], True, 'ElectronTeamID'),
+                ('3BNJ4M9R56', [], True, 'app group'),
+                ('3BNJ4M9R56', ['wrong.group'], True, 'app group'),
+                ('3BNJ4M9R56', [group], False, 'app group'),
+                ('3BNJ4M9R56', [group], True, None),
+            ]:
+                with self.subTest(team=team, groups=groups, sandbox=sandbox):
+                    info = dict(base)
+                    if team: info['ElectronTeamID'] = team
+                    (contents / 'Info.plist').write_bytes(plistlib.dumps(info))
+                    entitlements = plistlib.dumps({'com.apple.security.app-sandbox': sandbox,
+                                                  'com.apple.security.application-groups': groups})
+                    def output(command, **kwargs):
+                        return entitlements if command[0] == 'codesign' else 'arm64 x86_64'
+                    with patch('sys.argv', ['verify-archive.py', folder, '42']), \
+                         patch('subprocess.check_output', side_effect=output), \
+                         patch('subprocess.run'):
+                        if error:
+                            with self.assertRaisesRegex(SystemExit, error):
+                                runpy.run_path(str(ROOT / 'crossplatform/macos/verify-archive.py'))
+                        else:
+                            runpy.run_path(str(ROOT / 'crossplatform/macos/verify-archive.py'))

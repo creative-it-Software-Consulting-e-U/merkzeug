@@ -159,3 +159,22 @@ See [Apple's export-compliance metadata](https://developer.apple.com/documentati
 The final main-branch candidates are macOS **33** and iOS **34**, both built from
 `411080b` with public Xcode 26.6. Both processed Store builds are `VALID` and
 `APP_STORE_ELIGIBLE`. App Review selection remains separate from Cloud delivery.
+
+
+### TestFlight build 41 startup crash (10 September 2026)
+
+The installed macOS build 41 crashed before opening a window. Launching its
+executable with `--enable-logging=stderr` reproduced the fatal error in
+`base/apple/mach_port_rendezvous_mac.cc:159`: `bootstrap_check_in
+com.creative-it.merkzeug.MachPortRendezvousServer.<pid>: Permission denied (1100)`.
+The delivered bundle lacked both `ElectronTeamID` and the signed
+`com.apple.security.application-groups` entitlement. The Cloud route packages
+unsigned and uses Xcode to sign, bypassing osx-sign's automatic additions.
+
+The MAS packaging configuration now explicitly includes `ElectronTeamID`, and
+the shared MAS entitlements include `3BNJ4M9R56.com.creative-it.merkzeug` for
+Electron's sandbox IPC. The archive verifier checks the actual signed
+entitlements as well as the bundle metadata. A new Cloud/TestFlight build and
+an installed-app launch test are required to confirm the distribution fix;
+local packaging alone does not establish TestFlight acceptance.
+See [Electron's MAS signing requirements](https://github.com/electron/electron/blob/main/docs/tutorial/mac-app-store-submission-guide.md).
