@@ -41,7 +41,7 @@ jar = BUILD / 'merkzeug.jar'
 with zipfile.ZipFile(jar, 'w', zipfile.ZIP_DEFLATED) as out:
     out.write(ROOT / 'LICENSE', 'META-INF/LICENSE')
     out.write(ROOT / 'crossplatform/resources/THIRD_PARTY_NOTICES.txt', 'META-INF/THIRD_PARTY_NOTICES.txt')
-    for base, prefix in [(classes, ''), (ROOT / 'intellij/src/main/resources', ''), (BUILD / 'web', 'web/')]:
+    for base, prefix in [(ROOT / 'resources/pdf-templates', 'pdf-templates/'), (classes, ''), (ROOT / 'intellij/src/main/resources', ''), (BUILD / 'web', 'web/')]:
         for file in sorted(base.rglob('*')):
             if file.is_file(): out.write(file, prefix + file.relative_to(base).as_posix())
 dist = ROOT / 'intellij/dist'

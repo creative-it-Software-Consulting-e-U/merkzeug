@@ -194,6 +194,20 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
         PropertiesComponent settings = PropertiesComponent.getInstance(project);
         String stored = settings.getValue("merkzeug.templateDirectory");
         if (choose) {
+            if (stored == null) {
+                Path starter = Paths.get(com.intellij.openapi.application.PathManager.getConfigPath(), "merkzeug", "pdf-templates", "Merkzeug");
+                if (!Files.exists(starter)) {
+                    Files.createDirectories(starter);
+                    for (String name : new String[]{"kopfzeile.html", "fusszeile.html", "deckblatt.html", "stil.css", "vorlage.json", "README.md"}) {
+                        Path target = starter.resolve(name);
+                        try (InputStream source = getClass().getResourceAsStream("/pdf-templates/Merkzeug/" + name)) {
+                            if (source == null) throw new IOException(Messages.text("Bundled PDF template is missing"));
+                            Files.copy(source, target);
+                        }
+                    }
+                }
+                stored = starter.toString();
+            }
             JFileChooser picker = new JFileChooser(stored);
             picker.setDialogTitle(Messages.text("Merkzeug: PDF template folder"));
             picker.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);

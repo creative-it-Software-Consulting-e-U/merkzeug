@@ -1,4 +1,4 @@
-import { t as translate } from '@merkzeug/core/i18n'
+import { t as translate, getLocale } from '@merkzeug/core/i18n'
 import { useCallback, useEffect, useState } from 'react'
 import type { TemplateState } from '../../shared/types'
 
@@ -46,6 +46,9 @@ export function SettingsApp(): React.JSX.Element {
 
   if (!state) return <div className="settings-app" />
 
+  const templateGuide = getLocale().toLowerCase().startsWith('de')
+    ? 'https://merkzeug.creative-it.com/help-de.html#pdf-startvorlage'
+    : 'https://merkzeug.creative-it.com/help-en.html#pdf-template-starter'
   const vaultName = state.vault?.split(/[/\\]/).pop() ?? null
 
   return (
@@ -96,8 +99,8 @@ export function SettingsApp(): React.JSX.Element {
           </button>
         </div>
         <p className="settings-hint">
-          {translate("Create a template with example header, footer, cover and style files, then open it in your file manager. Add a logo image and")}{' '}
-          <code>kopfzeile.html</code> {translate("reference it there. See the template README for details.")}
+          {translate("Merkzeug includes a styled PDF template. Create a copy to customize it with your own colors, logo or an agent.")}{' '}
+          <button onClick={() => void window.merkzeug.openExternal(templateGuide)}>{translate("Template guide and agent prompt")}</button>
         </p>
         {error && <p className="settings-error">{error}</p>}
       </section>

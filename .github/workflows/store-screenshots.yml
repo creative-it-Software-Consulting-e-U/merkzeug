@@ -8,6 +8,7 @@ on:
       - 'scripts/capture-mac-demo.py'
       - 'store/automation/**'
       - 'store/demo/**'
+      - 'resources/pdf-templates/**'
 permissions:
   contents: read
 jobs:

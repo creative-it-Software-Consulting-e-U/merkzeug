@@ -6,6 +6,8 @@ User-visible changes are recorded here. Versions follow `VERSION`; version tags 
 
 ### Added
 
+- A styled Merkzeug PDF starter template for desktop and IntelliJ, with a cover, headers, footers, document styles and an agent customization guide.
+
 - Shared editor and PDF packages used by desktop, iOS and the IntelliJ preview.
 - IntelliJ visual Markdown editing, native document synchronization, conflict checks, undo/redo, saving and PDF export.
 - English-first project documentation and edition-specific user guides.
