@@ -1,6 +1,6 @@
 {
   "name": "merkzeug-mobile",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Merkzeug – iOS/iPadOS-Spike (Capacitor + Milkdown, Vault via Working Copy)",
   "private": true,
   "type": "module",
@@ -19,8 +19,8 @@
     "mermaid": "^11.16.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "@merkzeug/core": "0.1.0",
-    "@merkzeug/editor": "0.1.0"
+    "@merkzeug/core": "1.0.0",
+    "@merkzeug/editor": "1.0.0"
   },
   "devDependencies": {
     "@capacitor/cli": "^8.5.0",

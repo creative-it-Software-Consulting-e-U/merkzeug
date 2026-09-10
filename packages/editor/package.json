@@ -1,6 +1,6 @@
 {
   "name": "@merkzeug/editor",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "exports": {
@@ -9,7 +9,7 @@
     "./*": "./src/*.ts"
   },
   "dependencies": {
-    "@merkzeug/core": "0.1.0"
+    "@merkzeug/core": "1.0.0"
   },
   "peerDependencies": {
     "react": "^19.2.8",

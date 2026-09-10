@@ -1,8 +1,19 @@
-# Apple release status — 9 September 2026
+# Apple release status
 
 The first release is free, without in-app purchases or subscriptions. The owner selected the shared App Support service and `https://merkzeug.creative-it.com/` as the marketing site. English is the focus language, with German localization.
 
-## Verified
+## Current reconciliation — 10 September 2026
+
+- The first release is scoped to the iOS and macOS App Stores. Windows, Linux, IntelliJ and GitHub binary distribution are deferred; GitHub production-signing environment protection is not a blocker for this Apple-only release.
+- App Store Connect has processed iOS version 1.0 build 1 (`VALID`). No build was selected for either version 1.0 draft at the last check.
+- English/German descriptions, promotional text and shared subtitles were saved and verified. All 28 current screenshots were uploaded and checked, preserving the approved platform-specific ordering.
+- The public marketing website has a valid HTTPS certificate and HTTPS enforcement; the support integration and reciprocal app-directory links are live.
+- macOS Electron distribution is being validated through `scripts/package-mas.py` and `scripts/upload-mas.py`. It is not an existing Xcode Cloud macOS Archive product. A matching App Store profile was created outside the repository using the existing Apple Distribution certificate; the existing Mac App Store installer identity is available.
+- Source versions are aligned at 1.0.0. The macOS package uses the equivalent Store version 1.0 with an explicit build number. Distribution processing and final device acceptance remain distinct from successful packaging.
+
+The dated evidence below records the earlier setup; entries explicitly marked pending there are superseded by the current reconciliation where stated.
+
+## Historical verified evidence — 9 September 2026
 
 - Shared edition/store preparation merged through PR 2 at `902089b568aae88be484d11ca01109d9d019b6a5`. PR checks passed.
 - Xcode Cloud build 1 succeeded against `ab14f92`, using Xcode 26.6 (17F113) and macOS Tahoe 26.6.2. This was a Build action, not an App Store archive/upload.
