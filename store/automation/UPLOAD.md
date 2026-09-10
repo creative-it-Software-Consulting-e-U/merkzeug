@@ -11,7 +11,7 @@ The `Build release draft` manual workflow has a `screenshots` input:
 | Value | Behavior |
 | --- | --- |
 | `keep` (default) | No Store API call and no screenshot credentials used. Tag pushes also default to keep. |
-| `if-missing` | Populate empty/missing selected sets; preserve populated complete sets. |
+| `if-missing` | Populate empty/missing selected sets; resume incomplete groups belonging to this bundle; preserve other populated complete sets. |
 | `sync` | Make the selected sets match the reviewed bundle, including order. Skip identical images. |
 
 Choose the iOS, macOS or both Store platforms separately from the direct-download binary editions. The upload runs after source/version checks, independently of direct-download signing. It never submits for review, uploads an app binary, edits descriptions, or publishes a version.
@@ -53,7 +53,7 @@ The default command is a read-only plan. `--validate-only` requires no credentia
 
 ## Replacement, failure and recovery
 
-The uploader preflights every selected version, locale and set before changing anything. It reserves assets, uploads Apple's exact byte ranges without the API bearer token, commits the original-file MD5, and polls until `COMPLETE`. Existing complete images stay in place until all desired replacements in that set have completed processing. It then removes superseded images, applies the desired order and verifies final checksums/count/order.
+The uploader preflights every selected version, locale and set before changing anything. It reserves assets, uploads Apple's exact byte ranges without the API bearer token, commits the original-file MD5, and polls until `COMPLETE` and the original-file checksum is visible (Apple may publish these at different times). Existing complete images stay in place until all desired replacements in that set have completed processing. It then removes superseded images, applies the desired order and verifies final checksums/count/order.
 
 Apple permits ten screenshots per set. If existing images leave insufficient staging space, the preflight fails without deleting them. Review and reduce that set manually before retrying. Sets are updated sequentially, not as a cross-platform transaction: a later failure can leave earlier sets successfully updated. Re-run to reconcile; completed matching images are reused, pending managed uploads are resumed, and failed managed reservations can be recreated. Other display sizes and locales are untouched. A failed write is not automatically retried blindly.
 

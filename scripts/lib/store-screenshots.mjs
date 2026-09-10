@@ -78,7 +78,7 @@ export class Client {
   async ready(id,md5){
     for(let i=0;i<90;i++){
       const {data}=await this.json('GET',`/v1/appScreenshots/${id}`);const a=data.attributes;
-      if(a.assetDeliveryState?.state==='COMPLETE'){requireThat(a.sourceFileChecksum?.toLowerCase()===md5,'Processed screenshot checksum mismatch');return data;}
+      if(a.assetDeliveryState?.state==='COMPLETE' && a.sourceFileChecksum){requireThat(a.sourceFileChecksum?.toLowerCase()===md5,'Processed screenshot checksum mismatch');return data;}
       requireThat(a.assetDeliveryState?.state!=='FAILED','Apple rejected screenshot processing');await this.pause(2000);
     }
     throw Error('Screenshot processing timed out; rerun to reconcile');
@@ -106,7 +106,8 @@ export async function plan(client,bundle,version,platforms,mode){
       const complete=s=>s.attributes.assetDeliveryState?.state==='COMPLETE';
       const matched=group.images.map(img=>existing.find(s=>complete(s)&&s.attributes.sourceFileChecksum?.toLowerCase()===img.md5));
       const same=existing.length===matched.length && matched.every((s,i)=>s?.id===existing[i].id);
-      const keep=mode==='if-missing'&&existing.length>0&&existing.every(complete);
+      const managed=existing.every(s=>group.images.some(img=>img.remoteName===s.attributes.fileName));
+      const keep=mode==='if-missing'&&existing.length>0&&existing.every(complete)&&!managed;
       const newImages=group.images.filter((_,i)=>!matched[i]);
       if(!same&&!keep) requireThat(existing.length+newImages.filter(img=>!existing.some(s=>s.attributes.fileName===img.remoteName)).length<=10,'Not enough staging slots; existing images were preserved');
       result.push({group,versionId:v.id,localeId:loc[0].id,setId:set[0]?.id,existing,matched,action:same?'identical':keep?'keep':'update'});

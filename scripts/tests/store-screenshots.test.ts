@@ -71,3 +71,13 @@ test('rerun resumes a pending upload and commits its MD5 without reserving again
  const second=await plan(fakePlan([screenshot('pending')]),{appId:'1',groups:[group]},'1.0',['IOS'],'sync');
  const count=calls.length;await apply(c,second);assert.equal(calls.length,count);
 });
+
+test('processing completion waits for the eventually visible checksum',async()=>{
+ let reads=0;const c=new Client({token:()=> 'test',pause:async()=>{},request:async()=>({ok:true,status:200,json:async()=>({data:screenshot('new',++reads===1?null:image.md5)})})});
+ assert.equal((await c.ready('new',image.md5)).id,'new');assert.equal(reads,2);
+});
+test('if-missing resumes a partially completed managed group',async()=>{
+ const extended={...group,images:[image,{...image,md5:'second',remoteName:'second.png'}]};
+ const p=await plan(fakePlan([screenshot('first')]),{appId:'1',groups:[extended]},'1.0',['IOS'],'if-missing');
+ assert.equal(p[0].action,'update');assert.equal(p[0].matched[0].id,'first');
+});
