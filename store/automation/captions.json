@@ -13,8 +13,8 @@
       "subtitle": "Titles, tags and metadata stay with your files."
     },
     "git": {
-      "title": "Git belongs in your notebook.",
-      "subtitle": "Keep documentation beside your code. Commit and sync."
+      "title": "Track changes. Work together.",
+      "subtitle": "Version and sync your Markdown files with Git."
     },
     "pdf": {
       "title": "Markdown to a finished PDF.",
@@ -43,8 +43,8 @@
       "subtitle": "Titel, Tags und Metadaten gehören zur Datei."
     },
     "git": {
-      "title": "Git gehört ins Notizbuch.",
-      "subtitle": "Dokumentation beim Code behalten. Committen und synchronisieren."
+      "title": "Änderungen verfolgen. Gemeinsam arbeiten.",
+      "subtitle": "Markdown-Dateien direkt mit Git versionieren und synchronisieren."
     },
     "pdf": {
       "title": "Von Markdown zum fertigen PDF.",
