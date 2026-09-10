@@ -27,6 +27,30 @@ class CloudPreparation(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr.decode())
 
 
+    def test_archive_uses_store_version_and_cloud_counter(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            app = root / 'mobile/ios/App'
+            (app / 'App/public').mkdir(parents=True)
+            (app / 'App/public/index.html').write_text('built')
+            (app / 'App/capacitor.config.json').write_text('{}')
+            (app / 'ci_scripts').mkdir()
+            script = app / 'ci_scripts/ci_pre_xcodebuild.sh'
+            shutil.copyfile(ROOT / 'mobile/ios/App/ci_scripts/ci_pre_xcodebuild.sh', script)
+            tools = root / 'bin'
+            tools.mkdir()
+            xcrun = tools / 'xcrun'
+            xcrun.write_text('#!/bin/sh\nprintf "%s\\n" "$*" >> "$COMMAND_LOG"\n')
+            xcrun.chmod(0o755)
+            log = root / 'commands'
+            for version, expected in [('1.0.0', '1.0'), ('1.1.2', '1.1.2')]:
+                (root / 'VERSION').write_text(version+'\n')
+                log.write_text('')
+                result = subprocess.run(['bash', str(script)], env=dict(os.environ, PATH=str(tools)+os.pathsep+os.environ['PATH'], CI_PRIMARY_REPOSITORY_PATH=str(root), CI_BUILD_NUMBER='29', CI_XCODEBUILD_ACTION='archive', COMMAND_LOG=str(log)), capture_output=True)
+                self.assertEqual(result.returncode, 0, result.stderr.decode())
+                self.assertEqual(log.read_text().splitlines(), [f'agvtool new-marketing-version {expected}', 'agvtool new-version -all 29'])
+
+
 class MacCloudPreparation(unittest.TestCase):
     def test_rejects_missing_or_already_used_build_number_before_packaging(self):
         with tempfile.TemporaryDirectory() as folder:

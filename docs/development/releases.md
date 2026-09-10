@@ -28,8 +28,8 @@ Before adding production credentials to GitHub, configure protected release envi
 
 ### Xcode Cloud responsibilities
 
-- iOS: preferred Apple build/signing/TestFlight service. The shared `Merkzeug` archive scheme and preparation scripts are implemented; Cloud workflow/account configuration remains outstanding. A custom post-clone script must install pinned web dependencies, build the mobile frontend and synchronize Capacitor before the native archive.
-- macOS: desired Apple distribution target, but Xcode Cloud integration remains unproven for the current Electron application. First validate a local sandboxed MAS build. Then evaluate an archive-capable Xcode wrapper and Cloud scripts, including how the Electron artifact participates in signing and distribution. Do not assume that running electron-builder from a custom script automatically receives Apple's managed signing. If this cannot be integrated reliably, use a dedicated macOS CI signing/upload job with private credentials.
+- iOS: **iOS App Store** uses the shared `Merkzeug` scheme, public Xcode 26.6, preparation scripts, Apple-managed signing and an internal TestFlight post-action. Start it manually from reviewed `main`.
+- macOS: **macOS App Store** uses the archive-capable `crossplatform/macos/Merkzeug.xcodeproj` target to package the universal Electron MAS app. Cloud verifies the real payload and applies managed distribution signing, followed by automatic TestFlight upload. See the validation evidence in [Apple build setup](apple-builds.md).
 - Windows, Linux and IntelliJ: GitHub Actions remains the planned build service.
 
 Xcode Cloud setup and access control live in Apple's service; safe custom scripts stay in source control. [Cloud-managed signing](https://developer.apple.com/help/account/certificates/cloud-managed-certificates/), [Cloud workflow requirements](https://developer.apple.com/documentation/xcode/configuring-your-first-xcode-cloud-workflow), [custom scripts and secret variables](https://developer.apple.com/documentation/xcode/writing-custom-build-scripts).

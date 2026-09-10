@@ -6,7 +6,7 @@ The local iOS development archive and App Store distribution IPA export both suc
 
 The owner authorized Xcode Cloud access to `creative-it-Software-Consulting-e-U/merkzeug`. Setup completed on 9 September 2026 and created workflow `1E8147B2-4C78-4BCC-894E-5D29A2FD3323`. The public Capacitor dependency initially caused an incorrect request for third-party organization authorization. `CapacitorRuntime/Package.swift` now references the unchanged official Capacitor 8.5.0 binary URLs and SHA-256 checksums locally; a fresh signed archive succeeded. `scripts/prepare-ios-runtime.py` reapplies this package reference after Capacitor sync and rejects unexpected versions/layouts. Review upstream URLs and checksums when upgrading Capacitor. No authorization request was sent to the dependency's organization.
 
-Cloud build 1 (`1884362b-0f49-44e7-876e-0d303e945a69`) was started manually against `codex/store-readiness` at `ab14f92`. It succeeded with Xcode 26.6 (17F113) on macOS Tahoe 26.6.2. Its initial action is Build for iOS. Archive/TestFlight configuration remains pending; the web workflow editor currently returns no Archive schemes. The source is reviewable in [draft PR 2](https://github.com/creative-it-Software-Consulting-e-U/merkzeug/pull/2).
+Cloud build 1 (`1884362b-0f49-44e7-876e-0d303e945a69`) was started manually against `codex/store-readiness` at `ab14f92`. It succeeded with Xcode 26.6 (17F113) on macOS Tahoe 26.6.2. Its initial action was Build for iOS. The separate distribution workflows described below now provide Archive and TestFlight delivery for both editions.
 
 The macOS profile has been downloaded outside Git and validated against the bundle ID, platform and test device. The ARM64 development-signed MAS build now succeeds. `codesign --verify --deep --strict` passes, and the app launches with the German welcome screen from the MAS bundle. The embedded entitlements include the app sandbox, user-selected read/write access and the expected application identifier. A custom signing hook preserving the fingerprint fixed the certificate display-name decoding failure.
 
@@ -14,13 +14,15 @@ The basic vault persistence test passed on 9 September 2026: the owner selected 
 
 ## iOS / Xcode Cloud
 
-Open `mobile/ios/App/App.xcodeproj` and select the shared **Merkzeug** scheme. Its Archive action uses Release. Configure Xcode Cloud for this project/scheme after the reviewed source is pushed to a repository Apple can access:
+The **iOS App Store** workflow (`709665a7-0f88-4322-bbb8-67f4ff59e2a2`) uses `mobile/ios/App/App.xcodeproj`, shared scheme **Merkzeug**, and a Release Archive action. It is pinned to public Xcode 26.6 (17F113) on macOS Tahoe 26.6.2. The original **Default** workflow remains a separate build-only contributor check.
+
+To reproduce the distribution configuration:
 
 1. Choose an available Xcode/macOS environment and the existing Apple team. Use the working GeoHook Xcode Cloud configuration as the reference, checking its actual cloud toolchain selection. Local Xcode and the cloud build environment are configured independently; a stable local Xcode installation is not a prerequisite.
 2. Run on a controlled release branch/tag. Keep contributor checks separate from distribution actions.
-3. Add an iOS Archive action; configure TestFlight distribution when the app record is ready.
+3. Add an iOS Archive action with **App Store Connect** distribution preparation. Add **TestFlight Internal Testing** as a post-action, using the internal **Merkzeug Internal** group. The group was created without inviting testers; assign approved internal testers in TestFlight when needed.
 4. The checked-in `ci_scripts/ci_post_clone.sh` installs Node 24 if needed, runs `npm ci`, validates versions/tests, builds the web app and synchronizes Capacitor. Electron downloads are skipped for iOS.
-5. `ci_pre_xcodebuild.sh` verifies the generated resources and uses `CI_BUILD_NUMBER` for the archive's build number. Set Xcode Cloud's next build number above every number already uploaded for this app; marketing versions remain controlled by `VERSION`.
+5. `ci_pre_xcodebuild.sh` verifies the generated resources and uses `CI_BUILD_NUMBER` for the archive's build number. Set Xcode Cloud's next build number above every number already uploaded for this app; marketing versions remain controlled by `VERSION`, with source `1.0.0` written as Store version `1.0` during archiving.
 6. Use automatic/cloud-managed signing. There is no certificate export step in these scripts.
 
 The native `ScreenshotTests` UI-test target and shared `Merkzeug-Screenshots` scheme produce raw and captioned DE/EN images as XCTest attachments. See the [reproducible screenshot pipeline](../../store/automation/README.md) for local runs, Cloud Test actions and result export. Archive signing remains separate.
@@ -70,7 +72,7 @@ The MAS signing hook preserves the certificate fingerprint resolved by electron-
 
 For the first Store version, source version `1.0.0` is packaged with the equivalent Store spelling `1.0`. Distribution builds require an explicit unused positive build number. The universal target includes both Electron architectures and both calendar-helper slices, targeting macOS 12 or newer. `MERKZEUG_MACOS_SDK` can select an installed SDK independently of `DEVELOPER_DIR`; the local beta host uses the installed stable macOS 26.5 SDK for this build.
 
-The scripts deliberately reject provisioning profiles inside the checkout. They never upload, notarize MAS builds, install software or create signing identities. Distribution requires the relevant application and installer signing identities in the build keychain. Use the shared certificate qualifier, such as `creative-it (3BNJ4M9R56)`, so both identities can be resolved. The script also accepts and normalizes the Apple Distribution prefix. Keep exported keys/profiles in private storage; an Xcode Cloud wrapper has not been implemented or validated for this Electron target.
+The scripts deliberately reject provisioning profiles inside the checkout. They never upload, notarize MAS builds, install software or create signing identities. Distribution requires the relevant application and installer signing identities in the build keychain. Use the shared certificate qualifier, such as `creative-it (3BNJ4M9R56)`, so both identities can be resolved. The script also accepts and normalizes the Apple Distribution prefix. Keep exported keys/profiles in private storage for this optional local path. The Xcode Cloud packaging target described below uses Apple-managed signing without exporting credentials.
 
 The app requests user-selected read/write access, persistent folder bookmarks, outgoing connections and calendar access. Selected vault/template folders are bookmarked and restored when a MAS process starts. These bookmarks are stored in the private app settings, not in notes or source control. The calendar executable and Electron child processes require correct sandbox inheritance when signed.
 
@@ -91,7 +93,7 @@ The iOS app includes `PrivacyInfo.xcprivacy` for its own native code: app-privat
 
 ## Explicit Mac App Store validation and upload
 
-The macOS Electron edition uses `package-mas.py`; it is not currently an Xcode Cloud product. The existing Cloud default workflow builds the native iOS project. A successful iOS Cloud or screenshot run does not produce a macOS distribution package.
+The preferred macOS distribution route is the **macOS App Store** Xcode Cloud workflow below. These commands remain an explicit local validation/upload alternative. A successful iOS or screenshot-only workflow does not produce a macOS distribution package.
 
 After packaging and checking the bundle version, sandbox entitlements and both architectures:
 
@@ -113,9 +115,9 @@ The **macOS App Store** workflow (`9eea4c72-17b1-45d8-b8b7-5f7dc4269090`) uses `
 - Pre-build prepares unsigned universal Electron and calendar-helper binaries, using the Cloud build number (at least 2; local Store build 1 already exists).
 - The Xcode build phase copies the prepared bundle and gives nested executable code ad-hoc sandbox signatures. Xcode owns the outer signature and provisioning. The archive/export pipeline applies Apple's managed distribution signing; no signing keys, certificates or API keys are injected by the scripts.
 - Post-build verifies the archived app identity, Cloud build number, both architectures, signature, help/notices and payload hash.
-- The Archive action targets any Mac and requests App Store eligible distribution. Store build selection and App Review submission remain manual.
+- The Archive action targets any Mac and requests App Store eligible distribution. Its TestFlight post-action uploads the managed-signed export automatically. Store build selection and App Review submission remain manual.
 
-The workflow is initially manual, so documentation-only commits do not consume distribution build numbers. Start **macOS App Store** on the reviewed `main` branch from Xcode Cloud in App Store Connect. During setup only, the implementation branch is also enabled. A successful Cloud distribution run and processed Store build must be recorded before declaring this route validated.
+The workflow is initially manual, so documentation-only commits do not consume distribution build numbers. Start **macOS App Store** on the reviewed `main` branch from Xcode Cloud in App Store Connect. The workflow uses a **TestFlight Internal Testing** post-action for the **Merkzeug Internal** group. Both distribution workflows are manually started from `main`; App Review submission is a separate owner action.
 
 Local archive reproduction after `npm ci`:
 
@@ -129,3 +131,16 @@ python3 crossplatform/macos/verify-archive.py /tmp/Merkzeug-Cloud.xcarchive 2
 ```
 
 This local ad-hoc archive is only a packaging/signature-structure test; it is not a distribution-signed build or evidence of Cloud export success.
+
+## Cloud validation, 10 September 2026
+
+- macOS Cloud build **26** (`a5610ae1-a592-4ba1-8262-87cd43680567`, source `fba795f`) passed archive, universal payload verification and managed App Store export. The first run exposed Python 3.9 compatibility in the hash check; the verifier now hashes in chunks. The TestFlight post-action was added after build 26 started, so that run alone is not upload evidence.
+- iOS Cloud build **27** (`f3f1b84e-88e7-482e-900e-e6d96c58b805`, source `fba795f`) passed Archive and automatic TestFlight distribution with public Xcode 26.6. This replaces the local beta-Xcode route for release candidates.
+- Local beta development is still supported. Apple rejected the old beta-Xcode iOS build for Review even though API processing reported `VALID`; processing alone is not proof of submission eligibility.
+
+For a new release candidate, open Merkzeug → Xcode Cloud → **Start Build**, choose
+**iOS App Store** or **macOS App Store**, and select reviewed `main`. The shared
+Cloud counter prevents build-number reuse. Verify the resulting processed build
+in TestFlight and complete native acceptance before selecting it for submission.
+The existing macOS 1.0 submission was already waiting for review during setup;
+creating the workflows does not replace that submission.
