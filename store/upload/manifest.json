@@ -21,6 +21,14 @@
           "source": "Actual app PDF export composed with PDFKit; visually reviewed",
           "sourceCommit": "203bcc566c66af384934900459a8be108b286d10",
           "cloudBuild": 41
+        },
+        "git": {
+          "source": "Caption-only update from unchanged raw capture",
+          "rawSHA256": {
+            "en": "691c0a980eca97d42beb769ccc324d2d954a25395c6a1d183cc4efc2505cd719",
+            "de": "8b8d8d5bc57a76d9d2eb5d06b96d7bfb31791ab835eac2edbe0825ffad9ae4a8"
+          },
+          "captionsSHA256": "8bf4824447343aba2cd295770f9ca15e736b167f5f03e6dfd736f32ad8bf3465"
         }
       }
     }
@@ -162,7 +170,7 @@
         {
           "scene": "git",
           "file": "images/macos-en-git.png",
-          "sha256": "f2e6854336fcede5b4707d39038d3f470d1748421fd317cff06c89f17853356a"
+          "sha256": "0a811fb1b18efaea792c39a4fa9c375575c083adffbf3d9bf88a8467f1f6267f"
         },
         {
           "scene": "frontmatter",
@@ -199,7 +207,7 @@
         {
           "scene": "git",
           "file": "images/macos-de-git.png",
-          "sha256": "18a955158f226096d654d231fe18d4b3847bbd193c71d3291f3c5cd1ca4bc3c0"
+          "sha256": "e4943a8f236d33e020ee59f7c1fdf4237db19e5dbf0262712a9f11511c161e68"
         },
         {
           "scene": "frontmatter",
