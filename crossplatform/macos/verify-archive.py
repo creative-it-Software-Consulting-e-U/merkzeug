@@ -20,5 +20,8 @@ resources = app / 'Contents/Resources'
 for name in ['app.asar', 'LICENSE', 'THIRD_PARTY_NOTICES.txt', 'help/Help.en.md', 'help/Help.de.md']:
     if not (resources / name).is_file(): raise SystemExit(f'Missing archive resource: {name}')
 with (resources / 'app.asar').open('rb') as data:
-    digest = hashlib.file_digest(data, 'sha256').hexdigest()
+    checksum = hashlib.sha256()
+    for chunk in iter(lambda: data.read(1024 * 1024), b''):
+        checksum.update(chunk)
+    digest = checksum.hexdigest()
 print(json.dumps({'bundleId': info['CFBundleIdentifier'], 'version': info['CFBundleShortVersionString'], 'build': build, 'architectures': ['arm64', 'x86_64'], 'appAsarSHA256': digest, 'signature': 'verified'}))
