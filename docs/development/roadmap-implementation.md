@@ -43,3 +43,27 @@ No private physical device was used. An unavailable Working Copy app is an expli
 ## Native calendar API
 
 iOS 17+ uses `requestFullAccessToEvents`; earlier supported iOS versions use `requestAccess(to: .event)`. The corresponding usage-description keys are included. Calendar data is only read by the feature; the selected event becomes a Markdown note in the user's vault. See [Apple's EventKit access documentation](https://developer.apple.com/documentation/eventkit/accessing-calendar-using-eventkit-and-eventkitui).
+
+## Validation recorded for the implementation
+
+Implementation commit: `0336daf5ddc633abc9fcf0f387f9fd0fdf2bcd40`. Later documentation corrections do not change executable behavior. The synthetic test data contains no personal notes or calendar events.
+
+- `npm test`: 35 tests passed; `npm run test:release`: 19 tests passed. All four TypeScript targets, version consistency, local documentation links and repository/current-source secret scans passed.
+- `node scripts/roadmap-acceptance.mjs`: actual Electron renderer passed tour navigation, confirmed root guidance creation, cross-window theme changes including Mermaid, opt-in template styling, and ICS reimport preserving the existing meeting note. The native calendar uses an empty synthetic fixture in this test.
+- iOS: `Merkzeug-Screenshots/testRoadmap` passed on a separately created iPhone 17 Pro simulator with iOS 27.0. This exercises the actual Capacitor/EventKit permission and empty-event query. Use an ad-hoc signed simulator build (`CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES`); disabling signing prevents Keychain access. Reset only the dedicated simulator's Calendar permission before testing the first permission prompt. The private iPhone 16 Pro was not used.
+- IntelliJ: native document write, stale-write rejection, undo, redo, save and PDF smoke tests passed against IDEA 262.10315.125. The verifier reports compatibility, with two deprecated `ensureFilesWritable` usages and one pre-existing internal `PluginManagerCore.getPlugin` usage. The declared compatibility range is deliberately limited to that exact build.
+- Windows 11 ARM64 (`10.0.26200`), installed unsigned NSIS package: English and German acceptance passed for launch/notices, editing, save/reopen, undo/redo, read-only error/retry, external conflict handling, local images and PDF template/TOC/linked-document/diagram/table/image export. The dedicated test installation was then uninstalled. This is not signed-distribution or native Windows x64 acceptance.
+- Linux Ubuntu 24.04 x64 in temporary AWS EC2: AppImage, DEB and RPM packages built from the implementation commit. Installed DEB acceptance passed in English and German for the same functional checks as Windows. Normal DEB and AppImage processes remained running until the explicit 15-second test timeout, without Playwright or `--no-sandbox`, under SSM/D-Bus/Xvfb. The DEB was uninstalled. These checks do not cover a native RPM distribution, Wayland or every desktop environment.
+- Visual PDF spot checks: the Windows, Linux and IntelliJ content pages retained readable light print colors, diagrams and tables. This is not an exhaustive arbitrary-template layout certification.
+
+Playwright Electron functional tests use its default disabled Chromium sandbox. Normal Linux launches are checked separately; functional results alone do not certify sandbox behavior. Linux package build prerequisites include `binutils` (`ar`), `rpm` and `fakeroot` in addition to the desktop runtime libraries.
+
+Raw logs, native acceptance JSON, screenshots, PDFs, local installers, the iOS result attachments and verifier reports are retained in ignored `release-artifacts/roadmap/`. No artifacts were published. The draft PR is [#50](https://github.com/creative-it-Software-Consulting-e-U/merkzeug/pull/50).
+
+Remaining acceptance includes real subscribed-feed refresh/offline tests on each platform, iOS/iPad File Provider and Working Copy callbacks/conflicts, representative custom IDE theme review, Windows signing/x64/SmartScreen and public distribution, native RPM-distribution checks, Apple release selection/approval and YouTube publication. Feature issues remain in Review/Test rather than being auto-closed.
+
+## Temporary environment teardown
+
+AWS teardown was verified on 10 September 2026 at 19:59 UTC: the EC2 instance was terminated, its temporary EBS volume deleted, and the dedicated IAM role/policies/instance profile, security group, SSH key pair, S3 objects and bucket removed. The dedicated Windows installation/workspace and the separately created iOS simulator were also removed. No private physical device was used.
+
+The committed [validation summary](roadmap-validation.json) records implementation commit, platform checks, artifact SHA-256 values and teardown results. Binaries and full raw output remain local under `release-artifacts/roadmap/`; the later help-text corrections should be included when generating release packages.

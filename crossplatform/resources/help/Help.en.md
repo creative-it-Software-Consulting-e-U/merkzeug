@@ -74,8 +74,7 @@ The sidebar on the left shows the vault as a hierarchical tree.
   time, macOS asks for permission to access the calendar. On Windows,
   Outlook is started in the background if needed; if Outlook shows a
   security prompt ("A program is trying to access …"), allow access for a
-  few minutes. On Linux the calendar integration is not available yet (an
-  ICS import will follow).
+  few minutes. On Linux and with new Outlook, use **Calendar sources** to import ICS files or subscribe to HTTPS/Webcal feeds.
 - **Automatic naming of new notes:** a new note is initially called
   "New note". If it starts with a **heading 1**, the file is automatically
   named after the title when saving: all lowercase, spaces and special

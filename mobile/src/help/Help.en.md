@@ -38,7 +38,7 @@ accidental changes. The pencil **✎** switches to edit mode:
 - Typing "/" at the start of a line opens the insert menu (headings,
   lists, tables, images, code blocks …).
 - Images from your photo library are stored automatically in the
-  `assets/` subfolder next to the note when inserted.
+  `NoteName.assets/` folder next to `NoteName.md` when inserted.
 - Mermaid code blocks show a diagram preview.
 
 ## Creating, renaming, deleting

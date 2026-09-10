@@ -40,7 +40,7 @@ Bearbeitungsmodus:
 - „/" am Zeilenanfang öffnet das Einfüge-Menü (Überschriften, Listen,
   Tabellen, Bilder, Codeblöcke …).
 - Bilder aus der Foto-Mediathek werden beim Einfügen automatisch im
-  Unterordner `assets/` neben der Notiz abgelegt.
+  Ordner `Notizname.assets/` neben `Notizname.md` abgelegt.
 - Mermaid-Codeblöcke zeigen eine Diagramm-Vorschau.
 
 ## Anlegen, Umbenennen, Löschen

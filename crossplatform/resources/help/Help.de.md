@@ -79,8 +79,7 @@ Links zeigt die Sidebar den Vault als hierarchischen Baum.
   ersten Mal fragt macOS nach der Erlaubnis für den Kalender-Zugriff. Unter
   Windows startet Outlook bei Bedarf im Hintergrund; zeigt Outlook eine
   Sicherheitsabfrage („Ein Programm versucht, auf … zuzugreifen“), erlaube
-  den Zugriff für ein paar Minuten. Unter Linux ist die Kalender-Anbindung
-  noch nicht verfügbar (ein ICS-Import folgt).
+  den Zugriff für ein paar Minuten. Unter Linux und mit neuem Outlook importierst du unter **Kalenderquellen** ICS-Dateien oder abonnierst HTTPS/Webcal-Feeds.
 - **Automatische Benennung neuer Notizen:** Eine neue Notiz heißt zunächst
   „Neue Notiz“. Beginnt sie mit einer **Überschrift 1**, wird die Datei beim
   Speichern automatisch nach dem Titel benannt: alles klein, Leerzeichen und

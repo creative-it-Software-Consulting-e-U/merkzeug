@@ -2,9 +2,9 @@
 
 ## Requirements and installation
 
-The current preview targets IntelliJ IDEA 2026.2.2, build **262.10315 or later within the 262 branch**, with the JCEF plugin enabled. Other IDE products and build branches have not been verified.
+The current preview targets IntelliJ IDEA 2026.2.2, build **262.10315.125**, with the JCEF plugin enabled. Other IDE products and build branches have not been verified.
 
-1. Download `merkzeug-VERSION.zip` from a published release.
+1. Obtain the beta `merkzeug-VERSION.zip` from the maintainer or build it using the IntelliJ development guide. A public Marketplace release is not yet available.
 2. Open **Settings → Plugins → gear menu → Install Plugin from Disk…**.
 3. Select the ZIP and restart IntelliJ if requested.
 4. Open a local `.md` file and choose the **Merkzeug** editor tab.
@@ -28,11 +28,10 @@ The PDF uses the current IntelliJ document content, including edits already acce
 
 ## Preview limitations
 
-- Dark-theme integration is incomplete, including contrast in the save dialog.
 - Files and images outside the current project root are not accessible through the plugin.
 - Cross-document links open the target file; cross-document heading navigation is incomplete.
 - PDF export temporarily switches away from the editor, then reloads the document.
-- Desktop vault settings, calendar commands and bulk PDF export are not part of the plugin.
+- Desktop vault settings, native OS calendars and bulk PDF export are not part of the plugin.
 - This is a local preview distribution; JetBrains Marketplace publication is not configured.
 
 For failures, see [troubleshooting](troubleshooting.md). Contributors can use the [plugin development guide](../../intellij/README.md).
@@ -53,6 +52,6 @@ When opening a vault, Merkzeug can suggest root `AGENTS.md` / `CLAUDE.md` instru
 
 ## Calendar sources
 
-**New meeting note** offers calendar selection. Expand **Calendar sources** to import an `.ics` file or add a named private HTTPS/Webcal subscription. Subscriptions are saved on this device, never in the vault. **Refresh calendars** downloads changes; an error retains the previous snapshot and shows its saved time. Reimporting the same named ICS file updates its source without duplicating notes. Choose a term to create or reopen its meeting note; existing note text is never replaced. CalDAV and calendar write-back are not supported.
+**New meeting note** offers calendar selection. Expand **Calendar sources** to import an `.ics` file or add a named private HTTPS/Webcal subscription. Subscriptions are saved on this device, never in the vault. **Refresh calendars** downloads changes; an error retains the previous snapshot and shows its saved time. Reimporting the same named ICS file updates its source without duplicating notes. Choose an event to create or reopen its meeting note; existing note text is never replaced. CalDAV and calendar write-back are not supported.
 
 In IntelliJ, System follows IDE colors while the editor remains open. Calendar notes are created in the project root. Use native IDE document tools for saving and undo. The tested build target remains IntelliJ IDEA 2026.2.2; no other IDE version is implied.
