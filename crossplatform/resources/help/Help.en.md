@@ -392,3 +392,17 @@ Experimental Mac App Store builds request persistent access when you select a va
 Use **Help → Contact Support…** to open the support form with Merkzeug, your language, edition and app version selected. You can deselect the app details before sending. No note contents or file paths are attached automatically.
 
 [Contact Merkzeug App Support](https://support.apps.creative-it.com/?app=merkzeug&lang=en). Include your app version, operating system and steps to reproduce the issue. Use fictional examples and avoid confidential notes.
+
+## PDF template starter
+
+Merkzeug ships a ready-to-use **Merkzeug** PDF template: a warm paper cover, serif headings, blue accents, page headers and numbered footers. In **Settings → Template for this vault**, select **Merkzeug**. Existing vaults keep their current selection, including **No template**. **Create** makes an editable copy under a new name; **Edit** opens its folder. Your changes are never overwritten by an app update. Changing the templates root makes the starter available there too, if the folder is writable.
+
+Remove or rename `deckblatt.html` to omit the cover. Customize `stil.css` for document styles and `kopfzeile.html` / `fusszeile.html` for inline header/footer styles. Margins are in `vorlage.json`. Keep the German filenames and `{{titel}}` / `{{datum}}` placeholders; they are the shared template format. Put logo images in the template folder and reference them using relative paths. The template works in IntelliJ too: **PDF template…** opens the bundled starter folder initially when no other template is selected. PDF export is not yet available on iOS.
+
+### Adapt a template with an agent
+
+Create a copy first, then give the agent that folder and this prompt:
+
+> Read README.md and all five template files in this folder. Adapt this copy to my visual style: [COLORS], [FONTS] and [LOCAL LOGO PATH]. Preserve the filenames, title/date placeholders and Chromium page-number spans. Keep header/footer CSS inline and document CSS scoped to PDF selectors. Use local assets, no scripts or network dependencies. Support A4 portrait and landscape without clipping. Update README.md to explain the changes. Validate by exporting notes with a long title, headings, links, code, a table and a diagram; inspect every page of the resulting PDFs.
+
+The template README includes the full file-format reference and a reusable prompt. Export through Merkzeug to check the result: browser previews alone do not verify page breaks. The settings link **Template guide and agent prompt** opens this section of the online manual; the same instructions are also included in the app's offline help.

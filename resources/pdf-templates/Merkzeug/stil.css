@@ -1,0 +1,22 @@
+/* Local fonts only. Keep PDF selectors scoped so the editor is unchanged. */
+.pdf-app { color: #1a1916; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.merkzeug-cover { box-sizing: border-box; min-height: 235mm; padding: 18mm 14mm; background: #f7f3ec; position: relative; }
+.merkzeug-wordmark { font: bold 12pt Arial, sans-serif; letter-spacing: .16em; }
+.merkzeug-cover-rule { width: 24mm; height: 2mm; background: #28568f; margin: 26mm 0 12mm; }
+.merkzeug-cover h1 { font: normal 38pt/1.12 Georgia, 'Times New Roman', serif; letter-spacing: -.035em; overflow-wrap: anywhere; margin: 0 0 12mm; }
+.merkzeug-cover p { font: 11pt Arial, sans-serif; color: #5e5a52; }
+.merkzeug-cover-mark { margin-top: 22mm; color: #dcd6ca; font: 72pt Georgia, serif; }
+.pdf-content .milkdown .ProseMirror { font: 10.5pt/1.6 Arial, sans-serif; color: #1a1916; }
+.pdf-content .milkdown .ProseMirror :is(h1,h2,h3,h4), .pdf-toc-title { font-family: Georgia, 'Times New Roman', serif; font-weight: normal; color: #1a1916; break-after: avoid; }
+.pdf-content .milkdown .ProseMirror h1 { font-size: 28pt; line-height: 1.15; letter-spacing: -.025em; border-bottom: 1px solid #dcd6ca; padding-bottom: 5mm; }
+.pdf-content .milkdown .ProseMirror h2 { font-size: 19pt; line-height: 1.25; margin-top: 9mm; }
+.pdf-content .milkdown .ProseMirror h3 { font-size: 14pt; }
+.pdf-content .milkdown .ProseMirror a, .pdf-toc a { color: #28568f; }
+.pdf-content .milkdown .ProseMirror blockquote { border-left: 3px solid #28568f; background: #f7f3ec; color: #5e5a52; padding: 3mm 5mm; margin-left: 0; }
+.pdf-content .milkdown .ProseMirror :is(pre,code) { background: #f7f3ec; }
+.pdf-content .milkdown .ProseMirror th { background: #eee8dc; color: #1a1916; }
+.pdf-content .milkdown .ProseMirror :is(td,th) { border-color: #dcd6ca; padding: 2mm 3mm; }
+.pdf-content .milkdown .ProseMirror p { orphans: 3; widows: 3; }
+html.pdf-landscape .merkzeug-cover { min-height: 155mm; padding: 12mm; }
+html.pdf-landscape .merkzeug-cover-rule { margin-top: 12mm; }
+html.pdf-landscape .merkzeug-cover-mark { margin-top: 10mm; font-size: 44pt; }

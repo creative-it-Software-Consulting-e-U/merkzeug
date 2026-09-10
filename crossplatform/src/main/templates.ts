@@ -3,6 +3,7 @@ import { app } from 'electron'
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, extname, join } from 'node:path'
 import type { PdfTemplate, PdfTemplateMargins } from '../shared/types'
+import { installTemplate } from './templateFiles.mjs'
 import { getStoredTemplatesRoot } from './settings'
 
 /** Ränder, wenn Kopf-/Fußzeile Platz brauchen und die Vorlage nichts vorgibt (mm) */
@@ -30,6 +31,7 @@ export function templatesRoot(): string {
 
 export function listTemplates(): string[] {
   try {
+    try { ensureStarterTemplate() } catch { /* Read-only roots may still contain usable templates. */ }
     return readdirSync(templatesRoot(), { withFileTypes: true })
       .filter((e) => e.isDirectory() && !e.name.startsWith('.'))
       .map((e) => e.name)
@@ -108,40 +110,16 @@ export function loadTemplate(name: string): PdfTemplate | null {
   return template
 }
 
-const DEFAULT_HEADER = `<!-- Header: use inline CSS. Relative image URLs are embedded on export. -->
-<div style="width:100%;margin:0 10mm;font:9px Arial;color:#666;display:flex;justify-content:space-between">
-  <span>{{titel}}</span><span>Your organization</span>
-</div>`
-const DEFAULT_FOOTER = `<div style="width:100%;margin:0 10mm;font:9px Arial;color:#666;display:flex;justify-content:space-between">
-  <span>{{datum}}</span><span>Page <span class="pageNumber"></span> of <span class="totalPages"></span></span>
-</div>`
-const DEFAULT_COVER_EXAMPLE = `<!-- Rename to deckblatt.html to enable this cover. -->
-<div class="cover" style="padding-top:70mm;text-align:center;font-family:Arial,sans-serif">
-  <h1>{{titel}}</h1><p>{{datum}}</p>
-</div>`
-const DEFAULT_CSS = `/* Optional PDF content styles, for example:
-.pdf-content .milkdown .ProseMirror { font-size: 11pt; }
-html.pdf-landscape .cover { padding-top: 30mm !important; }
-*/`
-const DEFAULT_CONFIG = '{"margins":{"top":24,"bottom":18,"left":10,"right":10}}\n'
-const DEFAULT_README = `# Merkzeug PDF template
+/** Bundled source stays read-only; user copies are never upgraded in place. */
+function starterDirectory(): string {
+  return app.isPackaged
+    ? join(process.resourcesPath, 'pdf-templates', 'Merkzeug')
+    : join(app.getAppPath(), '..', 'resources', 'pdf-templates', 'Merkzeug')
+}
 
-All files are optional. Existing German filenames remain part of the file format:
-
-- kopfzeile.html: page header
-- fusszeile.html: page footer
-- deckblatt.html: cover page (rename deckblatt-beispiel.html to enable it)
-- stil.css: additional content styles
-- vorlage.json: page margins in millimetres
-
-HTML placeholders: {{titel}} is the export title; {{datum}} is the export date.
-Use pageNumber and totalPages span classes in headers and footers for page numbers.
-Place logo images here and reference them with relative URLs. Headers and footers
-require inline CSS. Use html.pdf-landscape in stil.css for landscape-specific rules.
-
-Assign this template through Merkzeug Settings, or choose this folder in IntelliJ.
-Desktop assignments are stored in .merkzeug/settings.json inside the vault.
-`
+function ensureStarterTemplate(): void {
+  installTemplate(starterDirectory(), join(templatesRoot(), 'Merkzeug'))
+}
 
 /** Legt eine neue Vorlage mit Beispieldateien an. Wirft bei Namenskonflikt. */
 export function createTemplate(name: string): string {
@@ -151,13 +129,7 @@ export function createTemplate(name: string): string {
   }
   const dir = join(templatesRoot(), clean)
   if (existsSync(dir)) throw new Error(`${translate("The template “")}${clean}${translate("” already exists.")}`)
-  mkdirSync(dir, { recursive: true })
-  writeFileSync(join(dir, 'kopfzeile.html'), DEFAULT_HEADER)
-  writeFileSync(join(dir, 'fusszeile.html'), DEFAULT_FOOTER)
-  writeFileSync(join(dir, 'deckblatt-beispiel.html'), DEFAULT_COVER_EXAMPLE)
-  writeFileSync(join(dir, 'stil.css'), DEFAULT_CSS)
-  writeFileSync(join(dir, 'vorlage.json'), DEFAULT_CONFIG)
-  writeFileSync(join(dir, 'README.md'), DEFAULT_README)
+  installTemplate(starterDirectory(), dir)
   return dir
 }
 

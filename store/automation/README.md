@@ -40,7 +40,7 @@ The macOS app is Electron. Its new Xcode packaging target supports Cloud Archive
 
 ## Release review
 
-- Run writing, diagrams, the Working Copy workflow and frontmatter on iPhone/iPad, plus calendar meeting notes and PDF templates on Mac, in both languages: 28 framed images and their raw originals. The Mac Git fixture uses a real temporary repository and a local-only bare remote. The PDF scene assigns a real template, exports a PDF proof and captures the template settings.
+- Run writing, diagrams, the Working Copy workflow and frontmatter on iPhone/iPad, plus calendar meeting notes and PDF templates on Mac, in both languages: 28 framed images and their raw originals. The Mac Git fixture uses a real temporary repository and a local-only bare remote. The PDF scene copies the shipped Merkzeug starter template, exports the linked demo notes through the app, and renders the actual cover and first linked document with PDFKit. The unmodified proof PDF is retained beside the image. This is an output preview, not a screenshot of an in-app PDF viewer.
 - Confirm expected note, complete diagram, expanded metadata, correct language, no alerts, keyboard, debug overlays or personal data.
 - Pin Xcode/runtime, Electron dependency lockfile and runner image for a release. The native status bar clock can vary between captures. System fonts may differ between OS releases; pixel identity across different operating systems is not promised.
 - Screenshots are opaque sRGB PNG. Keep the original supported pixel dimensions. Update the dimension allowlist only after checking Apple's current specification.

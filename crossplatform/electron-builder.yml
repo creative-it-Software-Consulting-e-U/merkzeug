@@ -8,6 +8,8 @@ files:
   - package.json
 artifactName: Merkzeug-${version}-${os}-${arch}.${ext}
 extraResources:
+  - from: ../resources/pdf-templates
+    to: pdf-templates
   - from: ../LICENSE
     to: LICENSE
   - from: resources/THIRD_PARTY_NOTICES.txt

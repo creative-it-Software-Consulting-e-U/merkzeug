@@ -26,7 +26,7 @@ for language, scenes in {'en': {'writing': 'Welcome', 'diagram': 'Projects;;Gard
     template = 'Project report' if language == 'en' else 'Projektbericht'
     scenes['git'] = welcome + ";;js:document.querySelector('.git-summary')?.click()"
     scenes['calendar'] = welcome + ";;js:Date.now = () => Date.parse('2026-09-10T08:00:00Z'); undefined;;menu:newMeetingNote;;js:document.querySelector('.meeting-row')?.click(); undefined;;menu:newMeetingNote"
-    scenes['pdf'] = welcome + ';;menu:exportPdf;;settingswindow'
+    scenes['pdf'] = welcome + ';;menu:exportPdf'
     for scene, clicks in scenes.items():
         if args.scene and scene != args.scene: continue
         with tempfile.TemporaryDirectory(prefix='merkzeug-capture-') as profile:
@@ -49,10 +49,7 @@ for language, scenes in {'en': {'writing': 'Welcome', 'diagram': 'Projects;;Gard
                 note.write_text(note.read_text() + ('\nNext step: share the project plan.\n' if language == 'en' else '\nNächster Schritt: den Projektplan teilen.\n'))
             if scene == 'pdf':
                 template_dir = Path(profile) / 'PDF Templates' / template
-                template_dir.mkdir(parents=True)
-                (template_dir/'kopfzeile.html').write_text('<div style="font-size:9px;width:100%;text-align:center">{{titel}}</div>')
-                (template_dir/'fusszeile.html').write_text('<div style="font-size:9px;width:100%;text-align:center"><span class="pageNumber"></span> / <span class="totalPages"></span></div>')
-                (template_dir/'deckblatt.html').write_text('<h1>{{titel}}</h1>')
+                shutil.copytree(ROOT/'resources/pdf-templates/Merkzeug', template_dir)
                 (demo/'.merkzeug').mkdir(exist_ok=True)
                 (demo/'.merkzeug/settings.json').write_text(json.dumps({'pdfTemplate':template}))
             if scene == 'calendar':
@@ -71,7 +68,7 @@ for language, scenes in {'en': {'writing': 'Welcome', 'diagram': 'Projects;;Gard
             if scene == 'pdf':
                 proof = args.output/f'macos-{language}-template-proof.pdf'
                 if not proof.is_file() or not proof.read_bytes().startswith(b'%PDF-'): raise SystemExit('Template PDF export did not finish')
-                target.with_name(target.stem + '-settings.png').replace(target)
+                subprocess.run(['xcrun', 'swift', str(ROOT/'store/automation/PdfSpread.swift'), str(proof), str(target)], check=True, timeout=90)
             if scene == 'calendar':
                 notes = list(demo.rglob('2026-09-10-*.md'))
                 if len(notes) != 1 or 'attendees:' not in notes[0].read_text(): raise SystemExit('Calendar event did not create a meeting note')
