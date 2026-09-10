@@ -12,6 +12,7 @@ export interface GitFileStatus {
 }
 
 export interface GitStatus {
+  gitAvailable?: boolean
   isRepo: boolean
   branch?: string
   ahead: number

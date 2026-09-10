@@ -9,6 +9,7 @@ interface GitBarProps {
   onCommitPush: (message: string) => void
   onPush: () => void
   onPull: () => void
+  onRetry: () => void
 }
 
 /** Git-Status in der Sidebar: Branch, Änderungen, Commit & Push, Push, Pull. */
@@ -18,11 +19,22 @@ export function GitBar({
   error,
   onCommitPush,
   onPush,
-  onPull
+  onPull,
+  onRetry
 }: GitBarProps): React.JSX.Element | null {
   const [message, setMessage] = useState('')
   const [expanded, setExpanded] = useState(false)
 
+  if (status?.gitAvailable === false) return (
+    <div className="git-bar git-unavailable" role="status">
+      <strong>{translate("Git is unavailable")}</strong>
+      <p>{translate("Install or configure Git to version and sync your notes. Editing and PDF export still work.")}</p>
+      <div className="git-buttons">
+        <button onClick={() => void window.merkzeug.openExternal('https://git-scm.com/install/')}>{translate("Git setup")}</button>
+        <button disabled={busy} onClick={onRetry}>{translate("Check again")}</button>
+      </div>
+    </div>
+  )
   if (!status || !status.isRepo) return null
 
   const changeCount = status.changes.length
@@ -58,7 +70,7 @@ export function GitBar({
                   <code>{c.code.trim() || '·'}</code> {c.path}
                 </li>
               ))}
-              {changeCount > 12 && <li>{translate("… and")} {changeCount - 12} weitere</li>}
+              {changeCount > 12 && <li>{translate("… and")} {changeCount - 12} {translate("more")}</li>}
             </ul>
           )}
           <input

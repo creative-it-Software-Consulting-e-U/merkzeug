@@ -58,16 +58,14 @@ The sidebar on the left shows the vault as a hierarchical tree.
 - **Sidebar footer:** buttons for a new note, a new meeting note and a new
   folder (left) plus a reload button for re-reading the vault; the eye icon
   shows/hides **asset folders** (⇧⌘R).
-- **Meeting notes from the calendar:** **⌃⌘N** (menu "Ablage → Neue
-  Meeting-Notiz…" or the calendar button in the footer) lists the running
+- **Meeting notes from the calendar:** **⌃⌘N** (menu "File → New Meeting Note…" or the calendar button in the footer) lists the running
   and upcoming events of the next 14 days from your locally configured
   calendars — on macOS all accounts of the Calendar app (iCloud,
   Exchange/Microsoft 365, Google, …), on Windows all calendars of
   **classic Outlook** (via its object model; the "new Outlook" has none),
   with no cloud API involved. All-day
   events (vacations, birthdays, …) are hidden by default and can be shown
-  via the checkbox above the list. **"Frühere
-  anzeigen"** reveals past events, **"Suchen"** searches titles, people and
+  via the checkbox above the list. **"Show earlier events"** reveals past events, **"Search"** searches titles, people and
   locations within ±90 days. Clicking an event creates a ready-named note:
   the event data (date, time, location, organizer, attendees, detected
   Teams/Zoom/Meet/Webex link) goes into the frontmatter; the body contains
@@ -79,11 +77,11 @@ The sidebar on the left shows the vault as a hierarchical tree.
   few minutes. On Linux the calendar integration is not available yet (an
   ICS import will follow).
 - **Automatic naming of new notes:** a new note is initially called
-  "Neue Notiz". If it starts with a **heading 1**, the file is automatically
+  "New note". If it starts with a **heading 1**, the file is automatically
   named after the title when saving: all lowercase, spaces and special
   characters become "-", umlauts are kept — so
-  "2026-08-11 BPP Call Gerulf & Alois - Neustrukturierung" becomes
-  `2026-08-11-bpp-call-gerulf-alois-neustrukturierung.md`. When the heading
+  "2026-08-11 Project Planning - Next Steps" becomes
+  `2026-08-11-project-planning-next-steps.md`. When the heading
   changes, the file name follows. As soon as you **rename the file manually**,
   your name is left untouched.
 - Changes made to the vault outside the app (Finder/Explorer, terminal, sync)
@@ -145,7 +143,7 @@ The editor shows the note formatted; what is saved is Markdown.
   **Edit → Find…**). The search covers the current note and is
   case-insensitive; selected text is taken over as the search term. **↩**
   jumps to the next match, **⇧↩** to the previous one, **Esc** closes the
-  bar. "Ersetzen" replaces the current match, "Alle" replaces all matches.
+  bar. "Replace" replaces the current match, "All" replaces all matches.
   In navigation mode you can search but not replace.
 - **Moving blocks:** the handle to the left of a block (appears on hover)
   allows drag & drop reordering.
@@ -154,7 +152,7 @@ The editor shows the note formatted; what is saved is Markdown.
   gray, collapsible **"Frontmatter"** bar at the very top of the editor, where
   it can be edited directly. Clearing the field removes the block on save.
   `title:` sets the title used by the PDF export.
-- **Which fields does Merkzeug interpret?** The **"+ Feld"** menu on the right
+- **Which fields does Merkzeug interpret?** The **"+ Field"** menu on the right
   of the frontmatter bar lists them with an explanation (currently `title:`,
   `pdf-linked-title:`, `pdf-exclude:`, `pdf-toc:` and `language:`) and inserts a template line on
   click. Any other fields are preserved but not interpreted.
@@ -264,7 +262,7 @@ For browsing linked notes there is a per-tab **navigation mode** – toggled wit
   starting on page 2 when there is a cover).
 - **Document language:** `language:` in the frontmatter of the (index) file
   (e.g. `language: en`) sets the heading of the table of contents ("Table of
-  Contents" instead of the German "Inhaltsverzeichnis"; supported: de, en,
+  Contents" for English; supported: de, en,
   fr, es, it, pt, nl — other languages get the English title) and the
   hyphenation used in the PDF. Without it, the interface language (German or English) is used.
 - The PDF is always rendered in the light theme (regardless of the system
@@ -291,7 +289,7 @@ footer with page numbers, and an optional cover page.
 
 - Templates are managed under **Merkzeug → Settings…** (⌘,). That is where the
   **templates folder** is chosen; each template is a subfolder inside it.
-- **"Anlegen"** (create) sets up a new template with example files and opens it
+- **"Create"** sets up a new template with example files and opens it
   in Finder/Explorer. A template consists of (all files optional):
   - `kopfzeile.html` – header on every page
   - `fusszeile.html` – footer on every page
@@ -307,7 +305,7 @@ footer with page numbers, and an optional cover page.
 - **Logo:** put an image file (e.g. `logo.png`) into the template folder and
   reference it relatively (`<img src="logo.png" style="height: 8mm">`) – it is
   embedded automatically on export. Header and footer support inline CSS only.
-  Details are in each template's `LIESMICH.md`.
+  Details are in each template's `README.md`.
 - **Detecting landscape:** when the PDF is generated in landscape
   automatically, the document carries the class `pdf-landscape` on the
   `<html>` element. `stil.css` can react to it, e.g. to make a tall cover page
@@ -322,6 +320,8 @@ footer with page numbers, and an optional cover page.
   templates to all machines automatically.
 
 ## 10. Git integration
+
+Merkzeug uses a separately installed Git executable for desktop version control. On macOS, Git is available through Apple’s Command Line Tools or a separate Git installation; full Xcode is not required. If Git is missing or cannot start, the sidebar shows **Git is unavailable**. Choose **Git setup** for installation instructions, then **Check again** after installing or configuring Git. Automatic Git checks pause while it is unavailable. Merkzeug does not launch Apple’s developer-tools installation dialog. Editing notes and exporting PDFs continue to work without Git.
 
 If the vault is a **Git repository**, a status line appears at the bottom of
 the sidebar:

@@ -1,26 +1,25 @@
 import { t as translate } from '@merkzeug/core/i18n'
-import { execFile } from 'node:child_process'
+import { createGitRuntime } from './gitRuntime.mjs'
 import type { GitResult, GitStatus } from '../shared/types'
 
-function git(vault: string, args: string[]): Promise<{ code: number; out: string }> {
-  return new Promise((resolvePromise) => {
-    execFile(
-      'git',
-      args,
-      { cwd: vault, timeout: 60_000, env: { ...process.env, GIT_TERMINAL_PROMPT: '0' } },
-      (error, stdout, stderr) => {
-        const rawCode = error ? (error as { code?: unknown }).code : 0
-        const code = typeof rawCode === 'number' ? rawCode : error ? 1 : 0
-        resolvePromise({ code, out: `${stdout}${stderr}`.trimEnd() })
-      }
-    )
-  })
+const runtime = createGitRuntime()
+
+async function git(vault: string, args: string[]): Promise<{ code: number; out: string }> {
+  const result = await runtime.command(vault, args)
+  return result.errorCode === 'GIT_UNAVAILABLE'
+    ? { code: 1, out: translate("Git is unavailable. Open Git setup, then choose Check again.") }
+    : result
+}
+
+export async function retryGit(vault: string): Promise<GitStatus> {
+  runtime.retry()
+  return gitStatus(vault)
 }
 
 export async function gitStatus(vault: string): Promise<GitStatus> {
   const inside = await git(vault, ['rev-parse', '--is-inside-work-tree'])
   if (inside.code !== 0 || inside.out !== 'true') {
-    return { isRepo: false, ahead: 0, behind: 0, hasRemote: false, changes: [] }
+    return { isRepo: false, gitAvailable: Boolean((await runtime.availability()).path), ahead: 0, behind: 0, hasRemote: false, changes: [] }
   }
   const branch = (await git(vault, ['rev-parse', '--abbrev-ref', 'HEAD'])).out
   const remotes = (await git(vault, ['remote'])).out
@@ -40,7 +39,7 @@ export async function gitStatus(vault: string): Promise<GitStatus> {
     .split('\n')
     .filter((line) => line.trim().length > 0)
     .map((line) => ({ code: line.slice(0, 2), path: line.slice(3).replace(/^"|"$/g, '') }))
-  return { isRepo: true, branch, ahead, behind, hasRemote, changes }
+  return { isRepo: true, gitAvailable: true, branch, ahead, behind, hasRemote, changes }
 }
 
 async function doPush(vault: string, remotes: string): Promise<GitResult> {
@@ -61,14 +60,18 @@ export async function gitCommitPush(vault: string, message: string): Promise<Git
     const commit = await git(vault, ['commit', '-m', message])
     if (commit.code !== 0) return { ok: false, output: commit.out }
   }
-  const remotes = (await git(vault, ['remote'])).out
+  const remoteResult = await git(vault, ['remote'])
+  if (remoteResult.code !== 0) return { ok: false, output: remoteResult.out }
+  const remotes = remoteResult.out
   if (remotes.length === 0) return { ok: true, output: translate("Commit created (no remote configured for pushing).") }
   return doPush(vault, remotes)
 }
 
 /** Nur pushen, ohne neuen Commit — um einen fehlgeschlagenen Push nachzuholen. */
 export async function gitPush(vault: string): Promise<GitResult> {
-  const remotes = (await git(vault, ['remote'])).out
+  const remoteResult = await git(vault, ['remote'])
+  if (remoteResult.code !== 0) return { ok: false, output: remoteResult.out }
+  const remotes = remoteResult.out
   if (remotes.length === 0) return { ok: false, output: translate("No remote is configured for pushing.") }
   return doPush(vault, remotes)
 }

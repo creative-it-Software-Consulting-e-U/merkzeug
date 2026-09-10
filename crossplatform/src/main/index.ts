@@ -19,7 +19,7 @@ import {
   saveImage,
   trashPath
 } from './vaultOps'
-import { gitCommitPush, gitPull, gitPush, gitStatus } from './git'
+import { gitCommitPush, gitPull, gitPush, gitStatus, retryGit } from './git'
 import {
   addRecentVault,
   getLastVault,
@@ -192,6 +192,7 @@ function registerIpc(): void {
   ipcMain.handle('assets:saveImage', (_e, notePath: string, base64: string, ext: string) =>
     saveImage(notePath, base64, ext)
   )
+  ipcMain.handle('git:retry', (_e, vault: string) => retryGit(vault))
   ipcMain.handle('git:status', (_e, vault: string) => gitStatus(vault))
   ipcMain.handle('git:commitPush', (_e, vault: string, message: string) =>
     gitCommitPush(vault, message)

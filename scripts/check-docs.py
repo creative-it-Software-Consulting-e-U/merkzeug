@@ -17,6 +17,17 @@ for file in files:
         target=unquote(target)
         resolved=(file.parent/target).resolve()
         if not resolved.exists():errors.append(f'{file.relative_to(ROOT)}: missing {target}')
+# English user-facing prose must not regress to untranslated German UI labels.
+# Persisted template filenames and placeholder keys inside code remain unchanged.
+english_help = [ROOT/'crossplatform/resources/help/Help.en.md', ROOT/'mobile/src/help/Help.en.md'] + list((ROOT/'docs/user').glob('*.md'))
+german_labels = ['Ablage', 'Neue Notiz', 'Neue Meeting-Notiz', 'Frühere anzeigen', 'Suchen', 'Ersetzen', 'Anlegen', '+ Feld', 'Inhaltsverzeichnis', 'Neustrukturierung']
+for file in english_help:
+    prose = re.sub(r'```[\s\S]*?```', '', file.read_text())
+    prose = re.sub(r'`[^`\n]+`', '', prose)
+    prose = re.sub(r'\s+', ' ', prose)
+    for label in german_labels:
+        if re.search(r'(?<!\w)' + re.escape(label) + r'(?!\w)', prose):
+            errors.append(f'{file.relative_to(ROOT)}: untranslated German label: {label}')
 if errors:
     print('\n'.join(errors),file=sys.stderr);sys.exit(1)
 print(f'Checked local file links in {len(files)} documentation files.')

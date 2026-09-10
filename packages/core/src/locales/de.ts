@@ -1,5 +1,11 @@
 /** German translations; English message text is the stable source key. */
 export const de: Readonly<Record<string, string>> = {
+  "Git is unavailable": "Git ist nicht verfügbar",
+  "Git is unavailable. Open Git setup, then choose Check again.": "Git ist nicht verfügbar. Öffne Git einrichten und wähle danach Erneut prüfen.",
+  "Install or configure Git to version and sync your notes. Editing and PDF export still work.": "Installiere oder konfiguriere Git, um Notizen zu versionieren und zu synchronisieren. Bearbeiten und PDF-Export funktionieren weiterhin.",
+  "Git setup": "Git einrichten",
+  "Check again": "Erneut prüfen",
+  "more": "weitere",
   "Merkzeug includes a styled PDF template. Create a copy to customize it with your own colors, logo or an agent.": "Merkzeug enthält eine gestaltete PDF-Vorlage. Erstelle eine Kopie für eigene Farben, ein Logo oder die Anpassung mit einem Agenten.",
   "Template guide and agent prompt": "Vorlagen-Anleitung und Agenten-Prompt",
   "Organizer": "Organisator",

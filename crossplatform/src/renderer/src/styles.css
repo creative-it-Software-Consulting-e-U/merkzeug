@@ -1105,3 +1105,6 @@ button.primary:disabled {
   margin: 0;
   accent-color: var(--accent);
 }
+
+.git-unavailable { padding: 12px; font-size: 12px; }
+.git-unavailable p { margin: 8px 0; line-height: 1.5; }
