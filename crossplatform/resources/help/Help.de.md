@@ -104,6 +104,7 @@ Links zeigt die Sidebar den Vault als hierarchischen Baum.
   die passende Build-Datei liegt (z. B. `pom.xml` oder `package.json`). So
   bleibt die App auch flüssig, wenn ein großes Code-Repository als Vault
   geöffnet wird.
+  Überschriften und Datumsangaben neuer Meeting-Notizen folgen der App-Sprache. Termintitel und Namen der Teilnehmer bleiben unverändert.
 
 ## 3. Tabs, Sektionen & Fenster
 

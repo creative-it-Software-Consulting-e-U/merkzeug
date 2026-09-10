@@ -29,7 +29,7 @@ python3 scripts/prepare-store-upload.py \
 node scripts/upload-store-screenshots.mjs --manifest /tmp/reviewed-upload/manifest.json --validate-only
 ```
 
-Replace `store/upload/` with that reviewed output in a PR. The preparer checks capture-manifest hashes and includes only captioned store PNGs, for English and German. Mac leads with Git and PDF templates, followed by writing, diagrams and frontmatter. Mobile leads with the repository/diagram workflow, followed by writing and frontmatter. The bundle records source-manifest hashes and image SHA-256. The uploader validates dimensions, opacity, containment, hashes and group uniqueness before accessing Apple. Public fictional artwork and its manifest can be committed; credentials cannot.
+Replace `store/upload/` with that reviewed output in a PR. The preparer checks capture-manifest hashes and includes only captioned store PNGs, for English and German. Mac order: writing, connections/diagrams, calendar meeting notes, PDF templates, Git, frontmatter. Mobile order: writing, connections/diagrams, Working Copy/Git, frontmatter; calendar integration and PDF generation are not available in this iOS edition. The bundle records source-manifest hashes and image SHA-256. The uploader validates dimensions, opacity, containment, hashes and group uniqueness before accessing Apple. Public fictional artwork and its manifest can be committed; credentials cannot.
 
 ## Credentials and environment
 

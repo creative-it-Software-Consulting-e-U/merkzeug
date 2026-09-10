@@ -28,7 +28,7 @@ def main():
         for test in json.loads((folder/'manifest.json').read_text()):
             for attachment in test['attachments']:
                 name = attachment['suggestedHumanReadableName']
-                match = re.search(r'(raw|store)-(iphone|ipad)-(en|de)-(writing|diagram|frontmatter)', name)
+                match = re.search(r'(raw|store)-(iphone|ipad)-(en|de)-(writing|diagram|git|frontmatter)', name)
                 if not match: continue
                 kind, edition, language, scene = match.groups()
                 target = args.output/edition/kind/f'{edition}-{language}-{scene}.png'
@@ -48,7 +48,7 @@ def main():
         for edition in ('iphone','ipad'):
             if not (args.output/edition).exists(): continue
             for kind in ('raw','store'):
-                expected={f'{edition}-{language}-{scene}.png' for language in ('en','de') for scene in ('writing','diagram','frontmatter')}
+                expected={f'{edition}-{language}-{scene}.png' for language in ('en','de') for scene in ('writing','diagram','git','frontmatter')}
                 actual={p.name for p in (args.output/edition/kind).glob('*.png')}
                 if actual != expected: raise ValueError(f'Incomplete {edition}/{kind}: missing {expected-actual}')
         shutil.copyfile(folder/'manifest.json',args.output/'xcresult-attachments.json')

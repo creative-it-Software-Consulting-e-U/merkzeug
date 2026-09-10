@@ -1,5 +1,8 @@
 /** German translations; English message text is the stable source key. */
 export const de: Readonly<Record<string, string>> = {
+  "Organizer": "Organisator",
+  "Attendees": "Teilnehmer",
+  "Tasks": "Aufgaben",
   "PDF templates": "PDF-Vorlagen",
   "Templates folder": "Vorlagen-Ordner",
   "missing": "fehlt",

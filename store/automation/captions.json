@@ -23,6 +23,10 @@
     "repository": {
       "title": "Your Git notes, on the go.",
       "subtitle": "Open via Working Copy. Read links and diagrams."
+    },
+    "calendar": {
+      "title": "From calendar to meeting notes.",
+      "subtitle": "Choose an event. Keep its details with your notes."
     }
   },
   "de": {
@@ -49,6 +53,10 @@
     "repository": {
       "title": "Deine Git-Notizen unterwegs.",
       "subtitle": "Über Working Copy öffnen. Links und Diagramme lesen."
+    },
+    "calendar": {
+      "title": "Vom Kalender zur Meeting-Notiz.",
+      "subtitle": "Termin wählen. Besprechungsdetails direkt übernehmen."
     }
   }
 }

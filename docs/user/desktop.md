@@ -32,7 +32,7 @@ Navigation mode makes the editor read-only and follows note links in the current
 
 Git commands operate on the vault repository. Inspect the selected files and commit message before using **Commit & Push**; use **Pull** to receive changes. Merkzeug does not resolve every Git conflict for you: use your preferred Git client when necessary.
 
-The calendar button creates notes from locally configured calendars on macOS or classic Outlook on Windows. It is not available on Linux or with new Outlook. Calendar access may require an OS permission prompt.
+The calendar button creates notes from locally configured calendars on macOS or classic Outlook on Windows. It is not available on Linux or with new Outlook. Calendar access may require an OS permission prompt. Meeting-note headings and date labels follow the app language; event titles and participant names remain unchanged.
 
 ## Detailed reference
 

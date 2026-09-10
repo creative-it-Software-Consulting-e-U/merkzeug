@@ -16,7 +16,7 @@ for edition,source,display in [('iphone',a.ios/'iphone/store','APP_IPHONE_67'),(
  manifest['provenance'][edition]={'manifestSHA256':hashlib.sha256(origin.read_bytes()).hexdigest(),'commit':source_manifest.get('commit'),'source':'Electron CI' if edition=='macos' else 'Xcode Cloud xcresult'}
  for lang,locale in [('en','en-US'),('de','de-DE')]:
   group={'platform':'MAC_OS' if edition=='macos' else 'IOS','locale':locale,'displayType':display,'images':[]}
-  for scene in (['git','pdf','writing','diagram','frontmatter'] if edition=='macos' else ['diagram','writing','frontmatter']):
+  for scene in (['writing','diagram','calendar','pdf','git','frontmatter'] if edition=='macos' else ['writing','diagram','git','frontmatter']):
    name=f'{edition}-{lang}-{scene}.png';image=source/name;digest=hashlib.sha256(image.read_bytes()).hexdigest()
    key=name if edition=='macos' else f'{edition}/store/{name}'
    if entries[key]['sha256']!=digest: p.error(f'Capture provenance mismatch: {name}')
