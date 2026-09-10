@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.creativeit.merkzeug</id>
   <name>Merkzeug</name>
-  <version>0.1.0</version>
+  <version>1.0.0</version>
   <vendor>creative-it</vendor>
   <description><![CDATA[WYSIWYG Markdown editor with Mermaid, frontmatter, images and PDF export using shared Merkzeug components. Local preview release.]]></description>
   <idea-version since-build="262.10315" until-build="262.*"/>

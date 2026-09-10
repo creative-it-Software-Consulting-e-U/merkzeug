@@ -1,15 +1,15 @@
 {
   "name": "merkzeug-intellij-web",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.json && vite build"
   },
   "dependencies": {
-    "@merkzeug/core": "0.1.0",
-    "@merkzeug/editor": "0.1.0",
-    "@merkzeug/export": "0.1.0",
+    "@merkzeug/core": "1.0.0",
+    "@merkzeug/editor": "1.0.0",
+    "@merkzeug/export": "1.0.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },

@@ -63,12 +63,14 @@ python3 scripts/package-mas.py arm64 --unsigned
 # MERKZEUG_MAS_PROFILE: absolute path to the matching macOS development profile
 python3 scripts/package-mas.py arm64
 # Appropriate distribution identity/profile plus installer identity are required.
-python3 scripts/package-mas.py arm64 --distribution
+python3 scripts/package-mas.py universal --distribution --store-version 1.0 --build-number 1
 ```
 
 The MAS signing hook preserves the certificate fingerprint resolved by electron-builder. Passing its display name instead failed locally because `codesign` misdecoded the non-ASCII owner name; setting UTF-8 locale variables alone did not fix it.
 
-The scripts deliberately reject provisioning profiles inside the checkout. They never upload, notarize MAS builds, install software or create signing identities. Distribution requires the relevant application and installer signing identities in the build keychain. Keep exported keys/profiles in private storage; an Xcode Cloud wrapper has not been implemented or validated for this Electron target.
+For the first Store version, source version `1.0.0` is packaged with the equivalent Store spelling `1.0`. Distribution builds require an explicit unused positive build number. The universal target includes both Electron architectures and both calendar-helper slices, targeting macOS 12 or newer. `MERKZEUG_MACOS_SDK` can select an installed SDK independently of `DEVELOPER_DIR`; the local beta host uses the installed stable macOS 26.5 SDK for this build.
+
+The scripts deliberately reject provisioning profiles inside the checkout. They never upload, notarize MAS builds, install software or create signing identities. Distribution requires the relevant application and installer signing identities in the build keychain. Use the shared certificate qualifier, such as `creative-it (3BNJ4M9R56)`, so both identities can be resolved. The script also accepts and normalizes the Apple Distribution prefix. Keep exported keys/profiles in private storage; an Xcode Cloud wrapper has not been implemented or validated for this Electron target.
 
 The app requests user-selected read/write access, persistent folder bookmarks, outgoing connections and calendar access. Selected vault/template folders are bookmarked and restored when a MAS process starts. These bookmarks are stored in the private app settings, not in notes or source control. The calendar executable and Electron child processes require correct sandbox inheritance when signed.
 
@@ -86,3 +88,19 @@ Do not claim Mac App Store readiness from packaging or the basic persistence tes
 ## Privacy manifest
 
 The iOS app includes `PrivacyInfo.xcprivacy` for its own native code: app-private UserDefaults hold the vault bookmark (`CA92.1`), and modification timestamps of user-selected files detect external changes (`3B52.1`). The app declares no tracking or developer-collected data in this initial manifest. Verify the final archive's aggregate privacy report, SDK manifests and store privacy answers before submission; the app's manifest does not replace dependency-specific declarations. [Apple required-reason APIs](https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api).
+
+## Explicit Mac App Store validation and upload
+
+The macOS Electron edition uses `package-mas.py`; it is not currently an Xcode Cloud product. The existing Cloud default workflow builds the native iOS project. A successful iOS Cloud or screenshot run does not produce a macOS distribution package.
+
+After packaging and checking the bundle version, sandbox entitlements and both architectures:
+
+```sh
+# ASC_KEY_ID, ASC_ISSUER_ID and ASC_PRIVATE_KEY_BASE64 come from private storage.
+# Use the same DEVELOPER_DIR that provides the supported altool CLI.
+python3 scripts/upload-mas.py crossplatform/dist-mas/Merkzeug-1.0.0-mac-universal.pkg
+# Validate again, then explicitly upload and wait for processing:
+python3 scripts/upload-mas.py crossplatform/dist-mas/Merkzeug-1.0.0-mac-universal.pkg --upload
+```
+
+The uploader requires the expected team's Mac App Store installer signature. API keys are materialized only in a private temporary directory outside Git and removed when the command ends. It does not select a Store build, submit to App Review or publish a release. Verify the processed build in App Store Connect before selecting it for version 1.0 and conducting TestFlight acceptance.
