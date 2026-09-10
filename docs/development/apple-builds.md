@@ -144,3 +144,18 @@ Cloud counter prevents build-number reuse. Verify the resulting processed build
 in TestFlight and complete native acceptance before selecting it for submission.
 The existing macOS 1.0 submission was already waiting for review during setup;
 creating the workflows does not replace that submission.
+
+### Export-compliance metadata
+
+The existing macOS Store builds 1 and 26 declare `usesNonExemptEncryption=false`,
+as does the iOS app. Preserve that existing declaration in the packaged Mac
+`Info.plist` with `ITSAppUsesNonExemptEncryption=false`; the archive verifier
+requires it. Without the key, a processed build can be `VALID` while TestFlight
+is blocked by `MISSING_EXPORT_COMPLIANCE`. Cloud build 33 exposed that gap; its
+existing declaration was supplied through the API and its state changed to
+`READY_FOR_BETA_TESTING`. Reassess the declaration if encryption features change.
+See [Apple's export-compliance metadata](https://developer.apple.com/documentation/bundleresources/information-property-list/itsappusesnonexemptencryption).
+
+The final main-branch candidates are macOS **33** and iOS **34**, both built from
+`411080b` with public Xcode 26.6. Both processed Store builds are `VALID` and
+`APP_STORE_ELIGIBLE`. App Review selection remains separate from Cloud delivery.
