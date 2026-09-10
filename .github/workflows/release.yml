@@ -8,6 +8,16 @@ on:
         description: 'Comma-separated editions (empty means complete matrix)'
         type: string
         default: ''
+      screenshots:
+        description: 'Store screenshots: keep, fill missing sets, or synchronize reviewed images'
+        type: choice
+        options: [keep, if-missing, sync]
+        default: keep
+      screenshot_platforms:
+        description: 'Store platforms for optional screenshot upload'
+        type: choice
+        options: ["IOS,MAC_OS", "IOS", "MAC_OS"]
+        default: "IOS,MAC_OS"
 permissions:
   contents: read
 concurrency:
@@ -197,3 +207,13 @@ jobs:
             [[ "$file" == */release-notes.md ]] || files+=("$file")
           done
           gh release create "$TAG" "${args[@]}" "${files[@]}"
+
+  store-screenshots:
+    needs: [checks, plan]
+    if: inputs.screenshots == 'if-missing' || inputs.screenshots == 'sync'
+    uses: ./.github/workflows/upload-store-screenshots.yml
+    with:
+      version: ${{ needs.plan.outputs.version }}
+      platforms: ${{ inputs.screenshot_platforms }}
+      mode: ${{ inputs.screenshots }}
+      apply: true

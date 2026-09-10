@@ -1,0 +1,155 @@
+{
+  "schema": 1,
+  "appId": "6799114334",
+  "provenance": {
+    "iphone": {
+      "manifestSHA256": "d14803fe264ea7e35fc0940264e396cca4da62241e60ef3614c77d1412594e36",
+      "commit": null,
+      "source": "Xcode Cloud xcresult"
+    },
+    "ipad": {
+      "manifestSHA256": "d14803fe264ea7e35fc0940264e396cca4da62241e60ef3614c77d1412594e36",
+      "commit": null,
+      "source": "Xcode Cloud xcresult"
+    },
+    "macos": {
+      "manifestSHA256": "d517eeb2c6018c38785baec0aacd712e0f5942c5dafeda3d7331f79ac96fbeb2",
+      "commit": "5168918c58dce8f4ce7b5c4772b102551f95e110",
+      "source": "Electron CI"
+    }
+  },
+  "groups": [
+    {
+      "platform": "IOS",
+      "locale": "en-US",
+      "displayType": "APP_IPHONE_67",
+      "images": [
+        {
+          "scene": "writing",
+          "file": "images/iphone-en-writing.png",
+          "sha256": "6144de2e3eb7b62b5b1370f5fc7f7cc19e427bb74e1a1be906244598408e0a21"
+        },
+        {
+          "scene": "diagram",
+          "file": "images/iphone-en-diagram.png",
+          "sha256": "91c2145f6e3a04a4d7ded70efad87578e973f5125b73f553e6a355dc62ac644f"
+        },
+        {
+          "scene": "frontmatter",
+          "file": "images/iphone-en-frontmatter.png",
+          "sha256": "c19b0a964402ddc32893926b621c5db4720dce934a46182c843b563820fd65cf"
+        }
+      ]
+    },
+    {
+      "platform": "IOS",
+      "locale": "de-DE",
+      "displayType": "APP_IPHONE_67",
+      "images": [
+        {
+          "scene": "writing",
+          "file": "images/iphone-de-writing.png",
+          "sha256": "8bc156f524858e874496b2c26af8dd36fb0a79bf6e788ee78a294dc880591910"
+        },
+        {
+          "scene": "diagram",
+          "file": "images/iphone-de-diagram.png",
+          "sha256": "5af4a16f08ff7617e0d8781978b27a904ad95a60e7c39da6b075c692012f066a"
+        },
+        {
+          "scene": "frontmatter",
+          "file": "images/iphone-de-frontmatter.png",
+          "sha256": "870690663886fe370308db3966989ab5fd7c0b22f8f169549676bdada72fbab1"
+        }
+      ]
+    },
+    {
+      "platform": "IOS",
+      "locale": "en-US",
+      "displayType": "APP_IPAD_PRO_3GEN_129",
+      "images": [
+        {
+          "scene": "writing",
+          "file": "images/ipad-en-writing.png",
+          "sha256": "ec3c90d89effa31534f5fa232301a799ad22621333c34951eaf33b400224df6e"
+        },
+        {
+          "scene": "diagram",
+          "file": "images/ipad-en-diagram.png",
+          "sha256": "25581fc3f94c49659062028cd6b0148c4ecd3c8dda76c44552ed68db1c4a0d6a"
+        },
+        {
+          "scene": "frontmatter",
+          "file": "images/ipad-en-frontmatter.png",
+          "sha256": "abac624f37c06b11911e11968e4d65697136f89b3019b7786866b8d06b690c2d"
+        }
+      ]
+    },
+    {
+      "platform": "IOS",
+      "locale": "de-DE",
+      "displayType": "APP_IPAD_PRO_3GEN_129",
+      "images": [
+        {
+          "scene": "writing",
+          "file": "images/ipad-de-writing.png",
+          "sha256": "e821303a2b3e2841a61ad9fadd69f35472dc1cb0749105a8d23e5f1deaba037a"
+        },
+        {
+          "scene": "diagram",
+          "file": "images/ipad-de-diagram.png",
+          "sha256": "9501fd2a3541f91c64b46eeb02395d437188681f7d32bcd9ac26c0b10fd57ea5"
+        },
+        {
+          "scene": "frontmatter",
+          "file": "images/ipad-de-frontmatter.png",
+          "sha256": "b45ad5d8a1fa1a57fd810fd062a0241e4eaf2e90615cf033b212bc89a739b018"
+        }
+      ]
+    },
+    {
+      "platform": "MAC_OS",
+      "locale": "en-US",
+      "displayType": "APP_DESKTOP",
+      "images": [
+        {
+          "scene": "writing",
+          "file": "images/macos-en-writing.png",
+          "sha256": "bf7dfbc37bae865a8eb63437d1c77cbb04d3dc5755d59b38c9d585cbb6811aac"
+        },
+        {
+          "scene": "diagram",
+          "file": "images/macos-en-diagram.png",
+          "sha256": "81c64c3d3656f08a67541ea914fdfdcbe5c6616b8659dcb4788282e6a1fa9eb4"
+        },
+        {
+          "scene": "frontmatter",
+          "file": "images/macos-en-frontmatter.png",
+          "sha256": "48da1ebb45a95fa752fd9bd0997fb9f8c9bac311d3838a6fb9a0832ee038f403"
+        }
+      ]
+    },
+    {
+      "platform": "MAC_OS",
+      "locale": "de-DE",
+      "displayType": "APP_DESKTOP",
+      "images": [
+        {
+          "scene": "writing",
+          "file": "images/macos-de-writing.png",
+          "sha256": "19752965336af0b4fe5734f8aa0a82cb1128e72d9c4f92988998f981752e8eba"
+        },
+        {
+          "scene": "diagram",
+          "file": "images/macos-de-diagram.png",
+          "sha256": "693cb244f8e6803a80e04b0f5afb21dc476a7bb2ef4917c8c5851df5385dfb88"
+        },
+        {
+          "scene": "frontmatter",
+          "file": "images/macos-de-frontmatter.png",
+          "sha256": "9d68a18a8094b81d5a5d0192977efebac3f007dcfc4514158112b5f9367e75e6"
+        }
+      ]
+    }
+  ]
+}

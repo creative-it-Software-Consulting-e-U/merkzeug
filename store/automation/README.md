@@ -1,6 +1,6 @@
 # Reproducible App Store screenshot candidates
 
-The pipeline captures the real editor with fictional notes from `store/demo`, then adds short English/German explanations from `captions.json`. `ScreenshotFrame.swift` is the shared, network-free Apple graphics compositor. Input proportions are preserved; clipped caption text fails the build. No screenshot upload, App Store submission or credential export happens automatically.
+The pipeline captures the real editor with fictional notes from `store/demo`, then adds short English/German explanations from `captions.json`. `ScreenshotFrame.swift` is the shared, network-free Apple graphics compositor. Input proportions are preserved; clipped caption text fails the build. Capture jobs do not change Store listings. The separate [release upload workflow](UPLOAD.md) can upload the reviewed bundle on demand; it never submits the app or exports credentials.
 
 ## iOS and iPadOS: Xcode Cloud
 
