@@ -3,18 +3,18 @@
   "appId": "6799114334",
   "provenance": {
     "iphone": {
-      "manifestSHA256": "d14803fe264ea7e35fc0940264e396cca4da62241e60ef3614c77d1412594e36",
+      "manifestSHA256": "25901a5e377f704a4fb070def842b877fce82a8f286f6e57b97ee52dd51d9b72",
       "commit": null,
       "source": "Xcode Cloud xcresult"
     },
     "ipad": {
-      "manifestSHA256": "d14803fe264ea7e35fc0940264e396cca4da62241e60ef3614c77d1412594e36",
+      "manifestSHA256": "25901a5e377f704a4fb070def842b877fce82a8f286f6e57b97ee52dd51d9b72",
       "commit": null,
       "source": "Xcode Cloud xcresult"
     },
     "macos": {
-      "manifestSHA256": "d517eeb2c6018c38785baec0aacd712e0f5942c5dafeda3d7331f79ac96fbeb2",
-      "commit": "5168918c58dce8f4ce7b5c4772b102551f95e110",
+      "manifestSHA256": "8ee556b504384f8e35ab27f488eb0c44c07cf2967a9743a4323c965342794ee3",
+      "commit": "61e79ac2642e4f8fa2f0a7d634543d93298d925c",
       "source": "Electron CI"
     }
   },
@@ -25,19 +25,19 @@
       "displayType": "APP_IPHONE_67",
       "images": [
         {
-          "scene": "writing",
-          "file": "images/iphone-en-writing.png",
-          "sha256": "6144de2e3eb7b62b5b1370f5fc7f7cc19e427bb74e1a1be906244598408e0a21"
-        },
-        {
           "scene": "diagram",
           "file": "images/iphone-en-diagram.png",
-          "sha256": "91c2145f6e3a04a4d7ded70efad87578e973f5125b73f553e6a355dc62ac644f"
+          "sha256": "8f55630e2f128bc62914b514fba9e9c3fb14b8faa02747e99b7dc9f4ede56299"
+        },
+        {
+          "scene": "writing",
+          "file": "images/iphone-en-writing.png",
+          "sha256": "507853f5cbd7fb60875ba42a6f55e83ce40649ad1ad27d503e84e67f307fefcf"
         },
         {
           "scene": "frontmatter",
           "file": "images/iphone-en-frontmatter.png",
-          "sha256": "c19b0a964402ddc32893926b621c5db4720dce934a46182c843b563820fd65cf"
+          "sha256": "0ebb79fabe0cea210bfeaf0a121e1b0b0e0a76a6c2ef28ef7a1d1bf31aea1946"
         }
       ]
     },
@@ -47,19 +47,19 @@
       "displayType": "APP_IPHONE_67",
       "images": [
         {
-          "scene": "writing",
-          "file": "images/iphone-de-writing.png",
-          "sha256": "8bc156f524858e874496b2c26af8dd36fb0a79bf6e788ee78a294dc880591910"
-        },
-        {
           "scene": "diagram",
           "file": "images/iphone-de-diagram.png",
-          "sha256": "5af4a16f08ff7617e0d8781978b27a904ad95a60e7c39da6b075c692012f066a"
+          "sha256": "7cfe7a30e65c6c85d9897c062b06aef2729fcc45588247ded88680aa96937f9a"
+        },
+        {
+          "scene": "writing",
+          "file": "images/iphone-de-writing.png",
+          "sha256": "c2965c8ab21fe660e5dca51f02a11e4742b7d04ed55f1158863b2936adf18e09"
         },
         {
           "scene": "frontmatter",
           "file": "images/iphone-de-frontmatter.png",
-          "sha256": "870690663886fe370308db3966989ab5fd7c0b22f8f169549676bdada72fbab1"
+          "sha256": "a8bbb528780f4f7a593eb8d2f8b57fef185b9e89d10f8e1450a04a6baf5f7882"
         }
       ]
     },
@@ -69,19 +69,19 @@
       "displayType": "APP_IPAD_PRO_3GEN_129",
       "images": [
         {
-          "scene": "writing",
-          "file": "images/ipad-en-writing.png",
-          "sha256": "ec3c90d89effa31534f5fa232301a799ad22621333c34951eaf33b400224df6e"
-        },
-        {
           "scene": "diagram",
           "file": "images/ipad-en-diagram.png",
-          "sha256": "25581fc3f94c49659062028cd6b0148c4ecd3c8dda76c44552ed68db1c4a0d6a"
+          "sha256": "2e2bb43c4f5b9ec568b63e6f7cd4a807a6aefb7b41cac1090dabe760ff931362"
+        },
+        {
+          "scene": "writing",
+          "file": "images/ipad-en-writing.png",
+          "sha256": "e10c0c1b4363bc58423df2ceba4d9ba668fd2ea67801020db9972d05416fac3b"
         },
         {
           "scene": "frontmatter",
           "file": "images/ipad-en-frontmatter.png",
-          "sha256": "abac624f37c06b11911e11968e4d65697136f89b3019b7786866b8d06b690c2d"
+          "sha256": "36520d7e9f70f95c1669dba3e57fe20cc3a6ae34b63937c843da4047087ac022"
         }
       ]
     },
@@ -91,19 +91,19 @@
       "displayType": "APP_IPAD_PRO_3GEN_129",
       "images": [
         {
-          "scene": "writing",
-          "file": "images/ipad-de-writing.png",
-          "sha256": "e821303a2b3e2841a61ad9fadd69f35472dc1cb0749105a8d23e5f1deaba037a"
-        },
-        {
           "scene": "diagram",
           "file": "images/ipad-de-diagram.png",
-          "sha256": "9501fd2a3541f91c64b46eeb02395d437188681f7d32bcd9ac26c0b10fd57ea5"
+          "sha256": "0b67a25483c2a90b16fb7aeb0ded7858a9b29384a7829da9aa51ef4871eb1441"
+        },
+        {
+          "scene": "writing",
+          "file": "images/ipad-de-writing.png",
+          "sha256": "6d49e496ac2ea9c1d806ad948df210960b3672cec457577fde18c4dc80e581ba"
         },
         {
           "scene": "frontmatter",
           "file": "images/ipad-de-frontmatter.png",
-          "sha256": "b45ad5d8a1fa1a57fd810fd062a0241e4eaf2e90615cf033b212bc89a739b018"
+          "sha256": "a3526547c871f07c3144e21e5e47d3e08e07ad5445582bc9568e793d54678f7e"
         }
       ]
     },
@@ -113,19 +113,29 @@
       "displayType": "APP_DESKTOP",
       "images": [
         {
+          "scene": "git",
+          "file": "images/macos-en-git.png",
+          "sha256": "81ead072d61703504295f5ea8532d0f94c4034ab668307313af278e4a727a934"
+        },
+        {
+          "scene": "pdf",
+          "file": "images/macos-en-pdf.png",
+          "sha256": "4a82a36cb925fa9f002c0077d9f9952143813f02130145b60bf309de8c965e61"
+        },
+        {
           "scene": "writing",
           "file": "images/macos-en-writing.png",
-          "sha256": "bf7dfbc37bae865a8eb63437d1c77cbb04d3dc5755d59b38c9d585cbb6811aac"
+          "sha256": "967776c6e3a327b644dc9b5dea38fc334e30154d681ad1b58a06bd4160ab2cc6"
         },
         {
           "scene": "diagram",
           "file": "images/macos-en-diagram.png",
-          "sha256": "81c64c3d3656f08a67541ea914fdfdcbe5c6616b8659dcb4788282e6a1fa9eb4"
+          "sha256": "ff66ee627a5b0d43e0f80ea8310cedcfe4c1ad5c6ba84e2da4dc41d7c9dd4597"
         },
         {
           "scene": "frontmatter",
           "file": "images/macos-en-frontmatter.png",
-          "sha256": "48da1ebb45a95fa752fd9bd0997fb9f8c9bac311d3838a6fb9a0832ee038f403"
+          "sha256": "55c8e283a4fcf435913c06dee8d96257321b41f09f7385bd9d560b5823f1b063"
         }
       ]
     },
@@ -135,19 +145,29 @@
       "displayType": "APP_DESKTOP",
       "images": [
         {
+          "scene": "git",
+          "file": "images/macos-de-git.png",
+          "sha256": "ad7a46644865116b52d589ef651e8b80e641677c616492addbba92e726781ba0"
+        },
+        {
+          "scene": "pdf",
+          "file": "images/macos-de-pdf.png",
+          "sha256": "4f2a4f01733f3a22ce678c37d724aa3bb87e8fbcffff33799c85c7b1b5fa6c1c"
+        },
+        {
           "scene": "writing",
           "file": "images/macos-de-writing.png",
-          "sha256": "19752965336af0b4fe5734f8aa0a82cb1128e72d9c4f92988998f981752e8eba"
+          "sha256": "10f17149117ecaaca4495b0d86d3332641a773b86164e80eb185a899c5d42412"
         },
         {
           "scene": "diagram",
           "file": "images/macos-de-diagram.png",
-          "sha256": "693cb244f8e6803a80e04b0f5afb21dc476a7bb2ef4917c8c5851df5385dfb88"
+          "sha256": "636de88874951cc90076773879f9287c7e9dce2e959c5ec01a47be76728d89fe"
         },
         {
           "scene": "frontmatter",
           "file": "images/macos-de-frontmatter.png",
-          "sha256": "9d68a18a8094b81d5a5d0192977efebac3f007dcfc4514158112b5f9367e75e6"
+          "sha256": "ad198e91a730a15ec6452238e2c8c1a2c09457f9f5d77906d1f9786dfea56f3a"
         }
       ]
     }

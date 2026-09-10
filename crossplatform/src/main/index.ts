@@ -318,6 +318,8 @@ app.whenReady().then(() => {
             await new Promise((r) => setTimeout(r, 3000))
             const settingsWin = BrowserWindow.getAllWindows().find((w) => w !== mainWin)
             if (settingsWin) {
+              settingsWin.setContentSize(1280, 800)
+              await new Promise((r) => setTimeout(r, 1000))
               const image = await settingsWin.webContents.capturePage()
               const { writeFileSync } = await import('node:fs')
               writeFileSync(target.replace('.png', '-settings.png'), image.toPNG())

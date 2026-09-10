@@ -12,7 +12,7 @@ import ImageIO
         for file in try FileManager.default.contentsOfDirectory(at: source, includingPropertiesForKeys: nil).sorted(by: { $0.path < $1.path }) where file.pathExtension == "png" {
             let parts = file.deletingPathExtension().lastPathComponent.split(separator: "-").map(String.init)
             guard parts.count == 3, ["macos", "iphone", "ipad"].contains(parts[0]),
-                  let caption = captions[parts[1]]?[parts[2]],
+                  let caption = captions[parts[1]]?[parts[0] != "macos" && parts[2] == "diagram" ? "repository" : parts[2]],
                   let imageSource = CGImageSourceCreateWithURL(file as CFURL, nil),
                   let image = CGImageSourceCreateImageAtIndex(imageSource, 0, nil) else { throw Failure.invalidFile(file.lastPathComponent) }
             let data = try ScreenshotFrame.render(image, title: caption.title, subtitle: caption.subtitle)

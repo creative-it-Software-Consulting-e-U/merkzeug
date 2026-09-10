@@ -24,8 +24,8 @@ def main():
     parser.add_argument('output', type=Path)
     parser.add_argument('--edition', choices=SIZES, required=True)
     args = parser.parse_args()
-    expected = {f'{args.edition}-{lang}-{scene}.png' for lang in ('en','de') for scene in ('writing','diagram','frontmatter')}
-    if {p.name for p in args.raw.glob('*.png')} != expected: parser.error('Require exactly six expected localized scene PNGs in raw folder')
+    expected = {f'{args.edition}-{lang}-{scene}.png' for lang in ('en','de') for scene in (('writing','diagram','frontmatter','git','pdf') if args.edition == 'macos' else ('writing','diagram','frontmatter'))}
+    if {p.name for p in args.raw.glob('*.png')} != expected: parser.error('Require the complete set of localized scene PNGs in raw folder')
     for name in expected:
         dimensions = inspect(args.raw/name)[:2]
         if dimensions not in SIZES[args.edition]: parser.error(f'Unexpected store dimensions: {name}: {dimensions}')

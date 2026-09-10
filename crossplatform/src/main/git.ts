@@ -11,7 +11,7 @@ function git(vault: string, args: string[]): Promise<{ code: number; out: string
       (error, stdout, stderr) => {
         const rawCode = error ? (error as { code?: unknown }).code : 0
         const code = typeof rawCode === 'number' ? rawCode : error ? 1 : 0
-        resolvePromise({ code, out: `${stdout}${stderr}`.trim() })
+        resolvePromise({ code, out: `${stdout}${stderr}`.trimEnd() })
       }
     )
   })

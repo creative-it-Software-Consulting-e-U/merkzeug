@@ -8,7 +8,7 @@ Use `mobile/ios/App/App.xcodeproj`, shared scheme **Merkzeug-Screenshots**, a **
 
 The existing post-clone script builds and synchronizes Capacitor. Screenshot fixtures and captions are test-bundle resources, so tests work on Cloud's separate test workers without repository paths or post-clone scripts there. Only Debug simulator builds accept fixture injection. No device or Release build contains that hook.
 
-Tests wait for the actual editor, fonts, rendered Mermaid SVG and expanded metadata panel. Each scene attaches `raw-…` and `store-…` PNGs with `.keepAlways`. The exporter rejects failed runs, missing scenes and unsupported dimensions, and records image hashes and the test/device summary. These live in the downloadable **test result bundle**, not in an arbitrary temporary directory that Cloud might discard. Download the successful result and run:
+Tests wait for the actual editor, fonts, rendered Mermaid SVG and expanded metadata panel. The mobile diagram caption explains the Working Copy file-provider workflow; Git commands and PDF export are not implemented in the iOS app. Each scene attaches `raw-…` and `store-…` PNGs with `.keepAlways`. The exporter rejects failed runs, missing scenes and unsupported dimensions, and records image hashes and the test/device summary. These live in the downloadable **test result bundle**, not in an arbitrary temporary directory that Cloud might discard. Download the successful result and run:
 
 ```sh
 python3 scripts/export-screenshot-results.py /path/to/Result.xcresult /tmp/merkzeug-screenshots
@@ -40,7 +40,7 @@ The current macOS app is Electron, not an Xcode app target. Its capture needs El
 
 ## Release review
 
-- Run all three scenes (writing, diagrams, frontmatter), in both languages, on iPhone, iPad and Mac: 18 framed images and their raw originals.
+- Run writing, diagrams and frontmatter on iPhone/iPad, plus Git and PDF templates on Mac, in both languages: 22 framed images and their raw originals. The Mac Git fixture uses a real temporary repository and a local-only bare remote. The PDF scene assigns a real template, exports a PDF proof and captures the template settings.
 - Confirm expected note, complete diagram, expanded metadata, correct language, no alerts, keyboard, debug overlays or personal data.
 - Pin Xcode/runtime, Electron dependency lockfile and runner image for a release. The native status bar clock can vary between captures. System fonts may differ between OS releases; pixel identity across different operating systems is not promised.
 - Screenshots are opaque sRGB PNG. Keep the original supported pixel dimensions. Update the dimension allowlist only after checking Apple's current specification.
@@ -48,3 +48,7 @@ The current macOS app is Electron, not an Xcode app target. Its capture needs El
 - Match the app's marketing version to the App Store Connect draft, validate signed archives, distribute a TestFlight candidate and finish sandbox acceptance before requesting App Review.
 
 References: [Xcode Cloud workflow artifacts](https://developer.apple.com/documentation/xcode/configuring-your-first-xcode-cloud-workflow), [Apple screenshot specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/).
+
+## Caption-only updates
+
+To update mobile captions without claiming a new native capture, run `python3 scripts/reframe-store-ios.py /path/to/cloud-export /tmp/reframed-ios`. This verifies every original raw image against the Cloud export manifest, recomposes the frames, and records the original manifest hash plus new composition provenance. The same captions are used by future Xcode Cloud screenshot tests.
