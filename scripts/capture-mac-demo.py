@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Capture desktop screenshot candidates with a fresh app profile and synthetic notes."""
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -60,6 +61,7 @@ for language, scenes in {'en': {'writing': 'Welcome', 'diagram': 'Projects;;Gard
                        MERKZEUG_VAULT=str(demo), MERKZEUG_CLICK=clicks, MERKZEUG_TEMPLATES_ROOT=str(Path(profile)/'PDF Templates'),
                        MERKZEUG_SCREENSHOT_READY='.mermaid-preview svg' if scene == 'diagram' else '.git-detail' if scene == 'git' else '.meeting-row' if scene == 'calendar' else '.ProseMirror h1')
             if scene == 'pdf':
+                (args.output/f'macos-{language}-template-proof.pdf').unlink(missing_ok=True)
                 env.update(MERKZEUG_PDF_TARGET=str((args.output/f'macos-{language}-template-proof.pdf').resolve()), MERKZEUG_PDF_TEMPLATE=template)
             if scene == 'calendar':
                 env.update(MERKZEUG_CALENDAR_FIXTURE=str(fixture), TZ='UTC')
@@ -69,6 +71,13 @@ for language, scenes in {'en': {'writing': 'Welcome', 'diagram': 'Projects;;Gard
                 proof = args.output/f'macos-{language}-template-proof.pdf'
                 if not proof.is_file() or not proof.read_bytes().startswith(b'%PDF-'): raise SystemExit('Template PDF export did not finish')
                 subprocess.run(['xcrun', 'swift', str(ROOT/'store/automation/PdfSpread.swift'), str(proof), str(target)], check=True, timeout=90)
+                target.with_suffix('.json').write_text(json.dumps({
+                    'source': 'Actual app PDF export, composed with PDFKit',
+                    'pdf': proof.name, 'pdfSHA256': hashlib.sha256(proof.read_bytes()).hexdigest(),
+                    'imageSHA256': hashlib.sha256(target.read_bytes()).hexdigest(),
+                    'templateSHA256': {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
+                                       for p in sorted((ROOT/'resources/pdf-templates/Merkzeug').iterdir()) if p.is_file()}
+                }, indent=2) + '\n')
             if scene == 'calendar':
                 notes = list(demo.rglob('2026-09-10-*.md'))
                 if len(notes) != 1 or 'attendees:' not in notes[0].read_text(): raise SystemExit('Calendar event did not create a meeting note')
