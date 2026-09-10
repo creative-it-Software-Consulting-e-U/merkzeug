@@ -104,3 +104,28 @@ python3 scripts/upload-mas.py crossplatform/dist-mas/Merkzeug-1.0.0-mac-universa
 ```
 
 The uploader requires the expected team's Mac App Store installer signature. API keys are materialized only in a private temporary directory outside Git and removed when the command ends. It does not select a Store build, submit to App Review or publish a release. Verify the processed build in App Store Connect before selecting it for version 1.0 and conducting TestFlight acceptance.
+
+## macOS Xcode Cloud archive workflow
+
+The **macOS App Store** workflow (`9eea4c72-17b1-45d8-b8b7-5f7dc4269090`) uses `crossplatform/macos/Merkzeug.xcodeproj` and shared scheme `Merkzeug-macOS`. It is pinned to Xcode 26.6 / macOS Tahoe 26.6.2. This packaging target installs the actual Electron MAS bundle as the Xcode app product; it does not ship a native placeholder or change the application's runtime.
+
+- Post-clone installs the pinned Node major, dependencies and runs version/tests checks.
+- Pre-build prepares unsigned universal Electron and calendar-helper binaries, using the Cloud build number (at least 2; local Store build 1 already exists).
+- The Xcode build phase copies the prepared bundle and gives nested executable code ad-hoc sandbox signatures. Xcode owns the outer signature and provisioning. The archive/export pipeline applies Apple's managed distribution signing; no signing keys, certificates or API keys are injected by the scripts.
+- Post-build verifies the archived app identity, Cloud build number, both architectures, signature, help/notices and payload hash.
+- The Archive action targets any Mac and requests App Store eligible distribution. Store build selection and App Review submission remain manual.
+
+The workflow is initially manual, so documentation-only commits do not consume distribution build numbers. Start **macOS App Store** on the reviewed `main` branch from Xcode Cloud in App Store Connect. During setup only, the implementation branch is also enabled. A successful Cloud distribution run and processed Store build must be recorded before declaring this route validated.
+
+Local archive reproduction after `npm ci`:
+
+```sh
+CI_BUILD_NUMBER=2 bash crossplatform/macos/ci_scripts/ci_pre_xcodebuild.sh
+xcodebuild archive -project crossplatform/macos/Merkzeug.xcodeproj \
+  -scheme Merkzeug-macOS -destination 'generic/platform=macOS' \
+  -archivePath /tmp/Merkzeug-Cloud.xcarchive \
+  CODE_SIGN_IDENTITY=- AD_HOC_CODE_SIGNING_ALLOWED=YES
+python3 crossplatform/macos/verify-archive.py /tmp/Merkzeug-Cloud.xcarchive 2
+```
+
+This local ad-hoc archive is only a packaging/signature-structure test; it is not a distribution-signed build or evidence of Cloud export success.
