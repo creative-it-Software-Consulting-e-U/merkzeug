@@ -37,6 +37,7 @@ const api = {
   showInFolder: (path: string): Promise<void> => ipcRenderer.invoke('file:showInFolder', path),
   saveImage: (notePath: string, base64: string, ext: string): Promise<string> =>
     ipcRenderer.invoke('assets:saveImage', notePath, base64, ext),
+  retryGit: (vault: string): Promise<GitStatus> => ipcRenderer.invoke('git:retry', vault),
   gitStatus: (vault: string): Promise<GitStatus> => ipcRenderer.invoke('git:status', vault),
   gitCommitPush: (vault: string, message: string): Promise<GitResult> =>
     ipcRenderer.invoke('git:commitPush', vault, message),

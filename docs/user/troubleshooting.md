@@ -6,6 +6,10 @@ Check the release's operating system, CPU architecture and signing status. Unsig
 
 An IntelliJ error notification is not necessarily a full IDE crash. Note the time and collect the corresponding entry from **Help → Show Log in Finder/Explorer**. Do not assume every plugin warning originates from Merkzeug.
 
+## Git is unavailable
+
+Merkzeug uses a separately installed Git executable for desktop version control. On macOS, Git is available through Apple’s Command Line Tools or a separate Git installation; full Xcode is not required. If Git is missing or cannot start, the sidebar shows **Git is unavailable**. Choose **Git setup** for installation instructions, then **Check again** after installing or configuring Git. Automatic Git checks pause while it is unavailable. Merkzeug does not launch Apple’s developer-tools installation dialog. Editing notes and exporting PDFs continue to work without Git.
+
 ## Changes do not save
 
 Read the error banner first. Check folder permissions, available disk space, the file provider and whether the file changed in another editor. Copy unsaved text somewhere safe before reloading or closing the editor. In IntelliJ, distinguish changes accepted by the IDE from changes saved to disk.

@@ -35,6 +35,7 @@ interface SidebarProps {
   onGitCommitPush: (message: string) => void
   onGitPush: () => void
   onGitPull: () => void
+  onGitRetry: () => void
 }
 
 export function Sidebar(props: SidebarProps): React.JSX.Element {
@@ -74,6 +75,7 @@ export function Sidebar(props: SidebarProps): React.JSX.Element {
         onCommitPush={props.onGitCommitPush}
         onPush={props.onGitPush}
         onPull={props.onGitPull}
+        onRetry={props.onGitRetry}
       />
       <div className="sidebar-footer">
         <button className="toolbar-btn icon" data-tip={translate("New note (⌘N)")} onClick={props.onNewNote}>

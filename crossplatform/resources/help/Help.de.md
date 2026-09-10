@@ -337,6 +337,8 @@ Seite, Fußzeile mit Seitenzahlen sowie optional ein Deckblatt.
 
 ## 10. Git-Integration
 
+Die Desktop-Version verwendet eine separat installierte Git-Anwendung zur Versionsverwaltung. Auf macOS ist Git über Apples Command Line Tools oder eine separate Git-Installation verfügbar; das vollständige Xcode ist nicht erforderlich. Fehlt Git oder lässt es sich nicht starten, erscheint in der Seitenleiste **Git ist nicht verfügbar**. **Git einrichten** öffnet die Installationsanleitung; wähle nach der Installation oder Konfiguration **Erneut prüfen**. Automatische Git-Abfragen pausieren, solange Git nicht verfügbar ist. Merkzeug öffnet keinen Installationsdialog für Apples Entwicklerwerkzeuge. Notizen bearbeiten und PDFs exportieren funktioniert weiterhin ohne Git.
+
 Ist der Vault ein **Git-Repository**, erscheint unten in der Sidebar eine Statuszeile:
 
 - **Branch-Name**, Anzahl geänderter Dateien, **n↑** = lokale Commits, die noch

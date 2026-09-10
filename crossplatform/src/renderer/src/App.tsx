@@ -700,9 +700,10 @@ export function App(): React.JSX.Element {
 
   // Git-Status regelmäßig aktualisieren
   useEffect(() => {
+    if (gitStatus?.gitAvailable === false) return
     const interval = setInterval(() => void refreshGit(), 10_000)
     return () => clearInterval(interval)
-  }, [refreshGit])
+  }, [refreshGit, gitStatus?.gitAvailable])
 
   // UI-Zustand persistieren
   useEffect(() => {
@@ -980,6 +981,16 @@ export function App(): React.JSX.Element {
                 ? new Set([selectedPath])
                 : new Set<string>()
           }
+          onGitRetry={async () => {
+            const target = vaultRef.current
+            if (!target) return
+            setGitBusy(true)
+            try {
+              const status = await window.merkzeug.retryGit(target)
+              if (vaultRef.current === target) { setGitStatus(status); setGitError(null) }
+            } catch (error) { setGitError(String(error)) }
+            finally { setGitBusy(false) }
+          }}
           gitStatus={gitStatus}
           gitBusy={gitBusy}
           gitError={gitError}
