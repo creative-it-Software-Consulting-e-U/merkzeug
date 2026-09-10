@@ -29,6 +29,7 @@ jobs:
       - run: npm run check:docs
       - run: node scripts/build-website.mjs
       - run: python3 scripts/check-website.py
+      - run: node scripts/upload-store-screenshots.mjs --validate-only
       - run: npm test
       - run: npm run test:release
       - run: npm run typecheck
