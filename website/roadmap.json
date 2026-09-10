@@ -135,5 +135,6 @@
       },
       "platform": "iOS · iPadOS"
     }
-  ]
+  ],
+  "sourceAccess": "repository-members"
 }
