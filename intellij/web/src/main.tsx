@@ -1,3 +1,10 @@
+import { GuidedTour } from '@merkzeug/editor/GuidedTour'
+import { MeetingNotes, type MeetingHost } from '@merkzeug/editor/MeetingNotes'
+import { loadSources, sourceEvents } from '@merkzeug/editor/calendarSourceStore'
+import { VaultGuidance, type GuidanceHost } from '@merkzeug/editor/VaultGuidance'
+import { ThemeSelect } from '@merkzeug/editor/ThemeSelect'
+import { setHostTheme, setTheme } from '@merkzeug/editor/theme'
+import { initializeTheme } from '@merkzeug/editor/theme'
 import { t as translate, setLocale } from '@merkzeug/core/i18n'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -9,17 +16,26 @@ import type { PdfPayload, PdfTemplate } from '@merkzeug/core/pdf'
 import { request } from './bridge'
 import './style.css'
 
+initializeTheme()
+
 function imageUrl(path: string, url: string): string {
   if (!url || /^(https?:|data:)/i.test(url)) return url
   const decoded = decodeURI(url)
   const absolute = decoded.startsWith('/') ? decoded : resolvePath(path.slice(0, path.lastIndexOf('/')), decoded)
   return `${location.origin}/image?path=${encodeURIComponent(absolute)}`
 }
+const meetingHost: MeetingHost = {
+  sources: { load: () => request('calendarSourcesLoad'), save: value => request('calendarSourcesSave', { value }), fetch: url => request('calendarFetch', { url }) },
+  list: async (from, to) => ({ ok: true, events: sourceEvents(await loadSources(meetingHost.sources), from, to) }),
+  create: (path, content) => request('createMeeting', { path, content })
+}
+const guidanceHost: GuidanceHost = { suppressed: () => request('guidanceSuppressed'), suppress: never => request('guidanceSuppress', { never }), read: name => request('guidanceRead', { name }), append: (name, expected, addition) => request('guidanceAppend', { name, expected, addition }) }
 function App() {
-  const [info, setInfo] = useState<{ path: string; vault: string; readonly: boolean; locale: string }>()
+  const [info, setInfo] = useState<{ path: string; vault: string; readonly: boolean; locale: string; tourSeen: boolean }>()
   const [status, setStatus] = useState(translate("Loading …"))
   const [error, setError] = useState('')
   const [template, setTemplate] = useState<PdfTemplate | null>(null)
+  const [meetings, setMeetings] = useState(false)
   const [busy, setBusy] = useState(false)
   const ref = useRef<EditorHandle>(null)
   const listeners = useRef(new Set<(vault: string, paths: string[]) => void>())
@@ -53,8 +69,12 @@ function App() {
     onVaultChanged: (listener) => { listeners.current.add(listener); return () => { listeners.current.delete(listener) } }
   }), [])
   useEffect(() => {
-    request('init').then(result => { setLocale(result.locale); setInfo(result); setStatus(translate('Synced with IntelliJ')) }).catch(e => setError(String(e)))
+    window.__merkzeugTheme = theme => { setTheme(theme.choice ?? 'system'); setHostTheme(theme) }
+    const saveTheme = (event: Event) => { void request('theme', { choice: (event as CustomEvent).detail }).catch(e => setError(String(e))) }
+    window.addEventListener('merkzeug-theme-choice', saveTheme)
+    request('init').then(result => { setLocale(result.locale); setTheme(result.themeChoice); setHostTheme(result.theme); setInfo(result); setStatus(translate('Synced with IntelliJ')) }).catch(e => setError(String(e)))
     request<PdfTemplate | null>('template').then(setTemplate).catch(e => setError(String(e)))
+    return () => window.removeEventListener('merkzeug-theme-choice', saveTheme)
   }, [])
   useEffect(() => {
     window.__merkzeugChanged = () => { if (info) for (const listener of listeners.current) listener(info.vault, [info.path]) }
@@ -96,12 +116,14 @@ function App() {
     finally { setBusy(false) }
   }
   return <div className="ide-app">
-    <header><strong>Merkzeug</strong><span className="status">{status}</span>
+    <header>{info && <GuidedTour edition="intellij" seen={info.tourSeen} onSeen={() => void request("tourSeen")} />}<strong>Merkzeug</strong><button onClick={() => setMeetings(true)}>{translate("New meeting note")}</button><ThemeSelect /><span className="status">{status}</span>
       <button onClick={() => void action('undo')}>↶</button><button onClick={() => void action('redo')}>↷</button>
       <button onClick={() => ref.current?.openSearch(false)}>{translate("Search")}</button>
       <button onClick={() => void request<PdfTemplate | null>('template', { choose: true }).then(t => { if (t) setTemplate(t) }).catch(e => setError(String(e)))}>{template?.name ?? translate("PDF template …")}</button>
       <button disabled={busy} onClick={() => void exportPdf()}>{busy ? translate("Exporting …") : translate("Export PDF")}</button>
     </header>
+    {info && meetings && <MeetingNotes host={meetingHost} folder={info.vault} onClose={() => setMeetings(false)} onOpen={() => setMeetings(false)} />}
+    {info && <VaultGuidance vaultId={info.vault} host={guidanceHost} />}
     {error && <div role="alert" className="error">{error}</div>}
     {info && <Editor ref={ref} host={host} filePath={info.path} loadToken={0} readonly={info.readonly}
       onLinkClick={href => href.startsWith('#') ? ref.current?.jumpToHeading(decodeURIComponent(href.slice(1))) : void request('open', { href }).catch(e => setError(String(e)))}

@@ -6,6 +6,12 @@ User-visible changes are recorded here. Versions follow `VERSION`; version tags 
 
 ### Added
 
+- System, light and dark appearance across desktop, iOS and IntelliJ, including diagrams.
+- Shared ICS imports and HTTPS/Webcal subscriptions, with meeting notes and native iOS Calendar access.
+- Explicit Working Copy pull, commit and push actions on iOS with protected configuration and callback handling.
+- Confirmed AGENTS.md/CLAUDE.md attachment guidance, first-use tours and a bundled German desktop tour video.
+- Optional PDF-template content styling in the desktop editor.
+
 - A styled Merkzeug PDF starter template for desktop and IntelliJ, with a cover, headers, footers, document styles and an agent customization guide.
 
 - Shared editor and PDF packages used by desktop, iOS and the IntelliJ preview.
@@ -16,12 +22,13 @@ User-visible changes are recorded here. Versions follow `VERSION`; version tags 
 
 ### Changed
 
+- iOS image attachments now use adjacent `Note.assets/` directories, matching desktop and IntelliJ; existing shared asset links remain readable.
+
 - Dependencies now use one npm workspace lockfile at the repository root.
 - PDF output waits for document rendering, images and fonts before printing.
 
 ### Known limitations
 
-- IntelliJ dark-theme contrast is incomplete, including file dialogs.
 - IntelliJ cross-document heading navigation and integration with desktop vault template assignments are incomplete.
 - iOS PDF export and VS Code support are not implemented.
 - Native iOS, Windows and Linux regression testing and the first hosted release workflow run are still required before a public release.

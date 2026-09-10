@@ -17,7 +17,7 @@
       "issues": [
         18
       ],
-      "status": "planned",
+      "status": "review",
       "title": {
         "en": "Light & dark themes",
         "de": "Helle & dunkle Designs"
@@ -28,7 +28,7 @@
       "issues": [
         19
       ],
-      "status": "planned",
+      "status": "review",
       "title": {
         "en": "IntelliJ plugin",
         "de": "IntelliJ-Plugin"
@@ -62,7 +62,7 @@
       "issues": [
         36
       ],
-      "status": "planned",
+      "status": "review",
       "title": {
         "en": "Meeting notes on iPhone & iPad",
         "de": "Meeting-Notizen auf iPhone & iPad"
@@ -71,20 +71,9 @@
     },
     {
       "issues": [
-        30
-      ],
-      "status": "planned",
-      "title": {
-        "en": "Ready-to-use PDF templates",
-        "de": "PDF-Vorlagen zum Loslegen"
-      },
-      "platform": "Desktop"
-    },
-    {
-      "issues": [
         35
       ],
-      "status": "planned",
+      "status": "review",
       "title": {
         "en": "Template styles while editing",
         "de": "Vorlagen-Design beim Bearbeiten"
@@ -95,7 +84,7 @@
       "issues": [
         25
       ],
-      "status": "planned",
+      "status": "review",
       "title": {
         "en": "Working Copy actions",
         "de": "Working-Copy-Aktionen"
@@ -106,7 +95,7 @@
       "issues": [
         24
       ],
-      "status": "planned",
+      "status": "review",
       "title": {
         "en": "More calendar sources",
         "de": "Weitere Kalenderquellen"
@@ -117,7 +106,7 @@
       "issues": [
         23
       ],
-      "status": "planned",
+      "status": "review",
       "title": {
         "en": "Better guidance for coding agents",
         "de": "Bessere Hinweise für Coding-Agenten"
@@ -134,6 +123,28 @@
         "de": "Weitere iOS-Git-Clients"
       },
       "platform": "iOS · iPadOS"
+    },
+    {
+      "issues": [
+        48
+      ],
+      "status": "review",
+      "title": {
+        "en": "Guided first-use tour",
+        "de": "Geführte Einführung"
+      },
+      "platform": "All editions / Alle Editionen"
+    },
+    {
+      "issues": [
+        49
+      ],
+      "status": "review",
+      "title": {
+        "en": "Tour video (publication pending)",
+        "de": "Tourvideo (Veröffentlichung ausstehend)"
+      },
+      "platform": "All editions / Alle Editionen"
     }
   ],
   "sourceAccess": "repository-members"

@@ -85,3 +85,17 @@ Desktop, iOS und IntelliJ verwenden denselben Merkzeug-Editor. Frontmatter bleib
 ## PDF-Vorlagen am Desktop
 
 Desktop-App und IntelliJ enthalten die PDF-Startvorlage Merkzeug mit Deckblatt, gestalteten Überschriften und Seitennummern. Eine Kopie lässt sich mit einem Agenten anpassen. Siehe die [Vorlagen-Anleitung](https://merkzeug.creative-it.com/help-de.html#pdf-startvorlage). Auf iOS ist PDF-Export noch nicht verfügbar.
+
+## Darstellung, Tour und Agentenhinweise
+
+Wähle **System**, **Hell** oder **Dunkel** für die Darstellung. System folgt dem Betriebssystem (in IntelliJ der IDE); deine Auswahl wird gespeichert. Die **Geführte Tour** startet erst nach deiner Zustimmung zur Einladung beim ersten Start und lässt sich jederzeit wieder öffnen.
+
+Beim Öffnen eines Vaults kann Merkzeug Hinweise in den Stammdateien `AGENTS.md` / `CLAUDE.md` für `Notiz.md` und `Notiz.assets/` vorschlagen. Prüfe jede Ergänzung vor **Hinzufügen**. **Später** verschiebt den Hinweis für diese Sitzung; **Für diesen Vault nicht mehr vorschlagen** unterdrückt weitere Hinweise für diesen Vault. Widersprüchliche oder unklare Bilderordner-Regeln müssen manuell geprüft werden. Gleichzeitige externe Änderungen bleiben erhalten und erfordern eine neue Vorschau. Bestehende gemeinsame `assets/`-Verweise bleiben lesbar.
+
+## Kalenderquellen
+
+**Neue Meeting-Notiz** öffnet die Terminauswahl. Unter **Kalenderquellen** kannst du eine `.ics`-Datei importieren oder ein benanntes privates HTTPS/Webcal-Abonnement hinzufügen. Abonnements werden auf diesem Gerät gespeichert, niemals im Vault. **Kalender aktualisieren** lädt Änderungen; bei Fehlern bleibt der vorherige Stand mit Zeitangabe verfügbar. Der erneute Import einer gleichnamigen ICS-Datei aktualisiert die Quelle, ohne Notizen zu duplizieren. Ein Termin erstellt oder öffnet seine Meeting-Notiz; bestehender Notiztext wird nicht ersetzt. CalDAV und das Zurückschreiben in Kalender werden nicht unterstützt.
+
+Auf iPhone und iPad stehen auch die nativen iOS-Kalender zur Verfügung. Zugriff wird erst beim Öffnen der Meeting-Notizen angefragt. Falls du ihn abgelehnt hast, aktiviere den Kalenderzugriff für Merkzeug in den iOS-Einstellungen. Die App liest Termine, ohne den Kalender zu ändern. Neue Bilder verwenden `Notiz.assets/`; beim Verschieben/Umbenennen durch Merkzeug wird der Begleitordner mitgenommen und die Verweise werden angepasst. Bestehende gemeinsame `assets/`-Ordner bleiben erhalten.
+
+Öffne **Working Copy** und gib den genauen Repository-Namen bzw. die Remote-URL und den Callback-Schlüssel ein. Der Schlüssel bleibt im Schlüsselbund dieses Geräts. Vor **Pull**, **Commit** oder **Push** werden ausstehende Änderungen gespeichert. Commit öffnet die Änderungsprüfung und Nachrichteneingabe von Working Copy für das Repository. Push benötigt dessen freigeschaltete Push-Funktion. Konflikte und Zugangsdaten werden in Working Copy geklärt. Das Öffnen der App ist noch kein Erfolg: Warte auf ihren Rückruf. Bei Unterbrechungen oder fehlendem Rückruf prüfe dort das Ergebnis, bevor du es bestätigst und einen weiteren Vorgang startest.

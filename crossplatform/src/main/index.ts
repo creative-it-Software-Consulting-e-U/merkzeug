@@ -1,3 +1,7 @@
+import { writeFileSync as writeMeetingFile } from 'node:fs'
+import { loadCalendarSources, saveCalendarSources, fetchCalendarSource } from './calendarSources'
+import { readGuidance, appendGuidance } from './vaultGuidance.mjs'
+import type { InstructionName } from '@merkzeug/core/vaultGuidance'
 import { rememberFolderAccess, restoreFolderAccess } from './sandboxAccess'
 import { FileRevisions } from './fileRevisions'
 import { vaultFilePath } from '@merkzeug/core/vaultFileUrl'
@@ -30,6 +34,7 @@ import {
   createTemplate,
   getVaultTemplateName,
   listTemplates,
+  loadTemplate,
   setVaultTemplateName,
   templatesRoot
 } from './templates'
@@ -158,6 +163,16 @@ function registerIpc(): void {
     return vault
   })
 
+  ipcMain.handle('guidance:read', (event, name: InstructionName) => {
+    const root = getWindowVault(winFromEvent(event)?.id ?? -1)
+    if (!root) throw new Error('No vault is open.')
+    return readGuidance(root, name)
+  })
+  ipcMain.handle('guidance:append', (event, name: InstructionName, expected: string | null, addition: string) => {
+    const root = getWindowVault(winFromEvent(event)?.id ?? -1)
+    if (!root) throw new Error('No vault is open.')
+    appendGuidance(root, name, expected, addition)
+  })
   ipcMain.handle('vault:tree', (_e, vault: string) => readTree(vault))
   const revisions = new Map<Electron.WebContents, FileRevisions>()
   const filesFor = (sender: Electron.WebContents): FileRevisions => {
@@ -171,6 +186,12 @@ function registerIpc(): void {
   ipcMain.handle('file:read', (event, path: string, options?: { peek?: boolean }) => filesFor(event.sender).read(path, options))
   ipcMain.handle('file:write', (event, path: string, content: string) => filesFor(event.sender).write(path, content))
   ipcMain.handle('file:createNote', (_e, dir: string) => createNote(dir))
+  ipcMain.handle('file:createMeeting', (_e, dir: string, name: string, content: string) => {
+    if (!/^meeting-[0-9a-f]{20}\.md$/.test(name)) throw new Error('Invalid meeting note name.')
+    const path = join(dir, name)
+    try { writeMeetingFile(path, content, { flag: 'wx' }) } catch (error) { if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error }
+    return path
+  })
   ipcMain.handle('file:createNoteFrom', (_e, dir: string, base: string, content: string) =>
     createNoteFrom(dir, base, content)
   )
@@ -214,6 +235,15 @@ function registerIpc(): void {
   ipcMain.handle('help:open', () => openHelpWindow())
 
   // Einstellungs-Fenster: PDF-Vorlagen verwalten und dem Vault zuweisen
+  ipcMain.handle('settings:open', event => openSettingsWindow(getWindowVault(winFromEvent(event)?.id ?? -1)))
+  ipcMain.handle('tpl:live', event => {
+    const vault = getWindowVault(winFromEvent(event)?.id ?? -1)
+    const name = vault ? getVaultTemplateName(vault) : null
+    return name ? loadTemplate(name) : null
+  })
+  ipcMain.handle('calendar:sourcesLoad', () => loadCalendarSources())
+  ipcMain.handle('calendar:sourcesSave', (_e, value: string) => saveCalendarSources(value))
+  ipcMain.handle('calendar:fetch', (_e, url: string) => fetchCalendarSource(url))
   ipcMain.handle('tpl:state', () => templateState())
   ipcMain.handle('tpl:pickRoot', async (event) => {
     const win = winFromEvent(event) ?? undefined
@@ -237,6 +267,7 @@ function registerIpc(): void {
   ipcMain.handle('tpl:assign', (_e, name: string | null) => {
     const vault = getSettingsVault()
     if (vault) setVaultTemplateName(vault, name)
+    for (const window of BrowserWindow.getAllWindows()) window.webContents.send('settings:refresh')
     return templateState()
   })
   ipcMain.handle('tpl:showRoot', () => {

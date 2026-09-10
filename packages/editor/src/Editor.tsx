@@ -154,6 +154,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   const rootRef = useRef<HTMLDivElement | null>(null)
   const hostRef = useRef<HTMLDivElement | null>(null)
   const crepeRef = useRef<Crepe | null>(null)
+  const mermaidSourcesRef = useRef(new Map<string, string>())
   const filePathRef = useRef(filePath)
   const dirtyRef = useRef(false)
   const latestMarkdownRef = useRef<string | null>(null)
@@ -294,6 +295,26 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   )
 
   // „+ Feld“-Menü bei Klick außerhalb oder Escape schließen
+  useEffect(() => {
+    let generation = 0
+    const refresh = () => {
+      const current = ++generation
+      rootRef.current?.querySelectorAll<HTMLElement>('.mermaid-preview').forEach(preview => {
+        const token = Array.from(preview.classList).find(name => name.startsWith('mermaid-source-'))
+        const source = token ? mermaidSourcesRef.current.get(token) : undefined
+        if (!source) return
+        void renderMermaid(source).then(svg => {
+          if (current !== generation || !preview.isConnected) return
+          const button = preview.querySelector('button')
+          preview.innerHTML = svg
+          if (button) preview.append(button)
+        }).catch(() => {})
+      })
+    }
+    window.addEventListener('merkzeug-theme', refresh)
+    return () => { generation++; window.removeEventListener('merkzeug-theme', refresh) }
+  }, [])
+
   useEffect(() => {
     if (!fmMenuOpen) return
     const close = (e: MouseEvent): void => {
@@ -502,6 +523,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       if (cancelled || !rootRef.current) return
       setFmText(frontmatterInner(frontmatter))
       rootRef.current.innerHTML = ''
+      mermaidSourcesRef.current.clear()
 
       crepe = new Crepe({
         root: rootRef.current,
@@ -536,7 +558,9 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
                   // (innerHTML), Listener gehen verloren. Klicks behandelt der
                   // Capture-Handler des Editors (handleClickCapture).
                   const wrap = document.createElement('div')
-                  wrap.className = 'mermaid-preview'
+                  const token = `mermaid-source-${mermaidSourcesRef.current.size + 1}`
+                  mermaidSourcesRef.current.set(token, content2)
+                  wrap.className = `mermaid-preview ${token}`
                   wrap.innerHTML = svg
                   const zoomBtn = document.createElement('button')
                   zoomBtn.className = 'mermaid-zoom-btn'

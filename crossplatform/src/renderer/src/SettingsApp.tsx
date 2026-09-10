@@ -1,3 +1,6 @@
+import { CalendarSources } from '@merkzeug/editor/CalendarSources'
+import { calendarSourceHost } from './util/calendarSources'
+import { ThemeSelect } from '@merkzeug/editor/ThemeSelect'
 import { t as translate, getLocale } from '@merkzeug/core/i18n'
 import { useCallback, useEffect, useState } from 'react'
 import type { TemplateState } from '../../shared/types'
@@ -53,7 +56,10 @@ export function SettingsApp(): React.JSX.Element {
 
   return (
     <div className="settings-app">
-      <h1>{translate("PDF templates")}</h1>
+      <h1>{translate("Settings")}</h1>
+      <ThemeSelect />
+      <CalendarSources host={calendarSourceHost} />
+      <h2>{translate("PDF templates")}</h2>
 
       <section className="settings-section">
         <h2>{translate("Templates folder")}</h2>

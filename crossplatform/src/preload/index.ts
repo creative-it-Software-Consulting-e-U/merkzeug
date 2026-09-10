@@ -1,3 +1,4 @@
+import type { InstructionName } from '@merkzeug/core/vaultGuidance'
 import { contextBridge, ipcRenderer } from 'electron'
 import type {
   CalendarResult,
@@ -11,6 +12,11 @@ import type {
   TemplateState, CalendarEvent } from '../shared/types'
 
 const api = {
+  calendarSourcesLoad: (): Promise<string | null> => ipcRenderer.invoke('calendar:sourcesLoad'),
+  calendarSourcesSave: (value: string): Promise<void> => ipcRenderer.invoke('calendar:sourcesSave', value),
+  calendarFetch: (url: string): Promise<string> => ipcRenderer.invoke('calendar:fetch', url),
+  guidanceRead: (name: InstructionName): Promise<string | null> => ipcRenderer.invoke('guidance:read', name),
+  guidanceAppend: (name: InstructionName, expected: string | null, addition: string): Promise<void> => ipcRenderer.invoke('guidance:append', name, expected, addition),
   locale: ipcRenderer.sendSync('app:locale') as string,
   getInitialVault: (): Promise<string | null> => ipcRenderer.invoke('app:getInitialVault'),
   pickVault: (): Promise<string | null> => ipcRenderer.invoke('dialog:pickVault'),
@@ -19,6 +25,7 @@ const api = {
   writeFile: (path: string, content: string): Promise<void> =>
     ipcRenderer.invoke('file:write', path, content),
   createNote: (dir: string): Promise<string> => ipcRenderer.invoke('file:createNote', dir),
+  createMeetingNote: (dir: string, name: string, content: string): Promise<string> => ipcRenderer.invoke('file:createMeeting', dir, name, content),
   createNoteFrom: (dir: string, base: string, content: string): Promise<string> =>
     ipcRenderer.invoke('file:createNoteFrom', dir, base, content),
   listCalendarEvents: (fromMs: number, toMs: number): Promise<CalendarResult> =>
@@ -71,6 +78,8 @@ const api = {
   },
 
   // Einstellungs-Fenster (#settings): PDF-Vorlagen verwalten
+  openSettings: (): Promise<void> => ipcRenderer.invoke('settings:open'),
+  getLiveTemplate: (): Promise<PdfTemplate | null> => ipcRenderer.invoke('tpl:live'),
   getTemplateState: (): Promise<TemplateState> => ipcRenderer.invoke('tpl:state'),
   pickTemplatesRoot: (): Promise<TemplateState> => ipcRenderer.invoke('tpl:pickRoot'),
   createTemplate: (name: string): Promise<TemplateState> => ipcRenderer.invoke('tpl:create', name),

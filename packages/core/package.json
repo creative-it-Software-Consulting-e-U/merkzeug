@@ -5,5 +5,8 @@
   "type": "module",
   "exports": {
     "./*": "./src/*.ts"
+  },
+  "dependencies": {
+    "ical.js": "2.2.1"
   }
 }

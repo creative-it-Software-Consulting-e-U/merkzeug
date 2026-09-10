@@ -6,7 +6,12 @@
   "exports": {
     ".": "./src/Editor.tsx",
     "./*.css": "./src/*.css",
-    "./*": "./src/*.ts"
+    "./*": "./src/*.ts",
+    "./ThemeSelect": "./src/ThemeSelect.tsx",
+    "./VaultGuidance": "./src/VaultGuidance.tsx",
+    "./CalendarSources": "./src/CalendarSources.tsx",
+    "./MeetingNotes": "./src/MeetingNotes.tsx",
+    "./GuidedTour": "./src/GuidedTour.tsx"
   },
   "dependencies": {
     "@merkzeug/core": "1.0.0"

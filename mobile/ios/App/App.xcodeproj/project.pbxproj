@@ -43,6 +43,9 @@
 
 
 /* Begin PBXBuildFile section */
+        CA1E00000000000000000011 = {isa = PBXBuildFile; fileRef = CA1E00000000000000000010; };
+        CA1E00000000000000000004 = {isa = PBXBuildFile; fileRef = CA1E00000000000000000003; };
+        CA1E00000000000000000002 = {isa = PBXBuildFile; fileRef = CA1E00000000000000000001; };
         FA1CE0000000000000000006 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = FA1CE0000000000000000005 /* PrivacyInfo.xcprivacy */; };
 		2FAD9763203C412B000D30F8 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 2FAD9762203C412B000D30F8 /* config.xml */; };
 		4D22ABE92AF431CB00220026 /* CapApp-SPM in Frameworks */ = {isa = PBXBuildFile; productRef = 4D22ABE82AF431CB00220026 /* CapApp-SPM */; };
@@ -58,6 +61,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+        CA1E00000000000000000012 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+        CA1E00000000000000000013 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+        CA1E00000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingCopyPlugin.swift; sourceTree = "<group>"; };
+        CA1E00000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPlugin.swift; sourceTree = "<group>"; };
         FA1CE0000000000000000005 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		2FAD9762203C412B000D30F8 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = config.xml; sourceTree = "<group>"; };
 		50379B222058CBB4000EE86E /* capacitor.config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = capacitor.config.json; sourceTree = "<group>"; };
@@ -109,6 +116,9 @@ AA5700000000000000000014,
 			children = (
 				9582B6822FE993A50072D4E8 /* SceneDelegate.swift */,
 				FA1CE0000000000000000001 /* VaultPlugin.swift */,
+                CA1E00000000000000000001,
+                CA1E00000000000000000010,
+                CA1E00000000000000000003,
 				FA1CE0000000000000000003 /* MerkzeugViewController.swift */,
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
@@ -191,6 +201,7 @@ AA570000000000000000001D,
 			files = (
 				504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */,
                 FA1CE0000000000000000006 /* PrivacyInfo.xcprivacy in Resources */,
+                CA1E00000000000000000011,
 				50B271D11FEDC1A000F3C39B /* public in Resources */,
 				504EC30F1FED79650016851F /* Assets.xcassets in Resources */,
 				50379B232058CBB4000EE86E /* capacitor.config.json in Resources */,
@@ -209,6 +220,8 @@ AA570000000000000000001D,
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
 				9582B6832FE993A70072D4E8 /* SceneDelegate.swift in Sources */,
 				FA1CE0000000000000000002 /* VaultPlugin.swift in Sources */,
+                CA1E00000000000000000002,
+                CA1E00000000000000000004,
 				FA1CE0000000000000000004 /* MerkzeugViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -216,6 +229,7 @@ AA570000000000000000001D,
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+        CA1E00000000000000000010 = {isa = PBXVariantGroup; children = (CA1E00000000000000000012, CA1E00000000000000000013,); name = InfoPlist.strings; sourceTree = "<group>"; };
 		504EC30B1FED79650016851F /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

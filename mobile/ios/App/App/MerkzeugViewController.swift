@@ -5,6 +5,8 @@ import Capacitor
 class MerkzeugViewController: CAPBridgeViewController {
     override open func capacitorDidLoad() {
         bridge?.registerPluginInstance(VaultPlugin())
+        bridge?.registerPluginInstance(CalendarPlugin())
+        bridge?.registerPluginInstance(WorkingCopyPlugin())
         #if DEBUG && targetEnvironment(simulator)
         if ProcessInfo.processInfo.environment["MERKZEUG_DEMO_MODE"] == "1" {
             overrideUserInterfaceStyle = .light

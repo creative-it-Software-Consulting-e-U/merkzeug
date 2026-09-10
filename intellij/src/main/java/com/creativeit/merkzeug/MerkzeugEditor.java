@@ -2,6 +2,10 @@ package com.creativeit.merkzeug;
 
 import com.google.gson.*;
 import com.intellij.ide.BrowserUtil;
+import com.intellij.ide.passwordSafe.PasswordSafe;
+import com.intellij.credentialStore.CredentialAttributes;
+import com.intellij.ide.ui.LafManagerListener;
+import com.intellij.util.ui.UIUtil;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -88,8 +92,21 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
                 if (!ownChange) script("window.__merkzeugChanged?.()");
             }
         }, this);
+        ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(LafManagerListener.TOPIC, manager -> {
+            browser.getComponent().setBackground(UIUtil.getPanelBackground());
+            script("window.__merkzeugTheme?.(" + JSON.toJson(theme()) + ")");
+        });
+        browser.getComponent().setBackground(UIUtil.getPanelBackground());
         panel.add(browser.getComponent());
         browser.loadURL(origin + "index.html");
+    }
+
+    private static String color(java.awt.Color value) { return String.format("#%02x%02x%02x", value.getRed(), value.getGreen(), value.getBlue()); }
+    private static Map<String, Object> theme() {
+        java.awt.Color bg = UIUtil.getPanelBackground();
+        return Map.of("choice", PropertiesComponent.getInstance().getValue("merkzeug.theme", "system"), "dark", (bg.getRed() * 299 + bg.getGreen() * 587 + bg.getBlue() * 114) < 128000,
+            "colors", Map.of("bg", color(bg), "bg-sidebar", color(bg), "text", color(UIUtil.getLabelForeground()),
+                "text-dim", color(UIUtil.getContextHelpForeground())));
     }
 
     private void script(String code) {
@@ -105,7 +122,33 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
         if (disposed || project.isDisposed()) return;
         try {
             Object result = switch (arg(m, "method")) {
-                case "init" -> Map.of("path", file.getPath(), "vault", root().toString().replace('\\', '/'), "readonly", !file.isWritable(), "locale", Locale.getDefault().toLanguageTag());
+                case "init" -> Map.of("path", file.getPath(), "vault", root().toString().replace('\\', '/'), "readonly", !file.isWritable(), "locale", Locale.getDefault().toLanguageTag(), "theme", theme(), "themeChoice", PropertiesComponent.getInstance().getValue("merkzeug.theme", "system"), "tourSeen", PropertiesComponent.getInstance().getBoolean("merkzeug.tour.seen", false));
+                case "tourSeen" -> { PropertiesComponent.getInstance().setValue("merkzeug.tour.seen", true); yield true; }
+                case "theme" -> {
+                    String choice = arg(m, "choice");
+                    if (!Set.of("system", "light", "dark").contains(choice)) throw new IllegalArgumentException("Invalid theme");
+                    PropertiesComponent.getInstance().setValue("merkzeug.theme", choice);
+                    yield true;
+                }
+                case "createMeeting" -> {
+                    Path target = allowed(arg(m, "path"));
+                    if (!target.getFileName().toString().matches("meeting-[0-9a-f]{20}\\.md")) throw new IOException("Invalid meeting note name");
+                    if (!Files.exists(target)) Files.writeString(target, arg(m, "content"), StandardOpenOption.CREATE_NEW);
+                    VirtualFile created = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(target);
+                    if (created != null) FileEditorManager.getInstance(project).openFile(created, true);
+                    yield true;
+                }
+                case "calendarSourcesLoad" -> PasswordSafe.getInstance().getPassword(new CredentialAttributes("Merkzeug calendar sources"));
+                case "calendarSourcesSave" -> { PasswordSafe.getInstance().setPassword(new CredentialAttributes("Merkzeug calendar sources"), arg(m, "value")); yield true; }
+                case "calendarFetch" -> { fetchCalendar(id, arg(m, "url")); yield null; }
+                case "guidanceSuppressed" -> guidanceDismissed.contains(root().toString()) || PropertiesComponent.getInstance().getBoolean("merkzeug.guidance." + root(), false);
+                case "guidanceSuppress" -> {
+                    guidanceDismissed.add(root().toString());
+                    if (m.get("never").getAsBoolean()) PropertiesComponent.getInstance().setValue("merkzeug.guidance." + root(), true);
+                    yield true;
+                }
+                case "guidanceRead" -> guidanceRead(arg(m, "name"));
+                case "guidanceAppend" -> { guidanceAppend(m); yield true; }
                 case "read" -> read(arg(m, "path"));
                 case "exists" -> Files.isRegularFile(allowed(arg(m, "path")));
                 case "write" -> write(m);
@@ -122,7 +165,7 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
                 case "editor" -> { browser.loadURL(origin + "index.html"); yield true; }
                 default -> throw new IllegalArgumentException(Messages.text("Unknown action"));
             };
-            reply(id, result, null);
+            if (!arg(m, "method").equals("calendarFetch")) reply(id, result, null);
         } catch (Exception error) {
             reply(id, null, Objects.toString(error.getMessage(), error.toString()));
         }
@@ -142,6 +185,57 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
         if (!real.startsWith(root())) throw new IOException(Messages.text("File is outside the open project: ") + candidate.getFileName());
         return real;
     }
+    private void fetchCalendar(int id, String raw) throws IOException {
+        URI uri = URI.create(raw);
+        if (!"https".equals(uri.getScheme()) || uri.getUserInfo() != null) throw new IOException("Use an HTTPS subscription URL");
+        ApplicationManager.getApplication().executeOnPooledThread(() -> {
+            try {
+                var client = java.net.http.HttpClient.newBuilder().connectTimeout(java.time.Duration.ofSeconds(20)).followRedirects(java.net.http.HttpClient.Redirect.NORMAL).build();
+                var request = java.net.http.HttpRequest.newBuilder(uri).timeout(java.time.Duration.ofSeconds(20)).build();
+                var response = client.send(request, java.net.http.HttpResponse.BodyHandlers.ofInputStream());
+                try (var input = response.body()) {
+                    byte[] bytes = input.readNBytes(2_000_001);
+                    if (response.statusCode() != 200 || bytes.length > 2_000_000) throw new IOException("Invalid calendar response");
+                    reply(id, new String(bytes, StandardCharsets.UTF_8), null);
+                }
+            } catch (Exception error) { reply(id, null, "Calendar download failed. Check the subscription URL and network connection."); }
+        });
+    }
+
+    private static final Set<String> guidanceDismissed = java.util.concurrent.ConcurrentHashMap.newKeySet();
+
+    private Path guidancePath(String name) throws IOException {
+        if (!Set.of("AGENTS.md", "CLAUDE.md").contains(name)) throw new IOException("Invalid instruction file");
+        Path path = root().resolve(name);
+        if (Files.isSymbolicLink(path)) throw new IOException("Review symbolic links manually");
+        return path;
+    }
+    private String guidanceRead(String name) throws IOException {
+        Path path = guidancePath(name);
+        if (!Files.exists(path)) return null;
+        return ((Map<?, ?>) read(path.toString())).get("text").toString();
+    }
+    private void guidanceAppend(JsonObject m) throws IOException {
+        String name = arg(m, "name"), addition = arg(m, "addition");
+        String expected = m.has("expected") && !m.get("expected").isJsonNull() ? arg(m, "expected") : null;
+        Path path = guidancePath(name);
+        if (!Objects.equals(guidanceRead(name), expected)) throw new IOException("Instructions changed externally. Review the refreshed preview.");
+        if (expected == null) {
+            Files.writeString(path, addition, StandardOpenOption.CREATE_NEW);
+            LocalFileSystem.getInstance().refreshAndFindFileByNioFile(path);
+        } else {
+            VirtualFile virtual = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(path);
+            if (virtual == null || ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(virtual).hasReadonlyFiles()) throw new IOException("File is read-only");
+            Document target = FileDocumentManager.getInstance().getDocument(virtual);
+            if (target == null) throw new IOException("Cannot open instructions");
+            WriteCommandAction.runWriteCommandAction(project, () -> {
+                if (!target.getText().equals(expected)) throw new IllegalStateException("Instructions changed externally.");
+                target.insertString(target.getTextLength(), addition);
+            });
+            FileDocumentManager.getInstance().saveDocument(target);
+        }
+    }
+
     private Object read(String path) throws IOException {
         Path resolved = allowed(path);
         VirtualFile virtual = LocalFileSystem.getInstance().findFileByNioFile(resolved);
@@ -323,6 +417,15 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
                     if (input == null) throw new FileNotFoundException(path);
                     bytes = input.readAllBytes();
                 }
+                if (path.equals("/index.html") && !"pdf".equals(uri.getQuery())) {
+                    var initialTheme = theme();
+                    String choice = initialTheme.get("choice").toString();
+                    boolean dark = choice.equals("dark") || (choice.equals("system") && Boolean.TRUE.equals(initialTheme.get("dark")));
+                    String meta = Base64.getEncoder().encodeToString(JSON.toJson(initialTheme).getBytes(StandardCharsets.UTF_8));
+                    String html = new String(bytes, StandardCharsets.UTF_8).replace("<html>", "<html data-theme=\"" + (dark ? "dark" : "light") + "\">")
+                        .replace("<head>", "<head><meta name=\"merkzeug-host-theme\" content=\"" + meta + "\">");
+                    bytes = html.getBytes(StandardCharsets.UTF_8);
+                }
                 type = mime(path);
             }
         } catch (Exception e) { bytes = "Not found".getBytes(StandardCharsets.UTF_8); type = "text/plain"; status = 404; }
@@ -335,7 +438,7 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
             @Override public boolean open(CefRequest request, BoolRef handle, CefCallback callback) { handle.set(true); return true; }
             @Override public void getResponseHeaders(CefResponse response, IntRef length, StringRef redirect) {
                 response.setStatus(responseStatus); response.setMimeType(contentType); length.set(data.length);
-                response.setHeaderMap(Map.of("Content-Security-Policy", "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: http:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'"));
+                response.setHeaderMap(Map.of("Content-Security-Policy", "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: http:; font-src 'self' data:; connect-src 'self'; media-src 'self'; object-src 'none'; base-uri 'none'"));
             }
             private boolean copy(byte[] out, int count, IntRef read) {
                 int size = Math.min(count, data.length - offset);
@@ -349,7 +452,7 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
     private static String mime(String path) {
         String ext = path.substring(path.lastIndexOf('.') + 1).toLowerCase(Locale.ROOT);
         return switch (ext) {
-            case "html" -> "text/html"; case "js" -> "application/javascript"; case "css" -> "text/css";
+            case "mp4" -> "video/mp4"; case "html" -> "text/html"; case "js" -> "application/javascript"; case "css" -> "text/css";
             case "svg" -> "image/svg+xml"; case "png" -> "image/png"; case "jpg", "jpeg" -> "image/jpeg";
             case "gif" -> "image/gif"; case "webp" -> "image/webp"; case "bmp" -> "image/bmp"; case "avif" -> "image/avif";
             case "woff2" -> "font/woff2"; case "woff" -> "font/woff"; default -> "application/octet-stream";

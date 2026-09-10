@@ -155,11 +155,12 @@ export function renamePath(path: string, newName: string): string {
   const target = join(dir, `${newBase}.md`)
   if (target === path) return path
   if (existsSync(target)) throw new Error(`${translate("Already exists: “")}${newBase}.md“.`)
-  renameSync(path, target)
   const oldAssets = join(dir, `${oldBase}.assets`)
+  const newAssets = join(dir, `${newBase}.assets`)
+  if (existsSync(oldAssets) && existsSync(newAssets)) throw new Error(`${translate('Already exists: “')}${newBase}.assets“.`)
+  renameSync(path, target)
   if (existsSync(oldAssets)) {
-    const newAssets = join(dir, `${newBase}.assets`)
-    renameSync(oldAssets, newAssets)
+    try { renameSync(oldAssets, newAssets) } catch (error) { renameSync(target, path); throw error }
     const content = readFileSync(target, 'utf8')
     const rewritten = rewriteAssetLinks(content, oldBase, newBase)
     if (rewritten !== content) writeFileSync(target, rewritten, 'utf8')
@@ -177,11 +178,13 @@ export function movePath(src: string, destDir: string): string {
   if (srcStat.isDirectory() && (resolve(destDir) + sep).startsWith(resolve(src) + sep)) {
     throw new Error(translate("A folder cannot be moved into itself."))
   }
+  const companion = extname(src) === '.md' ? assetsDirFor(src) : null
+  if (companion && existsSync(companion) && existsSync(join(destDir, basename(companion)))) throw new Error(`${translate('Already exists: “')}${basename(companion)}“.`)
   renameSync(src, target)
   if (extname(src) === '.md') {
     const assets = assetsDirFor(src)
     if (existsSync(assets)) {
-      renameSync(assets, join(destDir, basename(assets)))
+      try { renameSync(assets, join(destDir, basename(assets))) } catch (error) { renameSync(target, src); throw error }
     }
   }
   return target

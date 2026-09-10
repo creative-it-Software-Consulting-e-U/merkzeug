@@ -1,3 +1,6 @@
+import { GuidedTour } from '@merkzeug/editor/GuidedTour'
+import { VaultGuidance, type GuidanceHost } from '@merkzeug/editor/VaultGuidance'
+import { LiveTemplate } from './components/LiveTemplate'
 import { t as translate } from '@merkzeug/core/i18n'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type {
@@ -24,7 +27,7 @@ import { Sidebar } from './components/Sidebar'
 import { LinkDialog } from './components/LinkDialog'
 import { MeetingNoteDialog } from './components/MeetingNoteDialog'
 import { TooltipLayer } from './components/Tooltip'
-import { meetingNoteContent, meetingNoteFileBase } from './util/meetingNote'
+import { meetingNoteContent, meetingNoteFileName } from './util/meetingNote'
 
 const emptyPane = (): Pane => ({ tabs: [], activeTabId: null })
 
@@ -45,6 +48,8 @@ function findNode(node: FileNode | null, path: string): FileNode | null {
   }
   return null
 }
+
+const guidanceHost: GuidanceHost = { read: name => window.merkzeug.guidanceRead(name), append: (name, expected, addition) => window.merkzeug.guidanceAppend(name, expected, addition) }
 
 export function App(): React.JSX.Element {
   const [vault, setVault] = useState<string | null>(null)
@@ -477,11 +482,7 @@ export function App(): React.JSX.Element {
       const dir = node ? (node.isDirectory ? node.path : dirname(node.path)) : v
       // Windows liefert Teilnehmer und Meeting-Link erst auf Nachfrage
       const full = await window.merkzeug.calendarEventDetail(ev)
-      const path = await window.merkzeug.createNoteFrom(
-        dir,
-        meetingNoteFileBase(full),
-        meetingNoteContent(full)
-      )
+      const path = await window.merkzeug.createMeetingNote(dir, await meetingNoteFileName(full), meetingNoteContent(full))
       await refreshTree()
       expandFolder(dir)
       openInNewTab(path, 'note')
@@ -904,6 +905,7 @@ export function App(): React.JSX.Element {
       <div className="welcome">
         <div className="welcome-drag-region" />
         <h1>Merkzeug</h1>
+        <GuidedTour edition="desktop" />
         <p>{translate("Choose a vault folder containing Markdown notes.")}</p>
         <button className="primary" onClick={() => void window.merkzeug.pickVault()}>
           {translate("Open vault …")}
@@ -966,6 +968,9 @@ export function App(): React.JSX.Element {
 
   return (
     <div className="app">
+      <GuidedTour edition="desktop" />
+      <LiveTemplate key={vault} vault={vault} />
+      <VaultGuidance key={`guidance:${vault}`} vaultId={vault} host={guidanceHost} />
       <div className="titlebar-drag" />
       <div className="app-body">
         <Sidebar

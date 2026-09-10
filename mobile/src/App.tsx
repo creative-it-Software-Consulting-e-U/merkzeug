@@ -1,3 +1,9 @@
+import { GuidedTour } from '@merkzeug/editor/GuidedTour'
+import { WorkingCopy } from './components/WorkingCopy'
+import { VaultGuidance } from '@merkzeug/editor/VaultGuidance'
+import { guidanceHost } from './vault'
+import { MeetingNotes } from './components/MeetingNotes'
+import { ThemeSelect } from '@merkzeug/editor/ThemeSelect'
 import { t as translate } from '@merkzeug/core/i18n'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Editor } from './components/Editor'
@@ -41,12 +47,13 @@ export default function App(): React.JSX.Element {
   const [dirty, setDirty] = useState(false)
   const [sheet, setSheet] = useState<SheetState | null>(null)
   const [searching, setSearching] = useState(false)
+  const [showMeetings, setShowMeetings] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
   const treeRef = useRef<FileNode | null>(null)
   treeRef.current = tree
   // Solange ein Overlay offen ist, sollen die Kanten-Wischgesten nicht greifen
   const overlayOpenRef = useRef(false)
-  overlayOpenRef.current = sheet !== null || searching || showHelp
+  overlayOpenRef.current = sheet !== null || searching || showHelp || showMeetings
 
   const current = stack[stackIndex]
   const isNote = current.endsWith('.md')
@@ -354,6 +361,8 @@ export default function App(): React.JSX.Element {
     return (
       <div className="start-screen">
         <h1>Merkzeug</h1>
+        <GuidedTour edition="ios" />
+        <ThemeSelect />
         <p>
           {translate("Choose your vault folder, for example a repository provided by Working Copy.")}
         </p>
@@ -419,6 +428,11 @@ export default function App(): React.JSX.Element {
           ⌂
         </button>
       </header>
+      <GuidedTour edition="ios" />
+      <WorkingCopy key={`git:${vaultInfo.id ?? vaultInfo.name}`} vaultId={vaultInfo.id ?? vaultInfo.name} />
+      <VaultGuidance key={vaultInfo.id ?? vaultInfo.name} vaultId={vaultInfo.id ?? vaultInfo.name} host={guidanceHost} />
+      <div className="appearance-bar"><button onClick={() => setShowMeetings(true)}>{translate('New meeting note')}</button><ThemeSelect /></div>
+      {showMeetings && <MeetingNotes folder={isNote ? dirname(current) : current} onClose={() => setShowMeetings(false)} onOpen={path => { setShowMeetings(false); void reloadTree(); navigateTo(path) }} />}
       <main className="content" ref={contentRef}>
         {isNote ? (
           <Editor

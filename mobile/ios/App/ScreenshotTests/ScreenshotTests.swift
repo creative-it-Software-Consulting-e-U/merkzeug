@@ -6,6 +6,32 @@ final class ScreenshotTests: XCTestCase {
     func testEnglish() throws { try capture(locale: "en") }
     func testGerman() throws { try capture(locale: "de") }
 
+    func testRoadmap() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+        let files = ["Welcome.md": "# Roadmap test\n\nA native simulator note.\n"]
+        app.launchEnvironment = ["MERKZEUG_DEMO_MODE": "1", "MERKZEUG_DEMO_FILES": String(data: try JSONSerialization.data(withJSONObject: files), encoding: .utf8)!, "MERKZEUG_DEMO_NOTE": "/Welcome.md"]
+        app.launch()
+        let start = app.buttons["Start tour"]
+        if start.waitForExistence(timeout: 20) {
+            start.tap()
+            XCTAssertTrue(app.buttons["Next"].waitForExistence(timeout: 5))
+            app.buttons["Next"].tap()
+            app.buttons["Close"].firstMatch.tap()
+        }
+        let meeting = app.buttons["New meeting note"]
+        XCTAssertTrue(meeting.waitForExistence(timeout: 20))
+        meeting.tap()
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let allow = springboard.buttons.matching(NSPredicate(format: "label IN %@", ["Allow Full Access", "Vollen Zugriff erlauben"])).firstMatch
+        if allow.waitForExistence(timeout: 8) { allow.tap() }
+        XCTAssertTrue(app.staticTexts["No events in this date range."].waitForExistence(timeout: 20), "Native EventKit request should finish without error")
+        app.buttons["Close"].firstMatch.tap()
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = "roadmap-native-ios"; attachment.lifetime = .keepAlways; add(attachment)
+        app.terminate()
+    }
+
     private func capture(locale: String) throws {
         let bundle = Bundle(for: Self.self)
         let fixtures = try XCTUnwrap(bundle.url(forResource: "demo", withExtension: nil)).appendingPathComponent(locale)
@@ -22,6 +48,8 @@ final class ScreenshotTests: XCTestCase {
             app.launchEnvironment["MERKZEUG_DEMO_NOTE"] = ["diagram", "git"].contains(scene) ? (locale == "de" ? "/Projekte/Garten.md" : "/Projects/Garden.md") : (locale == "de" ? "/Willkommen.md" : "/Welcome.md")
             app.launchEnvironment["MERKZEUG_DEMO_SCENE"] = scene
             app.launch()
+            if app.buttons["Later"].waitForExistence(timeout: 3) { app.buttons["Later"].tap() }
+            else if app.buttons["Später"].exists { app.buttons["Später"].tap() }
             XCTAssertTrue(app.otherElements["merkzeug-screenshot-ready"].waitForExistence(timeout: 60), "Editor, fonts and diagram must finish rendering")
             let raw = app.screenshot()
             let edition = UIDevice.current.userInterfaceIdiom == .pad ? "ipad" : "iphone"

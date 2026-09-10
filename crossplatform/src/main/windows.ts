@@ -1,5 +1,5 @@
 import { t as translate } from '@merkzeug/core/i18n'
-import { BrowserWindow, shell } from 'electron'
+import { BrowserWindow, shell, nativeTheme } from 'electron'
 import { join } from 'node:path'
 import { is } from '@electron-toolkit/utils'
 
@@ -16,6 +16,8 @@ export function setWindowVault(winId: number, vault: string | null): void {
 
 export function createMainWindow(vault: string | null): BrowserWindow {
   const win = new BrowserWindow({
+    show: false,
+    backgroundColor: nativeTheme.shouldUseDarkColors ? '#1e1e1e' : '#ffffff',
     enableLargerThanScreen: Boolean(process.env.MERKZEUG_SCREENSHOT && process.env.MERKZEUG_SCREENSHOT_PROFILE),
     width: 1280,
     height: 850,
@@ -30,6 +32,7 @@ export function createMainWindow(vault: string | null): BrowserWindow {
     }
   })
 
+  win.once('ready-to-show', () => win.show())
   windowVaults.set(win.id, vault)
   win.once('closed', () => windowVaults.delete(win.id))
 
@@ -65,6 +68,8 @@ export function openHelpWindow(): void {
     return
   }
   helpWindow = new BrowserWindow({
+    show: false,
+    backgroundColor: nativeTheme.shouldUseDarkColors ? '#1e1e1e' : '#ffffff',
     width: 760,
     height: 820,
     title: translate("Merkzeug Help"),
@@ -73,6 +78,7 @@ export function openHelpWindow(): void {
       sandbox: false
     }
   })
+  helpWindow.once('ready-to-show', () => helpWindow?.show())
   helpWindow.once('closed', () => {
     helpWindow = null
   })
@@ -100,6 +106,8 @@ export function openSettingsWindow(vault: string | null): void {
     return
   }
   settingsWindow = new BrowserWindow({
+    show: false,
+    backgroundColor: nativeTheme.shouldUseDarkColors ? '#1e1e1e' : '#ffffff',
     enableLargerThanScreen: Boolean(process.env.MERKZEUG_SCREENSHOT && process.env.MERKZEUG_SCREENSHOT_PROFILE),
     width: 560,
     height: 660,
@@ -111,6 +119,7 @@ export function openSettingsWindow(vault: string | null): void {
       sandbox: false
     }
   })
+  settingsWindow.once('ready-to-show', () => settingsWindow?.show())
   settingsWindow.once('closed', () => {
     settingsWindow = null
   })
@@ -123,6 +132,8 @@ export function openSettingsWindow(vault: string | null): void {
 
 export function openMermaidZoom(svg: string): void {
   const zoom = new BrowserWindow({
+    show: false,
+    backgroundColor: nativeTheme.shouldUseDarkColors ? '#1e1e1e' : '#ffffff',
     width: 900,
     height: 700,
     title: translate("Diagram"),
@@ -132,6 +143,7 @@ export function openMermaidZoom(svg: string): void {
     }
   })
   const payload = encodeURIComponent(svg)
+  zoom.once('ready-to-show', () => zoom.show())
   if (is.dev && process.env.ELECTRON_RENDERER_URL) {
     zoom.loadURL(`${process.env.ELECTRON_RENDERER_URL}#zoom`)
   } else {
