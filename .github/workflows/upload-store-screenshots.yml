@@ -69,7 +69,7 @@ jobs:
           args=(--version "$STORE_VERSION" --platforms "$STORE_PLATFORMS" --mode "$STORE_MODE")
           if [[ "$STORE_APPLY" == true ]]; then args+=(--apply); fi
           node scripts/upload-store-screenshots.mjs "${args[@]}"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: app-store-screenshot-upload-report

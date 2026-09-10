@@ -66,14 +66,14 @@ jobs:
               xvfb-run -a python3 scripts/install-validation-package.py "crossplatform/dist/Merkzeug-$version-linux-$ARCH.AppImage" "release-artifacts/native-$PLATFORM-$ARCH/appimage" --arch "$ARCH"
               ;;
           esac
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: native-validation-${{ matrix.platform }}-${{ matrix.arch }}
           path: release-artifacts/native-*
           if-no-files-found: ignore
           retention-days: 30
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: unsigned-validation-${{ matrix.platform }}-${{ matrix.arch }}
@@ -106,7 +106,7 @@ jobs:
       - name: Build plugin
         shell: bash
         run: IDEA_HOME="$RUNNER_TEMP/merkzeug-sdk" npm run build:intellij
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: intellij
           path: intellij/dist/*.zip
@@ -128,7 +128,7 @@ jobs:
           name: intellij
           path: release-artifacts/candidate
       - run: python3 scripts/release-artifacts.py release-artifacts/candidate --complete
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: release-candidate-matrix
           path: release-artifacts/candidate

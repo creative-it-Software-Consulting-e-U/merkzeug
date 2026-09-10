@@ -130,7 +130,7 @@ jobs:
         if: always() && matrix.platform == 'mac'
         shell: bash
         run: rm -f "$RUNNER_TEMP/merkzeug-notarization.p8"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: desktop-${{ matrix.platform }}-${{ matrix.arch }}
           if-no-files-found: error
@@ -163,7 +163,7 @@ jobs:
       - name: Build plugin
         shell: bash
         run: IDEA_HOME="$RUNNER_TEMP/merkzeug-sdk" npm run build:intellij
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: intellij
           path: intellij/dist/*.zip
