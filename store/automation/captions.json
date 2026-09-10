@@ -2,11 +2,11 @@
   "en": {
     "writing": {
       "title": "Your notes. Your files.",
-      "subtitle": "Write naturally. Keep ordinary Markdown."
+      "subtitle": "Explore and edit your Markdown collections."
     },
     "diagram": {
       "title": "See the connections.",
-      "subtitle": "Follow links. Read diagrams right in your notes."
+      "subtitle": "Follow links. Understand notes and repository docs."
     },
     "frontmatter": {
       "title": "Keep the context.",
@@ -14,15 +14,15 @@
     },
     "git": {
       "title": "Git belongs in your notebook.",
-      "subtitle": "Review changes. Commit, push and pull from Merkzeug."
+      "subtitle": "Keep documentation beside your code. Commit and sync."
     },
     "pdf": {
       "title": "Markdown to a finished PDF.",
-      "subtitle": "Reusable templates. Covers, headers and footers."
+      "subtitle": "Share linked notes with reusable PDF templates."
     },
     "repository": {
       "title": "Your Git notes, on the go.",
-      "subtitle": "Open via Working Copy. Read links and diagrams."
+      "subtitle": "Read repository docs. Sync separately in Working Copy."
     },
     "calendar": {
       "title": "From calendar to meeting notes.",
@@ -32,11 +32,11 @@
   "de": {
     "writing": {
       "title": "Deine Notizen. Deine Dateien.",
-      "subtitle": "Natürlich schreiben. Als Markdown behalten."
+      "subtitle": "Deine Markdown-Sammlungen lesen und bearbeiten."
     },
     "diagram": {
       "title": "Zusammenhänge sehen.",
-      "subtitle": "Links folgen. Diagramme direkt in Notizen lesen."
+      "subtitle": "Links folgen. Notizen und Repo-Dokumentation verstehen."
     },
     "frontmatter": {
       "title": "Der Kontext bleibt.",
@@ -44,15 +44,15 @@
     },
     "git": {
       "title": "Git gehört ins Notizbuch.",
-      "subtitle": "Änderungen sehen. Commit, Push und Pull in Merkzeug."
+      "subtitle": "Dokumentation beim Code behalten. Committen und synchronisieren."
     },
     "pdf": {
       "title": "Von Markdown zum fertigen PDF.",
-      "subtitle": "Vorlagen wiederverwenden. Mit Deckblatt, Kopf- und Fußzeilen."
+      "subtitle": "Verlinkte Notizen mit PDF-Vorlagen weitergeben."
     },
     "repository": {
       "title": "Deine Git-Notizen unterwegs.",
-      "subtitle": "Über Working Copy öffnen. Links und Diagramme lesen."
+      "subtitle": "Repo-Dokumentation lesen. Über Working Copy synchronisieren."
     },
     "calendar": {
       "title": "Vom Kalender zur Meeting-Notiz.",
