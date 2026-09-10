@@ -30,7 +30,8 @@ localized alternative text and HTML captions. Images below the hero load lazily.
 
 `roadmap.json` stores short DE/EN labels linked to the GitHub project issues.
 Refresh statuses and the review date against the board before publishing roadmap
-changes. Group related engineering tasks into user-facing capabilities; do not
+changes. Set `sourceAccess` to `public` only after repository/issue visibility is
+public; the current private source is explicitly labeled on the page. Group related engineering tasks into user-facing capabilities; do not
 turn a backlog item into a dated release promise. VS Code remains a longer-term
 platform direction in the platform section, without an invented GitHub ticket.
 
