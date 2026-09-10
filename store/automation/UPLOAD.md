@@ -29,7 +29,7 @@ python3 scripts/prepare-store-upload.py \
 node scripts/upload-store-screenshots.mjs --manifest /tmp/reviewed-upload/manifest.json --validate-only
 ```
 
-Replace `store/upload/` with that reviewed output in a PR. The preparer checks capture-manifest hashes and includes only captioned store PNGs, in writing/diagram/frontmatter order, for English and German. The bundle records source-manifest hashes and image SHA-256. The uploader validates dimensions, opacity, containment, hashes and group uniqueness before accessing Apple. Public fictional artwork and its manifest can be committed; credentials cannot.
+Replace `store/upload/` with that reviewed output in a PR. The preparer checks capture-manifest hashes and includes only captioned store PNGs, for English and German. Mac leads with Git and PDF templates, followed by writing, diagrams and frontmatter. Mobile leads with the repository/diagram workflow, followed by writing and frontmatter. The bundle records source-manifest hashes and image SHA-256. The uploader validates dimensions, opacity, containment, hashes and group uniqueness before accessing Apple. Public fictional artwork and its manifest can be committed; credentials cannot.
 
 ## Credentials and environment
 
@@ -60,3 +60,9 @@ Apple permits ten screenshots per set. If existing images leave insufficient sta
 GitHub serializes all upload workflows for this app. Avoid simultaneous manual edits in App Store Connect while an upload runs. Verify the retained report and Store media manager before submission. Store asset processing has a bounded timeout; a successful build alone does not establish successful screenshot processing.
 
 API references: [upload protocol and MD5](https://developer.apple.com/documentation/appstoreconnectapi/uploading-assets-to-app-store-connect), [display types](https://developer.apple.com/documentation/appstoreconnectapi/screenshotdisplaytype), [screenshot sets](https://developer.apple.com/documentation/appstoreconnectapi/app-screenshot-sets).
+
+## Store descriptions and promotional text
+
+The reviewed English/German descriptions, promotional text and platform-specific keywords live in `store/metadata/*/listing.json`. Mac copy highlights Git controls and PDF templates; iOS explains access through Working Copy and explicitly states that Git operations remain in that app and PDF export requires desktop Merkzeug.
+
+With the same secure API environment, run `node scripts/upload-store-metadata.mjs --version 1.0` to preflight, then add `--apply`. It updates only description, promotional text and keywords on the exact editable iOS/macOS version, verifies them by reading back, and saves prior values in the local report. It does not submit or publish the app. Use `--validate-only` to check local copy without credentials.

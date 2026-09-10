@@ -100,6 +100,7 @@ export function openSettingsWindow(vault: string | null): void {
     return
   }
   settingsWindow = new BrowserWindow({
+    enableLargerThanScreen: Boolean(process.env.MERKZEUG_SCREENSHOT && process.env.MERKZEUG_SCREENSHOT_PROFILE),
     width: 560,
     height: 660,
     minWidth: 460,

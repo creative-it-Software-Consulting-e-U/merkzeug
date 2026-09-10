@@ -62,7 +62,7 @@ export function GitBar({
             </ul>
           )}
           <input
-            placeholder="Commit-Nachricht"
+            placeholder={translate("Commit message")}
             value={message}
             disabled={busy}
             onChange={(e) => setMessage(e.target.value)}

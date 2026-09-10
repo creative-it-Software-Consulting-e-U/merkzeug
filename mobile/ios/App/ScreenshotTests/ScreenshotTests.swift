@@ -28,7 +28,7 @@ final class ScreenshotTests: XCTestCase {
             let name = "\(edition)-\(locale)-\(scene)"
             let attachment = XCTAttachment(screenshot: raw)
             attachment.name = "raw-" + name; attachment.lifetime = .keepAlways; add(attachment)
-            let caption = try XCTUnwrap(captions[locale]?[scene])
+            let caption = try XCTUnwrap(captions[locale]?[scene == "diagram" ? "repository" : scene])
             let framed = try ScreenshotFrame.render(try XCTUnwrap(raw.image.cgImage), title: caption.title, subtitle: caption.subtitle)
             let store = XCTAttachment(data: framed, uniformTypeIdentifier: "public.png")
             store.name = "store-" + name; store.lifetime = .keepAlways; add(store)

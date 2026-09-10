@@ -2,8 +2,8 @@
   "name": "Merkzeug",
   "subtitle": "Your notes. Plain Markdown.",
   "keywords": "markdown,notes,writing,editor,knowledge,diagrams,notebook",
-  "description_ios": "Keep your ideas in Markdown files you control. Merkzeug brings visual editing to your notes on iPhone and iPad.\n\nWrite with headings, lists and tables. Connect notes with links, add images and display Mermaid diagrams. Open a folder through the Files app, including supported file providers such as Working Copy.\n\nThe interface and built-in help are available in English and German.\n\nPDF export is available in the desktop edition, not in this iOS edition. File-provider availability depends on the apps installed on your device.",
-  "description_macos": "Write, connect and share your notes with Merkzeug, a visual Markdown editor.\n\nOrganize ordinary Markdown files in folders. Work with headings, lists, tables, images and Mermaid diagrams. Export a note or a collection of linked notes as a PDF with reusable templates.\n\nThe interface and built-in help are available in English and German. Your notes remain ordinary files you can open with other Markdown tools.",
+  "description_ios": "Read and edit the Markdown notes in your Git repositories on iPhone and iPad. Merkzeug makes linked documentation, including files created by coding agents, easy to explore on the go.\n\nYOUR REPOSITORY, YOUR FILES\nClone your repository in Working Copy, then open its folder in Merkzeug through the Files app. Edit notes in Merkzeug; commit, push and pull in Working Copy. Working Copy is a separate app, and access depends on its file-provider support and configuration. Merkzeug does not run Git commands on iOS.\n\nSEE THE CONNECTIONS\nFollow links between notes, view Mermaid diagrams inside your documents, and edit titles, tags and other frontmatter. Write visually with headings, lists, tables and images while keeping ordinary Markdown files.\n\nFROM MOBILE NOTES TO DESKTOP PDF\nUse the same Markdown files in Merkzeug for Mac to export notes and directly linked documents with reusable PDF templates. PDF export and template management are not available in this iOS app.\n\nThe interface and built-in help are available in English and German.",
+  "description_macos": "Turn a Git notebook into a readable workspace and a finished PDF. Merkzeug combines visual Markdown editing, Git controls and reusable PDF templates.\n\nWORK IN YOUR REPOSITORY\nOpen a local Git repository as your notebook. See the branch and changed files, commit and push your edits, and pull updates from Merkzeug. Git must be installed and your repository and authentication configured; resolve complex conflicts in your preferred Git client.\n\nPUBLISH WITH PDF TEMPLATES\nExport a note or a set of directly linked notes as a PDF. Reuse a template with a cover, headers, footers, logos, styles and page margins. Assign templates per notebook and use frontmatter for export titles, exclusions and a clickable table of contents.\n\nREAD WHAT YOUR AGENTS WRITE\nExplore Markdown documentation created by coding agents in your repository. Follow links, view integrated Mermaid diagrams and edit frontmatter without moving your files into another format.\n\nWrite with headings, lists, tables and images. Your notes remain ordinary Markdown files. The interface and built-in help are available in English and German.",
   "status": "draft; review against signed target-platform builds before upload",
   "support_url": "https://support.apps.creative-it.com/?app=merkzeug&lang=en",
   "marketing_url": "https://merkzeug.creative-it.com/",
@@ -11,5 +11,9 @@
   "price": "free",
   "in_app_purchases": false,
   "release_mode": "manual",
-  "copyright": "2026 creative-it Software Consulting e.U."
+  "copyright": "2026 creative-it Software Consulting e.U.",
+  "promotional_text_macos": "Git notes to polished PDFs: commit, push and pull, then export linked Markdown with reusable templates. Read diagrams and agent-written docs in place.",
+  "promotional_text_ios": "Your Git notes on iPhone and iPad: open repository folders via Working Copy, follow links and read diagrams. Git synchronization stays in Working Copy.",
+  "keywords_ios": "markdown,git,repository,notes,diagrams,frontmatter,documentation,editor",
+  "keywords_macos": "markdown,git,pdf,templates,repository,diagrams,frontmatter,documentation,notes"
 }

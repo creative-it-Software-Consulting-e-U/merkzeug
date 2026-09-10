@@ -1,12 +1,54 @@
 {
   "en": {
-    "writing": {"title":"Your notes. Your files.","subtitle":"Write naturally. Keep ordinary Markdown."},
-    "diagram": {"title":"See the connections.","subtitle":"Follow links. Read diagrams right in your notes."},
-    "frontmatter": {"title":"Keep the context.","subtitle":"Titles, tags and metadata stay with your files."}
+    "writing": {
+      "title": "Your notes. Your files.",
+      "subtitle": "Write naturally. Keep ordinary Markdown."
+    },
+    "diagram": {
+      "title": "See the connections.",
+      "subtitle": "Follow links. Read diagrams right in your notes."
+    },
+    "frontmatter": {
+      "title": "Keep the context.",
+      "subtitle": "Titles, tags and metadata stay with your files."
+    },
+    "git": {
+      "title": "Git belongs in your notebook.",
+      "subtitle": "Review changes. Commit, push and pull from Merkzeug."
+    },
+    "pdf": {
+      "title": "Markdown to a finished PDF.",
+      "subtitle": "Reusable templates. Covers, headers and footers."
+    },
+    "repository": {
+      "title": "Your Git notes, on the go.",
+      "subtitle": "Open via Working Copy. Read links and diagrams."
+    }
   },
   "de": {
-    "writing": {"title":"Deine Notizen. Deine Dateien.","subtitle":"Natürlich schreiben. Als Markdown behalten."},
-    "diagram": {"title":"Zusammenhänge sehen.","subtitle":"Links folgen. Diagramme direkt in Notizen lesen."},
-    "frontmatter": {"title":"Der Kontext bleibt.","subtitle":"Titel, Tags und Metadaten gehören zur Datei."}
+    "writing": {
+      "title": "Deine Notizen. Deine Dateien.",
+      "subtitle": "Natürlich schreiben. Als Markdown behalten."
+    },
+    "diagram": {
+      "title": "Zusammenhänge sehen.",
+      "subtitle": "Links folgen. Diagramme direkt in Notizen lesen."
+    },
+    "frontmatter": {
+      "title": "Der Kontext bleibt.",
+      "subtitle": "Titel, Tags und Metadaten gehören zur Datei."
+    },
+    "git": {
+      "title": "Git gehört ins Notizbuch.",
+      "subtitle": "Änderungen sehen. Commit, Push und Pull in Merkzeug."
+    },
+    "pdf": {
+      "title": "Von Markdown zum fertigen PDF.",
+      "subtitle": "Vorlagen wiederverwenden. Mit Deckblatt, Kopf- und Fußzeilen."
+    },
+    "repository": {
+      "title": "Deine Git-Notizen unterwegs.",
+      "subtitle": "Über Working Copy öffnen. Links und Diagramme lesen."
+    }
   }
 }

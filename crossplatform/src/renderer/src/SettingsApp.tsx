@@ -50,10 +50,10 @@ export function SettingsApp(): React.JSX.Element {
 
   return (
     <div className="settings-app">
-      <h1>PDF-Vorlagen</h1>
+      <h1>{translate("PDF templates")}</h1>
 
       <section className="settings-section">
-        <h2>Vorlagen-Ordner</h2>
+        <h2>{translate("Templates folder")}</h2>
         <div className="settings-row">
           <span className="settings-path" title={state.templatesRoot}>
             {state.templatesRoot}
@@ -121,7 +121,7 @@ export function SettingsApp(): React.JSX.Element {
                 </option>
               ))}
               {state.assigned && !state.templates.includes(state.assigned) && (
-                <option value={state.assigned}>{state.assigned} (fehlt)</option>
+                <option value={state.assigned}>{state.assigned} ({translate("missing")})</option>
               )}
             </select>
           </div>

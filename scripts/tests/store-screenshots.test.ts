@@ -16,7 +16,7 @@ test('JWT is ES256 with a short expiry and no secret in the payload',()=>{
  assert.ok(verify('sha256',Buffer.from(`${head}.${body}`),{key:publicKey,dsaEncoding:'ieee-p1363'},Buffer.from(sig,'base64url')));
 });
 test('reviewed bundle is complete and integrity validated',async()=>{
- const b=await loadBundle('store/upload/manifest.json');assert.equal(b.groups.length,6);assert.equal(b.groups.flatMap(g=>g.images).length,18);
+ const b=await loadBundle('store/upload/manifest.json');assert.equal(b.groups.length,6);assert.equal(b.groups.flatMap(g=>g.images).length,22);
 });
 test('planner preserves existing sets by default and detects identical content',async()=>{
  const b={appId:'1',groups:[group]};
