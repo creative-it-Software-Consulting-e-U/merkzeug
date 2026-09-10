@@ -23,6 +23,8 @@ mac:
     - from: resources/calendar/merkzeug-calendar
       to: calendar/merkzeug-calendar
   extendInfo:
+    # Preserve the existing App Store declaration for Merkzeug builds 1 and 26.
+    ITSAppUsesNonExemptEncryption: false
     NSCalendarsUsageDescription: >-
       Merkzeug reads calendar events to create meeting notes.
     NSCalendarsFullAccessUsageDescription: >-

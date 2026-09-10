@@ -12,6 +12,8 @@ app = archive / 'Products/Applications/Merkzeug.app'
 info = plistlib.loads((app / 'Contents/Info.plist').read_bytes())
 if info.get('CFBundleIdentifier') != 'com.creative-it.merkzeug' or info.get('CFBundleVersion') != build:
     raise SystemExit('Archive app identity or build number differs from the Cloud run')
+if info.get('ITSAppUsesNonExemptEncryption') is not False:
+    raise SystemExit('Archive is missing the existing export-compliance declaration')
 for name in ['Contents/MacOS/Merkzeug', 'Contents/Resources/calendar/merkzeug-calendar']:
     architectures = subprocess.check_output(['xcrun', 'lipo', '-archs', str(app / name)], text=True).split()
     if set(architectures) != {'arm64', 'x86_64'}: raise SystemExit(f'Archive is not universal: {name}')
