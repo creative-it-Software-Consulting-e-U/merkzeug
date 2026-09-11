@@ -94,6 +94,17 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
             browser.getComponent().setBackground(UIUtil.getPanelBackground());
             script("window.__merkzeugTheme?.(" + JSON.toJson(theme()) + ")");
         });
+        project.getMessageBus().connect(this).subscribe(VirtualFileManager.VFS_CHANGES, new com.intellij.openapi.vfs.newvfs.BulkFileListener() {
+            @Override public void after(java.util.List<? extends com.intellij.openapi.vfs.newvfs.events.VFileEvent> events) {
+                boolean pathChanged = events.stream().anyMatch(event ->
+                    (event instanceof com.intellij.openapi.vfs.newvfs.events.VFileMoveEvent ||
+                     event instanceof com.intellij.openapi.vfs.newvfs.events.VFilePropertyChangeEvent property && VirtualFile.PROP_NAME.equals(property.getPropertyName())) &&
+                    event.getFile() != null && VfsUtilCore.isAncestor(event.getFile(), file, false));
+                if (pathChanged) ApplicationManager.getApplication().invokeLater(() -> {
+                    if (!disposed && file.isValid() && pdfPayload == null) browser.loadURL(origin + "index.html");
+                });
+            }
+        });
         browser.getComponent().setBackground(UIUtil.getPanelBackground());
         panel.add(browser.getComponent());
         browser.loadURL(origin + "index.html");

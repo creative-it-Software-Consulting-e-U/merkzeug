@@ -9,6 +9,8 @@
   <depends>com.intellij.modules.jcef</depends>
   <extensions defaultExtensionNs="com.intellij">
     <projectConfigurable parentId="tools" id="com.creativeit.merkzeug.settings" displayName="Merkzeug" instance="com.creativeit.merkzeug.MerkzeugSettings"/>
+    <renamePsiElementProcessor implementation="com.creativeit.merkzeug.CompanionRenameProcessor" order="first"/>
+    <refactoring.moveHandler implementation="com.creativeit.merkzeug.CompanionMoveHandler" order="first"/>
     <fileEditorProvider implementation="com.creativeit.merkzeug.MerkzeugEditorProvider"/>
   </extensions>
   <actions>

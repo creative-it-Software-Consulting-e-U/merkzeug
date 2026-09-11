@@ -21,6 +21,8 @@ public final class SmokeStarter implements ApplicationStarter {
         Project project = com.intellij.openapi.project.ex.ProjectManagerEx.getInstanceEx().openProject(test,
             com.intellij.ide.impl.OpenProjectTask.build().asNewProject().withForceOpenInNewFrame(true));
         if (project == null) throw new AssertionError("Test project failed to open");
+        try { testCompanionRefactoring(project, test); }
+        catch (Throwable failure) { failure.printStackTrace(); System.exit(1); }
         ApplicationManager.getApplication().invokeLater(() -> {
             try {
                 VirtualFile file = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(test.resolve("index.md"));
@@ -136,7 +138,7 @@ public final class SmokeStarter implements ApplicationStarter {
                 undo.redo(editor);
                 if (!document.getText().equals(edited)) throw new AssertionError("Redo failed");
                 FileDocumentManager.getInstance().saveDocument(document);
-                if (!Files.readString(test.resolve("index.md")).equals(edited)) throw new AssertionError("Save failed");
+                if (!Files.readString(test.resolve("index.md")).equals(edited)) throw new AssertionError("Save failed: expected=" + edited + " ACTUAL=" + Files.readString(test.resolve("index.md")));
                 System.out.println("MERKZEUG_SMOKE document-write, stale-revision, undo, redo and save passed");
                 javax.swing.Timer timer = new javax.swing.Timer(500, e -> {
                     try {
@@ -221,6 +223,101 @@ public final class SmokeStarter implements ApplicationStarter {
             } catch (Throwable error) { error.printStackTrace(); System.exit(1); }
         });
     }
+    private static void testCompanionRefactoring(Project project, Path test) throws Exception {
+        String rewritten = CompanionRenameProcessor.rewriteReferences("![x](Plan.assets/x.png) ![x](./Plan.assets/x.png) ![other](OtherPlan.assets/x.png) ![remote](../Other/Plan.assets/x.png)", "Plan", "Draft Note");
+        if (!rewritten.equals("![x](Draft%20Note.assets/x.png) ![x](./Draft%20Note.assets/x.png) ![other](OtherPlan.assets/x.png) ![remote](../Other/Plan.assets/x.png)")) throw new AssertionError("Companion reference escaping or boundaries failed");
+        if (!CompanionRenameProcessor.rewriteReferences("![x](Old%20Note.assets/x.png)", "Old Note", "New Note").contains("New%20Note.assets/")) throw new AssertionError("Encoded source link failed");
+        Path base = Files.createTempDirectory(test, "refactoring-");
+        Files.createDirectories(base.resolve("Plan.assets"));
+        Files.writeString(base.resolve("Plan.assets/image.svg"), "<svg xmlns=\"http://www.w3.org/2000/svg\"/>");
+        Files.writeString(base.resolve("Plan.md"), "![Image](Plan.assets/image.svg)\n");
+        Files.createDirectories(base.resolve("assets"));
+        Files.writeString(base.resolve("assets/shared.txt"), "shared");
+        Files.createDirectories(base.resolve("target"));
+        ApplicationManager.getApplication().invokeAndWait(() -> com.intellij.openapi.application.WriteAction.run(() -> {
+            var module = com.intellij.openapi.module.ModuleManager.getInstance(project).newModule(base.resolve("fixture.iml"), "EMPTY_MODULE");
+            com.intellij.openapi.roots.ModuleRootModificationUtil.addContentRoot(module, base.toString());
+        }));
+        VirtualFile root = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(base);
+        root.refresh(false, true);
+        ApplicationManager.getApplication().invokeAndWait(() -> {
+            var writable = new ArrayList<VirtualFile>();
+            com.intellij.openapi.vfs.VfsUtilCore.visitChildrenRecursively(root, new com.intellij.openapi.vfs.VirtualFileVisitor<Void>() {
+                @Override public boolean visitFile(VirtualFile file) { writable.add(file); return true; }
+            });
+            com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider.allowWriting(writable);
+        });
+        com.intellij.openapi.project.DumbService.getInstance(project).waitForSmartMode();
+        var renamed = new java.util.concurrent.CountDownLatch(1);
+        ApplicationManager.getApplication().invokeAndWait(() -> {
+            var psi = com.intellij.psi.PsiManager.getInstance(project).findFile(root.findChild("Plan.md"));
+            if (!(com.intellij.refactoring.rename.RenamePsiElementProcessor.forElement(psi) instanceof CompanionRenameProcessor)) throw new AssertionError("Companion rename processor not registered");
+            var processor = new com.intellij.refactoring.rename.RenameProcessor(project, psi, "Draft.md", false, false) {
+                @Override public void performRefactoring(com.intellij.usageView.UsageInfo[] usages) { super.performRefactoring(usages); renamed.countDown(); }
+            };
+            processor.setPreviewUsages(false); processor.run();
+        });
+        if (!renamed.await(45, java.util.concurrent.TimeUnit.SECONDS)) throw new AssertionError("Native rename timed out");
+        ApplicationManager.getApplication().invokeAndWait(() -> FileDocumentManager.getInstance().saveAllDocuments());
+        if (!Files.exists(base.resolve("Draft.assets/image.svg")) || Files.exists(base.resolve("Plan.assets"))) throw new AssertionError("Rename did not pair attachments");
+        if (!Files.readString(base.resolve("Draft.md")).contains("Draft.assets/image.svg")) throw new AssertionError("Rename did not update Markdown image link");
+        undoRefactoring(project, false);
+        if (!Files.exists(base.resolve("Plan.md")) || !Files.exists(base.resolve("Plan.assets/image.svg"))) throw new AssertionError("Rename undo did not restore pair");
+        undoRefactoring(project, true);
+        Files.createDirectories(base.resolve("Collision.assets")); root.refresh(false, true);
+        ApplicationManager.getApplication().invokeAndWait(() -> {
+            var psi = com.intellij.psi.PsiManager.getInstance(project).findFile(root.findChild("Draft.md"));
+            if (CompanionAssets.companion(psi) == null) throw new AssertionError("Missing companion after redo: " + psi + " " + java.util.Arrays.toString(root.getChildren()));
+            try { new CompanionRenameProcessor().prepareRenaming(psi, "Collision.md", new LinkedHashMap<>()); throw new AssertionError("Rename collision accepted"); }
+            catch (com.intellij.util.IncorrectOperationException expected) { }
+        });
+        com.intellij.openapi.project.DumbService.getInstance(project).waitForSmartMode();
+        var moved = new java.util.concurrent.CountDownLatch(1);
+        ApplicationManager.getApplication().invokeAndWait(() -> {
+            var manager = com.intellij.psi.PsiManager.getInstance(project);
+            var psi = manager.findFile(root.findChild("Draft.md"));
+            var target = manager.findDirectory(root.findChild("target"));
+            var handler = new CompanionMoveHandler();
+            if (!handler.canMove(new com.intellij.psi.PsiElement[]{psi}, target, null)) throw new AssertionError("Move handler not applicable");
+            var assets = manager.findDirectory(root.findChild("Draft.assets"));
+            if (CompanionAssets.expand(new com.intellij.psi.PsiElement[]{psi, assets}).length != 2) throw new AssertionError("Companion was duplicated");
+            var processor = CompanionMoveHandler.processor(project, new com.intellij.psi.PsiElement[]{psi}, target, moved::countDown, () -> {});
+            processor.setPreviewUsages(false); processor.run();
+        });
+        if (!moved.await(45, java.util.concurrent.TimeUnit.SECONDS)) throw new AssertionError("Native move timed out");
+        ApplicationManager.getApplication().invokeAndWait(() -> FileDocumentManager.getInstance().saveAllDocuments());
+        if (!Files.exists(base.resolve("target/Draft.md")) || !Files.exists(base.resolve("target/Draft.assets/image.svg"))) throw new AssertionError("Move did not pair attachments");
+        if (!Files.readString(base.resolve("target/Draft.md")).contains("Draft.assets/image.svg")) throw new AssertionError("Moved attachment link is incorrect");
+        if (!Files.exists(base.resolve("assets/shared.txt"))) throw new AssertionError("Shared assets moved");
+        undoRefactoring(project, false);
+        if (!Files.exists(base.resolve("Draft.md")) || !Files.exists(base.resolve("Draft.assets/image.svg"))) throw new AssertionError("Move undo did not restore pair");
+        Files.createDirectories(base.resolve("target/Draft.assets")); root.refresh(false, true);
+        ApplicationManager.getApplication().invokeAndWait(() -> {
+            var manager = com.intellij.psi.PsiManager.getInstance(project);
+            try { CompanionMoveHandler.processor(project, new com.intellij.psi.PsiElement[]{manager.findFile(root.findChild("Draft.md"))}, manager.findDirectory(root.findChild("target")), null, () -> {}); throw new AssertionError("Move collision accepted"); }
+            catch (com.intellij.util.IncorrectOperationException expected) { }
+        });
+        System.out.println("MERKZEUG_SMOKE native paired rename/move, Markdown links, undo/redo, collisions and shared assets passed");
+    }
+
+    private static void undoRefactoring(Project project, boolean redo) {
+        ApplicationManager.getApplication().invokeAndWait(() -> {
+            javax.swing.Timer confirm = new javax.swing.Timer(150, event -> {
+                for (java.awt.Window window : java.awt.Window.getWindows()) {
+                    if (window instanceof javax.swing.JDialog dialog && dialog.isShowing()) {
+                        JButton button = dialog.getRootPane().getDefaultButton();
+                        if (button != null) button.doClick();
+                    }
+                }
+            });
+            confirm.start();
+            try {
+                var manager = com.intellij.openapi.command.undo.UndoManager.getInstance(project);
+                if (redo) manager.redo(null); else manager.undo(null);
+            } finally { confirm.stop(); }
+        });
+    }
+
     private static boolean clickButton(java.awt.Container container, String label) {
         for (java.awt.Component component : container.getComponents()) {
             if (component instanceof javax.swing.JButton button && label.equals(button.getText())) { button.doClick(); return true; }
