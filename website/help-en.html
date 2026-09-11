@@ -51,16 +51,14 @@ clicking notes and subfolders navigates onward.</li>
 <li><strong>Sidebar footer:</strong> buttons for a new note, a new meeting note and a new
 folder (left) plus a reload button for re-reading the vault; the eye icon
 shows/hides <strong>asset folders</strong> (⇧⌘R).</li>
-<li><strong>Meeting notes from the calendar:</strong> <strong>⌃⌘N</strong> (menu &quot;Ablage → Neue
-Meeting-Notiz…&quot; or the calendar button in the footer) lists the running
+<li><strong>Meeting notes from the calendar:</strong> <strong>⌃⌘N</strong> (menu &quot;File → New Meeting Note…&quot; or the calendar button in the footer) lists the running
 and upcoming events of the next 14 days from your locally configured
 calendars — on macOS all accounts of the Calendar app (iCloud,
 Exchange/Microsoft 365, Google, …), on Windows all calendars of
 <strong>classic Outlook</strong> (via its object model; the &quot;new Outlook&quot; has none),
 with no cloud API involved. All-day
 events (vacations, birthdays, …) are hidden by default and can be shown
-via the checkbox above the list. <strong>&quot;Frühere
-anzeigen&quot;</strong> reveals past events, <strong>&quot;Suchen&quot;</strong> searches titles, people and
+via the checkbox above the list. <strong>&quot;Show earlier events&quot;</strong> reveals past events, <strong>&quot;Search&quot;</strong> searches titles, people and
 locations within ±90 days. Clicking an event creates a ready-named note:
 the event data (date, time, location, organizer, attendees, detected
 Teams/Zoom/Meet/Webex link) goes into the frontmatter; the body contains
@@ -72,11 +70,11 @@ security prompt (&quot;A program is trying to access …&quot;), allow access fo
 few minutes. On Linux the calendar integration is not available yet (an
 ICS import will follow).</li>
 <li><strong>Automatic naming of new notes:</strong> a new note is initially called
-&quot;Neue Notiz&quot;. If it starts with a <strong>heading 1</strong>, the file is automatically
+&quot;New note&quot;. If it starts with a <strong>heading 1</strong>, the file is automatically
 named after the title when saving: all lowercase, spaces and special
 characters become &quot;-&quot;, umlauts are kept — so
-&quot;2026-08-11 BPP Call Gerulf &amp; Alois - Neustrukturierung&quot; becomes
-<code>2026-08-11-bpp-call-gerulf-alois-neustrukturierung.md</code>. When the heading
+&quot;2026-08-11 Project Planning - Next Steps&quot; becomes
+<code>2026-08-11-project-planning-next-steps.md</code>. When the heading
 changes, the file name follows. As soon as you <strong>rename the file manually</strong>,
 your name is left untouched.</li>
 <li>Changes made to the vault outside the app (Finder/Explorer, terminal, sync)
@@ -137,7 +135,7 @@ editor, <strong>⌥⌘F</strong> additionally shows the replace row (also via
 <strong>Edit → Find…</strong>). The search covers the current note and is
 case-insensitive; selected text is taken over as the search term. <strong>↩</strong>
 jumps to the next match, <strong>⇧↩</strong> to the previous one, <strong>Esc</strong> closes the
-bar. &quot;Ersetzen&quot; replaces the current match, &quot;Alle&quot; replaces all matches.
+bar. &quot;Replace&quot; replaces the current match, &quot;All&quot; replaces all matches.
 In navigation mode you can search but not replace.</li>
 <li><strong>Moving blocks:</strong> the handle to the left of a block (appears on hover)
 allows drag &amp; drop reordering.</li>
@@ -146,7 +144,7 @@ allows drag &amp; drop reordering.</li>
 gray, collapsible <strong>&quot;Frontmatter&quot;</strong> bar at the very top of the editor, where
 it can be edited directly. Clearing the field removes the block on save.
 <code>title:</code> sets the title used by the PDF export.</li>
-<li><strong>Which fields does Merkzeug interpret?</strong> The <strong>&quot;+ Feld&quot;</strong> menu on the right
+<li><strong>Which fields does Merkzeug interpret?</strong> The <strong>&quot;+ Field&quot;</strong> menu on the right
 of the frontmatter bar lists them with an explanation (currently <code>title:</code>,
 <code>pdf-linked-title:</code>, <code>pdf-exclude:</code>, <code>pdf-toc:</code> and <code>language:</code>) and inserts a template line on
 click. Any other fields are preserved but not interpreted.</li>
@@ -255,7 +253,7 @@ starting on page 2 when there is a cover).</p>
 </li>
 <li><p><strong>Document language:</strong> <code>language:</code> in the frontmatter of the (index) file
 (e.g. <code>language: en</code>) sets the heading of the table of contents (&quot;Table of
-Contents&quot; instead of the German &quot;Inhaltsverzeichnis&quot;; supported: de, en,
+Contents&quot; for English; supported: de, en,
 fr, es, it, pt, nl — other languages get the English title) and the
 hyphenation used in the PDF. Without it, the interface language (German or English) is used.</p>
 </li>
@@ -288,7 +286,7 @@ footer with page numbers, and an optional cover page.</p>
 <ul>
 <li>Templates are managed under <strong>Merkzeug → Settings…</strong> (⌘,). That is where the
 <strong>templates folder</strong> is chosen; each template is a subfolder inside it.</li>
-<li><strong>&quot;Anlegen&quot;</strong> (create) sets up a new template with example files and opens it
+<li><strong>&quot;Create&quot;</strong> sets up a new template with example files and opens it
 in Finder/Explorer. A template consists of (all files optional):<ul>
 <li><code>kopfzeile.html</code> – header on every page</li>
 <li><code>fusszeile.html</code> – footer on every page</li>
@@ -306,7 +304,7 @@ header and footer additionally <code>&lt;span class=&quot;pageNumber&quot;&gt;&l
 <li><strong>Logo:</strong> put an image file (e.g. <code>logo.png</code>) into the template folder and
 reference it relatively (<code>&lt;img src=&quot;logo.png&quot; style=&quot;height: 8mm&quot;&gt;</code>) – it is
 embedded automatically on export. Header and footer support inline CSS only.
-Details are in each template&#39;s <code>LIESMICH.md</code>.</li>
+Details are in each template&#39;s <code>README.md</code>.</li>
 <li><strong>Detecting landscape:</strong> when the PDF is generated in landscape
 automatically, the document carries the class <code>pdf-landscape</code> on the
 <code>&lt;html&gt;</code> element. <code>stil.css</code> can react to it, e.g. to make a tall cover page
@@ -321,6 +319,7 @@ Google Drive, OneDrive or Dropbox</strong>, the respective cloud client syncs th
 templates to all machines automatically.</li>
 </ul>
 <h2 id="10-git-integration">10. Git integration</h2>
+<p>Merkzeug uses a separately installed Git executable for desktop version control. On macOS, Git is available through Apple’s Command Line Tools or a separate Git installation; full Xcode is not required. If Git is missing or cannot start, the sidebar shows <strong>Git is unavailable</strong>. Choose <strong>Git setup</strong> for installation instructions, then <strong>Check again</strong> after installing or configuring Git. Automatic Git checks pause while it is unavailable. Merkzeug does not launch Apple’s developer-tools installation dialog. Editing notes and exporting PDFs continue to work without Git.</p>
 <p>If the vault is a <strong>Git repository</strong>, a status line appears at the bottom of
 the sidebar:</p>
 <ul>
@@ -452,4 +451,15 @@ message instead of hanging.</li>
 <h2 id="support-and-feedback">Support and feedback</h2>
 <p>Use <strong>Help → Contact Support…</strong> to open the support form with Merkzeug, your language, edition and app version selected. You can deselect the app details before sending. No note contents or file paths are attached automatically.</p>
 <p><a href="https://support.apps.creative-it.com/?app=merkzeug&lang=en">Contact Merkzeug App Support</a>. Include your app version, operating system and steps to reproduce the issue. Use fictional examples and avoid confidential notes.</p>
-</main><footer><span>© 2026 creative-it Software Consulting e.U.</span><nav aria-label="Footer"><a href="release-notes-en.html">Release Notes</a><a href="privacy-en.html">Privacy</a><a href="legal-en.html">Legal notice</a><a href="https://apps.creative-it.com/">More apps</a><a href="https://www.creative-it.com/">creative-it</a></nav></footer></body></html>
+<h2 id="pdf-template-starter">PDF template starter</h2>
+<p>Merkzeug ships a ready-to-use <strong>Merkzeug</strong> PDF template: a warm paper cover, serif headings, blue accents, page headers and numbered footers. In <strong>Settings → Template for this vault</strong>, select <strong>Merkzeug</strong>. Existing vaults keep their current selection, including <strong>No template</strong>. <strong>Create</strong> makes an editable copy under a new name; <strong>Edit</strong> opens its folder. Your changes are never overwritten by an app update. Changing the templates root makes the starter available there too, if the folder is writable.</p>
+<p>Remove or rename <code>deckblatt.html</code> to omit the cover. Customize <code>stil.css</code> for document styles and <code>kopfzeile.html</code> / <code>fusszeile.html</code> for inline header/footer styles. Margins are in <code>vorlage.json</code>. Keep the German filenames and <code>{{titel}}</code> / <code>{{datum}}</code> placeholders; they are the shared template format. Put logo images in the template folder and reference them using relative paths. The template works in IntelliJ too: <strong>PDF template…</strong> opens the bundled starter folder initially when no other template is selected. PDF export is not yet available on iOS.</p>
+<h3 id="adapt-a-template-with-an-agent">Adapt a template with an agent</h3>
+<p>Create a copy first, then give the agent that folder and this prompt:</p>
+<blockquote>
+<p>Read README.md and all five template files in this folder. Adapt this copy to my visual style: [COLORS], [FONTS] and [LOCAL LOGO PATH]. Preserve the filenames, title/date placeholders and Chromium page-number spans. Keep header/footer CSS inline and document CSS scoped to PDF selectors. Use local assets, no scripts or network dependencies. Support A4 portrait and landscape without clipping. Update README.md to explain the changes. Validate by exporting notes with a long title, headings, links, code, a table and a diagram; inspect every page of the resulting PDFs.</p>
+</blockquote>
+<p>The template README includes the full file-format reference and a reusable prompt. Export through Merkzeug to check the result: browser previews alone do not verify page breaks. The settings link <strong>Template guide and agent prompt</strong> opens this section of the online manual; the same instructions are also included in the app&#39;s offline help.</p>
+<h3 id="license">License</h3>
+<p>Merkzeug is proprietary software for private and internal business use. The full End User License Agreement is included at the end of the in-app help and is also available on the <a href="https://merkzeug.creative-it.com/license-en.html">website</a>. Third-party components retain their own licenses.</p>
+</main><footer><span>© 2026 creative-it Software Consulting e.U.</span><nav aria-label="Footer"><a href="release-notes-en.html">Release Notes</a><a href="privacy-en.html">Privacy</a><a href="license-en.html">License</a><a href="legal-en.html">Legal notice</a><a href="https://apps.creative-it.com/">More apps</a><a href="https://www.creative-it.com/">creative-it</a></nav></footer></body></html>

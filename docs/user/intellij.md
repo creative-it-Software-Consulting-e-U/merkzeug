@@ -40,3 +40,12 @@ For failures, see [troubleshooting](troubleshooting.md). Contributors can use th
 ## Contact support
 
 Choose **Help → Merkzeug: Contact Support…**. The browser opens the support form with Merkzeug, the system language (German or English), IntelliJ and the plugin version selected. You can omit the app details before submitting. Note contents and repository paths are not included.
+
+## Bundled PDF starter
+
+With no template selected, **PDF template…** starts in the bundled **Merkzeug** template folder. Confirm that folder to enable its cover, typography and page headers/footers. An editable copy is stored in the IDE configuration directory under `merkzeug/pdf-templates/Merkzeug`; existing copies are never overwritten. Copy the folder before customizing it with an agent. See [PDF templates and the suggested agent prompt](pdf.md#pdf-template-starter).
+
+
+## License
+
+Merkzeug is proprietary software for private and internal business use under the [shared End User License Agreement](../../resources/legal/EULA.en.md), also supplied in German. Third-party components retain their own licenses.

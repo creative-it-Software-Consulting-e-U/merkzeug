@@ -337,6 +337,8 @@ Seite, Fußzeile mit Seitenzahlen sowie optional ein Deckblatt.
 
 ## 10. Git-Integration
 
+Die Desktop-Version verwendet eine separat installierte Git-Anwendung zur Versionsverwaltung. Auf macOS ist Git über Apples Command Line Tools oder eine separate Git-Installation verfügbar; das vollständige Xcode ist nicht erforderlich. Fehlt Git oder lässt es sich nicht starten, erscheint in der Seitenleiste **Git ist nicht verfügbar**. **Git einrichten** öffnet die Installationsanleitung; wähle nach der Installation oder Konfiguration **Erneut prüfen**. Automatische Git-Abfragen pausieren, solange Git nicht verfügbar ist. Merkzeug öffnet keinen Installationsdialog für Apples Entwicklerwerkzeuge. Notizen bearbeiten und PDFs exportieren funktioniert weiterhin ohne Git.
+
 Ist der Vault ein **Git-Repository**, erscheint unten in der Sidebar eine Statuszeile:
 
 - **Branch-Name**, Anzahl geänderter Dateien, **n↑** = lokale Commits, die noch
@@ -405,3 +407,22 @@ Experimentelle Mac-App-Store-Versionen merken sich die Zugriffsberechtigung beim
 Wähle **Hilfe → Support kontaktieren…**, um das Supportformular mit Merkzeug, Sprache, Variante und App-Version zu öffnen. Die App-Informationen kannst du vor dem Senden abwählen. Notizinhalte und Dateipfade werden nicht automatisch angehängt.
 
 [Merkzeug App Support kontaktieren](https://support.apps.creative-it.com/?app=merkzeug&lang=de). Nenne App-Version, Betriebssystem und Schritte zum Nachstellen des Problems. Verwende fiktive Beispiele und sende keine vertraulichen Notizen.
+
+## PDF-Startvorlage
+
+Merkzeug enthält die fertige PDF-Vorlage **Merkzeug**: ein Deckblatt in warmem Papierweiß, Serifenschrift für Überschriften, blaue Akzente, Kopfzeilen und nummerierte Fußzeilen. Wähle sie unter **Einstellungen → Vorlage für diesen Vault** aus. Bestehende Vaults behalten ihre Auswahl, auch **Keine Vorlage**. **Erstellen** legt eine bearbeitbare Kopie unter einem neuen Namen an; **Bearbeiten** öffnet ihren Ordner. App-Updates überschreiben deine Anpassungen nicht. Auch in einem neu gewählten Vorlagenordner wird die Standardvorlage bereitgestellt, sofern er beschreibbar ist.
+
+Entferne `deckblatt.html` oder benenne die Datei um, wenn du kein Deckblatt möchtest. Passe `stil.css` für Dokumentstile sowie `kopfzeile.html` / `fusszeile.html` für Inline-Stile der Kopf- und Fußzeilen an. Die Seitenränder stehen in `vorlage.json`. Die deutschen Dateinamen und Platzhalter `{{titel}}` / `{{datum}}` gehören zum gemeinsamen Dateiformat. Lege Logos im Vorlagenordner ab und verwende relative Bildpfade. Die Vorlage funktioniert auch in IntelliJ: **PDF-Vorlage…** öffnet zunächst den mitgelieferten Vorlagenordner, wenn keine andere Vorlage ausgewählt ist. Auf iOS ist PDF-Export noch nicht verfügbar.
+
+### Vorlage mit einem Agenten anpassen
+
+Erstelle zuerst eine Kopie und übergib dem Agenten diesen Ordner mit folgendem Prompt:
+
+> Lies README.md und alle fünf Vorlagendateien in diesem Ordner. Passe diese Kopie an meinen Stil an: [FARBEN], [SCHRIFTEN] und [LOKALER LOGO-PFAD]. Behalte Dateinamen, Titel-/Datumsplatzhalter und Chromium-Seitennummern bei. Verwende Inline-CSS für Kopf-/Fußzeilen und begrenze Dokumentstile auf PDF-Selektoren. Nutze lokale Dateien, keine Skripte oder Netzwerkabhängigkeiten. Unterstütze A4 im Hoch- und Querformat ohne abgeschnittene Inhalte. Dokumentiere Änderungen in README.md. Exportiere zur Prüfung Notizen mit langem Titel, Überschriften, Links, Code, einer Tabelle und einem Diagramm und kontrolliere jede PDF-Seite.
+
+Die README der Vorlage enthält das Dateiformat und einen wiederverwendbaren Prompt. Prüfe das Ergebnis durch einen Export in Merkzeug: Eine Browser-Vorschau allein prüft keine Seitenumbrüche. **Vorlagen-Anleitung und Agenten-Prompt** in den Einstellungen öffnet diesen Abschnitt der Online-Hilfe; dieselbe Anleitung findest du auch in der Offline-Hilfe der App.
+
+
+### Lizenz
+
+Merkzeug ist proprietäre Software für private und interne geschäftliche Nutzung. Die vollständige Endnutzerlizenz steht am Ende der In-App-Hilfe sowie auf der [Website](https://merkzeug.creative-it.com/license-de.html). Drittanbieter-Komponenten behalten ihre eigenen Lizenzen.

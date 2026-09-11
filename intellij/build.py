@@ -39,7 +39,9 @@ sources = sorted((ROOT / 'intellij/src/main/java').rglob('*.java'))
 subprocess.run([str(javac), '-encoding', 'UTF-8', '--release', '21', '-classpath', os.pathsep.join(map(str, jars)), '-d', str(classes), *map(str, sources)], check=True)
 jar = BUILD / 'merkzeug.jar'
 with zipfile.ZipFile(jar, 'w', zipfile.ZIP_DEFLATED) as out:
-    out.write(ROOT / 'LICENSE', 'META-INF/LICENSE')
+    for language, target_name in [('en', 'LICENSE'), ('de', 'EULA.de.md')]:
+        terms = (ROOT / f'resources/legal/EULA.{language}.md').read_text() + '\n' + (ROOT / f'resources/legal/INTELLIJ-ADDENDUM.{language}.md').read_text()
+        out.writestr('META-INF/' + target_name, terms)
     out.write(ROOT / 'crossplatform/resources/THIRD_PARTY_NOTICES.txt', 'META-INF/THIRD_PARTY_NOTICES.txt')
     for base, prefix in [(classes, ''), (ROOT / 'intellij/src/main/resources', ''), (BUILD / 'web', 'web/')]:
         for file in sorted(base.rglob('*')):
