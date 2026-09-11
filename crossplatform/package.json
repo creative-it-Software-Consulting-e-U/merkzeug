@@ -23,7 +23,7 @@
   "author": "Günther Wieser <guenther.wieser@creative-it.com>",
   "homepage": "https://www.creative-it.com",
   "desktopName": "merkzeug.desktop",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "type": "commonjs",
   "devDependencies": {
     "@milkdown/crepe": "^7.22.0",

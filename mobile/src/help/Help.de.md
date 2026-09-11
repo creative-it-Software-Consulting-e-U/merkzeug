@@ -85,3 +85,8 @@ Desktop, iOS und IntelliJ verwenden denselben Merkzeug-Editor. Frontmatter bleib
 ## PDF-Vorlagen am Desktop
 
 Desktop-App und IntelliJ enthalten die PDF-Startvorlage Merkzeug mit Deckblatt, gestalteten Überschriften und Seitennummern. Eine Kopie lässt sich mit einem Agenten anpassen. Siehe die [Vorlagen-Anleitung](https://merkzeug.creative-it.com/help-de.html#pdf-startvorlage). Auf iOS ist PDF-Export noch nicht verfügbar.
+
+
+### Lizenz
+
+Merkzeug ist proprietäre Software für private und interne geschäftliche Nutzung. Die vollständige Endnutzerlizenz steht am Ende der In-App-Hilfe sowie auf der [Website](https://merkzeug.creative-it.com/license-de.html). Drittanbieter-Komponenten behalten ihre eigenen Lizenzen.

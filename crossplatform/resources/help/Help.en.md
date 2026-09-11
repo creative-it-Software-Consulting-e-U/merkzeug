@@ -406,3 +406,8 @@ Create a copy first, then give the agent that folder and this prompt:
 > Read README.md and all five template files in this folder. Adapt this copy to my visual style: [COLORS], [FONTS] and [LOCAL LOGO PATH]. Preserve the filenames, title/date placeholders and Chromium page-number spans. Keep header/footer CSS inline and document CSS scoped to PDF selectors. Use local assets, no scripts or network dependencies. Support A4 portrait and landscape without clipping. Update README.md to explain the changes. Validate by exporting notes with a long title, headings, links, code, a table and a diagram; inspect every page of the resulting PDFs.
 
 The template README includes the full file-format reference and a reusable prompt. Export through Merkzeug to check the result: browser previews alone do not verify page breaks. The settings link **Template guide and agent prompt** opens this section of the online manual; the same instructions are also included in the app's offline help.
+
+
+### License
+
+Merkzeug is proprietary software for private and internal business use. The full End User License Agreement is included at the end of the in-app help and is also available on the [website](https://merkzeug.creative-it.com/license-en.html). Third-party components retain their own licenses.

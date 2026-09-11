@@ -1,5 +1,7 @@
 # Changelog
 
+- Correct company register number to FN 473229 a and VAT ID to ATU61645777. Publish the shared proprietary End User License Agreement in English and German.
+
 User-visible changes are recorded here. Versions follow `VERSION`; version tags use `vX.Y.Z` or `vX.Y.Z-beta.N` (also `alpha` and `rc`). An entry does not imply binaries have been published.
 
 ## Unreleased

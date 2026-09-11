@@ -5,6 +5,8 @@ on:
     paths:
       - 'website/**'
       - 'scripts/build-website.mjs'
+      - 'scripts/build-licenses.mjs'
+      - 'resources/legal/**'
       - 'scripts/build-website-progress.mjs'
       - 'scripts/check-website.py'
       - 'crossplatform/resources/help/**'

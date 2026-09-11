@@ -81,3 +81,8 @@ Open **Help** and choose **Contact Support…** to open the support form with Me
 ## PDF templates on desktop
 
 The desktop app and IntelliJ include the Merkzeug PDF starter template, with a cover, styled headings and numbered pages. Create a copy to adapt it with an agent. See the [desktop template guide](https://merkzeug.creative-it.com/help-en.html#pdf-template-starter). PDF export is not available on iOS yet.
+
+
+### License
+
+Merkzeug is proprietary software for private and internal business use. The full End User License Agreement is included at the end of the in-app help and is also available on the [website](https://merkzeug.creative-it.com/license-en.html). Third-party components retain their own licenses.

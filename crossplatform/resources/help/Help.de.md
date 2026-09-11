@@ -421,3 +421,8 @@ Erstelle zuerst eine Kopie und übergib dem Agenten diesen Ordner mit folgendem 
 > Lies README.md und alle fünf Vorlagendateien in diesem Ordner. Passe diese Kopie an meinen Stil an: [FARBEN], [SCHRIFTEN] und [LOKALER LOGO-PFAD]. Behalte Dateinamen, Titel-/Datumsplatzhalter und Chromium-Seitennummern bei. Verwende Inline-CSS für Kopf-/Fußzeilen und begrenze Dokumentstile auf PDF-Selektoren. Nutze lokale Dateien, keine Skripte oder Netzwerkabhängigkeiten. Unterstütze A4 im Hoch- und Querformat ohne abgeschnittene Inhalte. Dokumentiere Änderungen in README.md. Exportiere zur Prüfung Notizen mit langem Titel, Überschriften, Links, Code, einer Tabelle und einem Diagramm und kontrolliere jede PDF-Seite.
 
 Die README der Vorlage enthält das Dateiformat und einen wiederverwendbaren Prompt. Prüfe das Ergebnis durch einen Export in Merkzeug: Eine Browser-Vorschau allein prüft keine Seitenumbrüche. **Vorlagen-Anleitung und Agenten-Prompt** in den Einstellungen öffnet diesen Abschnitt der Online-Hilfe; dieselbe Anleitung findest du auch in der Offline-Hilfe der App.
+
+
+### Lizenz
+
+Merkzeug ist proprietäre Software für private und interne geschäftliche Nutzung. Die vollständige Endnutzerlizenz steht am Ende der In-App-Hilfe sowie auf der [Website](https://merkzeug.creative-it.com/license-de.html). Drittanbieter-Komponenten behalten ihre eigenen Lizenzen.

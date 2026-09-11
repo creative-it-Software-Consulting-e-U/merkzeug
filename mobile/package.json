@@ -11,7 +11,7 @@
     "open": "cap open ios"
   },
   "author": "Günther Wieser <guenther.wieser@creative-it.com>",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "dependencies": {
     "@capacitor/core": "^8.5.0",
     "@milkdown/crepe": "^7.22.0",
