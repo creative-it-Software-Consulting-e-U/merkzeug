@@ -26,7 +26,7 @@ public final class MarketplaceCaptureStarter implements ApplicationStarter {
                 var editor = new MerkzeugEditor(project, file);
                 var browserField = MerkzeugEditor.class.getDeclaredField("browser"); browserField.setAccessible(true);
                 var browser = (JBCefBrowser) browserField.get(editor);
-                var frame = new JFrame("Merkzeug — screenshot fixture");
+                var frame = new JFrame("Project plan.md — Merkzeug (IntelliJ IDEA)");
                 frame.setContentPane(editor.getComponent()); frame.getContentPane().setPreferredSize(new java.awt.Dimension(1280,800)); frame.pack(); frame.setVisible(true);
                 var stage = new java.util.concurrent.atomic.AtomicInteger(0);
                 browser.getJBCefClient().getCefClient().addDisplayHandler(new org.cef.handler.CefDisplayHandlerAdapter() {
@@ -72,13 +72,10 @@ public final class MarketplaceCaptureStarter implements ApplicationStarter {
     private static void capture(JBCefBrowser browser, Path root, String name, Runnable done) {
         ApplicationManager.getApplication().invokeLater(() -> {
             try {
-                var component = browser.getComponent();
-                var window = javax.swing.SwingUtilities.getWindowAncestor(component);
-                window.toFront();
-                var point = component.getLocationOnScreen();
-                var bounds = new java.awt.Rectangle(point.x, point.y, component.getWidth(), component.getHeight());
-                var image = new java.awt.Robot().createScreenCapture(bounds);
-                javax.imageio.ImageIO.write(image,"png",root.resolve(name).toFile()); done.run();
+                var process = new ProcessBuilder(System.getProperty("merkzeug.capture.helper"),
+                    Long.toString(ProcessHandle.current().pid()), root.resolve(name).toString()).inheritIO().start();
+                if (process.waitFor() != 0) throw new AssertionError("Fixture window capture failed");
+                done.run();
             } catch (Throwable failure) { failure.printStackTrace(); System.exit(1); }
         });
     }

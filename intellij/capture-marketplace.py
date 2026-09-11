@@ -6,6 +6,8 @@ ROOT = Path(__file__).resolve().parent.parent
 IDE = Path(os.environ.get('IDEA_HOME', '/Applications/IntelliJ IDEA.app/Contents'))
 TEST = ROOT / 'intellij/build/marketplace-capture'
 TEST.mkdir(parents=True, exist_ok=True)
+capture_helper = TEST/'capture-window'
+subprocess.run(['swiftc', str(ROOT/'intellij/capture-window.swift'), '-o', str(capture_helper)], check=True)
 # Reuse only the isolated smoke profile's completed first-run setup.
 if not (TEST/'config/disabled_plugins.txt').exists():
     source_config = ROOT/'intellij/build/smoke/config'
@@ -55,6 +57,6 @@ with zipfile.ZipFile(ROOT/'intellij/build/merkzeug.jar') as src,zipfile.ZipFile(
         dst.writestr(name,data)
     for path in classes.rglob('*.class'):dst.write(path,path.relative_to(classes).as_posix())
 props=TEST/'idea.properties'
-props.write_text('\n'.join([f'idea.config.path={TEST}/config',f'idea.system.path={TEST}/system-{os.getpid()}',f'idea.plugins.path={TEST}/plugins',f'idea.log.path={TEST}/log',f'merkzeug.capture.root={TEST}','idea.initially.ask.config=never']))
+props.write_text('\n'.join([f'idea.config.path={TEST}/config',f'idea.system.path={TEST}/system-{os.getpid()}',f'idea.plugins.path={TEST}/plugins',f'idea.log.path={TEST}/log',f'merkzeug.capture.root={TEST}',f'merkzeug.capture.helper={capture_helper}','idea.initially.ask.config=never']))
 subprocess.run([str(IDE/'MacOS/idea'),'merkzeugCapture'],env=dict(os.environ,IDEA_PROPERTIES=str(props),IDEA_VM_OPTIONS=str(IDE/'bin/idea.vmoptions')),check=True,timeout=120)
 print(TEST)

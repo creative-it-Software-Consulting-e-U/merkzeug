@@ -32,7 +32,7 @@ for source,name in [('store/jetbrains-marketplace.md','listing-en-de.md'),('stor
 capture = ROOT/'intellij/build/marketplace-capture'
 for name in ['01-editor.png','02-template-preview.png']:
     shutil.copy2(capture/name,out/name)
-(out/'SCREENSHOTS.md').write_text('Actual IntelliJ/JCEF plugin UI, captured with intellij/capture-marketplace.py from the synthetic Project plan.md fixture. The editor area is captured without unrelated IDE or desktop content. No personal notes. Screenshots show the dark IDE appearance and the light PDF template editing preview. UI controls use German; sample content is English.\n')
+(out/'SCREENSHOTS.md').write_text('Actual IntelliJ/JCEF plugin UI, captured with intellij/capture-marketplace.py from the synthetic Project plan.md fixture. The isolated plugin window is captured by window ID, without unrelated desktop content. Visually review both images before uploading. No personal notes. Screenshots show the dark IDE appearance and the light PDF template editing preview. UI controls use German; sample content is English.\n')
 (out/'START-HERE.md').write_text(f'''# Merkzeug {version}: Marketplace upload kit
 
 Upload **merkzeug-{version}.zip** unchanged. The other files are supporting material.
