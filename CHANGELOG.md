@@ -1,5 +1,7 @@
 # Changelog
 
+- Shared offline template styling kit with CSS examples, agent instructions and copyable prompts in desktop settings, IntelliJ settings and iOS help; existing templates remain intact.
+
 - PDF editing preview: remove the dark code-block background behind transparent Mermaid diagrams, including in IntelliJ.
 
 - IntelliJ Move/Rename includes a Markdown note’s companion `.assets` directory, with collision checks, link updates and native undo/redo.

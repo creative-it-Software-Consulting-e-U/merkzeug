@@ -63,3 +63,11 @@ Create a copy first, then give the agent that folder and this prompt:
 The template README includes the full file-format reference and a reusable prompt. Export through Merkzeug to check the result: browser previews alone do not verify page breaks. The settings link **Template guide and agent prompt** opens this section of the online manual; the same instructions are also included in the app's offline help.
 
 Template sources and full agent prompt: [Merkzeug starter](../../resources/pdf-templates/Merkzeug/README.md).
+
+### Template styling prompt
+
+Desktop Settings provides **Template styling prompt** for each template; expand it to review and copy a complete agent brief with the template's folder path. IntelliJ offers the same action in **Settings → Tools → Merkzeug**, using the folder currently shown in the settings field. On iOS, open **Help → Template styling prompt** and substitute the folder path on the agent's computer; iOS does not currently export PDFs or preview PDF template styles.
+
+Replace the new template name and your colors, fonts, logo and design wishes before sending it. The prompt is in English, includes the complete offline technical reference, and works with older templates that lack instruction files. Copying it does not read note contents or modify existing templates. If clipboard access is unavailable in the web view, select and copy the displayed text manually.
+
+New starter copies include `AGENTS.md` (format, CSS examples, placeholders, preview limitations and validation) and `STYLING-PROMPT.md` (reusable brief). Keep template-specific design choices in `README.md`. The brief instructs the agent to create a separate copy and preserve existing instructions. Existing desktop templates are not upgraded or overwritten. For manual use, concatenate STYLING-PROMPT.md and AGENTS.md and replace the template-path placeholder.

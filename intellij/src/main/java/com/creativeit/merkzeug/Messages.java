@@ -6,6 +6,10 @@ import java.util.Map;
 /** English source messages with a German OS-locale translation. */
 final class Messages {
     private static final Map<String, String> GERMAN = Map.ofEntries(
+        Map.entry("Close", "Schließen"),
+        Map.entry("Template styling prompt", "Vorlagen-Styling-Prompt"),
+        Map.entry("Copy styling prompt", "Styling-Prompt kopieren"),
+
         Map.entry("Refactoring symbolic-link attachments requires manual review.", "Refactoring von Begleitordnern mit symbolischen Links muss manuell geprüft werden."),
         Map.entry("Attachment refactoring stopped: destination already exists: ", "Refactoring mit Begleitordner gestoppt: Das Ziel existiert bereits: "),
         Map.entry("Choose a desktop template…", "Desktop-Vorlage auswählen…"),

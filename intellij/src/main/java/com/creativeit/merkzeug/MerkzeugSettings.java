@@ -34,7 +34,7 @@ public final class MerkzeugSettings implements Configurable {
             try {
                 Path directory = Paths.get(com.intellij.openapi.application.PathManager.getConfigPath(), "merkzeug", "pdf-templates", "Merkzeug");
                 Files.createDirectories(directory);
-                for (String name : new String[]{"kopfzeile.html", "fusszeile.html", "deckblatt.html", "stil.css", "vorlage.json", "README.md"}) {
+                for (String name : new String[]{"kopfzeile.html", "fusszeile.html", "deckblatt.html", "stil.css", "vorlage.json", "README.md", "AGENTS.md", "STYLING-PROMPT.md"}) {
                     Path target = directory.resolve(name);
                     if (!Files.exists(target)) try (InputStream source = getClass().getResourceAsStream("/pdf-templates/Merkzeug/" + name)) {
                         if (source == null) throw new IOException(Messages.text("Bundled PDF template is missing"));
@@ -47,6 +47,21 @@ public final class MerkzeugSettings implements Configurable {
         JPanel extras = new JPanel();
         extras.setLayout(new BoxLayout(extras, BoxLayout.Y_AXIS));
         extras.add(starter);
+        JButton styling = new JButton(Messages.text("Template styling prompt"));
+        styling.addActionListener(event -> {
+            try {
+                String path = folder.getText().trim();
+                String text = stylingPrompt(path);
+                JTextArea preview = new JTextArea(text, 20, 75);
+                preview.setEditable(false); preview.setLineWrap(true); preview.setWrapStyleWord(true);
+                preview.setCaretPosition(0);
+                int choice = JOptionPane.showOptionDialog(folder, new JScrollPane(preview), Messages.text("Template styling prompt"),
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
+                    new String[]{Messages.text("Copy styling prompt"), Messages.text("Close")}, Messages.text("Copy styling prompt"));
+                if (choice == 0) com.intellij.openapi.ide.CopyPasteManager.getInstance().setContents(new java.awt.datatransfer.StringSelection(text));
+            } catch (IOException error) { com.intellij.openapi.ui.Messages.showErrorDialog(project, error.getMessage(), "Merkzeug"); }
+        });
+        extras.add(styling);
         desktop = new JComboBox<>();
         desktop.addItem(Messages.text("Choose a desktop template…"));
         desktop.addActionListener(event -> {
@@ -67,6 +82,16 @@ public final class MerkzeugSettings implements Configurable {
         panel.add(row, BorderLayout.NORTH);
         reset();
         return panel;
+    }
+    static String stylingPrompt(String path) throws IOException {
+        String base = "/pdf-templates/Merkzeug/";
+        try (InputStream prompt = MerkzeugSettings.class.getResourceAsStream(base + "STYLING-PROMPT.md");
+             InputStream guide = MerkzeugSettings.class.getResourceAsStream(base + "AGENTS.md")) {
+            if (prompt == null || guide == null) throw new IOException("Template styling instructions are missing");
+            return new String(prompt.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8)
+                .replace("{{TEMPLATE_PATH}}", path.isBlank() ? "[TEMPLATE FOLDER PATH ON THE AGENT’S COMPUTER]" : path)
+                + "\n" + new String(guide.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+        }
     }
     private void refreshDesktopTemplates() {
         var target = desktop;

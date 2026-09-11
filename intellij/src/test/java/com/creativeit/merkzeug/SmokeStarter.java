@@ -16,6 +16,11 @@ public final class SmokeStarter implements ApplicationStarter {
     @Override public boolean isHeadless() { return false; }
     @Override public int getRequiredModality() { return NOT_IN_EDT; }
     @Override public void main(List<String> args) {
+        try {
+            String prompt = MerkzeugSettings.stylingPrompt("/tmp/My templates/$1");
+            if (!prompt.contains("/tmp/My templates/$1") || prompt.contains("{{TEMPLATE_PATH}}") || !prompt.contains("Editor preview versus PDF")) throw new AssertionError("Incomplete template styling prompt");
+        } catch (java.io.IOException e) { throw new RuntimeException(e); }
+
         Path test = Paths.get(System.getProperty("merkzeug.smoke.root"));
         com.intellij.ide.trustedProjects.TrustedProjects.setProjectTrusted(test, true);
         Project project = com.intellij.openapi.project.ex.ProjectManagerEx.getInstanceEx().openProject(test,
@@ -50,7 +55,7 @@ public final class SmokeStarter implements ApplicationStarter {
                 if (!DesktopTemplates.profiles("Mac OS X", discoveryRoot, java.util.Map.of()).get(0).equals(discoveryRoot.resolve("Library/Application Support/merkzeug"))) throw new AssertionError("macOS location failed");
                 System.out.println("MERKZEUG_SMOKE desktop template discovery: default, custom, deduplication, missing, malformed and platform paths passed");
                 var settings = new MerkzeugSettings(project);
-                settings.createComponent();
+                var settingsPanel = settings.createComponent();
                 if (settings.isModified()) throw new AssertionError("Fresh settings are modified");
                 var folderField = MerkzeugSettings.class.getDeclaredField("folder"); folderField.setAccessible(true);
                 var folderInput = (com.intellij.openapi.ui.TextFieldWithBrowseButton) folderField.get(settings);
@@ -60,6 +65,21 @@ public final class SmokeStarter implements ApplicationStarter {
                 if (!folderInput.getText().equals(customTemplate.toRealPath().toString())) throw new AssertionError("Desktop selection did not set template folder");
                 settings.reset();
                 folderInput.setText(test.toString());
+                var stylingClosed = new java.util.concurrent.atomic.AtomicBoolean();
+                javax.swing.Timer closeStyling = new javax.swing.Timer(150, event -> {
+                    for (java.awt.Window window : java.awt.Window.getWindows()) {
+                        if (window instanceof javax.swing.JDialog dialog && dialog.isShowing() && Messages.text("Template styling prompt").equals(dialog.getTitle())) {
+                            if (clickButton(dialog, Messages.text("Close"))) stylingClosed.set(true);
+                        }
+                    }
+                });
+                closeStyling.start();
+                try {
+                    if (!clickButton(settingsPanel, Messages.text("Template styling prompt"))) throw new AssertionError("Missing styling action");
+                    if (!stylingClosed.get() || !folderInput.getText().equals(test.toString())) throw new AssertionError("Styling dialog did not preserve settings");
+                } finally { closeStyling.stop(); }
+                System.out.println("MERKZEUG_SMOKE native styling prompt preview and close passed");
+
                 if (!settings.isModified()) throw new AssertionError("Settings edit not detected");
                 settings.apply();
                 if (!test.toString().equals(com.intellij.ide.util.PropertiesComponent.getInstance(project).getValue("merkzeug.templateDirectory"))) throw new AssertionError("Project template not stored");

@@ -12,7 +12,8 @@
     "./CalendarSources": "./src/CalendarSources.tsx",
     "./MeetingNotes": "./src/MeetingNotes.tsx",
     "./GuidedTour": "./src/GuidedTour.tsx",
-    "./icons": "./src/icons.tsx"
+    "./icons": "./src/icons.tsx",
+    "./TemplateStylingPrompt": "./src/TemplateStylingPrompt.tsx"
   },
   "dependencies": {
     "@merkzeug/core": "1.0.0"

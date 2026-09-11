@@ -1,3 +1,4 @@
+import { TemplateStylingPrompt } from '@merkzeug/editor/TemplateStylingPrompt'
 import { CalendarSources } from '@merkzeug/editor/CalendarSources'
 import { calendarSourceHost } from './util/calendarSources'
 import { ThemeSelect } from '@merkzeug/editor/ThemeSelect'
@@ -84,10 +85,10 @@ export function SettingsApp(): React.JSX.Element {
             </div>
           )}
           {state.templates.map((name) => (
-            <div key={name} className="settings-list-row">
+            <div key={name}><div className="settings-list-row">
               <span>{name}</span>
               <button onClick={() => void window.merkzeug.showTemplate(name)}>{translate("Edit")}</button>
-            </div>
+            </div><TemplateStylingPrompt path={`${state.templatesRoot.replace(/[/\\]$/, '')}/${name}`} /></div>
           ))}
         </div>
         <div className="settings-new">

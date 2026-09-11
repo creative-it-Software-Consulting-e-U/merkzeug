@@ -1,5 +1,11 @@
 /** German translations; English message text is the stable source key. */
 export const de: Readonly<Record<string, string>> = {
+  "Template styling prompt": "Vorlagen-Styling-Prompt",
+  "Copy styling prompt": "Styling-Prompt kopieren",
+  "Prompt copied.": "Prompt kopiert.",
+  "Select and copy the prompt manually.": "Bitte den Prompt markieren und manuell kopieren.",
+  "Replace the name and styling wishes before sending this prompt to your agent. No template files are changed.": "Ersetze den Namen und die Gestaltungswünsche, bevor du den Prompt an deinen Agenten übergibst. Es werden keine Vorlagendateien geändert.",
+
   "Text to add": "Einzufügender Text",
   "Review the existing files and select where to add this text. Files that only refer to another instruction file can remain unchanged.": "Prüfe die vorhandenen Dateien und wähle aus, wo dieser Text ergänzt werden soll. Dateien, die nur auf eine andere Hinweisdatei verweisen, können unverändert bleiben.",
   "This file is empty.": "Diese Datei ist leer.",
