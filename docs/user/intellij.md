@@ -13,13 +13,13 @@ The built-in Markdown editor remains available. Update through the same disk-ins
 
 ## Editing
 
-Use the shared visual editor, slash menu, formatting tools, frontmatter panel and Mermaid diagrams. The toolbar provides search and undo/redo. Changes update IntelliJ's document; IntelliJ owns disk saving, Git integration and undo history. **⌘S / Ctrl+S** explicitly saves.
+Use the shared visual editor, slash menu, formatting tools, frontmatter panel and Mermaid diagrams. The compact toolbar provides paragraph styles, bold, italic, strikethrough, inline code, lists, quotes, code blocks, links, images, tables and dividers. Search (⌘F / Ctrl+F), undo and redo remain available through keyboard shortcuts without duplicate toolbar buttons. Changes update IntelliJ's document; IntelliJ owns disk saving, Git integration and undo history. **⌘S / Ctrl+S** explicitly saves.
 
 If another editor changes the document, Merkzeug reloads it when there are no local edits. Otherwise a conflict banner lets you reload the other version or deliberately keep your own version.
 
 ## PDF export
 
-1. Optionally choose **PDF template …** and select a template folder.
+1. Optionally open **Settings → Tools → Merkzeug** and select a PDF template folder for this project. Leave it empty to export without a template.
 2. Click **Export PDF**.
 3. Choose whether to include linked documents when offered.
 4. Choose a destination filename and save.
@@ -42,18 +42,14 @@ Choose **Help → Merkzeug: Contact Support…**. The browser opens the support 
 
 ## Bundled PDF starter
 
-With no template selected, **PDF template…** starts in the bundled **Merkzeug** template folder. Confirm that folder to enable its cover, typography and page headers/footers. An editable copy is stored in the IDE configuration directory under `merkzeug/pdf-templates/Merkzeug`; existing copies are never overwritten. Copy the folder before customizing it with an agent. See [PDF templates and the suggested agent prompt](pdf.md#pdf-template-starter).
+In **Settings → Tools → Merkzeug**, choose **Use bundled PDF template** and apply the settings to enable its cover, typography and page headers/footers. An editable copy is stored in the IDE configuration directory under `merkzeug/pdf-templates/Merkzeug`; existing copies are never overwritten. Copy the folder before customizing it with an agent. See [PDF templates and the suggested agent prompt](pdf.md#pdf-template-starter).
 
 ## Appearance, tours and agent guidance
 
-Choose **System**, **Light** or **Dark** for appearance. System follows the operating system (the IDE in IntelliJ); your choice is saved. The **Guided tour** starts only after you accept the first-use invitation and can be reopened at any time.
+The editor automatically follows IntelliJ’s active theme, including live changes. There is no separate appearance selector. The **⋯** menu contains the guided tour, the prepared desktop tour video, attachment guidance and a shortcut to the PDF settings. These controls stay hidden during normal editing.
 
-When opening a vault, Merkzeug can suggest root `AGENTS.md` / `CLAUDE.md` instructions for `Note.md` and `Note.assets/`. Review each proposed addition before choosing **Add**. **Later** postpones it for the current session; **Do not suggest again for this vault** suppresses future prompts for that vault. Contradictory or unclear attachment rules require manual review. Concurrent external changes are preserved and require a refreshed preview. Existing shared `assets/` references remain readable.
+In the **⋯** menu, Merkzeug can suggest root `AGENTS.md` / `CLAUDE.md` instructions for `Note.md` and `Note.assets/`. Review each proposed addition before choosing **Add**. **Later** postpones it for the current session; **Do not suggest again for this vault** suppresses future prompts for that vault. Contradictory or unclear attachment rules require manual review. Concurrent external changes are preserved and require a refreshed preview. Existing shared `assets/` references remain readable.
 
-## Calendar sources
+Calendar and meeting-note creation are available in the standalone apps. Create new files using IntelliJ’s project tools.
 
-**New meeting note** offers calendar selection. Expand **Calendar sources** to import an `.ics` file or add a named private HTTPS/Webcal subscription. Subscriptions are saved on this device, never in the vault. **Refresh calendars** downloads changes; an error retains the previous snapshot and shows its saved time. Reimporting the same named ICS file updates its source without duplicating notes. Choose an event to create or reopen its meeting note; existing note text is never replaced. CalDAV and calendar write-back are not supported.
-
-In IntelliJ, System follows IDE colors while the editor remains open. Calendar notes are created in the project root. Use native IDE document tools for saving and undo. The tested build target remains IntelliJ IDEA 2026.2.2; no other IDE version is implied.
-
-The status beside **Merkzeug** changes from **Loading …** to **Synced with IntelliJ** after initialization, without requiring an edit. After installing a plugin update while IntelliJ is running, restart the IDE to load it.
+After installing a plugin update while IntelliJ is running, restart the IDE to load it. Synchronization status remains available to assistive technology and as a tooltip in the toolbar.

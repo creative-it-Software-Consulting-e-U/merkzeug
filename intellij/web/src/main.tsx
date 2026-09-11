@@ -1,14 +1,12 @@
+import { IconHeading, IconBold, IconItalic, IconStrike, IconInlineCode, IconBulletList, IconOrderedList, IconQuote, IconCodeBlock, IconHr, IconLink, IconImage, IconTable } from '@merkzeug/editor/icons'
 import { GuidedTour } from '@merkzeug/editor/GuidedTour'
-import { MeetingNotes, type MeetingHost } from '@merkzeug/editor/MeetingNotes'
-import { loadSources, sourceEvents } from '@merkzeug/editor/calendarSourceStore'
 import { VaultGuidance, type GuidanceHost } from '@merkzeug/editor/VaultGuidance'
-import { ThemeSelect } from '@merkzeug/editor/ThemeSelect'
 import { setHostTheme, setTheme } from '@merkzeug/editor/theme'
 import { initializeTheme } from '@merkzeug/editor/theme'
 import { t as translate, setLocale } from '@merkzeug/core/i18n'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { Editor, type EditorHandle } from '@merkzeug/editor'
+import { Editor, type EditorHandle, type FormatAction } from '@merkzeug/editor'
 import type { EditorHost } from '@merkzeug/editor/host'
 import { PdfView } from '@merkzeug/export'
 import { collectLinkedDocs, fillTemplate, resolvePath } from '@merkzeug/core/exportPlan'
@@ -24,18 +22,12 @@ function imageUrl(path: string, url: string): string {
   const absolute = decoded.startsWith('/') ? decoded : resolvePath(path.slice(0, path.lastIndexOf('/')), decoded)
   return `${location.origin}/image?path=${encodeURIComponent(absolute)}`
 }
-const meetingHost: MeetingHost = {
-  sources: { load: () => request('calendarSourcesLoad'), save: value => request('calendarSourcesSave', { value }), fetch: url => request('calendarFetch', { url }) },
-  list: async (from, to) => ({ ok: true, events: sourceEvents(await loadSources(meetingHost.sources), from, to) }),
-  create: (path, content) => request('createMeeting', { path, content })
-}
 const guidanceHost: GuidanceHost = { suppressed: () => request('guidanceSuppressed'), suppress: never => request('guidanceSuppress', { never }), read: name => request('guidanceRead', { name }), append: (name, expected, addition) => request('guidanceAppend', { name, expected, addition }) }
 function App() {
   const [info, setInfo] = useState<{ path: string; vault: string; readonly: boolean; locale: string; tourSeen: boolean }>()
   const [status, setStatus] = useState(translate("Loading …"))
   const [error, setError] = useState('')
-  const [template, setTemplate] = useState<PdfTemplate | null>(null)
-  const [meetings, setMeetings] = useState(false)
+  const [extras, setExtras] = useState(false)
   const [busy, setBusy] = useState(false)
   const ref = useRef<EditorHandle>(null)
   const listeners = useRef(new Set<(vault: string, paths: string[]) => void>())
@@ -69,12 +61,8 @@ function App() {
     onVaultChanged: (listener) => { listeners.current.add(listener); return () => { listeners.current.delete(listener) } }
   }), [])
   useEffect(() => {
-    window.__merkzeugTheme = theme => { setTheme(theme.choice ?? 'system'); setHostTheme(theme) }
-    const saveTheme = (event: Event) => { void request('theme', { choice: (event as CustomEvent).detail }).catch(e => setError(String(e))) }
-    window.addEventListener('merkzeug-theme-choice', saveTheme)
-    request('init').then(result => { setLocale(result.locale); setTheme(result.themeChoice); setHostTheme(result.theme); setInfo(result); setStatus(translate('Synced with IntelliJ')) }).catch(e => setError(String(e)))
-    request<PdfTemplate | null>('template').then(setTemplate).catch(e => setError(String(e)))
-    return () => window.removeEventListener('merkzeug-theme-choice', saveTheme)
+    window.__merkzeugTheme = theme => { setTheme('system'); setHostTheme(theme) }
+    request('init').then(result => { setLocale(result.locale); setTheme('system'); setHostTheme(result.theme); setInfo(result); setStatus(translate('Synced with IntelliJ')) }).catch(e => setError(String(e)))
   }, [])
   useEffect(() => {
     window.__merkzeugChanged = () => { if (info) for (const listener of listeners.current) listener(info.vault, [info.path]) }
@@ -107,6 +95,7 @@ function App() {
       const include = linked.length > 0 && confirm(`${translate("Also include")} ${linked.length} ${translate("linked documents?")}`)
       const paths = include ? [info.path, ...linked] : [info.path]
       const docs = await Promise.all(paths.map(async path => ({ path, content: (await request('read', { path })).text })))
+      const template = await request<PdfTemplate | null>('template')
       const payload: PdfPayload = {
         vault: info.vault, docs,
         template: template ? fillTemplate(template, current.text, info.path.split('/').pop()!.replace(/\.md$/i, ''), include) : null
@@ -116,14 +105,23 @@ function App() {
     finally { setBusy(false) }
   }
   return <div className="ide-app">
-    <header>{info && <GuidedTour edition="intellij" seen={info.tourSeen} onSeen={() => void request("tourSeen")} />}<strong>Merkzeug</strong><button onClick={() => setMeetings(true)}>{translate("New meeting note")}</button><ThemeSelect /><span className="status">{status}</span>
-      <button onClick={() => void action('undo')}>↶</button><button onClick={() => void action('redo')}>↷</button>
-      <button onClick={() => ref.current?.openSearch(false)}>{translate("Search")}</button>
-      <button onClick={() => void request<PdfTemplate | null>('template', { choose: true }).then(t => { if (t) setTemplate(t) }).catch(e => setError(String(e)))}>{template?.name ?? translate("PDF template …")}</button>
+    <header className="format-toolbar" role="toolbar" aria-label={translate("Paragraph style")}>
+      <details className="format-menu"><summary onMouseDown={e => e.preventDefault()} title={translate("Paragraph style")} aria-label={translate("Paragraph style")}><IconHeading /></summary><div>
+        {(['text', 'h1', 'h2', 'h3'] as const).map((action, i) => <button key={action} disabled={!info || info.readonly} onMouseDown={e => e.preventDefault()} onClick={e => { ref.current?.format(action); e.currentTarget.closest('details')?.removeAttribute('open') }}>{i ? translate(`Heading ${i}`) : 'Text'}</button>)}
+      </div></details>
+      {([['bold', IconBold, 'Bold (⌘B)'], ['italic', IconItalic, 'Italic (⌘I)'], ['strike', IconStrike, 'Strikethrough (⌥⌘X)'], ['inlineCode', IconInlineCode, 'Inline code (⌘E)'], ['bulletList', IconBulletList, 'Bullet list (⌥⌘8)'], ['orderedList', IconOrderedList, 'Numbered list (⌥⌘7)'], ['quote', IconQuote, 'Quote (⇧⌘B)'], ['codeBlock', IconCodeBlock, 'Code block (⌥⌘C)'], ['hr', IconHr, 'Divider']] as const).map(([action, Icon, label]) =>
+        <button key={action} title={translate(label)} aria-label={translate(label)} disabled={!info || info.readonly} onMouseDown={e => e.preventDefault()} onClick={() => ref.current?.format(action)}><Icon /></button>)}
+      <button title={translate("Insert link (⌘K)")} aria-label={translate("Insert link (⌘K)")} disabled={!info || info.readonly} onMouseDown={e => e.preventDefault()} onClick={() => { const text = ref.current?.getSelectedText() ?? ''; const href = prompt('URL'); if (href) ref.current?.insertLink(text || href, href) }}><IconLink /></button>
+      <button title={translate("Insert image")} aria-label={translate("Insert image")} disabled={!info || info.readonly} onMouseDown={e => e.preventDefault()} onClick={() => ref.current?.openImagePicker()}><IconImage /></button>
+      <details className="format-menu"><summary onMouseDown={e => e.preventDefault()} title={translate("Table")} aria-label={translate("Table")}><IconTable /></summary><div>
+        <button disabled={!info || info.readonly} onMouseDown={e => e.preventDefault()} onClick={e => { ref.current?.insertTable(3, 3); e.currentTarget.closest('details')?.removeAttribute('open') }}>{translate("Insert table (3×3)")}</button>
+        {([['rowAbove', 'Insert Row Above'], ['rowBelow', 'Insert Row Below'], ['colBefore', 'Insert column to the left'], ['colAfter', 'Insert column to the right'], ['deleteRow', 'Delete Row'], ['deleteCol', 'Delete Column']] as const).map(([value, label]) => <button key={value} disabled={!info || info.readonly} onMouseDown={e => e.preventDefault()} onClick={e => { ref.current?.tableCommand(value); e.currentTarget.closest('details')?.removeAttribute('open') }}>{translate(label)}</button>)}
+      </div></details>
+      <span className="status" title={status} aria-label={status} role="status"><span className="status-text">{status}</span></span>
       <button disabled={busy} onClick={() => void exportPdf()}>{busy ? translate("Exporting …") : translate("Export PDF")}</button>
+      <button title="Merkzeug" aria-label="Merkzeug" aria-expanded={extras} onClick={() => setExtras(!extras)}>⋯</button>
     </header>
-    {info && meetings && <MeetingNotes host={meetingHost} folder={info.vault} onClose={() => setMeetings(false)} onOpen={() => setMeetings(false)} />}
-    {info && <VaultGuidance vaultId={info.vault} host={guidanceHost} />}
+    {extras && <aside className="editor-extras"><button onClick={() => void request('settings')}>{translate("PDF template …")}</button>{info && <><GuidedTour edition="intellij" seen={true} onSeen={() => void request('tourSeen')} /><VaultGuidance vaultId={info.vault} host={guidanceHost} /></>}</aside>}
     {error && <div role="alert" className="error">{error}</div>}
     {info && <Editor ref={ref} host={host} filePath={info.path} loadToken={0} readonly={info.readonly}
       onLinkClick={href => href.startsWith('#') ? ref.current?.jumpToHeading(decodeURIComponent(href.slice(1))) : void request('open', { href }).catch(e => setError(String(e)))}

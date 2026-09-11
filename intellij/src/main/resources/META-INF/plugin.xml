@@ -3,11 +3,12 @@
   <name>Merkzeug</name>
   <version>1.0.0</version>
   <vendor>creative-it</vendor>
-  <description><![CDATA[WYSIWYG Markdown editor with Mermaid, frontmatter, images and PDF export using shared Merkzeug components. Beta for IntelliJ IDEA 2026.2.2. Includes System/Light/Dark appearance, calendar meeting notes, guided tours and local attachment guidance.]]></description>
+  <description><![CDATA[WYSIWYG Markdown editor with Mermaid, frontmatter, images and PDF export using shared Merkzeug components. Beta for IntelliJ IDEA 2026.2.2. Follows IDE appearance and includes formatting tools and project-specific PDF settings.]]></description>
   <idea-version since-build="262.10315.125" until-build="262.10315.125"/>
   <depends>com.intellij.modules.platform</depends>
   <depends>com.intellij.modules.jcef</depends>
   <extensions defaultExtensionNs="com.intellij">
+    <projectConfigurable parentId="tools" id="com.creativeit.merkzeug.settings" displayName="Merkzeug" instance="com.creativeit.merkzeug.MerkzeugSettings"/>
     <fileEditorProvider implementation="com.creativeit.merkzeug.MerkzeugEditorProvider"/>
   </extensions>
   <actions>

@@ -25,6 +25,25 @@ public final class SmokeStarter implements ApplicationStarter {
             try {
                 VirtualFile file = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(test.resolve("index.md"));
                 if (file == null) throw new AssertionError("Fixture not found");
+                var settings = new MerkzeugSettings(project);
+                settings.createComponent();
+                if (settings.isModified()) throw new AssertionError("Fresh settings are modified");
+                var folderField = MerkzeugSettings.class.getDeclaredField("folder"); folderField.setAccessible(true);
+                var folderInput = (com.intellij.openapi.ui.TextFieldWithBrowseButton) folderField.get(settings);
+                folderInput.setText(test.toString());
+                if (!settings.isModified()) throw new AssertionError("Settings edit not detected");
+                settings.apply();
+                if (!test.toString().equals(com.intellij.ide.util.PropertiesComponent.getInstance(project).getValue("merkzeug.templateDirectory"))) throw new AssertionError("Project template not stored");
+                folderInput.setText(test.resolve("missing-template-directory").toString());
+                try { settings.apply(); throw new AssertionError("Missing template directory accepted"); }
+                catch (com.intellij.openapi.options.ConfigurationException expected) { }
+                settings.reset();
+                if (!folderInput.getText().equals(test.toString())) throw new AssertionError("Settings reset failed");
+                folderInput.setText("");
+                settings.apply();
+                if (com.intellij.ide.util.PropertiesComponent.getInstance(project).getValue("merkzeug.templateDirectory") != null) throw new AssertionError("Template not cleared");
+                settings.disposeUIResources();
+                System.out.println("MERKZEUG_SMOKE project settings lifecycle passed");
                 MerkzeugEditor editor = new MerkzeugEditor(project, file);
                 JFrame window = new JFrame("Merkzeug integration test");
                 window.setContentPane(editor.getComponent()); window.setSize(1050, 900); window.setVisible(true);
@@ -38,7 +57,7 @@ public final class SmokeStarter implements ApplicationStarter {
                     }
                 });
                 javax.swing.Timer statusTimer = new javax.swing.Timer(500, event -> {
-                    browser.getCefBrowser().executeJavaScript("(() => { const status = document.querySelector('.status')?.textContent; if (document.querySelector('.ProseMirror') && ['Synced with IntelliJ', 'Mit IntelliJ synchronisiert'].includes(status)) { console.log('MERKZEUG_INITIAL_READY'); } })()", browser.getCefBrowser().getURL(), 0);
+                    browser.getCefBrowser().executeJavaScript("(() => { const status = document.querySelector('.status')?.textContent; if (document.querySelectorAll('.format-toolbar > button').length === 13 && document.querySelectorAll('.format-toolbar details').length === 2 && !document.querySelector('.theme-select, .meeting-notes') && document.querySelector('.ProseMirror') && ['Synced with IntelliJ', 'Mit IntelliJ synchronisiert'].includes(status)) { console.log('MERKZEUG_INITIAL_READY'); } })()", browser.getCefBrowser().getURL(), 0);
                     if (statusReady.get()) ((javax.swing.Timer) event.getSource()).stop();
                 });
                 statusTimer.start();

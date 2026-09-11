@@ -2,8 +2,6 @@ package com.creativeit.merkzeug;
 
 import com.google.gson.*;
 import com.intellij.ide.BrowserUtil;
-import com.intellij.ide.passwordSafe.PasswordSafe;
-import com.intellij.credentialStore.CredentialAttributes;
 import com.intellij.ide.ui.LafManagerListener;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.ide.util.PropertiesComponent;
@@ -104,7 +102,7 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
     private static String color(java.awt.Color value) { return String.format("#%02x%02x%02x", value.getRed(), value.getGreen(), value.getBlue()); }
     private static Map<String, Object> theme() {
         java.awt.Color bg = UIUtil.getPanelBackground();
-        return Map.of("choice", PropertiesComponent.getInstance().getValue("merkzeug.theme", "system"), "dark", (bg.getRed() * 299 + bg.getGreen() * 587 + bg.getBlue() * 114) < 128000,
+        return Map.of("choice", "system", "dark", (bg.getRed() * 299 + bg.getGreen() * 587 + bg.getBlue() * 114) < 128000,
             "colors", Map.of("bg", color(bg), "bg-sidebar", color(bg), "text", color(UIUtil.getLabelForeground()),
                 "text-dim", color(UIUtil.getContextHelpForeground())));
     }
@@ -122,25 +120,9 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
         if (disposed || project.isDisposed()) return;
         try {
             Object result = switch (arg(m, "method")) {
-                case "init" -> Map.of("path", file.getPath(), "vault", root().toString().replace('\\', '/'), "readonly", !file.isWritable(), "locale", Locale.getDefault().toLanguageTag(), "theme", theme(), "themeChoice", PropertiesComponent.getInstance().getValue("merkzeug.theme", "system"), "tourSeen", PropertiesComponent.getInstance().getBoolean("merkzeug.tour.seen", false));
+                case "init" -> Map.of("path", file.getPath(), "vault", root().toString().replace('\\', '/'), "readonly", !file.isWritable(), "locale", Locale.getDefault().toLanguageTag(), "theme", theme(), "themeChoice", "system", "tourSeen", PropertiesComponent.getInstance().getBoolean("merkzeug.tour.seen", false));
                 case "tourSeen" -> { PropertiesComponent.getInstance().setValue("merkzeug.tour.seen", true); yield true; }
-                case "theme" -> {
-                    String choice = arg(m, "choice");
-                    if (!Set.of("system", "light", "dark").contains(choice)) throw new IllegalArgumentException("Invalid theme");
-                    PropertiesComponent.getInstance().setValue("merkzeug.theme", choice);
-                    yield true;
-                }
-                case "createMeeting" -> {
-                    Path target = allowed(arg(m, "path"));
-                    if (!target.getFileName().toString().matches("meeting-[0-9a-f]{20}\\.md")) throw new IOException("Invalid meeting note name");
-                    if (!Files.exists(target)) Files.writeString(target, arg(m, "content"), StandardOpenOption.CREATE_NEW);
-                    VirtualFile created = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(target);
-                    if (created != null) FileEditorManager.getInstance(project).openFile(created, true);
-                    yield true;
-                }
-                case "calendarSourcesLoad" -> PasswordSafe.getInstance().getPassword(new CredentialAttributes("Merkzeug calendar sources"));
-                case "calendarSourcesSave" -> { PasswordSafe.getInstance().setPassword(new CredentialAttributes("Merkzeug calendar sources"), arg(m, "value")); yield true; }
-                case "calendarFetch" -> { fetchCalendar(id, arg(m, "url")); yield null; }
+                case "settings" -> { com.intellij.openapi.options.ShowSettingsUtil.getInstance().showSettingsDialog(project, MerkzeugSettings.class); yield true; }
                 case "guidanceSuppressed" -> guidanceDismissed.contains(root().toString()) || PropertiesComponent.getInstance().getBoolean("merkzeug.guidance." + root(), false);
                 case "guidanceSuppress" -> {
                     guidanceDismissed.add(root().toString());
@@ -157,7 +139,7 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
                 case "redo" -> { if (UndoManager.getInstance(project).isRedoAvailable(this)) UndoManager.getInstance(project).redo(this); yield true; }
                 case "open" -> { open(arg(m, "href")); yield true; }
                 case "image" -> saveImage(m);
-                case "template" -> loadTemplate(m.has("choose") && m.get("choose").getAsBoolean());
+                case "template" -> loadTemplate();
                 case "export" -> beginExport(m);
                 case "pdfPayload" -> pdfPayload;
                 case "pdfReady" -> { printPdf(m.get("landscape").getAsBoolean()); yield true; }
@@ -185,23 +167,6 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
         if (!real.startsWith(root())) throw new IOException(Messages.text("File is outside the open project: ") + candidate.getFileName());
         return real;
     }
-    private void fetchCalendar(int id, String raw) throws IOException {
-        URI uri = URI.create(raw);
-        if (!"https".equals(uri.getScheme()) || uri.getUserInfo() != null) throw new IOException("Use an HTTPS subscription URL");
-        ApplicationManager.getApplication().executeOnPooledThread(() -> {
-            try {
-                var client = java.net.http.HttpClient.newBuilder().connectTimeout(java.time.Duration.ofSeconds(20)).followRedirects(java.net.http.HttpClient.Redirect.NORMAL).build();
-                var request = java.net.http.HttpRequest.newBuilder(uri).timeout(java.time.Duration.ofSeconds(20)).build();
-                var response = client.send(request, java.net.http.HttpResponse.BodyHandlers.ofInputStream());
-                try (var input = response.body()) {
-                    byte[] bytes = input.readNBytes(2_000_001);
-                    if (response.statusCode() != 200 || bytes.length > 2_000_000) throw new IOException("Invalid calendar response");
-                    reply(id, new String(bytes, StandardCharsets.UTF_8), null);
-                }
-            } catch (Exception error) { reply(id, null, "Calendar download failed. Check the subscription URL and network connection."); }
-        });
-    }
-
     private static final Set<String> guidanceDismissed = java.util.concurrent.ConcurrentHashMap.newKeySet();
 
     private Path guidancePath(String name) throws IOException {
@@ -284,31 +249,9 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
         LocalFileSystem.getInstance().refreshAndFindFileByNioFile(directory);
         return folder + "/" + name;
     }
-    private Object loadTemplate(boolean choose) throws IOException {
+    private Object loadTemplate() throws IOException {
         PropertiesComponent settings = PropertiesComponent.getInstance(project);
         String stored = settings.getValue("merkzeug.templateDirectory");
-        if (choose) {
-            if (stored == null) {
-                Path starter = Paths.get(com.intellij.openapi.application.PathManager.getConfigPath(), "merkzeug", "pdf-templates", "Merkzeug");
-                if (!Files.exists(starter)) {
-                    Files.createDirectories(starter);
-                    for (String name : new String[]{"kopfzeile.html", "fusszeile.html", "deckblatt.html", "stil.css", "vorlage.json", "README.md"}) {
-                        Path target = starter.resolve(name);
-                        try (InputStream source = getClass().getResourceAsStream("/pdf-templates/Merkzeug/" + name)) {
-                            if (source == null) throw new IOException(Messages.text("Bundled PDF template is missing"));
-                            Files.copy(source, target);
-                        }
-                    }
-                }
-                stored = starter.toString();
-            }
-            JFileChooser picker = new JFileChooser(stored);
-            picker.setDialogTitle(Messages.text("Merkzeug: PDF template folder"));
-            picker.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            if (picker.showOpenDialog(panel) != JFileChooser.APPROVE_OPTION) return null;
-            stored = picker.getSelectedFile().getCanonicalPath();
-            settings.setValue("merkzeug.templateDirectory", stored);
-        }
         if (stored == null) return null;
         templateDirectory = Paths.get(stored).toRealPath();
         Map<String, Object> result = new HashMap<>();
@@ -350,11 +293,11 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
     }
     private boolean beginExport(JsonObject m) {
         if (pdfPayload != null) throw new IllegalStateException(Messages.text("A PDF export is already running"));
-        JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle(Messages.text("Merkzeug: Export PDF"));
-        chooser.setSelectedFile(new File(file.getNameWithoutExtension() + ".pdf"));
-        if (chooser.showSaveDialog(panel) != JFileChooser.APPROVE_OPTION) return false;
-        Path target = chooser.getSelectedFile().toPath().toAbsolutePath();
+        var descriptor = new com.intellij.openapi.fileChooser.FileSaverDescriptor(Messages.text("Merkzeug: Export PDF"), "", "pdf");
+        var chosen = com.intellij.openapi.fileChooser.FileChooserFactory.getInstance().createSaveFileDialog(descriptor, project)
+            .save(file.getParent(), file.getNameWithoutExtension() + ".pdf");
+        if (chosen == null) return false;
+        Path target = chosen.getFile().toPath().toAbsolutePath();
         if (!target.toString().toLowerCase(Locale.ROOT).endsWith(".pdf")) target = Paths.get(target + ".pdf");
         if (Files.exists(target) && JOptionPane.showConfirmDialog(panel, Messages.text("Replace the existing PDF?"), "Merkzeug", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) return false;
         pdfTarget = target;

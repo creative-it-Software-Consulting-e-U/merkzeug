@@ -6,6 +6,9 @@ import java.util.Map;
 /** English source messages with a German OS-locale translation. */
 final class Messages {
     private static final Map<String, String> GERMAN = Map.ofEntries(
+        Map.entry("PDF template folder (empty: no template)", "PDF-Vorlagenordner (leer: keine Vorlage)"),
+        Map.entry("Use bundled PDF template", "Mitgelieferte PDF-Vorlage verwenden"),
+        Map.entry("Choose an existing template folder", "Bitte einen vorhandenen Vorlagenordner auswählen"),
         Map.entry("Bundled PDF template is missing", "Die mitgelieferte PDF-Vorlage fehlt"),
         Map.entry("Unknown action", "Unbekannte Aktion"),
         Map.entry("File is outside the open project: ", "Datei liegt außerhalb des geöffneten Projekts: "),

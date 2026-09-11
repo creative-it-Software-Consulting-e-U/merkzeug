@@ -32,4 +32,4 @@ Inspect `actual.pdf` visually after meaningful rendering changes; successful fil
 
 ## Integration boundaries
 
-The Java adapter owns IntelliJ documents, revisions, undo, file dialogs, project resource restrictions and native PDF printing. The web shell owns presentation and sends typed-operation payloads through the bridge. English messages are source text; German follows the host locale. System appearance follows IDE colors; Light and Dark provide explicit overrides. Native file dialogs follow IntelliJ.
+The Java adapter owns IntelliJ documents, revisions, undo, file dialogs, project resource restrictions and native PDF printing. The web shell owns presentation and sends typed-operation payloads through the bridge. English messages are source text; German follows the host locale. Appearance follows IDE colors automatically. PDF templates are configured under Settings → Tools → Merkzeug for each project. Native file dialogs follow IntelliJ.

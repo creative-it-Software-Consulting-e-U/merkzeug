@@ -11,7 +11,8 @@
     "./VaultGuidance": "./src/VaultGuidance.tsx",
     "./CalendarSources": "./src/CalendarSources.tsx",
     "./MeetingNotes": "./src/MeetingNotes.tsx",
-    "./GuidedTour": "./src/GuidedTour.tsx"
+    "./GuidedTour": "./src/GuidedTour.tsx",
+    "./icons": "./src/icons.tsx"
   },
   "dependencies": {
     "@merkzeug/core": "1.0.0"
