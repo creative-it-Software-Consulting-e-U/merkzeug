@@ -303,7 +303,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
         const token = Array.from(preview.classList).find(name => name.startsWith('mermaid-source-'))
         const source = token ? mermaidSourcesRef.current.get(token) : undefined
         if (!source) return
-        void renderMermaid(source).then(svg => {
+        void renderMermaid(source, !!rootRef.current?.closest('.template-live')).then(svg => {
           if (current !== generation || !preview.isConnected) return
           const button = preview.querySelector('button')
           preview.innerHTML = svg
@@ -311,8 +311,16 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
         }).catch(() => {})
       })
     }
+    let templateLive = !!rootRef.current?.closest('.template-live')
+    const observer = new MutationObserver(() => {
+      const next = !!rootRef.current?.closest('.template-live')
+      if (next !== templateLive) { templateLive = next; refresh() }
+    })
+    for (let ancestor = rootRef.current?.parentElement; ancestor; ancestor = ancestor.parentElement) {
+      observer.observe(ancestor, { attributes: true, attributeFilter: ['class'] })
+    }
     window.addEventListener('merkzeug-theme', refresh)
-    return () => { generation++; window.removeEventListener('merkzeug-theme', refresh) }
+    return () => { generation++; observer.disconnect(); window.removeEventListener('merkzeug-theme', refresh) }
   }, [])
 
   useEffect(() => {
@@ -552,8 +560,12 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
             copyText: translate("Copy"),
             renderPreview: (language: string, content2: string, apply: (v: null | string | HTMLElement) => void) => {
               if (language !== 'mermaid' || !content2.trim()) return null
-              renderMermaid(content2)
-                .then((svg) => {
+              const templateLive = !!rootRef.current?.closest('.template-live')
+              renderMermaid(content2, templateLive)
+                .then(async svg => {
+                  // The mode can change while Mermaid is loading or rendering.
+                  const current = !!rootRef.current?.closest('.template-live')
+                  if (current !== templateLive) svg = await renderMermaid(content2, current)
                   // Kein addEventListener hier: Crepe sanitisiert die Vorschau
                   // (innerHTML), Listener gehen verloren. Klicks behandelt der
                   // Capture-Handler des Editors (handleClickCapture).

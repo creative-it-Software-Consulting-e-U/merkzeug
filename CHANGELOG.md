@@ -1,5 +1,7 @@
 # Changelog
 
+- Mermaid diagrams follow the light PDF theme while template editing styles are active and restore the host theme when disabled.
+
 - IntelliJ: discover desktop PDF templates in standard and custom locations; choose a shared template directly in project settings.
 
 - IntelliJ: optional project-specific PDF content styles while editing, using the shared desktop style filter. Existing desktop template folders can be selected directly.

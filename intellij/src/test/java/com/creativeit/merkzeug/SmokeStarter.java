@@ -147,15 +147,34 @@ public final class SmokeStarter implements ApplicationStarter {
                                   if (!document.querySelector('.editor-extras')) { document.querySelector('button[aria-label="Merkzeug"]').click(); return; }
                                   const toggle = document.querySelector('.template-preview-toggle input');
                                   const paragraph = document.querySelector('.editor-root p');
-                                  if (!window.previewTestStage) { window.previewHeaderFont = getComputedStyle(document.querySelector('header')).fontSize; toggle.click(); window.previewTestStage = 1; return; }
+                                  if (!window.previewTestStage) {
+                                    const svg = document.querySelector('.mermaid-preview svg'); if (!svg) return;
+                                    window.__merkzeugTheme({ dark: true, choice: 'system' });
+                                    window.previewOriginalSvg = svg.id;
+                                    window.previewTestStage = -1; return;
+                                  }
+                                  if (window.previewTestStage === -1) {
+                                    const svg = document.querySelector('.mermaid-preview svg');
+                                    if (!svg || svg.id === window.previewOriginalSvg) return;
+                                    window.previewDarkFill = getComputedStyle(svg.querySelector('.node rect')).fill;
+                                    window.previewDarkSvg = svg.id;
+                                    window.previewHeaderFont = getComputedStyle(document.querySelector('header')).fontSize; toggle.click(); window.previewTestStage = 1; return; }
                                   if (window.previewTestStage === 1) {
                                     if (!document.querySelector('.template-live')) return;
                                     if (getComputedStyle(paragraph).fontSize !== '31px' || getComputedStyle(document.querySelector('header')).fontSize !== window.previewHeaderFont) throw new Error('Template style scope incorrect');
+                                    const svg = document.querySelector('.mermaid-preview svg');
+                                    if (!svg || svg.id === window.previewDarkSvg) return;
+                                    const fill = getComputedStyle(svg.querySelector('.node rect')).fill;
+                                    if (fill === window.previewDarkFill) throw new Error('Mermaid stayed dark during template preview');
+                                    window.previewLightSvg = svg.id;
                                     toggle.click(); window.previewTestStage = 2; return;
                                   }
                                   if (window.previewTestStage === 2) {
                                     if (document.querySelector('.template-live')) return;
                                     if (getComputedStyle(paragraph).fontSize === '31px') throw new Error('Template style not removed');
+                                    const svg = document.querySelector('.mermaid-preview svg');
+                                    if (!svg || svg.id === window.previewLightSvg) return;
+                                    if (getComputedStyle(svg.querySelector('.node rect')).fill !== window.previewDarkFill) throw new Error('Mermaid did not restore the IDE theme');
                                     window.previewTestStage = 3; console.log('MERKZEUG_TEMPLATE_PREVIEW_PASSED');
                                   }
                                   const actions = [...document.querySelectorAll('.editor-extra-actions > button, .editor-extra-actions .tour-tools > button')];
