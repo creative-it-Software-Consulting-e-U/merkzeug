@@ -26,9 +26,9 @@
   "license": "UNLICENSED",
   "type": "commonjs",
   "devDependencies": {
-    "@milkdown/crepe": "^7.22.0",
-    "@milkdown/kit": "^7.22.0",
-    "@milkdown/react": "^7.22.0",
+    "@milkdown/crepe": "^7.22.1",
+    "@milkdown/kit": "^7.22.1",
+    "@milkdown/react": "^7.22.1",
     "@types/node": "^26.1.2",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",

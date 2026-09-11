@@ -13,8 +13,8 @@
     "@merkzeug/editor": "1.0.0"
   },
   "peerDependencies": {
-    "react": "^19.2.8",
-    "@milkdown/crepe": "^7.22.0"
+    "@milkdown/crepe": "^7.22.1",
+    "react": "^19.2.8"
   },
   "license": "UNLICENSED"
 }
