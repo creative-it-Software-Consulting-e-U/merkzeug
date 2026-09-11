@@ -38,4 +38,4 @@ button:disabled { opacity: .5; }
 
 .template-preview-toggle { display: inline-flex; align-items: center; gap: 5px; }
 /* PDF content starts on paper even when the surrounding IDE uses a dark theme. */
-.template-live .editor-root { background: #fff; color: #1a1916; --bg: #fff; --text: #1a1916; --bg-sidebar: #f5f4f2; --bg-hover: #eee; --bg-active: #ddd; --text-dim: #666; --border: #ddd; }
+.template-live .editor-host { color-scheme: light; background: #fff; color: #1a1916; --bg: #fff; --text: #1a1916; --bg-sidebar: #f5f4f2; --bg-hover: #eee; --bg-active: #ddd; --text-dim: #666; --border: #ddd; }
