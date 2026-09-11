@@ -45,6 +45,28 @@ public final class SmokeStarter implements ApplicationStarter {
                 settings.disposeUIResources();
                 System.out.println("MERKZEUG_SMOKE project settings lifecycle passed");
                 MerkzeugEditor editor = new MerkzeugEditor(project, file);
+                var scopeMethod = MerkzeugEditor.class.getDeclaredMethod("chooseExportScope", JsonObject.class);
+                scopeMethod.setAccessible(true);
+                JsonObject scopeRequest = new JsonObject();
+                var linkedPaths = new com.google.gson.JsonArray(); linkedPaths.add(file.getPath());
+                scopeRequest.add("paths", linkedPaths);
+                String[] scopeLabels = {"Only this document", "Include linked documents", "Cancel"};
+                for (int choice = 0; choice < scopeLabels.length; choice++) {
+                    String label = Messages.text(scopeLabels[choice]);
+                    javax.swing.Timer click = new javax.swing.Timer(150, event -> {
+                        for (java.awt.Window dialog : java.awt.Window.getWindows()) {
+                            if (dialog instanceof javax.swing.JDialog && dialog.isShowing() && clickButton((java.awt.Container) dialog, label)) {
+                                ((javax.swing.Timer) event.getSource()).stop(); break;
+                            }
+                        }
+                    });
+                    click.start();
+                    int actual;
+                    try { actual = (Integer) scopeMethod.invoke(editor, scopeRequest); }
+                    finally { click.stop(); }
+                    if (actual != choice) throw new AssertionError("Wrong PDF scope choice: " + actual);
+                }
+                System.out.println("MERKZEUG_SMOKE native PDF scope choices and cancellation passed");
                 JFrame window = new JFrame("Merkzeug integration test");
                 window.setContentPane(editor.getComponent()); window.setSize(1050, 900); window.setVisible(true);
                 var browserField = MerkzeugEditor.class.getDeclaredField("browser"); browserField.setAccessible(true);
@@ -110,4 +132,12 @@ public final class SmokeStarter implements ApplicationStarter {
             } catch (Throwable error) { error.printStackTrace(); System.exit(1); }
         });
     }
+    private static boolean clickButton(java.awt.Container container, String label) {
+        for (java.awt.Component component : container.getComponents()) {
+            if (component instanceof javax.swing.JButton button && label.equals(button.getText())) { button.doClick(); return true; }
+            if (component instanceof java.awt.Container child && clickButton(child, label)) return true;
+        }
+        return false;
+    }
+
 }

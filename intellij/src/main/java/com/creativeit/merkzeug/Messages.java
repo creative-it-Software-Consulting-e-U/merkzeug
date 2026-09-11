@@ -6,6 +6,11 @@ import java.util.Map;
 /** English source messages with a German OS-locale translation. */
 final class Messages {
     private static final Map<String, String> GERMAN = Map.ofEntries(
+        Map.entry("Choose which documents to include in the PDF.", "Welche Dokumente sollen in das PDF aufgenommen werden?"),
+        Map.entry("Linked documents:", "Verlinkte Dokumente:"),
+        Map.entry("Only this document", "Nur dieses Dokument"),
+        Map.entry("Include linked documents", "Mit verlinkten Dokumenten"),
+        Map.entry("Cancel", "Abbrechen"),
         Map.entry("PDF template folder (empty: no template)", "PDF-Vorlagenordner (leer: keine Vorlage)"),
         Map.entry("Use bundled PDF template", "Mitgelieferte PDF-Vorlage verwenden"),
         Map.entry("Choose an existing template folder", "Bitte einen vorhandenen Vorlagenordner auswählen"),

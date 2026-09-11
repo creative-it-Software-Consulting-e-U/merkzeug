@@ -92,7 +92,9 @@ function App() {
       await ref.current?.flush(); await queue.current
       const current = await request('read', { path: info.path })
       const linked = await collectLinkedDocs(info.path, current.text, info.vault, path => request('exists', { path }))
-      const include = linked.length > 0 && confirm(`${translate("Also include")} ${linked.length} ${translate("linked documents?")}`)
+      const scope = linked.length > 0 ? await request<number>('exportScope', { paths: linked }) : 0
+      if (scope !== 0 && scope !== 1) return
+      const include = scope === 1
       const paths = include ? [info.path, ...linked] : [info.path]
       const docs = await Promise.all(paths.map(async path => ({ path, content: (await request('read', { path })).text })))
       const template = await request<PdfTemplate | null>('template')

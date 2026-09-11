@@ -1,5 +1,7 @@
 # Changelog
 
+- IntelliJ: PDF export uses an IDE dialog listing linked documents, explicit export choices and a real cancel action.
+
 - IntelliJ: compact formatting toolbar, IDE appearance, project PDF settings and IDE file choosers; removed calendar creation and redundant toolbar actions.
 
 User-visible changes are recorded here. Versions follow `VERSION`; version tags use `vX.Y.Z` or `vX.Y.Z-beta.N` (also `alpha` and `rc`). An entry does not imply binaries have been published.

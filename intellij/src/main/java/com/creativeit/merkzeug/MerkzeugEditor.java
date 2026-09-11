@@ -140,6 +140,7 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
                 case "open" -> { open(arg(m, "href")); yield true; }
                 case "image" -> saveImage(m);
                 case "template" -> loadTemplate();
+                case "exportScope" -> chooseExportScope(m);
                 case "export" -> beginExport(m);
                 case "pdfPayload" -> pdfPayload;
                 case "pdfReady" -> { printPdf(m.get("landscape").getAsBoolean()); yield true; }
@@ -290,6 +291,18 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
         }
         matcher.appendTail(output);
         return output.toString();
+    }
+    private int chooseExportScope(JsonObject message) throws IOException {
+        var names = new ArrayList<String>();
+        for (JsonElement item : message.getAsJsonArray("paths")) {
+            Path linked = allowed(item.getAsString());
+            names.add(root().relativize(linked).toString());
+        }
+        String description = Messages.text("Choose which documents to include in the PDF.")
+            + "\n\n" + Messages.text("Linked documents:") + "\n" + String.join("\n", names);
+        return com.intellij.openapi.ui.Messages.showDialog(project, description, Messages.text("Merkzeug: Export PDF"),
+            new String[]{Messages.text("Only this document"), Messages.text("Include linked documents"), Messages.text("Cancel")},
+            0, com.intellij.openapi.ui.Messages.getQuestionIcon());
     }
     private boolean beginExport(JsonObject m) {
         if (pdfPayload != null) throw new IllegalStateException(Messages.text("A PDF export is already running"));

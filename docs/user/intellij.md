@@ -21,7 +21,7 @@ If another editor changes the document, Merkzeug reloads it when there are no lo
 
 1. Optionally open **Settings → Tools → Merkzeug** and select a PDF template folder for this project. Leave it empty to export without a template.
 2. Click **Export PDF**.
-3. Choose whether to include linked documents when offered.
+3. If linked documents are found, the IntelliJ dialog lists them. Choose **Only this document** or **Include linked documents**. **Cancel** (or closing the dialog) stops the export.
 4. Choose a destination filename and save.
 
 The PDF uses the current IntelliJ document content, including edits already accepted by the IDE. The template selection is remembered per project. See the [PDF guide](pdf.md) for template files, frontmatter and supported document selection.
