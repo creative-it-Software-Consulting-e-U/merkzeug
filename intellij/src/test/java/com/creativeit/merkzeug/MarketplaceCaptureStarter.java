@@ -61,7 +61,9 @@ public final class MarketplaceCaptureStarter implements ApplicationStarter {
                             if (!toggle.checked) toggle.click(); return;
                           }
                           if (!document.querySelector('.template-live') || svg.id===window.beforePaper) return;
-                          if (document.querySelector('.editor-extras')) { document.querySelector('button[aria-label=Merkzeug]').click(); return; }
+                          if (!document.querySelector('.editor-extras')) { document.querySelector('button[aria-label=Merkzeug]').click(); return; }
+                          if (!document.querySelector('.template-preview-toggle input')?.checked) return;
+                          if ((window.paperWait=(window.paperWait||0)+1)<3) return;
                           host.scrollTop=0; console.log('CAPTURE_PAPER_READY');
                         })()
                         """, browser.getCefBrowser().getURL(), 0);
