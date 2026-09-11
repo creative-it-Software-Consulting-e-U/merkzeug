@@ -21,7 +21,7 @@ Prepared for a manual first upload. No Marketplace submission is performed by th
 | Supported IDE | IntelliJ IDEA 2026.2.2, build 262.10315.125, with JCEF |
 | Source code URL | Leave empty. The source repository is private. |
 
-Paste the full [English EULA](../resources/legal/EULA.en.md) into the custom-license field. The [German version](../resources/legal/EULA.de.md) has the same intended meaning. The planned website addresses are `https://merkzeug.creative-it.com/license-en.html` and `https://merkzeug.creative-it.com/license-de.html`; use those only after publication and an HTTP GET check. Preparing the pages does not publish them.
+Paste `EULA.en.md` from the upload kit into the custom-license field. It combines the [shared English EULA](../resources/legal/EULA.en.md) with the [IntelliJ-only supplement](../resources/legal/INTELLIJ-ADDENDUM.en.md). The German file in the kit combines the corresponding German texts. The general website, desktop and mobile license has no IntelliJ-specific references. The planned website addresses are `https://merkzeug.creative-it.com/license-intellij-en.html` and `https://merkzeug.creative-it.com/license-intellij-de.html`; use those only after publication and an HTTP GET check. Preparing the pages does not publish them.
 
 Review the new license text before public distribution. This is a newly prepared contractual text, not a legal opinion. The common EULA is bundled across editions; Apple-specific custom-EULA requirements must be reviewed before changing the license in App Store Connect. Existing third-party license notices remain mandatory. Previously validly granted MIT rights are not revoked by the new license.
 

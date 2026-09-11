@@ -6,7 +6,7 @@ Version 1.0 · 11. September 2026
 
 Lizenzgeber ist creative-it Software Consulting e.U., Inhaber Günther Wieser, Am Gassl 25, 3482 Gösing am Wagram, Österreich (Firmenbuch FN 473229 a, Landesgericht St. Pölten; UID ATU61645777). Kontakt: guenther.wieser@creative-it.com.
 
-Dieser Vertrag gilt für die mit dieser Lizenz bereitgestellten Desktop- und Mobilanwendungen von Merkzeug sowie das Merkzeug-IntelliJ-Plugin. „Du“ bezeichnet die natürliche Person oder Organisation, die die Software bezieht. Wer für eine Organisation handelt, muss zur Annahme dieses Vertrags für sie berechtigt sein. Lies die Bedingungen vor Installation oder Nutzung; die Nutzung wird unter der Voraussetzung deiner Zustimmung angeboten. Wenn du nicht zustimmst, installiere und nutze die Software nicht.
+Dieser Vertrag gilt für die mit dieser Lizenz bereitgestellten Merkzeug-Anwendungen und Editor-Erweiterungen. „Du“ bezeichnet die natürliche Person oder Organisation, die die Software bezieht. Wer für eine Organisation handelt, muss zur Annahme dieses Vertrags für sie berechtigt sein. Lies die Bedingungen vor Installation oder Nutzung; die Nutzung wird unter der Voraussetzung deiner Zustimmung angeboten. Wenn du nicht zustimmst, installiere und nutze die Software nicht.
 
 ## 2. Nutzungsrecht
 
@@ -24,7 +24,7 @@ Die mitgelieferten PDF-Vorlagendateien und Vorlagen-Anleitungen dürfen für pri
 
 Drittanbieter-Komponenten behalten ihre eigenen Lizenzen, einschließlich Open-Source-Lizenzen. Die zugehörigen Hinweise liegen der Distribution bei. Dieser Vertrag schränkt Rechte aus diesen Lizenzen an den jeweiligen Komponenten nicht ein. Er entzieht auch keine Rechte, die mit einer früheren Merkzeug-Kopie unter deren damaliger Lizenz wirksam eingeräumt wurden.
 
-JetBrains ist weder Lizenzgeber von Merkzeug noch Partei dieses Vertrags. Fragen, Supportanliegen und Ansprüche zu Merkzeug sind an creative-it zu richten. Soweit gesetzlich zulässig, entstehen JetBrains aus diesem Vertrag keine Pflichten oder Haftung. Die Bedingungen deiner IDE und des JetBrains Marketplace gelten daneben weiter. Dasselbe gilt entsprechend für andere Vertriebsplattformen: Dieser Vertrag ersetzt deren anwendbare Bedingungen nicht und schränkt zwingende Rechte gegen sie nicht ein.
+Vertriebsplattformen sind weder Lizenzgeber von Merkzeug noch Parteien dieses Vertrags. Fragen, Supportanliegen und Ansprüche zu Merkzeug sind an creative-it zu richten. Die Bedingungen der Plattform und einer etwaigen Host-Anwendung gelten daneben weiter. Dieser Vertrag ersetzt sie nicht und schränkt zwingende Rechte gegen deren Anbieter nicht ein. Mit einer Ausgabe bereitgestellte plattformspezifische Zusatzbedingungen gelten nur für diese Ausgabe.
 
 ## 5. Support, Updates und Daten
 

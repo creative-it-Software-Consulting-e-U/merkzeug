@@ -6,12 +6,15 @@ for (const lang of ['en', 'de']) {
   const license = await readFile(new URL(`resources/legal/EULA.${lang}.md`, root), 'utf8');
   if (lang === 'en') await writeFile(new URL('LICENSE', root), license);
   const base = await readFile(new URL(`website/legal-${lang}.html`, root), 'utf8');
-  const name = `license-${lang}.html`;
-  let head = base.slice(0, base.indexOf('<main'))
-    .replace(/<title>.*?<\/title>/, `<title>${lang === 'en' ? 'End User License' : 'Endnutzerlizenz'} · Merkzeug</title>`)
-    .replaceAll(`legal-${lang}.html`, name)
-    .replace(`href="legal-${lang === 'en' ? 'de' : 'en'}.html"`, `href="license-${lang === 'en' ? 'de' : 'en'}.html"`);
-  await writeFile(new URL(`website/${name}`, root), head + '<main id="content" class="legal">' + marked.parse(license) + '</main>' + base.slice(base.indexOf('<footer>')));
+  for (const edition of ['', '-intellij']) {
+    const name = `license${edition}-${lang}.html`;
+    const content = license + (edition ? '\n' + await readFile(new URL(`resources/legal/INTELLIJ-ADDENDUM.${lang}.md`, root), 'utf8') : '');
+    let head = base.slice(0, base.indexOf('<main'))
+      .replace(/<title>.*?<\/title>/, `<title>${lang === 'en' ? 'End User License' : 'Endnutzerlizenz'}${edition ? ' · IntelliJ' : ''} · Merkzeug</title>`)
+      .replaceAll(`legal-${lang}.html`, name)
+      .replace(`href="legal-${lang === 'en' ? 'de' : 'en'}.html"`, `href="license${edition}-${lang === 'en' ? 'de' : 'en'}.html"`);
+    await writeFile(new URL(`website/${name}`, root), head + '<main id="content" class="legal">' + marked.parse(content) + '</main>' + base.slice(base.indexOf('<footer>')));
+  }
 }
 for (const name of await readdir(new URL('website/', root))) {
   if (!name.endsWith('.html')) continue;

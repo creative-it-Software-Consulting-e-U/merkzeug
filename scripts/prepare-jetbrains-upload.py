@@ -13,8 +13,10 @@ with zipfile.ZipFile(archive) as outer:
     with zipfile.ZipFile(io.BytesIO(outer.read(outer.namelist()[0]))) as jar:
         names = jar.namelist()
         assert not any(n.endswith('.mp4') or 'SmokeStarter' in n or 'CaptureStarter' in n for n in names), 'Unpublished/test assets in release'
-        assert jar.read('META-INF/LICENSE') == (ROOT/'resources/legal/EULA.en.md').read_bytes(), 'Stale license'
-        assert jar.read('META-INF/EULA.de.md') == (ROOT/'resources/legal/EULA.de.md').read_bytes(), 'Stale German license'
+        assert jar.read('META-INF/LICENSE') == ((ROOT/'resources/legal/EULA.en.md').read_text()+'\n'+(ROOT/'resources/legal/INTELLIJ-ADDENDUM.en.md').read_text()).encode(), 'Stale license'
+        assert jar.read('META-INF/EULA.de.md') == ((ROOT/'resources/legal/EULA.de.md').read_text()+'\n'+(ROOT/'resources/legal/INTELLIJ-ADDENDUM.de.md').read_text()).encode(), 'Stale German license'
+        (out/'EULA.en.md').write_bytes(jar.read('META-INF/LICENSE'))
+        (out/'EULA.de.md').write_bytes(jar.read('META-INF/EULA.de.md'))
         plugin = ET.fromstring(jar.read('META-INF/plugin.xml'))
         assert plugin.findtext('version') == version
         assert plugin.findtext('id') == 'com.creativeit.merkzeug'
@@ -25,7 +27,7 @@ with zipfile.ZipFile(archive) as outer:
         for name, tag in [('description-en.html','description'),('change-notes.html','change-notes')]:
             (out/name).write_text(plugin.findtext(tag).strip()+'\n')
 shutil.copy2(archive,out/archive.name)
-for source,name in [('resources/legal/EULA.en.md','EULA.en.md'),('resources/legal/EULA.de.md','EULA.de.md'),('store/jetbrains-marketplace.md','listing-en-de.md'),('store/jetbrains-upload.md','UPLOAD-GUIDE.md')]:
+for source,name in [('store/jetbrains-marketplace.md','listing-en-de.md'),('store/jetbrains-upload.md','UPLOAD-GUIDE.md')]:
     shutil.copy2(ROOT/source,out/name)
 capture = ROOT/'intellij/build/marketplace-capture'
 for name in ['01-editor.png','02-template-preview.png']:
@@ -47,7 +49,7 @@ Upload **merkzeug-{version}.zip** unchanged. The other files are supporting mate
 
 The ZIP includes the description, change notes, SVG logo, proprietary license and third-party notices. Two screenshots are included here for the listing. Full English/German copy is in listing-en-de.md.
 
-The website license pages are prepared in the repository but have not been published. Until then, paste the included EULA text in the Marketplace form rather than supplying an unverified URL. Planned URLs: https://merkzeug.creative-it.com/license-en.html and https://merkzeug.creative-it.com/license-de.html.
+The website license pages are prepared in the repository but have not been published. Until then, paste the included EULA text in the Marketplace form rather than supplying an unverified URL. Planned URLs: https://merkzeug.creative-it.com/license-intellij-en.html and https://merkzeug.creative-it.com/license-intellij-de.html.
 
 This kit has not been uploaded or published. Do not use older MIT-labeled preview ZIPs for this release. Review the new contract text before public distribution.
 ''')

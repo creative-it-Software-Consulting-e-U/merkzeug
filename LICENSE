@@ -6,7 +6,7 @@ Version 1.0 · 11 September 2026
 
 The licensor is creative-it Software Consulting e.U., owned by Günther Wieser, Am Gassl 25, 3482 Gösing am Wagram, Austria (company register FN 473229 a, Landesgericht St. Pölten; VAT ID ATU61645777). Contact: guenther.wieser@creative-it.com.
 
-This agreement covers Merkzeug desktop and mobile applications and the Merkzeug IntelliJ plugin supplied with this license. “You” means the individual or organization obtaining the software. If you act for an organization, you must be authorized to accept this agreement for it. Review the terms before installing or using the software; use is offered subject to your acceptance. If you do not accept, do not install or use it.
+This agreement covers Merkzeug applications and editor extensions supplied with this license. “You” means the individual or organization obtaining the software. If you act for an organization, you must be authorized to accept this agreement for it. Review the terms before installing or using the software; use is offered subject to your acceptance. If you do not accept, do not install or use it.
 
 ## 2. Permission to use
 
@@ -24,7 +24,7 @@ The included PDF template files and template instructions may be copied, customi
 
 Third-party components retain their own licenses, including open-source licenses. Their notices accompany the distribution. This agreement does not restrict any rights those licenses grant in the corresponding components. It does not withdraw rights validly granted under a license accompanying an earlier Merkzeug copy.
 
-JetBrains is not the licensor of Merkzeug and is not a party to this agreement. Questions, support and claims about Merkzeug should be addressed to creative-it. To the extent permitted by applicable law, JetBrains has no obligations or liability under this agreement. The terms for your IDE and JetBrains Marketplace remain applicable separately. The same distinction applies to other distribution platforms: this agreement does not replace their applicable terms or restrict mandatory rights against them.
+Distribution platforms are not the licensor of Merkzeug and are not parties to this agreement. Questions, support and claims about Merkzeug should be addressed to creative-it. Platform terms and the terms of any host application remain applicable separately. This agreement does not replace them or restrict mandatory rights against their providers. Any platform-specific supplemental terms supplied with an edition apply only to that edition.
 
 ## 5. Support, updates and data
 
