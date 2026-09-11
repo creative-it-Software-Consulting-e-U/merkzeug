@@ -2,6 +2,10 @@
 
 Local preview of the shared editor and PDF renderer hosted in IntelliJ IDEA through JCEF. For installation and daily use, see the [IntelliJ user guide](../docs/user/intellij.md).
 
+## Plugin description
+
+The bundled plugin description for the IDE and Marketplace is maintained in [`plugin.xml`](src/main/resources/META-INF/plugin.xml). It explicitly documents relative image storage in `Note.assets/` and the native IntelliJ Move/Rename integration. English and German listing copy is prepared in [Marketplace text](../store/jetbrains-marketplace.md). Keep these descriptions aligned with the [image and refactoring guide](../docs/user/intellij.md#images-and-companion-folders) when changing attachment behavior.
+
 ## Build
 
 The SDK version and build are pinned in `sdk.json`. The current target is IDEA 2026.2.2, build 262.10315.125. Other SDKs are rejected until compatibility is reviewed.

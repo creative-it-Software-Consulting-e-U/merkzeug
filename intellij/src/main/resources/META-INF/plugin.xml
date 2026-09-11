@@ -3,7 +3,31 @@
   <name>Merkzeug</name>
   <version>1.0.0</version>
   <vendor>creative-it</vendor>
-  <description><![CDATA[WYSIWYG Markdown editor with Mermaid, frontmatter, images and PDF export using shared Merkzeug components. Beta for IntelliJ IDEA 2026.2.2. Follows IDE appearance and includes formatting tools and project-specific PDF settings.]]></description>
+  <description><![CDATA[
+    <p>Merkzeug is a visual Markdown editor for IntelliJ IDEA, with formatting tools, Mermaid diagrams,
+    frontmatter and PDF export. Your notes stay ordinary Markdown files in your project.</p>
+    <h3>Images stay with their notes — including IntelliJ refactoring</h3>
+    <p>Images inserted or pasted into <code>Plan.md</code> are saved as separate files in the sibling
+    folder <code>Plan.assets/</code>, referenced by relative paths in the Markdown. The note and its
+    companion folder can be versioned and shared together.</p>
+    <p>Merkzeug extends IntelliJ's own <b>Refactor → Move</b> and <b>Refactor → Rename</b> actions with this
+    pairing rule. Renaming <code>Plan.md</code> to <code>Draft.md</code> also renames
+    <code>Plan.assets/</code> to <code>Draft.assets/</code> and updates companion-folder references in
+    the note. Moving a note includes its companion folder. Native Undo/Redo applies to both.</p>
+    <p>Existing destinations stop the operation; companion folders are not merged or overwritten.
+    Existing shared <code>assets/</code> folders remain supported and are not treated as belonging to
+    one note. This rule applies to IntelliJ Move/Rename refactoring, not external filesystem actions,
+    copying or deletion. Symbolic-link companions require manual handling.</p>
+    <h3>Fits your IDE workflow</h3>
+    <ul>
+      <li>IntelliJ owns document saving, version control and undo history.</li>
+      <li>Appearance follows the IDE theme, with optional PDF content styles while editing.</li>
+      <li>Project-specific PDF templates, including automatic discovery of desktop Merkzeug templates.</li>
+      <li>Optional attachment guidance for coding agents: preview existing AGENTS.md and CLAUDE.md
+      contents and explicitly select which files receive the guidance.</li>
+    </ul>
+    <p>Preview for IntelliJ IDEA 2026.2.2 (build 262.10315.125), with JCEF enabled.</p>
+  ]]></description>
   <idea-version since-build="262.10315.125" until-build="262.10315.125"/>
   <depends>com.intellij.modules.platform</depends>
   <depends>com.intellij.modules.jcef</depends>

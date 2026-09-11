@@ -5,6 +5,7 @@ These are reviewable source assets and local screenshot candidates, not a publis
 - `demo/en` and `demo/de`: wholly fictional Markdown notebooks for repeatable captures. Copy a notebook outside this repository before launching desktop captures so its parent Git repository is not shown.
 - `metadata/en-US/listing.json` and `metadata/de-DE/listing.json`: initial iOS and macOS listing drafts. Platform-specific copy distinguishes macOS Git, calendar and PDF features from iOS repository access through Working Copy. See [marketing positioning](marketing.md).
 - `screenshots/`: visually reviewed raw candidates for writing and diagrams on iPhone, iPad and Mac. Their provenance and hashes are recorded in `manifest.json`. These demonstrate current UI, not final signed-store-build acceptance.
+- [JetBrains Marketplace text](jetbrains-marketplace.md): English and German plugin description drafts, including image storage and native Move/Rename rules.
 - `privacy-draft.md` and `support-draft.md`: source drafts requiring final publisher/hosting review before publication.
 
 [Open the screenshot gallery](gallery.html). Capture details and checksums are in [the manifest](screenshots/manifest.json).

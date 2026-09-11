@@ -17,6 +17,18 @@ Use the shared visual editor, slash menu, formatting tools, frontmatter panel an
 
 If another editor changes the document, Merkzeug reloads it when there are no local edits. Otherwise a conflict banner lets you reload the other version or deliberately keep your own version.
 
+## Images and companion folders
+
+Images inserted through the image picker or pasted into `Plan.md` are written as separate image files in a sibling folder named `Plan.assets/`. Markdown uses relative references such as `![Diagram](Plan.assets/image-….png)`. The same `Note.md` / `Note.assets/` layout is used by the desktop and iOS editions. Include both the note and its companion folder when committing to Git or sharing the note.
+
+Existing shared `assets/` links remain supported. Merkzeug does not migrate those images into a companion folder or infer that the shared folder belongs to one note.
+
+### IntelliJ gets the pairing rule too
+
+Use IntelliJ **Refactor → Rename** or **Refactor → Move** on a Markdown file. If `Plan.md` has a sibling `Plan.assets/` folder, Merkzeug includes that folder in the same refactoring: renaming to `Draft.md` also renames the folder to `Draft.assets/` and updates companion-folder references in the note. Moving a note keeps its companion folder beside it. The native Move dialog shows both entries; selecting both yourself does not duplicate the operation. Undo/Redo applies to the pair.
+
+Existing destination files or folders stop the action; folders are never merged. Shared `assets/` folders and Markdown files without their own companion folder retain normal IntelliJ behavior. Symbolic-link companions require manual handling. This integration applies to IntelliJ refactoring actions, not external filesystem operations, copy or delete actions. Open Merkzeug editors refresh their paths after a rename or move.
+
 ## PDF export
 
 1. Optionally open **Settings → Tools → Merkzeug** and select a PDF template folder for this project. Leave it empty to export without a template.
@@ -61,9 +73,3 @@ Enable **Use PDF template while editing** in the **⋯** menu. The choice is rem
 IntelliJ can use the same template folder as the desktop app: select the actual template subfolder (containing `stil.css`, `vorlage.json`, etc.) under **Settings → Tools → Merkzeug**. Both editions read those files directly, so no import or duplicate copy is necessary. A custom or synchronized desktop template location works as well. The **Desktop templates** dropdown discovers the desktop app’s standard locations on macOS, Windows and Linux, including its custom `templatesRoot` setting and an inherited `MERKZEUG_TEMPLATES_ROOT` environment variable. Select an entry and apply the project settings. **Refresh** rescans after changes in the desktop app. Discovery does not change the current selection or copy files. If nothing is found or a location cannot be read, the manual folder chooser remains available.
 
 Mermaid diagrams switch to the light PDF theme when PDF template editing styles are active, and return to the application theme when the preview is disabled.
-
-## Move and rename notes with attachments
-
-Use IntelliJ **Refactor → Rename** or **Refactor → Move** on a Markdown file. If `Plan.md` has a sibling `Plan.assets/` folder, Merkzeug includes that folder in the same refactoring: renaming to `Draft.md` also renames the folder to `Draft.assets/` and updates companion-folder references in the note. Moving a note keeps its companion folder beside it. The native Move dialog shows both entries; selecting both yourself does not duplicate the operation. Undo/Redo applies to the pair.
-
-Existing destination files or folders stop the action; folders are never merged. Shared `assets/` folders and Markdown files without their own companion folder retain normal IntelliJ behavior. Symbolic-link companions require manual handling. This integration applies to IntelliJ refactoring actions, not external filesystem operations, copy or delete actions. Open Merkzeug editors refresh their paths after a rename or move.
