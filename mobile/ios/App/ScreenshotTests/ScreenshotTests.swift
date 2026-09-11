@@ -32,6 +32,31 @@ final class ScreenshotTests: XCTestCase {
         app.terminate()
     }
 
+    func testSearchDismissal() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+        let files = ["Welcome.md": "# Welcome\n\nSearch test fixture.\n"]
+        app.launchEnvironment = ["MERKZEUG_DEMO_MODE": "1", "MERKZEUG_DEMO_FILES": String(data: try JSONSerialization.data(withJSONObject: files), encoding: .utf8)!, "MERKZEUG_DEMO_NOTE": "/Welcome.md", "MERKZEUG_DEMO_LOCALE": "en"]
+        app.launch()
+        XCTAssertTrue(app.otherElements["merkzeug-screenshot-ready"].waitForExistence(timeout: 60))
+        if app.buttons["Later"].exists { app.buttons["Later"].tap() }
+        let search = app.buttons["🔍"]
+        let input = app.descendants(matching: .any).matching(NSPredicate(format: "placeholderValue == %@", "Search vault …")).firstMatch
+        for populated in [false, true] {
+            search.tap()
+            XCTAssertTrue(input.waitForExistence(timeout: 5))
+            if populated { input.tap(); input.typeText("Welcome") }
+            app.webViews.buttons["Done"].tap()
+            XCTAssertTrue(input.waitForNonExistence(timeout: 5), "Done closes search with and without a query")
+        }
+        search.tap()
+        XCTAssertTrue(input.waitForExistence(timeout: 5))
+        input.tap()
+        input.typeText("\n")
+        XCTAssertTrue(input.waitForNonExistence(timeout: 5), "Keyboard Done closes an empty search")
+        app.terminate()
+    }
+
     private func capture(locale: String) throws {
         let bundle = Bundle(for: Self.self)
         let fixtures = try XCTUnwrap(bundle.url(forResource: "demo", withExtension: nil)).appendingPathComponent(locale)

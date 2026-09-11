@@ -28,6 +28,8 @@ funktioniert auch jeder andere Ordner aus der Dateien-App.
 - **Suche 🔍**: durchsucht Dateinamen und Inhalte aller Notizen; ein
   Tippen auf einen Treffer öffnet die Notiz.
 
+Schließe die Suche mit **Fertig** über den Ergebnissen oder **Fertig** auf der Tastatur, auch bei leerem Suchfeld. Mit einer externen Tastatur funktioniert außerdem Escape.
+
 ## Lesen und Bearbeiten
 
 Notizen öffnen sich **schreibgeschützt** – ideal zum Nachschlagen ohne

@@ -27,6 +27,8 @@ just as well as a Working Copy repository.
 - **Search 🔍**: searches file names and the contents of all notes;
   tapping a result opens the note.
 
+Close search with **Done** above the results or **Done** on the keyboard, including when the search field is empty. An external keyboard can also use Escape.
+
 ## Reading and editing
 
 Notes open **read-only** – ideal for looking things up without

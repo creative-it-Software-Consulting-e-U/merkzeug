@@ -4,6 +4,11 @@ User-visible changes are recorded here. Versions follow `VERSION`; version tags 
 
 ## Unreleased
 
+### Fixed
+
+- iOS search/help toolbars no longer inherit the editor search popup layout, keeping Done reachable.
+- iOS search can be dismissed with keyboard Done even with an empty query; cleared searches no longer show late results from previous queries.
+
 ### Added
 
 - System, light and dark appearance across desktop, iOS and IntelliJ, including diagrams.

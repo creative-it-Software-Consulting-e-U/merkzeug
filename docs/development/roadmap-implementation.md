@@ -67,3 +67,11 @@ Remaining acceptance includes real subscribed-feed refresh/offline tests on each
 AWS teardown was verified on 10 September 2026 at 19:59 UTC: the EC2 instance was terminated, its temporary EBS volume deleted, and the dedicated IAM role/policies/instance profile, security group, SSH key pair, S3 objects and bucket removed. The dedicated Windows installation/workspace and the separately created iOS simulator were also removed. No private physical device was used.
 
 The committed [validation summary](roadmap-validation.json) records implementation commit, platform checks, artifact SHA-256 values and teardown results. Binaries and full raw output remain local under `release-artifacts/roadmap/`; the later help-text corrections should be included when generating release packages.
+
+## Search and initial status regression checks, 11 September
+
+The previous installed IntelliJ preview initialized its status to Loading and did not update it on successful initialization. PR #50 already resets that status. A native JCEF smoke assertion now waits for both the editor and the synchronized status before continuing to PDF export, without any web-editor input. The user IDE was still running the previous plugin; the new ZIP remains scheduled for the next IDE startup.
+
+iOS vault search and help reused the shared editor's `.search-bar`/`.search-input` styles. These supplied popup positioning and column layout to the full-screen mobile toolbar. Distinct `vault-search-*` classes keep Done reachable. A search form and keyboard Done hint support completion with an empty query; clearing or closing the search invalidates pending results.
+
+The native `ScreenshotTests.testSearchDismissal` reproduced the Done-button failure before the CSS correction and passed afterwards: empty search, populated search and empty keyboard submission all close the overlay. IntelliJ status/document/PDF smoke, 35 automated tests, TypeScript, documentation and website checks passed. Test logs are retained in `release-artifacts/roadmap/search-status-regression/`. The dedicated iOS simulator was removed; no private physical device was used.

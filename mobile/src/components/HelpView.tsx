@@ -54,7 +54,7 @@ export function HelpView({ onClose }: HelpViewProps): React.JSX.Element {
 
   return (
     <div className="help-view">
-      <div className="search-bar">
+      <div className="vault-search-bar">
         <div className="topbar-title">{translate("Help")}</div>
         <select aria-label={translate("Help language")} value={language} onChange={e => setLanguage(e.target.value as 'en' | 'de')}><option value="en">English</option><option value="de">Deutsch</option></select>
         <button className="bar-btn" onClick={onClose}>

@@ -55,3 +55,5 @@ When opening a vault, Merkzeug can suggest root `AGENTS.md` / `CLAUDE.md` instru
 **New meeting note** offers calendar selection. Expand **Calendar sources** to import an `.ics` file or add a named private HTTPS/Webcal subscription. Subscriptions are saved on this device, never in the vault. **Refresh calendars** downloads changes; an error retains the previous snapshot and shows its saved time. Reimporting the same named ICS file updates its source without duplicating notes. Choose an event to create or reopen its meeting note; existing note text is never replaced. CalDAV and calendar write-back are not supported.
 
 In IntelliJ, System follows IDE colors while the editor remains open. Calendar notes are created in the project root. Use native IDE document tools for saving and undo. The tested build target remains IntelliJ IDEA 2026.2.2; no other IDE version is implied.
+
+The status beside **Merkzeug** changes from **Loading …** to **Synced with IntelliJ** after initialization, without requiring an edit. After installing a plugin update while IntelliJ is running, restart the IDE to load it.

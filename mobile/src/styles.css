@@ -207,7 +207,7 @@ body {
 
 /* ---- Suche & Hilfe (Vollbild-Overlays) ---- */
 
-.search-view,
+.vault-search-view,
 .help-view {
   position: fixed;
   inset: 0;
@@ -217,7 +217,7 @@ body {
   z-index: 30;
 }
 
-.search-bar {
+.vault-search-bar {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -228,12 +228,12 @@ body {
   flex-shrink: 0;
 }
 
-.search-bar .bar-btn {
+.vault-search-bar .bar-btn {
   font-size: 16px;
   min-width: auto;
 }
 
-.search-input {
+.vault-search-input {
   flex: 1;
   min-width: 0;
   font-size: 16px;
@@ -245,11 +245,11 @@ body {
   -webkit-appearance: none;
 }
 
-.search-results {
+.vault-search-results {
   flex: 1;
 }
 
-.search-row-text {
+.vault-search-row-text {
   flex: 1;
   min-width: 0;
   display: flex;
@@ -257,11 +257,11 @@ body {
   gap: 2px;
 }
 
-.search-row-name {
+.vault-search-row-name {
   font-weight: 600;
 }
 
-.search-row-path {
+.vault-search-row-path {
   color: var(--text-dim);
   font-size: 13px;
   white-space: nowrap;
@@ -269,7 +269,7 @@ body {
   text-overflow: ellipsis;
 }
 
-.search-row-snippet {
+.vault-search-row-snippet {
   color: var(--text-dim);
   font-size: 14px;
   overflow: hidden;

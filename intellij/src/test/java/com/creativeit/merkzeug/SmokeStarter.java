@@ -30,11 +30,18 @@ public final class SmokeStarter implements ApplicationStarter {
                 window.setContentPane(editor.getComponent()); window.setSize(1050, 900); window.setVisible(true);
                 var browserField = MerkzeugEditor.class.getDeclaredField("browser"); browserField.setAccessible(true);
                 JBCefBrowser browser = (JBCefBrowser) browserField.get(editor);
+                var statusReady = new java.util.concurrent.atomic.AtomicBoolean(false);
                 browser.getJBCefClient().getCefClient().addDisplayHandler(new org.cef.handler.CefDisplayHandlerAdapter() {
                     @Override public boolean onConsoleMessage(org.cef.browser.CefBrowser b, org.cef.CefSettings.LogSeverity level, String message, String source, int line) {
+                        if ("MERKZEUG_INITIAL_READY".equals(message)) statusReady.set(true);
                         System.out.println("MERKZEUG_BROWSER " + level + " " + message); return false;
                     }
                 });
+                javax.swing.Timer statusTimer = new javax.swing.Timer(500, event -> {
+                    browser.getCefBrowser().executeJavaScript("(() => { const status = document.querySelector('.status')?.textContent; if (document.querySelector('.ProseMirror') && ['Synced with IntelliJ', 'Mit IntelliJ synchronisiert'].includes(status)) { console.log('MERKZEUG_INITIAL_READY'); } })()", browser.getCefBrowser().getURL(), 0);
+                    if (statusReady.get()) ((javax.swing.Timer) event.getSource()).stop();
+                });
+                statusTimer.start();
                 var dispatch = MerkzeugEditor.class.getDeclaredMethod("dispatch", JsonObject.class); dispatch.setAccessible(true);
                 Document document = FileDocumentManager.getInstance().getDocument(file);
                 com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider.allowWriting(List.of(file));
@@ -55,8 +62,10 @@ public final class SmokeStarter implements ApplicationStarter {
                 FileDocumentManager.getInstance().saveDocument(document);
                 if (!Files.readString(test.resolve("index.md")).equals(edited)) throw new AssertionError("Save failed");
                 System.out.println("MERKZEUG_SMOKE document-write, stale-revision, undo, redo and save passed");
-                javax.swing.Timer timer = new javax.swing.Timer(8000, e -> {
+                javax.swing.Timer timer = new javax.swing.Timer(500, e -> {
                     try {
+                        if (!statusReady.get()) return;
+                        ((javax.swing.Timer) e.getSource()).stop();
                         JsonObject payload = JsonParser.parseString(Files.readString(test.resolve("payload.json"))).getAsJsonObject();
                         var payloadField = MerkzeugEditor.class.getDeclaredField("pdfPayload"); payloadField.setAccessible(true); payloadField.set(editor, payload);
                         var targetField = MerkzeugEditor.class.getDeclaredField("pdfTarget"); targetField.setAccessible(true); targetField.set(editor, test.resolve("actual.pdf"));
@@ -64,7 +73,7 @@ public final class SmokeStarter implements ApplicationStarter {
                         browser.loadURL(originField.get(editor) + "index.html?pdf");
                     } catch (Exception error) { error.printStackTrace(); System.exit(1); }
                 });
-                timer.setRepeats(false); timer.start();
+                timer.start();
                 ApplicationManager.getApplication().executeOnPooledThread(() -> {
                     try {
                         for (int n = 0; n < 120; n++) {
