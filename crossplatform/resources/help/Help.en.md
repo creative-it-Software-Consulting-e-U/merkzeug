@@ -418,4 +418,4 @@ When opening a vault, Merkzeug can suggest root `AGENTS.md` / `CLAUDE.md` instru
 
 In **Settings**, select the PDF template for this vault. Enable **Use PDF template while editing** in the bottom bar to preview its document typography and colors. Disable it to return to the editor theme. Only `.pdf-content` content rules are reused; cover pages, page furniture, print layout and application-wide CSS are excluded. This is a formatting preview, not a paginated PDF proof. PDF export keeps the complete original template and print colors. Linux needs a system keyring for private subscriptions; ICS files can be imported without one.
 
-Mermaid diagrams switch to the light PDF theme when PDF template editing styles are active, and return to the application theme when the preview is disabled.
+Mermaid diagrams use the document background instead of a dark code-block panel and switch to the light PDF theme when PDF template editing styles are active, and return to the application theme when the preview is disabled.

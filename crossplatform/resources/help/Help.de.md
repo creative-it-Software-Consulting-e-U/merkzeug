@@ -433,4 +433,4 @@ Beim Öffnen eines Vaults kann Merkzeug Hinweise in den Stammdateien `AGENTS.md`
 
 Wähle unter **Einstellungen** die PDF-Vorlage für diesen Vault. Aktiviere unten **PDF-Vorlage beim Bearbeiten verwenden**, um Textformatierung und Farben anzuzeigen. Deaktiviere die Option für das normale Editor-Design. Es werden nur `.pdf-content`-Inhaltsregeln übernommen; Deckblatt, Kopf-/Fußzeilen, Drucklayout und globale App-Regeln sind ausgenommen. Die Vorschau zeigt Formatierung, keinen seitengetreuen PDF-Proof. Der PDF-Export behält die vollständige Originalvorlage und Druckfarben. Linux benötigt für private Abonnements einen System-Schlüsselbund; ICS-Dateien lassen sich ohne ihn importieren.
 
-Mermaid-Diagramme wechseln bei aktiver PDF-Vorlagenvorschau zum hellen PDF-Theme. Nach dem Ausschalten folgen sie wieder der Darstellung der Anwendung.
+Mermaid-Diagramme verwenden den Dokumenthintergrund statt einer dunklen Codeblock-Fläche und wechseln bei aktiver PDF-Vorlagenvorschau zum hellen PDF-Theme. Nach dem Ausschalten folgen sie wieder der Darstellung der Anwendung.

@@ -1,5 +1,7 @@
 # Changelog
 
+- PDF editing preview: remove the dark code-block background behind transparent Mermaid diagrams, including in IntelliJ.
+
 - IntelliJ Move/Rename includes a Markdown note’s companion `.assets` directory, with collision checks, link updates and native undo/redo.
 
 - IntelliJ: include the frontmatter area in the light PDF template preview surface.

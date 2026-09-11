@@ -168,6 +168,9 @@ public final class SmokeStarter implements ApplicationStarter {
                                     if (!svg || svg.id === window.previewDarkSvg) return;
                                     const fill = getComputedStyle(svg.querySelector('.node rect')).fill;
                                     if (fill === window.previewDarkFill) throw new Error('Mermaid stayed dark during template preview');
+                                    let backdrop = svg;
+                                    while (backdrop && ['rgba(0, 0, 0, 0)', 'transparent'].includes(getComputedStyle(backdrop).backgroundColor)) backdrop = backdrop.parentElement;
+                                    if (!backdrop || getComputedStyle(backdrop).backgroundColor !== 'rgb(255, 255, 255)') throw new Error('Mermaid is not rendered on the light PDF paper surface');
                                     window.previewLightSvg = svg.id;
                                     toggle.click(); window.previewTestStage = 2; return;
                                   }

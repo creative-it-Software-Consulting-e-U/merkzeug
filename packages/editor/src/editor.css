@@ -561,3 +561,9 @@ dialog { color: var(--text); background: var(--bg); border: 1px solid var(--bord
 .tour-tools { display: flex; justify-content: flex-end; gap: 4px; flex-wrap: wrap; }
 .tour-video { width: min(92vw, 1000px); padding: 12px; border-radius: 10px; }
 .tour-video video { display: block; width: 100%; max-height: 75vh; margin-top: 10px; }
+
+/* Mermaid SVGs are transparent; do not leave a dark code-block surface behind them
+   when previewing PDF content styles on the document's paper background. */
+.template-live .editor-root .milkdown-code-block:has(.mermaid-preview) {
+  background: transparent;
+}
