@@ -6,6 +6,14 @@ import java.util.Map;
 /** English source messages with a German OS-locale translation. */
 final class Messages {
     private static final Map<String, String> GERMAN = Map.ofEntries(
+        Map.entry("Choose a desktop template…", "Desktop-Vorlage auswählen…"),
+        Map.entry("Desktop templates", "Desktop-Vorlagen"),
+        Map.entry("Refresh", "Aktualisieren"),
+        Map.entry("Looking for desktop templates…", "Desktop-Vorlagen werden gesucht…"),
+        Map.entry("Some desktop locations could not be read. You can choose a folder manually.", "Einige Desktop-Verzeichnisse konnten nicht gelesen werden. Du kannst einen Ordner manuell auswählen."),
+        Map.entry("No desktop templates found. You can choose a folder manually.", "Keine Desktop-Vorlagen gefunden. Du kannst einen Ordner manuell auswählen."),
+        Map.entry("Select a template to use its existing folder. No files are copied.", "Wähle eine Vorlage, um ihren vorhandenen Ordner zu verwenden. Es werden keine Dateien kopiert."),
+
         Map.entry("Choose which documents to include in the PDF.", "Welche Dokumente sollen in das PDF aufgenommen werden?"),
         Map.entry("Linked documents:", "Verlinkte Dokumente:"),
         Map.entry("Only this document", "Nur dieses Dokument"),
