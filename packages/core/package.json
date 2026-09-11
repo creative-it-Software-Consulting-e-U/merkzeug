@@ -8,5 +8,6 @@
   },
   "dependencies": {
     "ical.js": "2.2.1"
-  }
+  },
+  "license": "UNLICENSED"
 }

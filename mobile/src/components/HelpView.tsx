@@ -1,3 +1,4 @@
+import { licenseText } from '@merkzeug/editor/licenseText'
 import { TemplateStylingPrompt } from '@merkzeug/editor/TemplateStylingPrompt'
 import { supportUrl } from '@merkzeug/core/support'
 import appPackage from '../../package.json'
@@ -20,7 +21,7 @@ export function HelpView({ onClose }: HelpViewProps): React.JSX.Element {
   useEffect(() => {
     const root = rootRef.current
     if (!root) return
-    const content = language === 'de' ? helpDe : helpEn
+    const content = (language === 'de' ? helpDe : helpEn) + '\n\n' + licenseText(language)
     const crepe = new Crepe({
       root,
       defaultValue: content,

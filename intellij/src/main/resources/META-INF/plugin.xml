@@ -2,7 +2,7 @@
   <id>com.creativeit.merkzeug</id>
   <name>Merkzeug</name>
   <version>1.0.0</version>
-  <vendor>creative-it</vendor>
+  <vendor email="guenther.wieser@creative-it.com" url="https://merkzeug.creative-it.com/">creative-it Software Consulting e.U.</vendor>
   <description><![CDATA[
     <p>Merkzeug is a visual Markdown editor for IntelliJ IDEA, with formatting tools, Mermaid diagrams,
     frontmatter and PDF export. Your notes stay ordinary Markdown files in your project.</p>
@@ -23,11 +23,23 @@
       <li>IntelliJ owns document saving, version control and undo history.</li>
       <li>Appearance follows the IDE theme, with optional PDF content styles while editing.</li>
       <li>Project-specific PDF templates, including automatic discovery of desktop Merkzeug templates.</li>
+      <li>Copyable template styling prompts with an offline technical reference for coding agents.</li>
       <li>Optional attachment guidance for coding agents: preview existing AGENTS.md and CLAUDE.md
       contents and explicitly select which files receive the guidance.</li>
     </ul>
+    <p>Available as an additional editor tab for local .md files. The JetBrains Markdown plugin is optional.</p>
+    <p>Proprietary software, free for private and internal business use under the Merkzeug End User License Agreement.</p>
     <p>Preview for IntelliJ IDEA 2026.2.2 (build 262.10315.125), with JCEF enabled.</p>
   ]]></description>
+  <change-notes><![CDATA[
+    <p>First Marketplace preview.</p>
+    <ul>
+      <li>Visual Markdown editing, Mermaid diagrams, frontmatter and PDF export.</li>
+      <li>Companion image folders follow IntelliJ Move/Rename, with link updates and Undo/Redo.</li>
+      <li>Project PDF templates, desktop template discovery and PDF styles while editing.</li>
+      <li>Offline template styling prompts and explicit selection of coding-agent guidance files.</li>
+    </ul>
+  ]]></change-notes>
   <idea-version since-build="262.10315.125" until-build="262.10315.125"/>
   <depends>com.intellij.modules.platform</depends>
   <depends>com.intellij.modules.jcef</depends>

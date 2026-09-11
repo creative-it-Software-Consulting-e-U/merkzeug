@@ -8,6 +8,10 @@ ROOT = Path(__file__).resolve().parent.parent
 IDE = Path(os.environ.get('IDEA_HOME', '/Applications/IntelliJ IDEA.app/Contents'))
 TEST = ROOT / 'intellij/build/smoke'
 TEST.mkdir(parents=True, exist_ok=True)
+config = TEST / 'config'
+config.mkdir(exist_ok=True)
+# Only this isolated test profile is changed; never touch the user's IDE profile.
+(config / 'disabled_plugins.txt').write_text('org.intellij.plugins.markdown\n' if os.environ.get('MERKZEUG_SMOKE_NO_MARKDOWN') == '1' else '')
 for name in ['actual.pdf', 'passed.txt']:
     (TEST / name).unlink(missing_ok=True)
 markdown = '''---

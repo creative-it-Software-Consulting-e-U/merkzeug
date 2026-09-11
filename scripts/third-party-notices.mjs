@@ -16,7 +16,10 @@ for (const [location, entry] of Object.entries(lock.packages)) {
     texts: files.map(name => `--- ${name} ---\n${fs.readFileSync(path.join(dir, name), 'utf8')}`)})
 }
 records.sort((a,b) => `${a.name}@${a.version}`.localeCompare(`${b.name}@${b.version}`, 'en'))
-const body = 'Merkzeug third-party notices\n\nThis inventory includes installed build tools as well as runtime dependencies.\nUpstream components retain their own licenses. Electron and the host IDE also ship their own notices.\n\n' + records.map(r => `${r.name}@${r.version}\nLicense: ${JSON.stringify(r.license)}\n${r.texts.join('\n')}\n`).join('\n')
+const body = 'Merkzeug third-party notices\n\nical.js 2.2.1 (MPL-2.0) source is available at https://github.com/kewisch/ical.js/tree/v2.2.1 . Merkzeug does not modify these upstream source files.\n\nThis inventory includes installed build tools as well as runtime dependencies.\nUpstream components retain their own licenses. Electron and the host IDE also ship their own notices.\n\n' + records.map(r => `${r.name}@${r.version}\nLicense: ${JSON.stringify(r.license)}\n${r.texts.join('\n')}\n`).join('\n')
 const output = path.join(root, 'crossplatform/resources/THIRD_PARTY_NOTICES.txt')
 fs.writeFileSync(output, body)
+const mobilePublic = path.join(root, 'mobile/public')
+fs.mkdirSync(mobilePublic, { recursive: true })
+fs.writeFileSync(path.join(mobilePublic, 'THIRD_PARTY_NOTICES.txt'), body)
 console.log(`Wrote notices for ${records.length} installed dependency packages.`)

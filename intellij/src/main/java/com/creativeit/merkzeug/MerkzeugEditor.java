@@ -207,7 +207,7 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
             LocalFileSystem.getInstance().refreshAndFindFileByNioFile(path);
         } else {
             VirtualFile virtual = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(path);
-            if (virtual == null || ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(virtual).hasReadonlyFiles()) throw new IOException("File is read-only");
+            if (virtual == null || ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(java.util.List.of(virtual)).hasReadonlyFiles()) throw new IOException("File is read-only");
             Document target = FileDocumentManager.getInstance().getDocument(virtual);
             if (target == null) throw new IOException("Cannot open instructions");
             WriteCommandAction.runWriteCommandAction(project, () -> {
@@ -227,7 +227,7 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
     private Object write(JsonObject m) throws IOException {
         if (!allowed(arg(m, "path")).equals(Paths.get(file.getPath()).toRealPath())) throw new IOException(Messages.text("Wrong document"));
         if (!Long.toString(document.getModificationStamp()).equals(arg(m, "revision"))) throw new IOException(Messages.text("CONFLICT: The document has changed since it was read."));
-        if (ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(file).hasReadonlyFiles()) throw new IOException(Messages.text("File is read-only"));
+        if (ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(java.util.List.of(file)).hasReadonlyFiles()) throw new IOException(Messages.text("File is read-only"));
         String text = arg(m, "text").replace("\r\n", "\n");
         if (!text.equals(document.getText())) {
             ownChange = true;

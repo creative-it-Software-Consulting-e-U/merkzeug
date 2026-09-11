@@ -6,6 +6,10 @@ import java.util.Map;
 /** English source messages with a German OS-locale translation. */
 final class Messages {
     private static final Map<String, String> GERMAN = Map.ofEntries(
+        Map.entry("Move note and attachments", "Notiz und Begleitordner verschieben"),
+        Map.entry("Move", "Verschieben"),
+        Map.entry("Destination folder", "Zielordner"),
+        Map.entry("Choose an existing destination folder", "Wähle einen vorhandenen Zielordner"),
         Map.entry("Close", "Schließen"),
         Map.entry("Template styling prompt", "Vorlagen-Styling-Prompt"),
         Map.entry("Copy styling prompt", "Styling-Prompt kopieren"),

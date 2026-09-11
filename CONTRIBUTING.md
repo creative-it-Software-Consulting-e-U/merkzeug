@@ -35,4 +35,4 @@ Keep platform-specific file access and OS behavior in their adapters. Shared pac
 
 Do not include credentials, signing certificates, provisioning profiles, private notes or calendar data. Do not commit generated SDKs, build output or installed dependencies. Follow the [security reporting guide](SECURITY.md) for vulnerabilities.
 
-Contributions are provided under the project's [MIT license](LICENSE). Third-party components retain their own licenses; preserve their notices and identify new dependencies in your pull request.
+Merkzeug is proprietary software under its [End User License Agreement](LICENSE). Coordinate contributions and the required rights with the owner in writing before submitting code; submitting a change alone does not assign copyright. Third-party components retain their own licenses; preserve their notices and identify new dependencies in your pull request.

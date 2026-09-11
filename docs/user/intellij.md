@@ -81,3 +81,8 @@ Desktop Settings provides **Template styling prompt** for each template; expand 
 Replace the new template name and your colors, fonts, logo and design wishes before sending it. The prompt is in English, includes the complete offline technical reference, and works with older templates that lack instruction files. Copying it does not read note contents or modify existing templates. If clipboard access is unavailable in the web view, select and copy the displayed text manually.
 
 New starter copies include `AGENTS.md` (format, CSS examples, placeholders, preview limitations and validation) and `STYLING-PROMPT.md` (reusable brief). Keep template-specific design choices in `README.md`. The brief instructs the agent to create a separate copy and preserve existing instructions. Existing desktop templates are not upgraded or overwritten. For manual use, concatenate STYLING-PROMPT.md and AGENTS.md and replace the template-path placeholder.
+
+
+## License and Marketplace preview
+
+Merkzeug is proprietary software for private and internal business use under the [shared End User License Agreement](../../resources/legal/EULA.en.md), also supplied in German. The plugin archive includes this license and third-party notices. The Marketplace build omits the unpublished guided tour and video. It is currently limited to IntelliJ IDEA build 262.10315.125; the Markdown plugin is optional. Move uses a theme-aware destination dialog built with public IntelliJ APIs; the native refactoring transaction still includes both the note and its attachments.

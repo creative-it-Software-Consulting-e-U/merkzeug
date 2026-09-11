@@ -1,5 +1,11 @@
 # Release management
 
+## Licensing and Marketplace
+
+Merkzeug remains proprietary; the repository is private. `resources/legal/EULA.en.md` and `EULA.de.md` are the common license sources for all editions. `node scripts/build-licenses.mjs` generates the English root LICENSE and website pages. New plugin archives must embed the current license and third-party notices. Do not distribute earlier MIT-labeled candidate ZIPs as the proprietary release. Rights already validly granted under earlier licenses remain unaffected.
+
+For Marketplace, use `python3 intellij/build.py --marketplace`: this omits the unpublished guided tour and its video. A beta channel can carry version 1.0.0 without changing all edition versions. Run Plugin Verifier and native smoke tests against the exact candidate. See the [upload guide](../../store/jetbrains-upload.md). No build command submits or publishes a plugin.
+
 ## Status and distribution policy
 
 The workflow in `.github/workflows/release.yml` prepares **draft GitHub releases**. It has not yet been exercised on GitHub for this repository. Local checks and successful compilation must not be described as a published or fully validated multi-platform release.

@@ -23,5 +23,6 @@
     "@milkdown/crepe": "^7.22.0",
     "@milkdown/kit": "^7.22.0",
     "mermaid": "^11.16.1"
-  }
+  },
+  "license": "UNLICENSED"
 }

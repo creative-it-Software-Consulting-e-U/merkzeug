@@ -12,6 +12,8 @@ extraResources:
     to: pdf-templates
   - from: ../LICENSE
     to: LICENSE
+  - from: ../resources/legal/EULA.de.md
+    to: EULA.de.md
   - from: resources/THIRD_PARTY_NOTICES.txt
     to: THIRD_PARTY_NOTICES.txt
   - from: resources/help

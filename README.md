@@ -62,8 +62,8 @@ See the [development guide](docs/development/README.md) for SDK setup and native
 | `SampleVault` | Example notes; includes existing German examples |
 | `legacy` | Archived native macOS implementation; outside the current release pipeline |
 
-Merkzeug is preparing for its first open-source release. Preview builds and native platform support still require release-by-release testing; see the [release checklist](docs/development/releases.md).
+Merkzeug is preparing for its first proprietary release. Preview builds and native platform support still require release-by-release testing; see the [release checklist](docs/development/releases.md).
 
 ## License
 
-Merkzeug is licensed under the [MIT license](LICENSE). Dependencies retain their own licenses; distribution packages include third-party notices.
+Merkzeug is proprietary software, available for private and internal business use under the [Merkzeug End User License Agreement](LICENSE). Dependencies retain their own licenses; distribution packages include third-party notices.

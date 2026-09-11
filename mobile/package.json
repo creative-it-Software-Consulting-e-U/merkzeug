@@ -6,12 +6,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "node ../scripts/third-party-notices.mjs && tsc --noEmit && vite build",
     "sync": "npm run build && cap sync ios && python3 ../scripts/prepare-ios-runtime.py",
     "open": "cap open ios"
   },
   "author": "Günther Wieser <guenther.wieser@creative-it.com>",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "dependencies": {
     "@capacitor/core": "^8.5.0",
     "@milkdown/crepe": "^7.22.0",

@@ -1,3 +1,4 @@
+import { licenseText } from '@merkzeug/editor/licenseText'
 import { t as translate, getLocale } from '@merkzeug/core/i18n'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Crepe } from '@milkdown/crepe'
@@ -15,7 +16,7 @@ export function HelpApp(): React.JSX.Element {
     let crepe: Crepe | null = null
     let cancelled = false
     void (async () => {
-      const content = await window.merkzeug.readHelp(lang)
+      const content = (await window.merkzeug.readHelp(lang)) + '\n\n' + licenseText(lang)
       if (cancelled || !rootRef.current) return
       rootRef.current.innerHTML = ''
       crepe = new Crepe({

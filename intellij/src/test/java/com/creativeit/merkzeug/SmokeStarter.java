@@ -203,7 +203,7 @@ public final class SmokeStarter implements ApplicationStarter {
                                     window.previewTestStage = 3; console.log('MERKZEUG_TEMPLATE_PREVIEW_PASSED');
                                   }
                                   const actions = [...document.querySelectorAll('.editor-extra-actions > button, .editor-extra-actions .tour-tools > button')];
-                                  if (actions.length !== 3 || actions.some(b => Math.abs(b.getBoundingClientRect().top - actions[0].getBoundingClientRect().top) > 1 || getComputedStyle(b).fontSize !== getComputedStyle(actions[0]).fontSize)) throw new Error('Extra actions are not aligned or use different font sizes');
+                                  if (actions.length !== (document.querySelector('.tour-tools') ? 3 : 1) || actions.some(b => Math.abs(b.getBoundingClientRect().top - actions[0].getBoundingClientRect().top) > 1 || getComputedStyle(b).fontSize !== getComputedStyle(actions[0]).fontSize)) throw new Error('Extra actions are not aligned or use different font sizes');
                                   if (document.querySelector('.vault-guidance').getBoundingClientRect().top < actions[0].getBoundingClientRect().bottom) throw new Error('Guidance must occupy its own row');
                                   const dialog = document.querySelector('.guidance-dialog');
                                   if (!dialog) { document.querySelector('.vault-guidance > button')?.click(); return; }
@@ -304,8 +304,16 @@ public final class SmokeStarter implements ApplicationStarter {
             if (!handler.canMove(new com.intellij.psi.PsiElement[]{psi}, target, null)) throw new AssertionError("Move handler not applicable");
             var assets = manager.findDirectory(root.findChild("Draft.assets"));
             if (CompanionAssets.expand(new com.intellij.psi.PsiElement[]{psi, assets}).length != 2) throw new AssertionError("Companion was duplicated");
-            var processor = CompanionMoveHandler.processor(project, new com.intellij.psi.PsiElement[]{psi}, target, moved::countDown, () -> {});
-            processor.setPreviewUsages(false); processor.run();
+            javax.swing.Timer submit = new javax.swing.Timer(200, event -> {
+                for (java.awt.Window window : java.awt.Window.getWindows()) {
+                    if (window instanceof javax.swing.JDialog dialog && dialog.isShowing() && Messages.text("Move note and attachments").equals(dialog.getTitle())) {
+                        if (clickButton(dialog, Messages.text("Move"))) ((javax.swing.Timer)event.getSource()).stop();
+                    }
+                }
+            });
+            submit.start();
+            try { handler.doMove(project, new com.intellij.psi.PsiElement[]{psi}, target, moved::countDown); }
+            finally { submit.stop(); }
         });
         if (!moved.await(45, java.util.concurrent.TimeUnit.SECONDS)) throw new AssertionError("Native move timed out");
         ApplicationManager.getApplication().invokeAndWait(() -> FileDocumentManager.getInstance().saveAllDocuments());

@@ -109,3 +109,8 @@ In den Desktop-Einstellungen gibt es bei jeder Vorlage **Vorlagen-Styling-Prompt
 Ersetze den neuen Vorlagennamen sowie Farben, Schriften, Logo und Gestaltungswünsche vor der Übergabe. Der Prompt ist auf Englisch und enthält die vollständige technische Anleitung offline, auch für ältere Vorlagen ohne Hinweisdateien. Beim Kopieren werden keine Notizinhalte gelesen oder bestehende Vorlagen verändert. Falls die Webansicht keinen Zugriff auf die Zwischenablage hat, markiere und kopiere den angezeigten Text manuell.
 
 Neue Startvorlagen enthalten `AGENTS.md` mit Dateiformat, CSS-Beispielen, Platzhaltern, Vorschau-Grenzen und Prüfhinweisen sowie `STYLING-PROMPT.md` als wiederverwendbaren Arbeitsauftrag. Gestaltungsentscheidungen für die jeweilige Vorlage gehören in `README.md`. Der Auftrag verlangt eine separate Kopie und den Erhalt vorhandener Anweisungen. Bestehende Desktop-Vorlagen werden nicht aktualisiert oder überschrieben. Für die manuelle Nutzung STYLING-PROMPT.md und AGENTS.md zusammenfügen und den Platzhalter für den Vorlagenpfad ersetzen.
+
+
+### Lizenz
+
+Merkzeug ist proprietäre Software für private und interne geschäftliche Nutzung. Die vollständige Endnutzerlizenz steht am Ende der In-App-Hilfe sowie auf der [Website](https://merkzeug.creative-it.com/license-de.html). Drittanbieter-Komponenten behalten ihre eigenen Lizenzen.

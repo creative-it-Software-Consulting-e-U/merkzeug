@@ -19,7 +19,9 @@ Merkzeug teaches IntelliJ's own **Refactor → Move** and **Refactor → Rename*
 
 Existing shared `assets/` folders remain supported and are not assigned to a single note. The integration applies to IntelliJ Move/Rename refactoring, not external filesystem actions, copying or deletion. Symbolic-link companions require manual handling.
 
-IntelliJ owns saving, Git integration and undo history. Merkzeug follows the IDE theme and offers optional PDF content styles while editing, project-specific PDF templates and automatic discovery of desktop Merkzeug templates. Optional coding-agent guidance can be added to explicitly selected `AGENTS.md` or `CLAUDE.md` files after reviewing their contents.
+IntelliJ owns saving, Git integration and undo history. Merkzeug follows the IDE theme and offers optional PDF content styles while editing, project-specific PDF templates and automatic discovery of desktop Merkzeug templates. An offline styling prompt explains template files, CSS and preview limitations for your agent. Optional coding-agent guidance can be added to explicitly selected `AGENTS.md` or `CLAUDE.md` files after reviewing their contents.
+
+Merkzeug is proprietary software, free for private and internal business use under the Merkzeug End User License Agreement. It adds its own editor tab; the JetBrains Markdown plugin is optional.
 
 Preview target: IntelliJ IDEA 2026.2.2, build 262.10315.125, with JCEF enabled.
 
@@ -40,6 +42,8 @@ Merkzeug erweitert IntelliJs eigene Aktionen **Refactor → Move** und **Refacto
 
 Bestehende gemeinsame `assets/`-Ordner bleiben unterstützt und werden keiner einzelnen Notiz zugeordnet. Die Integration gilt für IntelliJs Move/Rename-Refactoring, nicht für externe Dateisystemaktionen, Kopieren oder Löschen. Begleitordner mit symbolischen Links müssen manuell behandelt werden.
 
-Speichern, Git-Integration und Undo-Verlauf bleiben bei IntelliJ. Merkzeug folgt dem IDE-Theme und bietet optional PDF-Inhaltsstile beim Bearbeiten, projektspezifische PDF-Vorlagen und die automatische Erkennung von Vorlagen der Desktop-App. Hinweise für Coding-Agenten lassen sich nach Prüfung der vorhandenen Inhalte gezielt in ausgewählte `AGENTS.md`- oder `CLAUDE.md`-Dateien einfügen.
+Speichern, Git-Integration und Undo-Verlauf bleiben bei IntelliJ. Merkzeug folgt dem IDE-Theme und bietet optional PDF-Inhaltsstile beim Bearbeiten, projektspezifische PDF-Vorlagen und die automatische Erkennung von Vorlagen der Desktop-App. Ein offline verfügbarer Styling-Prompt erklärt einem Agenten Vorlagendateien, CSS und Grenzen der Vorschau. Hinweise für Coding-Agenten lassen sich nach Prüfung der vorhandenen Inhalte gezielt in ausgewählte `AGENTS.md`- oder `CLAUDE.md`-Dateien einfügen.
+
+Merkzeug ist proprietäre Software, kostenlos für private und interne geschäftliche Nutzung gemäß der Merkzeug-Endnutzerlizenz. Es ergänzt einen eigenen Editor-Tab; das JetBrains-Markdown-Plugin ist optional.
 
 Vorschau für IntelliJ IDEA 2026.2.2, Build 262.10315.125, mit aktiviertem JCEF.

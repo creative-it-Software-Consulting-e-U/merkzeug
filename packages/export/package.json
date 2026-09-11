@@ -15,5 +15,6 @@
   "peerDependencies": {
     "react": "^19.2.8",
     "@milkdown/crepe": "^7.22.0"
-  }
+  },
+  "license": "UNLICENSED"
 }

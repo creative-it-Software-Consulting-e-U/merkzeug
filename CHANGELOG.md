@@ -1,5 +1,7 @@
 # Changelog
 
+- Prepare the proprietary Marketplace preview: shared English/German EULA, plugin logo and metadata, public IntelliJ APIs, and a package without the unpublished tour.
+
 - Shared offline template styling kit with CSS examples, agent instructions and copyable prompts in desktop settings, IntelliJ settings and iOS help; existing templates remain intact.
 
 - PDF editing preview: remove the dark code-block background behind transparent Mermaid diagrams, including in IntelliJ.
