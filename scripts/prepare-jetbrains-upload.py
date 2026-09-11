@@ -49,7 +49,7 @@ Upload **merkzeug-{version}.zip** unchanged. The other files are supporting mate
 
 The ZIP includes the description, change notes, SVG logo, proprietary license and third-party notices. Two screenshots are included here for the listing. Full English/German copy is in listing-en-de.md.
 
-The website license pages are prepared in the repository but have not been published. Until then, paste the included EULA text in the Marketplace form rather than supplying an unverified URL. Planned URLs: https://merkzeug.creative-it.com/license-intellij-en.html and https://merkzeug.creative-it.com/license-intellij-de.html.
+Marketplace license URLs: https://merkzeug.creative-it.com/license-intellij-en.html and https://merkzeug.creative-it.com/license-intellij-de.html. Both are published. Before uploading a future version, verify that the hosted license matches the included EULA text; you can also paste the included text into the Marketplace form.
 
 This kit has not been uploaded or published. Do not use older MIT-labeled preview ZIPs for this release. Review the new contract text before public distribution.
 ''')
