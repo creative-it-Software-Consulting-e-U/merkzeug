@@ -44,6 +44,12 @@ public final class SmokeStarter implements ApplicationStarter {
                 if (com.intellij.ide.util.PropertiesComponent.getInstance(project).getValue("merkzeug.templateDirectory") != null) throw new AssertionError("Template not cleared");
                 settings.disposeUIResources();
                 System.out.println("MERKZEUG_SMOKE project settings lifecycle passed");
+                Files.writeString(test.resolve("AGENTS.md"), "# Project instructions\nFollow project conventions.\n");
+                Files.writeString(test.resolve("CLAUDE.md"), "See AGENTS.md for all instructions.\n");
+                for (String name : List.of("AGENTS.md", "CLAUDE.md")) {
+                    var instructionFile = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(test.resolve(name));
+                    com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider.allowWriting(List.of(instructionFile));
+                }
                 MerkzeugEditor editor = new MerkzeugEditor(project, file);
                 var scopeMethod = MerkzeugEditor.class.getDeclaredMethod("chooseExportScope", JsonObject.class);
                 scopeMethod.setAccessible(true);
@@ -106,6 +112,28 @@ public final class SmokeStarter implements ApplicationStarter {
                 javax.swing.Timer timer = new javax.swing.Timer(500, e -> {
                     try {
                         if (!statusReady.get()) return;
+                        if (!Files.readString(test.resolve("AGENTS.md")).contains("## Merkzeug:")) {
+                            browser.getCefBrowser().executeJavaScript("""
+                                (() => {
+                                  if (!document.querySelector('.editor-extras')) { document.querySelector('button[aria-label="Merkzeug"]').click(); return; }
+                                  const actions = [...document.querySelectorAll('.editor-extra-actions > button, .editor-extra-actions .tour-tools > button')];
+                                  if (actions.length !== 3 || actions.some(b => Math.abs(b.getBoundingClientRect().top - actions[0].getBoundingClientRect().top) > 1 || getComputedStyle(b).fontSize !== getComputedStyle(actions[0]).fontSize)) throw new Error('Extra actions are not aligned or use different font sizes');
+                                  if (document.querySelector('.vault-guidance').getBoundingClientRect().top < actions[0].getBoundingClientRect().bottom) throw new Error('Guidance must occupy its own row');
+                                  const dialog = document.querySelector('.guidance-dialog');
+                                  if (!dialog) { document.querySelector('.vault-guidance > button')?.click(); return; }
+                                  const boxes = dialog.querySelectorAll('input[type=checkbox]');
+                                  const add = [...dialog.querySelectorAll('button')].find(b => ['Add', 'Hinzufügen'].includes(b.textContent));
+                                  if (!window.guidanceTestSelected) {
+                                    if (boxes.length !== 2 || [...boxes].some(b => b.checked) || !add.disabled || dialog.querySelectorAll('pre').length !== 3 || !dialog.textContent.includes('See AGENTS.md for all instructions.')) throw new Error('Guidance preview or defaults incorrect');
+                                    boxes[0].click(); window.guidanceTestSelected = true; return;
+                                  }
+                                  if (boxes[0].checked && !boxes[1].checked && !add.disabled) add.click();
+                                })()
+                                """, browser.getCefBrowser().getURL(), 0);
+                            return;
+                        }
+                        if (!Files.readString(test.resolve("CLAUDE.md")).equals("See AGENTS.md for all instructions.\n")) throw new AssertionError("Unselected CLAUDE.md was modified");
+                        System.out.println("MERKZEUG_SMOKE guidance preview and explicit AGENTS-only selection passed");
                         ((javax.swing.Timer) e.getSource()).stop();
                         JsonObject payload = JsonParser.parseString(Files.readString(test.resolve("payload.json"))).getAsJsonObject();
                         var payloadField = MerkzeugEditor.class.getDeclaredField("pdfPayload"); payloadField.setAccessible(true); payloadField.set(editor, payload);

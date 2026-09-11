@@ -1,5 +1,10 @@
 /** German translations; English message text is the stable source key. */
 export const de: Readonly<Record<string, string>> = {
+  "Text to add": "Einzufügender Text",
+  "Review the existing files and select where to add this text. Files that only refer to another instruction file can remain unchanged.": "Prüfe die vorhandenen Dateien und wähle aus, wo dieser Text ergänzt werden soll. Dateien, die nur auf eine andere Hinweisdatei verweisen, können unverändert bleiben.",
+  "This file is empty.": "Diese Datei ist leer.",
+  "This file does not exist. Selecting it will create it.": "Diese Datei existiert noch nicht. Wenn du sie auswählst, wird sie angelegt.",
+  "This file already contains attachment guidance.": "Diese Datei enthält bereits Hinweise zu Begleitordnern.",
   "Native calendar access is unavailable. Import an ICS file or add a subscription under Calendar sources.": "Der native Kalenderzugriff ist nicht verfügbar. Importiere unter Kalenderquellen eine ICS-Datei oder füge ein Abonnement hinzu.",
   "Desktop tour video (German)": "Desktop-Tourvideo (Deutsch)",
   "Help coding agents preserve note attachments.": "Hilf Coding-Agenten, Bilder und Notizen zusammenzuhalten.",

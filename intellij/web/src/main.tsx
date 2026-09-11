@@ -123,7 +123,7 @@ function App() {
       <button disabled={busy} onClick={() => void exportPdf()}>{busy ? translate("Exporting …") : translate("Export PDF")}</button>
       <button title="Merkzeug" aria-label="Merkzeug" aria-expanded={extras} onClick={() => setExtras(!extras)}>⋯</button>
     </header>
-    {extras && <aside className="editor-extras"><button onClick={() => void request('settings')}>{translate("PDF template …")}</button>{info && <><GuidedTour edition="intellij" seen={true} onSeen={() => void request('tourSeen')} /><VaultGuidance vaultId={info.vault} host={guidanceHost} /></>}</aside>}
+    {extras && <aside className="editor-extras"><div className="editor-extra-actions"><button onClick={() => void request('settings')}>{translate("PDF template …")}</button>{info && <><GuidedTour edition="intellij" seen={true} onSeen={() => void request('tourSeen')} /></>}</div>{info && <VaultGuidance vaultId={info.vault} host={guidanceHost} />}</aside>}
     {error && <div role="alert" className="error">{error}</div>}
     {info && <Editor ref={ref} host={host} filePath={info.path} loadToken={0} readonly={info.readonly}
       onLinkClick={href => href.startsWith('#') ? ref.current?.jumpToHeading(decodeURIComponent(href.slice(1))) : void request('open', { href }).catch(e => setError(String(e)))}

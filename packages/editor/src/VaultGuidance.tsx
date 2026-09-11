@@ -11,7 +11,7 @@ export function VaultGuidance({ vaultId, host }: { vaultId: string; host: Guidan
   const [files, setFiles] = useState<Partial<Record<InstructionName, string | null>>>({})
   const [show, setShow] = useState(false)
   const [preview, setPreview] = useState(false)
-  const [optional, setOptional] = useState(false)
+  const [selected, setSelected] = useState<InstructionName[]>([])
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const applying = useRef(false)
@@ -31,17 +31,22 @@ export function VaultGuidance({ vaultId, host }: { vaultId: string; host: Guidan
     return () => { active = false }
   }, [host, key])
   const exists = instructionNames.filter(name => files[name] != null)
-  const targets = exists.length ? exists.filter(name => inspectGuidance(files[name]!) !== 'present') : optional ? instructionNames : ['AGENTS.md' as const]
+  const targets = selected.filter(name => inspectGuidance(files[name] ?? '') !== 'present')
+  const addition = guidanceAddition(exists.map(name => files[name]).join('\n\n'), getLocale()).trim()
+  function appendText(expected: string | null) {
+    const newline = expected?.includes('\r\n') ? '\r\n' : '\n'
+    return (expected && !expected.endsWith('\n') ? newline : '') + newline + addition.replace(/\r?\n/g, newline) + newline
+  }
   const dismiss = (never = false) => { if (never) localStorage.setItem(key, 'never'); else sessionStorage.setItem(key, 'later'); setShow(false); void host.suppress?.(never).catch(e => { setError(String(e)); setShow(true) }) }
   async function apply() {
-    if (applying.current) return
+    if (applying.current || !targets.length || targets.some(name => inspectGuidance(files[name] ?? '') === 'review')) return
     applying.current = true; setBusy(true); setError('')
     try {
       for (const name of targets) {
         const expected = files[name] ?? null
-        await host.append(name, expected, guidanceAddition(expected ?? '', getLocale()))
+        await host.append(name, expected, appendText(expected))
         // A partial failure can be retried without duplicating earlier additions.
-        setFiles(previous => ({ ...previous, [name]: (expected ?? '') + guidanceAddition(expected ?? '', getLocale()) }))
+        setFiles(previous => ({ ...previous, [name]: (expected ?? '') + appendText(expected) }))
       }
       dismiss()
     } catch (e) {
@@ -58,13 +63,17 @@ export function VaultGuidance({ vaultId, host }: { vaultId: string; host: Guidan
     <button onClick={() => dismiss(true)}>{t('Do not suggest again for this vault')}</button>
     {preview && <dialog open aria-label={t('Review guidance')} className="guidance-dialog">
       <h2>{t('Review guidance')}</h2>
-      {!exists.length && <label><input type="checkbox" checked={optional} onChange={e => setOptional(e.target.checked)} disabled={busy} /> {t('Also create CLAUDE.md')}</label>}
-      {targets.map(name => <section key={name}><h3>{name}</h3>
+      <h3>{t('Text to add')}</h3>
+      <pre>{addition}</pre>
+      <p>{t('Review the existing files and select where to add this text. Files that only refer to another instruction file can remain unchanged.')}</p>
+      {instructionNames.map(name => <section key={name}>
+        <h3><label><input type="checkbox" checked={selected.includes(name)} disabled={busy || inspectGuidance(files[name] ?? '') !== 'missing'} onChange={e => setSelected(previous => e.target.checked ? [...previous, name] : previous.filter(item => item !== name))} /> {name}</label></h3>
+        {files[name] != null ? <pre aria-label={name}>{files[name] || t('This file is empty.')}</pre> : <p>{t('This file does not exist. Selecting it will create it.')}</p>}
+        {inspectGuidance(files[name] ?? '') === 'present' && <p>{t('This file already contains attachment guidance.')}</p>}
         {inspectGuidance(files[name] ?? '') === 'review' && <p role="alert">{t('Existing attachment instructions need review. Resolve contradictions before adding this guidance.')}</p>}
-        <pre>{guidanceAddition(files[name] ?? '', getLocale())}</pre>
       </section>)}
       {error && <p role="alert">{error}</p>}
-      <button disabled={busy || targets.some(name => inspectGuidance(files[name] ?? '') === 'review')} onClick={() => void apply()}>{t('Add')}</button>{' '}
+      <button disabled={busy || !targets.length || targets.some(name => inspectGuidance(files[name] ?? '') === 'review')} onClick={() => void apply()}>{t('Add')}</button>{' '}
       <button disabled={busy} onClick={() => setPreview(false)}>{t('Close')}</button>
     </dialog>}
   </aside>

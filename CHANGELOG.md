@@ -1,5 +1,7 @@
 # Changelog
 
+- Instruction guidance now previews both existing files and one shared addition, with explicit destination selection. IntelliJ extra actions share a consistent row above the guidance banner.
+
 - IntelliJ: PDF export uses an IDE dialog listing linked documents, explicit export choices and a real cancel action.
 
 - IntelliJ: compact formatting toolbar, IDE appearance, project PDF settings and IDE file choosers; removed calendar creation and redundant toolbar actions.
