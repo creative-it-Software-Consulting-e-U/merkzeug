@@ -13,6 +13,7 @@ public final class MarketplaceCaptureStarter implements ApplicationStarter {
     @Override public boolean isHeadless() { return false; }
     @Override public int getRequiredModality() { return NOT_IN_EDT; }
     @Override public void main(List<String> args) {
+        java.util.Locale.setDefault(java.util.Locale.ENGLISH);
         Path root = Path.of(System.getProperty("merkzeug.capture.root"));
         com.intellij.ide.trustedProjects.TrustedProjects.setProjectTrusted(root, true);
         var project = com.intellij.openapi.project.ex.ProjectManagerEx.getInstanceEx().openProject(root,
