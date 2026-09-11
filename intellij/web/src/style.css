@@ -35,3 +35,7 @@ button:disabled { opacity: .5; }
 .editor-extra-actions .tour-tools { margin: 0; justify-content: flex-start; }
 .editor-extra-actions > button, .editor-extra-actions .tour-tools > button, .editor-extra-actions .tour-video-launch { font: inherit; }
 .editor-extras .vault-guidance { margin-top: 8px; padding: 8px 0 0; border-top: 1px solid var(--border); border-bottom: 0; }
+
+.template-preview-toggle { display: inline-flex; align-items: center; gap: 5px; }
+/* PDF content starts on paper even when the surrounding IDE uses a dark theme. */
+.template-live .editor-root { background: #fff; color: #1a1916; --bg: #fff; --text: #1a1916; --bg-sidebar: #f5f4f2; --bg-hover: #eee; --bg-active: #ddd; --text-dim: #666; --border: #ddd; }

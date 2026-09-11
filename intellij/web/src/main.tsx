@@ -1,3 +1,4 @@
+import { liveTemplateCss } from '@merkzeug/editor/templateStyle'
 import { IconHeading, IconBold, IconItalic, IconStrike, IconInlineCode, IconBulletList, IconOrderedList, IconQuote, IconCodeBlock, IconHr, IconLink, IconImage, IconTable } from '@merkzeug/editor/icons'
 import { GuidedTour } from '@merkzeug/editor/GuidedTour'
 import { VaultGuidance, type GuidanceHost } from '@merkzeug/editor/VaultGuidance'
@@ -28,6 +29,8 @@ function App() {
   const [status, setStatus] = useState(translate("Loading …"))
   const [error, setError] = useState('')
   const [extras, setExtras] = useState(false)
+  const [previewEnabled, setPreviewEnabled] = useState(false)
+  const [previewCss, setPreviewCss] = useState('')
   const [busy, setBusy] = useState(false)
   const ref = useRef<EditorHandle>(null)
   const listeners = useRef(new Set<(vault: string, paths: string[]) => void>())
@@ -62,11 +65,29 @@ function App() {
   }), [])
   useEffect(() => {
     window.__merkzeugTheme = theme => { setTheme('system'); setHostTheme(theme) }
+    request<boolean>('templatePreview').then(setPreviewEnabled).catch(e => setError(String(e)))
     request('init').then(result => { setLocale(result.locale); setTheme('system'); setHostTheme(result.theme); setInfo(result); setStatus(translate('Synced with IntelliJ')) }).catch(e => setError(String(e)))
   }, [])
   useEffect(() => {
     window.__merkzeugChanged = () => { if (info) for (const listener of listeners.current) listener(info.vault, [info.path]) }
   }, [info])
+  async function refreshTemplatePreview() {
+    try {
+      const template = await request<PdfTemplate | null>('template')
+      setPreviewCss(template?.css ? liveTemplateCss(template.css) : '')
+    } catch (e) { setPreviewCss(''); setError(String(e)) }
+  }
+  useEffect(() => {
+    if (!previewEnabled) return
+    void refreshTemplatePreview()
+    const refresh = () => { void refreshTemplatePreview() }
+    window.addEventListener('focus', refresh)
+    return () => window.removeEventListener('focus', refresh)
+  }, [previewEnabled])
+  async function toggleTemplatePreview(enabled: boolean) {
+    try { await request('templatePreview', { enabled }); setPreviewEnabled(enabled) }
+    catch (e) { setError(String(e)) }
+  }
   async function action(method: string) {
     try { await ref.current?.flush(); await queue.current; await request(method); setError('') }
     catch (e) { setError(String(e)) }
@@ -106,7 +127,8 @@ function App() {
     } catch (e) { setError(String(e)) }
     finally { setBusy(false) }
   }
-  return <div className="ide-app">
+  return <div className={`ide-app${previewEnabled && previewCss ? ' template-live' : ''}`}>
+    {previewEnabled && <style>{previewCss}</style>}
     <header className="format-toolbar" role="toolbar" aria-label={translate("Paragraph style")}>
       <details className="format-menu"><summary onMouseDown={e => e.preventDefault()} title={translate("Paragraph style")} aria-label={translate("Paragraph style")}><IconHeading /></summary><div>
         {(['text', 'h1', 'h2', 'h3'] as const).map((action, i) => <button key={action} disabled={!info || info.readonly} onMouseDown={e => e.preventDefault()} onClick={e => { ref.current?.format(action); e.currentTarget.closest('details')?.removeAttribute('open') }}>{i ? translate(`Heading ${i}`) : 'Text'}</button>)}
@@ -123,7 +145,7 @@ function App() {
       <button disabled={busy} onClick={() => void exportPdf()}>{busy ? translate("Exporting …") : translate("Export PDF")}</button>
       <button title="Merkzeug" aria-label="Merkzeug" aria-expanded={extras} onClick={() => setExtras(!extras)}>⋯</button>
     </header>
-    {extras && <aside className="editor-extras"><div className="editor-extra-actions"><button onClick={() => void request('settings')}>{translate("PDF template …")}</button>{info && <><GuidedTour edition="intellij" seen={true} onSeen={() => void request('tourSeen')} /></>}</div>{info && <VaultGuidance vaultId={info.vault} host={guidanceHost} />}</aside>}
+    {extras && <aside className="editor-extras"><div className="editor-extra-actions"><button onClick={() => void request('settings').then(refreshTemplatePreview).catch(e => setError(String(e)))}>{translate("PDF template …")}</button><label className="template-preview-toggle"><input type="checkbox" checked={previewEnabled} onChange={e => void toggleTemplatePreview(e.target.checked)} /> {translate('Use PDF template while editing')}</label>{info && <><GuidedTour edition="intellij" seen={true} onSeen={() => void request('tourSeen')} /></>}</div>{previewEnabled && !previewCss && <p>{translate('Assign a PDF template in Settings to preview its content styles.')}</p>}{info && <VaultGuidance vaultId={info.vault} host={guidanceHost} />}</aside>}
     {error && <div role="alert" className="error">{error}</div>}
     {info && <Editor ref={ref} host={host} filePath={info.path} loadToken={0} readonly={info.readonly}
       onLinkClick={href => href.startsWith('#') ? ref.current?.jumpToHeading(decodeURIComponent(href.slice(1))) : void request('open', { href }).catch(e => setError(String(e)))}

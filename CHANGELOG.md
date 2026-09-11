@@ -1,5 +1,7 @@
 # Changelog
 
+- IntelliJ: optional project-specific PDF content styles while editing, using the shared desktop style filter. Existing desktop template folders can be selected directly.
+
 - Instruction guidance now previews both existing files and one shared addition, with explicit destination selection. IntelliJ extra actions share a consistent row above the guidance banner.
 
 - IntelliJ: PDF export uses an IDE dialog listing linked documents, explicit export choices and a real cancel action.

@@ -50,6 +50,8 @@ public final class SmokeStarter implements ApplicationStarter {
                     var instructionFile = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(test.resolve(name));
                     com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider.allowWriting(List.of(instructionFile));
                 }
+                Files.writeString(test.resolve("stil.css"), ".pdf-content .milkdown .ProseMirror p { font-size: 31px; } header { font-size: 99px; }");
+                com.intellij.ide.util.PropertiesComponent.getInstance(project).setValue("merkzeug.templateDirectory", test.toString());
                 MerkzeugEditor editor = new MerkzeugEditor(project, file);
                 var scopeMethod = MerkzeugEditor.class.getDeclaredMethod("chooseExportScope", JsonObject.class);
                 scopeMethod.setAccessible(true);
@@ -116,6 +118,19 @@ public final class SmokeStarter implements ApplicationStarter {
                             browser.getCefBrowser().executeJavaScript("""
                                 (() => {
                                   if (!document.querySelector('.editor-extras')) { document.querySelector('button[aria-label="Merkzeug"]').click(); return; }
+                                  const toggle = document.querySelector('.template-preview-toggle input');
+                                  const paragraph = document.querySelector('.editor-root p');
+                                  if (!window.previewTestStage) { window.previewHeaderFont = getComputedStyle(document.querySelector('header')).fontSize; toggle.click(); window.previewTestStage = 1; return; }
+                                  if (window.previewTestStage === 1) {
+                                    if (!document.querySelector('.template-live')) return;
+                                    if (getComputedStyle(paragraph).fontSize !== '31px' || getComputedStyle(document.querySelector('header')).fontSize !== window.previewHeaderFont) throw new Error('Template style scope incorrect');
+                                    toggle.click(); window.previewTestStage = 2; return;
+                                  }
+                                  if (window.previewTestStage === 2) {
+                                    if (document.querySelector('.template-live')) return;
+                                    if (getComputedStyle(paragraph).fontSize === '31px') throw new Error('Template style not removed');
+                                    window.previewTestStage = 3; console.log('MERKZEUG_TEMPLATE_PREVIEW_PASSED');
+                                  }
                                   const actions = [...document.querySelectorAll('.editor-extra-actions > button, .editor-extra-actions .tour-tools > button')];
                                   if (actions.length !== 3 || actions.some(b => Math.abs(b.getBoundingClientRect().top - actions[0].getBoundingClientRect().top) > 1 || getComputedStyle(b).fontSize !== getComputedStyle(actions[0]).fontSize)) throw new Error('Extra actions are not aligned or use different font sizes');
                                   if (document.querySelector('.vault-guidance').getBoundingClientRect().top < actions[0].getBoundingClientRect().bottom) throw new Error('Guidance must occupy its own row');

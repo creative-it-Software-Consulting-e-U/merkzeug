@@ -139,6 +139,11 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
                 case "redo" -> { if (UndoManager.getInstance(project).isRedoAvailable(this)) UndoManager.getInstance(project).redo(this); yield true; }
                 case "open" -> { open(arg(m, "href")); yield true; }
                 case "image" -> saveImage(m);
+                case "templatePreview" -> {
+                    var preferences = PropertiesComponent.getInstance(project);
+                    if (m.has("enabled")) preferences.setValue("merkzeug.templatePreview", m.get("enabled").getAsBoolean());
+                    yield preferences.getBoolean("merkzeug.templatePreview", false);
+                }
                 case "template" -> loadTemplate();
                 case "exportScope" -> chooseExportScope(m);
                 case "export" -> beginExport(m);

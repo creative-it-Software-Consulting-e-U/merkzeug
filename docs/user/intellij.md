@@ -53,3 +53,9 @@ In the **⋯** menu, Merkzeug can suggest root `AGENTS.md` / `CLAUDE.md` instruc
 Calendar and meeting-note creation are available in the standalone apps. Create new files using IntelliJ’s project tools.
 
 After installing a plugin update while IntelliJ is running, restart the IDE to load it. Synchronization status remains available to assistive technology and as a tooltip in the toolbar.
+
+## Preview PDF styles while editing
+
+Enable **Use PDF template while editing** in the **⋯** menu. The choice is remembered per project. Content styles from the project's PDF template apply to the editor; toolbar, dialogs and IDE controls keep the IntelliJ theme. Disable the option to restore the normal editor appearance. This previews content typography and colors, not PDF pagination, cover pages or headers and footers. The preview refreshes after changing PDF settings and when the editor window regains focus.
+
+IntelliJ can use the same template folder as the desktop app: select the actual template subfolder (containing `stil.css`, `vorlage.json`, etc.) under **Settings → Tools → Merkzeug**. Both editions read those files directly, so no import or duplicate copy is necessary. A custom or synchronized desktop template location works as well. Automatic discovery of the desktop configuration is not implemented.
