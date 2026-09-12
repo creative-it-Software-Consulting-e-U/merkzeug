@@ -81,8 +81,10 @@ public final class MarketplaceCaptureStarter implements ApplicationStarter {
                             }
                             case "visual" -> manager.setSelectedEditor(file, "merkzeug-editor");
                             case "rename" -> {
-                                var psi = com.intellij.psi.PsiManager.getInstance(project).findFile(file);
-                                new com.intellij.refactoring.rename.RenameProcessor(project, psi, "Release plan.md", false, false).run();
+                                com.intellij.openapi.application.WriteIntentReadAction.run(() -> {
+                                    var psi = com.intellij.psi.PsiManager.getInstance(project).findFile(file);
+                                    new com.intellij.refactoring.rename.RenameProcessor(project, psi, "Release plan.md", false, false).run();
+                                });
                             }
                             case "click" -> ApplicationManager.getApplication().invokeLater(() -> { for (var window : java.awt.Window.getWindows()) if (window.isVisible()) clickButton(window,c.get("label").getAsString()); });
                             case "settings" -> com.intellij.openapi.options.ShowSettingsUtil.getInstance().showSettingsDialog(project,"Merkzeug");
