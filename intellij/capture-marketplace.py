@@ -52,7 +52,7 @@ shutil.copytree(ROOT/'resources/pdf-templates/Merkzeug', fixture/'Template', dir
 (fixture/'CLAUDE.md').write_text('See AGENTS.md for all project instructions.\n')
 (fixture/'Project plan.assets').mkdir(exist_ok=True)
 (fixture/'Project plan.assets'/'diagram.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg" width="240" height="80"><rect width="240" height="80" rx="12" fill="#3574f0"/><text x="120" y="47" text-anchor="middle" fill="white" font-family="sans-serif" font-size="18">This is an image</text></svg>')
-with (fixture/'Project plan.md').open('a') as note: note.write('\nYour image assets stay with your note.\n\n![This is an image](Project%20plan.assets/diagram.svg)\n')
+with (fixture/'Project plan.md').open('a') as note: note.write('\nMerkzeug adds refactoring rules to IntelliJ and optionally to your AGENTS.md/CLAUDE.md to ensure that your images stay with your notes.\n\n![This is an image](Project%20plan.assets/diagram.svg)\n')
 classes=TEST/'classes'; classes.mkdir(exist_ok=True)
 jars=list((IDE/'lib').glob('*.jar'))+list((IDE/'plugins/jcef-plugin').rglob('*.jar'))+[ROOT/'intellij/build/merkzeug.jar']
 subprocess.run([str(IDE/'jbr/Contents/Home/bin/javac'),'--release','21','-classpath',os.pathsep.join(map(str,jars)),'-d',str(classes),str(ROOT/'intellij/src/test/java/com/creativeit/merkzeug/MarketplaceCaptureStarter.java')],check=True)
