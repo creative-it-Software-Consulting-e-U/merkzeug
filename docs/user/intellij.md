@@ -86,3 +86,8 @@ New starter copies include `AGENTS.md` (format, CSS examples, placeholders, prev
 ## License and Marketplace preview
 
 Merkzeug is proprietary software for private and internal business use under the [shared End User License Agreement](../../resources/legal/EULA.en.md), also supplied in German. The plugin archive includes this license and third-party notices. The Marketplace build omits the unpublished guided tour and video. It is currently limited to IntelliJ IDEA build 262.10315.125; the Markdown plugin is optional. Move uses a theme-aware destination dialog built with public IntelliJ APIs; the native refactoring transaction still includes both the note and its attachments.
+
+
+## Neben anderen Markdown-Editoren
+
+Merkzeug ergänzt einen eigenen Editor-Tab für lokale `.md`-Dateien. Der mitgelieferte Markdown-Editor kann parallel installiert bleiben: Über die Tabs am unteren Rand wechselst du zwischen Quelltext-/Split-Ansicht und Merkzeug. Beide verwenden dasselbe IntelliJ-Dokument; Merkzeug ersetzt das Markdown-Plugin nicht und benötigt es auch nicht. Das Zusammenspiel mit weiteren Markdown-Plugins hängt von deren Editor-Registrierung ab und ist nicht pauschal für alle Plugins zugesichert.

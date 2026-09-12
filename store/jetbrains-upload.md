@@ -61,3 +61,14 @@ python3 intellij/capture-marketplace.py
 The current build range is deliberately exact. Do not broaden it until additional IDE builds have been verified. Native runtime validation on macOS does not establish Windows/Linux acceptance.
 
 [Upload instructions](https://plugins.jetbrains.com/docs/marketplace/uploading-a-new-plugin.html) · [Approval guidelines](https://plugins.jetbrains.com/docs/marketplace/jetbrains-marketplace-approval-guidelines.html) · [Custom EULA requirements](https://plugins.jetbrains.com/docs/marketplace/eula.html)
+
+
+## English Marketplace gallery
+
+The reviewed gallery is in `release-artifacts/jetbrains-1.0.0/upload/marketplace-gallery/`. Upload its eight numbered PNGs under Media; they replace the earlier two-image selection. Every image is 1920 × 1200 (16:10), with an English caption outside the captured UI. The native IDE uses its built-in default **Islands Dark** theme. The PDF-style preview changes document styling only. The PDF slide uses the actual exported cover and content page. The styling-prompt detail is cropped to omit the local filesystem path.
+
+Capture tooling: `python3 intellij/capture-marketplace.py` starts an isolated IDEA showcase and waits for commands in `intellij/build/marketplace-capture/command.json`. Commands are JSON objects with `action`: `js` (plus `script`), `capture` (plus `name`), `source`, `visual`, `tree`, `rename`, `settings`, `click` (plus `label`), `pdf` (plus the payload produced by the actual export action), or `stop`. Wait for the renderer to settle before capture, then visually inspect every result. This controls only the synthetic showcase project. The native refactoring command operates on its synthetic note and attachment folder. Do not run another capture session while one is active. The process times out after 30 minutes.
+
+`node scripts/compose-jetbrains-gallery.mjs` frames the reviewed raw captures and rendered PDF pages. It uses an isolated headless Chrome instance; `PLAYWRIGHT_CHANNEL` can select another installed browser channel. No UI or exported PDF content is invented or repainted.
+
+The Marketplace description now explains coexistence with the built-in Markdown source editor. Update the listing text independently of the already submitted ZIP; the source descriptor carries the same text for the next plugin release.

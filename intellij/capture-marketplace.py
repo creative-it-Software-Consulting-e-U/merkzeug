@@ -5,6 +5,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 IDE = Path(os.environ.get('IDEA_HOME', '/Applications/IntelliJ IDEA.app/Contents'))
 TEST = ROOT / 'intellij/build/marketplace-capture'
+fixture = TEST/'Showcase'
+fixture.mkdir(parents=True, exist_ok=True)
 TEST.mkdir(parents=True, exist_ok=True)
 capture_helper = TEST/'capture-window'
 subprocess.run(['swiftc', str(ROOT/'intellij/capture-window.swift'), '-o', str(capture_helper)], check=True)
@@ -14,7 +16,7 @@ if not (TEST/'config/disabled_plugins.txt').exists():
     if not source_config.exists(): raise SystemExit('Run intellij/smoke.py first to initialize the isolated IDE test profile.')
     shutil.copytree(source_config,TEST/'config',dirs_exist_ok=True)
 (TEST/'config/disabled_plugins.txt').write_text('com.intellij.modules.ultimate\n')
-(TEST/'Project plan.md').write_text('''---
+(fixture/'Project plan.md').write_text('''---
 title: Project plan
 status: Draft
 ---
@@ -45,7 +47,12 @@ flowchart LR
 - [x] Connect the pieces
 - [ ] Share the finished document
 ''')
-shutil.copytree(ROOT/'resources/pdf-templates/Merkzeug', TEST/'Template', dirs_exist_ok=True)
+shutil.copytree(ROOT/'resources/pdf-templates/Merkzeug', fixture/'Template', dirs_exist_ok=True)
+(fixture/'AGENTS.md').write_text('# Project instructions\n\nKeep documentation clear and concise.\n')
+(fixture/'CLAUDE.md').write_text('See AGENTS.md for all project instructions.\n')
+(fixture/'Project plan.assets').mkdir(exist_ok=True)
+(fixture/'Project plan.assets'/'diagram.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg" width="240" height="80"><rect width="240" height="80" rx="12" fill="#3574f0"/><text x="120" y="47" text-anchor="middle" fill="white" font-family="sans-serif" font-size="18">Project overview</text></svg>')
+with (fixture/'Project plan.md').open('a') as note: note.write('\n![Project overview](Project%20plan.assets/diagram.svg)\n')
 classes=TEST/'classes'; classes.mkdir(exist_ok=True)
 jars=list((IDE/'lib').glob('*.jar'))+list((IDE/'plugins/jcef-plugin').rglob('*.jar'))+[ROOT/'intellij/build/merkzeug.jar']
 subprocess.run([str(IDE/'jbr/Contents/Home/bin/javac'),'--release','21','-classpath',os.pathsep.join(map(str,jars)),'-d',str(classes),str(ROOT/'intellij/src/test/java/com/creativeit/merkzeug/MarketplaceCaptureStarter.java')],check=True)
@@ -57,6 +64,6 @@ with zipfile.ZipFile(ROOT/'intellij/build/merkzeug.jar') as src,zipfile.ZipFile(
         dst.writestr(name,data)
     for path in classes.rglob('*.class'):dst.write(path,path.relative_to(classes).as_posix())
 props=TEST/'idea.properties'
-props.write_text('\n'.join([f'idea.config.path={TEST}/config',f'idea.system.path={TEST}/system-{os.getpid()}',f'idea.plugins.path={TEST}/plugins',f'idea.log.path={TEST}/log',f'merkzeug.capture.root={TEST}',f'merkzeug.capture.helper={capture_helper}','idea.initially.ask.config=never']))
-subprocess.run([str(IDE/'MacOS/idea'),'merkzeugCapture'],env=dict(os.environ,IDEA_PROPERTIES=str(props),IDEA_VM_OPTIONS=str(IDE/'bin/idea.vmoptions')),check=True,timeout=120)
+props.write_text('\n'.join([f'idea.config.path={TEST}/config',f'idea.system.path={TEST}/system-{os.getpid()}',f'idea.plugins.path={TEST}/plugins',f'idea.log.path={TEST}/log',f'merkzeug.capture.root={fixture}',f'merkzeug.capture.output={TEST}',f'merkzeug.capture.helper={capture_helper}','idea.initially.ask.config=never']))
+subprocess.run([str(IDE/'MacOS/idea'),'merkzeugCapture'],env=dict(os.environ,IDEA_PROPERTIES=str(props),IDEA_VM_OPTIONS=str(IDE/'bin/idea.vmoptions')),check=True,timeout=1800)
 print(TEST)

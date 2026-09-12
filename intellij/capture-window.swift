@@ -8,7 +8,7 @@ let destination = CommandLine.arguments[2]
 let windows = CGWindowListCopyWindowInfo(.optionAll, kCGNullWindowID) as? [[String: Any]] ?? []
 guard let window = windows.first(where: {
     ($0[kCGWindowOwnerPID as String] as? Int) == Int(pid)
-    && ($0[kCGWindowName as String] as? String) == "Project plan.md — Merkzeug (IntelliJ IDEA)"
+    && ($0[kCGWindowName as String] as? String) == "Merkzeug Showcase"
 }), let id = window[kCGWindowNumber as String] as? Int else {
     fputs("Cannot identify the Merkzeug fixture window; refusing desktop capture.\n", stderr)
     exit(1)

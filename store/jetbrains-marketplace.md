@@ -6,6 +6,10 @@ Prepared copy; not submitted or published. The English description bundled with 
 
 Merkzeug is a visual Markdown editor for IntelliJ IDEA with formatting tools, Mermaid diagrams, frontmatter and PDF export. Your notes stay ordinary Markdown files in your project.
 
+### Visual editing alongside your Markdown source editor
+
+Merkzeug adds a separate editor tab for the same Markdown file. Keep the built-in Markdown editor available for source editing and switch back to Merkzeug for visual editing. Both work with the same IntelliJ document. The JetBrains Markdown plugin is optional; Merkzeug does not replace it. Other Markdown plugins can remain installed, but compatibility depends on how each plugin registers its editors; we do not claim compatibility with every third-party plugin.
+
 ### Images stay with their notes — including IntelliJ refactoring
 
 Images inserted or pasted into `Plan.md` are saved as separate files in the sibling folder `Plan.assets/`. Relative Markdown links connect the note to its images. Commit or share the note and its companion folder together. The desktop and iOS editions use the same directory pattern.
@@ -28,6 +32,10 @@ Preview target: IntelliJ IDEA 2026.2.2, build 262.10315.125, with JCEF enabled.
 ## Deutsch
 
 Merkzeug ist ein visueller Markdown-Editor für IntelliJ IDEA mit Formatierungswerkzeugen, Mermaid-Diagrammen, Frontmatter und PDF-Export. Deine Notizen bleiben gewöhnliche Markdown-Dateien im Projekt.
+
+### Visuell bearbeiten und Markdown-Quelltext nutzen
+
+Merkzeug ergänzt einen eigenen Editor-Tab für dieselbe Markdown-Datei. Der mitgelieferte Markdown-Editor bleibt für die Quelltextbearbeitung verfügbar; für visuelles Bearbeiten wechselst du zurück zu Merkzeug. Beide arbeiten mit demselben IntelliJ-Dokument. Das JetBrains-Markdown-Plugin ist optional und wird nicht ersetzt. Weitere Markdown-Plugins können installiert bleiben; das Zusammenspiel hängt von deren Editor-Registrierung ab. Eine pauschale Kompatibilität mit allen Drittanbieter-Plugins versprechen wir nicht.
 
 ### Bilder bleiben bei ihrer Notiz – auch beim IntelliJ-Refactoring
 
