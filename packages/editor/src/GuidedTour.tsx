@@ -25,7 +25,7 @@ const steps = {
     ['header', 'Meeting notes', 'Import ICS calendars or subscribe to feeds to create meeting notes in your project.']
   ]
 } satisfies Record<Edition, string[][]>
-export function GuidedTour({ edition, seen, onSeen }: { edition: Edition; seen?: boolean; onSeen?: () => void }) {
+export function GuidedTour({ edition, seen, onSeen, showLauncher = true }: { edition: Edition; seen?: boolean; onSeen?: () => void; showLauncher?: boolean }) {
   const [open, setOpen] = useState(() => !(seen ?? localStorage.getItem('merkzeug.tour.v1') === 'seen'))
   const [index, setIndex] = useState(-1)
   const ref = useRef<HTMLDialogElement>(null)
@@ -42,9 +42,15 @@ export function GuidedTour({ edition, seen, onSeen }: { edition: Edition; seen?:
     element?.classList.add('tour-highlight')
     return () => element?.classList.remove('tour-highlight')
   }, [index, open, list])
-  return <div className="tour-tools">
-    <button className="tour-launch" onClick={() => { setIndex(-1); setOpen(true) }}>{t('Guided tour')}</button>
-    <TourVideo />
+  useEffect(() => {
+    if (showLauncher) return
+    const launch = () => { setIndex(-1); setOpen(true) }
+    window.addEventListener('merkzeug:guided-tour', launch)
+    return () => window.removeEventListener('merkzeug:guided-tour', launch)
+  }, [showLauncher])
+  return <div className="tour-tools" style={showLauncher ? undefined : { display: 'contents' }}>
+    {showLauncher && <button className="tour-launch" onClick={() => { setIndex(-1); setOpen(true) }}>{t('Guided tour')}</button>}
+    <TourVideo showLauncher={showLauncher} />
     <dialog className="tour-dialog" ref={ref} aria-labelledby="tour-title" onCancel={event => { event.preventDefault(); dismiss() }}>
       <h2 id="tour-title">{t(index < 0 ? 'Welcome to Merkzeug' : list[index][1])}</h2>
       <p>{t(index < 0 ? 'Would you like a short tour of writing, images, calendars and Git?' : list[index][2])}</p>

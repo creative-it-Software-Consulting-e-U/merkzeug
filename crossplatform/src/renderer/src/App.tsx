@@ -724,6 +724,12 @@ export function App(): React.JSX.Element {
   useEffect(() => {
     const off = window.merkzeug.onMenuAction((action: MenuAction) => {
       switch (action) {
+        case 'guidedTour':
+          window.dispatchEvent(new Event('merkzeug:guided-tour'))
+          break
+        case 'tourVideo':
+          window.dispatchEvent(new Event('merkzeug:tour-video'))
+          break
         case 'newNote':
           createAtSelection('note')
           break
@@ -905,7 +911,7 @@ export function App(): React.JSX.Element {
       <div className="welcome">
         <div className="welcome-drag-region" />
         <h1>Merkzeug</h1>
-        <GuidedTour edition="desktop" />
+        <GuidedTour edition="desktop" showLauncher={false} />
         <p>{translate("Choose a vault folder containing Markdown notes.")}</p>
         <button className="primary" onClick={() => void window.merkzeug.pickVault()}>
           {translate("Open vault …")}
@@ -968,10 +974,10 @@ export function App(): React.JSX.Element {
 
   return (
     <div className="app">
-      <GuidedTour edition="desktop" />
+      <div className="titlebar-drag" />
+      <GuidedTour edition="desktop" showLauncher={false} />
       <LiveTemplate key={vault} vault={vault} />
       <VaultGuidance key={`guidance:${vault}`} vaultId={vault} host={guidanceHost} />
-      <div className="titlebar-drag" />
       <div className="app-body">
         <Sidebar
           vault={vault}

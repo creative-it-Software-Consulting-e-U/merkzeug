@@ -150,6 +150,9 @@ export function buildMenu(hooks: MenuHooks): void {
       label: translate("Help"),
       role: 'help',
       submenu: [
+        item(translate("Guided tour"), 'guidedTour'),
+        item(translate("Desktop tour video (German)"), 'tourVideo'),
+        { type: 'separator' },
         {
           label: translate("Merkzeug Help"),
           accelerator: 'Cmd+?',

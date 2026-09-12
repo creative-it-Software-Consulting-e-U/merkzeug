@@ -30,6 +30,8 @@ export type { CalendarPerson, CalendarEvent, CalendarResult } from '@merkzeug/co
 
 /** Aktionen, die das Menü an den Renderer schickt */
 export type MenuAction =
+  | 'guidedTour'
+  | 'tourVideo'
   | 'newNote'
   | 'newMeetingNote'
   | 'newFolder'
