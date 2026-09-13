@@ -3,7 +3,7 @@ import type { PdfTemplate } from '@merkzeug/core/pdf'
 import { t } from '@merkzeug/core/i18n'
 import { liveTemplateCss } from '@merkzeug/editor/templateStyle'
 import { TemplateStylingPrompt } from '@merkzeug/editor/TemplateStylingPrompt'
-import { assignedTemplate, assignTemplate, loadTemplate, templateFolder, pickTemplateFolder, type TemplateFolder } from '../templates'
+import { assignedTemplate, assignTemplate, loadTemplate, templateFolder, pickTemplateFolder, useCloudTemplateFolder, type TemplateFolder } from '../templates'
 
 export function TemplateSettings({ vaultId, onChange }: { vaultId: string; onChange(template: PdfTemplate | null): void }) {
   const key = `templateLive:${vaultId}`
@@ -51,7 +51,8 @@ export function TemplateSettings({ vaultId, onChange }: { vaultId: string; onCha
   return <details className="mobile-template-settings">
     <summary>{t('PDF templates')}</summary>
     <div className="mobile-template-controls">
-      <span>{folder.name ?? t('Choose templates folder')}</span>
+      <span>{folder.cloud ? 'iCloud · Merkzeug / Templates' : folder.name ?? t('Choose templates folder')}</span>
+      {!folder.cloud && <button disabled={busy} onClick={() => void run(useCloudTemplateFolder)}>{t('Use Merkzeug iCloud templates')}</button>}
       <button disabled={busy} onClick={() => void run(pickTemplateFolder)}>{t('Change…')}</button>
       <button disabled={busy} onClick={() => window.dispatchEvent(new Event('merkzeug-templates-change'))}>{t('Refresh')}</button>
       <label>{t('Template for this vault')} <select disabled={busy} value={selected} onChange={event => void run(() => assignTemplate(event.target.value || null))}>

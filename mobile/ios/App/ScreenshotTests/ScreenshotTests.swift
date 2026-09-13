@@ -58,6 +58,34 @@ final class ScreenshotTests: XCTestCase {
         app.terminate()
     }
 
+    func testTemplatePrinting() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+        let paragraphs = (1...65).map { "Paragraph \($0): Native template pagination acceptance." }.joined(separator: "\n\n")
+        let templates = ["Acceptance/kopfzeile.html": "<div style=\"font:16px Arial;color:#28568f\">Native header: {{titel}}</div>", "Acceptance/fusszeile.html": "<div style=\"font:14px Arial;color:#28568f\">Page <span class=\"pageNumber\"></span> of <span class=\"totalPages\"></span></div>", "Acceptance/vorlage.json": "{\"margins\":{\"top\":30,\"bottom\":24,\"left\":15,\"right\":15}}"]
+        let files = ["Welcome.md": "# Print acceptance\n\nSaved content for printing.\n\n```mermaid\nflowchart LR\n A --> B\n```\n" + paragraphs]
+        app.launchEnvironment = ["MERKZEUG_PRINT_PROOF": "1", "MERKZEUG_DEMO_TEMPLATES": String(data: try JSONSerialization.data(withJSONObject: templates), encoding: .utf8)!, "MERKZEUG_DEMO_MODE": "1", "MERKZEUG_DEMO_FILES": String(data: try JSONSerialization.data(withJSONObject: files), encoding: .utf8)!, "MERKZEUG_DEMO_NOTE": "/Welcome.md"]
+        app.launch()
+        if app.buttons["Start tour"].waitForExistence(timeout: 10) { app.buttons.matching(identifier: "Later").allElementsBoundByIndex.last?.tap() }
+        XCTAssertTrue(app.buttons["Print…"].waitForExistence(timeout: 60))
+        app.buttons["Print…"].tap()
+        let printButton = app.buttons["Print…"]
+        XCTAssertTrue(printButton.waitForExistence(timeout: 30))
+        let ready = NSPredicate(format: "enabled == true")
+        expectation(for: ready, evaluatedWith: printButton)
+        waitForExpectations(timeout: 60)
+        printButton.tap()
+        let cancel = app.buttons["Cancel"].firstMatch
+        XCTAssertTrue(cancel.waitForExistence(timeout: 20), app.debugDescription)
+        let screenshot = XCTAttachment(screenshot: app.screenshot())
+        screenshot.name = "AirPrint with template headers and footers"; screenshot.lifetime = .keepAlways; add(screenshot)
+        cancel.tap()
+        XCTAssertTrue(app.buttons["Close"].waitForExistence(timeout: 10))
+        app.buttons["Close"].tap()
+        XCTAssertTrue(app.buttons["Edit"].waitForExistence(timeout: 10))
+        app.terminate()
+    }
+
     func testRoadmap() throws {
         let app = XCUIApplication()
         app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]

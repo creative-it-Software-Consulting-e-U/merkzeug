@@ -1,22 +1,16 @@
-# iOS templates — issue #51
+# Shared iCloud templates — issue #51
 
-Work in progress on `codex/ios-template-sync`.
+Implemented on `codex/ios-template-sync` (PR #52):
 
-Implemented and tested independently of iCloud account configuration:
+- Native Files folder picker, persistent security-scoped bookmark and coordinated template reads on iOS.
+- Shared template loader with embedded images, metadata and per-vault selection; optional content-style preview including Mermaid.
+- Shared `iCloud.com.creative-it.merkzeug` CloudDocuments container for iOS and macOS, exposed as Merkzeug / Templates in iCloud Drive. iOS installs a missing starter template without replacing existing files.
+- Foundation container discovery inside Electron's main process, with matching app entitlements and replacement provisioning profiles for App Store, development and Developer ID distribution.
+- First-use migration of the macOS default templates folder, preserving originals and refusing conflicting files. Custom roots remain unchanged until explicit migration in settings. Windows discovers an existing Merkzeug folder in the registered or conventional iCloud Drive location; Linux retains custom-folder support.
+- iOS AirPrint uses template CSS, cover, custom margins, repeated headers/footers and page counters. The native AirPrint preview shows pagination; the preceding HTML content preview does not. Page furniture is rasterized by a separate WebKit view, while the document body retains PDF text.
 
-- Native Files folder picker, persistent security-scoped bookmark and coordinated template reads.
-- Template selection stored in the shared vault setting; content-style preview and Mermaid light mode.
-- Shared asynchronous template loader including embedded images and template metadata.
-- Print preview content styles and cover, with title/date substitution.
-- Conflict-checked copy utility for desktop migration, retaining originals as a recovery copy. Not connected to the desktop settings yet.
+## Validation
 
-Still required before closing #51:
+`npm test` covers the shared loader, verified migration, conflict handling, custom-root retention and Windows path discovery. The isolated iOS simulator tests exercise native coordinated reads, preview switching and multi-page AirPrint preparation using synthetic fixtures. The resulting three-page PDF was inspected, including its Mermaid diagram, repeated header and first/last page numbers. The dialog was cancelled without printing.
 
-- Confirm/register the shared iCloud container. The Apple app ID currently has no iCloud capability; the repository has no iCloud entitlements.
-- Configure iOS and macOS document-container entitlements, provisioning and native URL discovery. Do not infer a container ID from an arbitrary filesystem path.
-- Adopt the available iCloud folder as the macOS default with first-run migration; offer explicit migration for custom folders and Windows iCloud Drive.
-- Integrate desktop migration into settings, report conflicts clearly, and validate actual cloud availability and sync on signed builds.
-- Complete iOS template print pagination, including headers, footers and custom margins; current draft preview supports content CSS and cover only.
-- Validate folder-picker bookmarks with an actual Files provider and signed iCloud access. Simulator fixtures exercise native coordinated reads, preview switching and cover rendering, not real cloud synchronization.
-
-Validation: `npm test` includes template loader and migration tests. `ScreenshotTests/testTemplates` runs on an isolated iOS simulator with synthetic note/template fixtures; it opens the preview without invoking a native print dialog. Never use the user's private iPhone 16 Pro.
+A signed sandboxed macOS build resolved the real container, wrote and read back a temporary sentinel, then removed its test directory. Signed distribution checks also cover Developer ID packaging. These checks do not establish end-to-end synchronization between two Apple devices, an actual third-party Files provider bookmark lifecycle, or output from a physical printer. Those remain acceptance checks before closing the issue. Never use the user's private iPhone 16 Pro.

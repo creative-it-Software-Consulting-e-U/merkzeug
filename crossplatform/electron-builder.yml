@@ -26,7 +26,14 @@ mac:
   extraResources:
     - from: resources/calendar/merkzeug-calendar
       to: calendar/merkzeug-calendar
+    - from: resources/icloud/merkzeug-icloud.node
+      to: icloud/merkzeug-icloud.node
   extendInfo:
+    NSUbiquitousContainers:
+      iCloud.com.creative-it.merkzeug:
+        NSUbiquitousContainerIsDocumentScopePublic: true
+        NSUbiquitousContainerName: Merkzeug
+        NSUbiquitousContainerSupportedFolderLevels: Any
     # Preserve the existing App Store declaration for Merkzeug builds 1 and 26.
     ITSAppUsesNonExemptEncryption: false
     NSCalendarsUsageDescription: >-
@@ -38,7 +45,8 @@ mac:
   hardenedRuntime: true
   gatekeeperAssess: false
   entitlements: build/entitlements.mac.plist
-  entitlementsInherit: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.inherit.plist
+  sign: build/sign-mac.cjs
   # Notarisierung läuft automatisch, wenn APPLE_API_KEY, APPLE_API_KEY_ID
   # und APPLE_API_ISSUER gesetzt sind (siehe README), sonst wird sie
   # übersprungen.

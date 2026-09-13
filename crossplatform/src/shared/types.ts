@@ -63,6 +63,9 @@ export type MenuAction =
 export type { PdfDoc, PdfTemplate, PdfTemplateMargins } from '@merkzeug/core/pdf'
 /** Zustand für das Einstellungs-Fenster (PDF-Vorlagen) */
 export interface TemplateState {
+  cloudSupported: boolean
+  cloudRoot: string | null
+  cloudError: string | null
   /** Vault des Fensters, aus dem die Einstellungen geöffnet wurden */
   vault: string | null
   templatesRoot: string

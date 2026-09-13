@@ -114,7 +114,7 @@ Merkzeug is proprietary software for private and internal business use. The full
 
 ## Printing
 
-Open a note and tap **Print…**. After the preview has finished preparing, tap **Print…** to open AirPrint and choose a printer, page range and copies. Pending edits are saved first. The current note is printed with its Mermaid diagrams and images. A selected template supplies content styles and a cover. Template page headers, footers, custom margins and linked-document printing are not yet supported on iOS. Cancel AirPrint to return to the preview; **Close** returns to your note.
+Open a note and tap **Print…**. After the preview has finished preparing, tap **Print…** to open AirPrint and choose a printer, page range and copies. Pending edits are saved first. The current note is printed with its Mermaid diagrams and images. A selected template supplies content styles and a cover. AirPrint also applies template headers, footers, page numbers and custom margins. These appear in the native AirPrint preview; the preceding content preview is not paginated. Linked-document printing is not supported on iOS. Cancel AirPrint to return to the preview; **Close** returns to your note.
 
 ## PDF templates on iOS
 
@@ -122,4 +122,4 @@ Open **PDF templates → Change…** and choose the folder containing your templ
 
 Enable **Use PDF template while editing** to apply its content styles, including light Mermaid diagrams. The preference is remembered for this vault on this device. **Refresh** reads template changes; returning to the app also refreshes them. Cloud files must be available from their provider. An unavailable template shows an error; printing does not silently replace it with another template.
 
-Automatic Merkzeug iCloud-container setup and desktop migration are being prepared in issue #51. Until configured, select an existing folder explicitly.
+By default, Merkzeug uses **iCloud Drive → Merkzeug → Templates** and installs the starter template if it is missing. Sign in to iCloud and enable iCloud Drive. The same Apple account must be used on your devices. **Use Merkzeug iCloud templates** returns from a manually selected folder to this shared location. When iCloud is unavailable, you can still choose an existing folder through Files; unavailable templates are reported instead of silently replaced.

@@ -118,7 +118,7 @@ Merkzeug ist proprietäre Software für private und interne geschäftliche Nutzu
 
 ## Drucken
 
-Öffne eine Notiz und tippe auf **Drucken…**. Sobald die Vorschau fertig ist, öffnet **Drucken…** den AirPrint-Dialog mit Drucker, Seitenbereich und Kopien. Ausstehende Änderungen werden zuvor gespeichert. Gedruckt wird die aktuelle Notiz samt Mermaid-Diagrammen und Bildern. Eine ausgewählte Vorlage liefert Inhalts-Styles und Deckblatt. Seitenkopf, Seitenfuß, eigene Seitenränder und das Drucken verlinkter Dokumente werden auf iOS noch nicht unterstützt. Mit Abbrechen gelangst du zur Vorschau zurück; **Schließen** öffnet wieder deine Notiz.
+Öffne eine Notiz und tippe auf **Drucken…**. Sobald die Vorschau fertig ist, öffnet **Drucken…** den AirPrint-Dialog mit Drucker, Seitenbereich und Kopien. Ausstehende Änderungen werden zuvor gespeichert. Gedruckt wird die aktuelle Notiz samt Mermaid-Diagrammen und Bildern. Eine ausgewählte Vorlage liefert Inhalts-Styles und Deckblatt. AirPrint berücksichtigt auch Seitenkopf, Seitenfuß, Seitennummern und eigene Seitenränder. Diese erscheinen in der nativen AirPrint-Vorschau; die vorherige Inhaltsvorschau ist nicht in Seiten aufgeteilt. Das Drucken verlinkter Dokumente wird auf iOS nicht unterstützt. Mit Abbrechen gelangst du zur Vorschau zurück; **Schließen** öffnet wieder deine Notiz.
 
 ## PDF-Vorlagen auf iOS
 
@@ -126,4 +126,4 @@ Merkzeug ist proprietäre Software für private und interne geschäftliche Nutzu
 
 **PDF-Vorlage beim Bearbeiten verwenden** übernimmt die Inhalts-Styles einschließlich heller Mermaid-Diagramme. Die Einstellung wird pro Vault auf diesem Gerät gespeichert. **Neu einlesen** lädt Änderungen; auch bei der Rückkehr zur App werden Vorlagen aktualisiert. Cloud-Dateien müssen über ihren Anbieter verfügbar sein. Bei nicht verfügbaren Vorlagen erscheint ein Fehler; beim Drucken wird keine andere Vorlage stillschweigend eingesetzt.
 
-Die automatische Merkzeug-iCloud-Ablage und Desktop-Migration werden in Ticket #51 vorbereitet. Bis zur Einrichtung wird ein vorhandener Ordner ausdrücklich ausgewählt.
+Standardmäßig verwendet Merkzeug **iCloud Drive → Merkzeug → Templates** und installiert dort die Startvorlage, falls sie fehlt. Melde dich bei iCloud an und aktiviere iCloud Drive. Verwende auf deinen Geräten denselben Apple-Account. **Merkzeug-iCloud-Vorlagen verwenden** wechselt von einem selbst gewählten Ordner zurück zur gemeinsamen Ablage. Ohne iCloud kannst du weiterhin über Dateien einen vorhandenen Ordner wählen; nicht verfügbare Vorlagen werden gemeldet und nicht stillschweigend ersetzt.

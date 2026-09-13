@@ -16,9 +16,9 @@ Desktop additionally supports selecting multiple notes in one folder and exporti
 
 ## Select a template
 
-**Desktop:** Settings lets you choose the root templates folder, create a template, and assign it to a vault. The assignment is saved in `.merkzeug/settings.json`; the template files themselves must be available on each computer.
+**Desktop:** Settings lets you choose the root templates folder, create a template, and assign it to a vault. On macOS, the old default folder is automatically copied to the available Merkzeug iCloud container before switching. Custom folders are retained; **Use Merkzeug iCloud templates** explicitly copies and switches, preserving originals and refusing conflicting files. Windows offers the same action when iCloud Drive has synchronized the public Merkzeug folder. The assignment is saved in `.merkzeug/settings.json`; the template files themselves must be available on each computer.
 
-**iOS:** Open **PDF templates → Change…**, select the folder containing template subfolders in Files, then choose **Template for this vault**. The assignment uses the same `.merkzeug/settings.json` field as desktop. **Use PDF template while editing** previews content styles, including Mermaid diagrams. **Refresh** reloads files from the selected provider. Automatic container discovery and desktop migration remain in progress in issue #51.
+**iOS:** Open **PDF templates → Change…**, select the folder containing template subfolders in Files, then choose **Template for this vault**. The assignment uses the same `.merkzeug/settings.json` field as desktop. **Use PDF template while editing** previews content styles, including Mermaid diagrams. **Refresh** reloads files from the selected provider. The default folder is **iCloud Drive → Merkzeug → Templates**. A manually selected Files folder remains available as an alternative.
 
 **IntelliJ:** **PDF template …** selects one template folder and remembers it per project. It does not import the desktop vault assignment automatically.
 
@@ -80,4 +80,4 @@ Desktop **File → Print…** (⌘P / Ctrl+P) uses the same generated PDF, inclu
 
 In IntelliJ, activate the Merkzeug editor and choose **File → Print**, or click **Print…**. Merkzeug prepares a PDF preview; use its **Print…** button to open the native print dialog. Other editor tabs retain their own printing behavior.
 
-On iOS, open a note, tap **Print…**, wait for the print preview, then tap **Print…** to open AirPrint. Pending edits are saved before preparing the current note. Diagrams and local images are included. iOS prints one note at a time and uses the selected template’s content styles and cover. Template headers, footers, custom page margins and linked-document printing are not yet supported on iOS. Cancel AirPrint to return to the preview, or close the preview to return to editing.
+On iOS, open a note, tap **Print…**, wait for the print preview, then tap **Print…** to open AirPrint. Pending edits are saved before preparing the current note. Diagrams and local images are included. iOS prints one note at a time and uses the selected template’s content styles and cover. AirPrint applies template headers, footers, page numbers and custom margins. These appear in the native AirPrint preview; the preceding content preview is not paginated. Linked-document printing is not supported on iOS. Cancel AirPrint to return to the preview, or close the preview to return to editing.

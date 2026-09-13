@@ -99,6 +99,7 @@ Fork pull requests run checks with read-only repository access. Signing credenti
 
 | Secret | Purpose |
 | --- | --- |
+| `MAC_ICLOUD_PROFILE_BASE64` | Base64-encoded Developer ID provisioning profile containing the Merkzeug iCloud container |
 | `MAC_CSC_LINK` | Base64-encoded macOS Developer ID Application certificate in P12 format |
 | `MAC_CSC_KEY_PASSWORD` | P12 password |
 | `APPLE_API_KEY_BASE64` | Base64-encoded App Store Connect P8 key for notarization |

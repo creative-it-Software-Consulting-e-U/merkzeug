@@ -180,3 +180,11 @@ entitlements as well as the bundle metadata. A new Cloud/TestFlight build and
 an installed-app launch test are required to confirm the distribution fix;
 local packaging alone does not establish TestFlight acceptance.
 See [Electron's MAS signing requirements](https://github.com/electron/electron/blob/main/docs/tutorial/mac-app-store-submission-guide.md).
+
+## Shared iCloud template container
+
+The universal app ID now includes `iCloud.com.creative-it.merkzeug` with CloudDocuments access. On 13 September 2026, replacement profiles named **Merkzeug macOS Development iCloud**, **Merkzeug macOS App Store iCloud** and **Merkzeug App Store iCloud** were created using the existing certificates/devices; all were active and their decoded entitlements confirmed this container. Prior profiles became invalid after the capability change. New profile files remain outside Git under the local App Store Connect profile directory. Point local signing at a replacement profile; Xcode Cloud uses automatic signing. No certificate was created or revoked.
+
+The macOS bridge is a stable Node-API module executing Foundation container discovery in the Electron main process, so the sandbox extension belongs to the process reading templates. Build it with `python3 scripts/build-icloud-addon.py --arch universal`; MAS packaging does this automatically. The Node distribution must include its standard `include/node` headers. Both apps publish the Documents directory under the visible name Merkzeug; templates reside in `Documents/Templates`.
+
+Developer ID distribution outside the Mac App Store also requires a provisioning profile for iCloud. **Merkzeug Developer ID iCloud** was created with the existing Developer ID certificate. Set `MERKZEUG_MAC_PROFILE` to its path outside the checkout for local packaging. GitHub releases decode `MAC_ICLOUD_PROFILE_BASE64` into a private temporary file and remove it afterward. The main app receives the container entitlements; helper processes use unrestricted inherited entitlements without iCloud capabilities.

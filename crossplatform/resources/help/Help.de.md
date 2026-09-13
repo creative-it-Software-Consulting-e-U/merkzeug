@@ -452,3 +452,13 @@ Merkzeug ist proprietäre Software für private und interne geschäftliche Nutzu
 ## Drucken
 
 Wähle **Ablage → Drucken…** (⌘P unter macOS, Ctrl+P unter Windows/Linux). Merkzeug speichert ausstehende Änderungen, bereitet dieselbe PDF-Datei wie beim Export auf und öffnet den System-Druckdialog. Die PDF-Vorschau bleibt nach Drucken oder Abbrechen verfügbar. Sie enthält die gewählte Vorlage, Deckblatt, Kopf-/Fußzeilen, Diagramme und Bilder. Verlinkte Dokumente können optional aufgenommen werden. Ein Speicherziel ist nicht nötig; die temporäre PDF-Datei wird beim Schließen der Vorschau entfernt. PDF-Export bleibt eine eigene Menüaktion.
+
+## Gemeinsame iCloud-Vorlagen
+
+Unter macOS verwendet Merkzeug **iCloud Drive → Merkzeug → Templates**, sobald iCloud Drive verfügbar ist. Beim ersten Zugriff werden die Vorlagen des bisherigen Standardordners kopiert und geprüft, bevor die Einstellung umgestellt wird. Die Originale bleiben als Sicherung im alten Ordner. Ein ausdrücklich gewählter eigener Ordner bleibt eingestellt.
+
+In den Einstellungen kopiert **Merkzeug-iCloud-Vorlagen verwenden** die aktuellen Vorlagen in die gemeinsame Ablage und wechselt nach erfolgreicher Prüfung den Ordner. Unterschiedliche Dateien mit gleichem Namen stoppen die Übernahme, ohne eine Version zu überschreiben. Prüfe diese Dateien vor einem erneuten Versuch.
+
+Unter Windows mit iCloud Drive wird die Aktion verfügbar, sobald der öffentliche Ordner **Merkzeug** synchronisiert wurde. Öffne Merkzeug dafür zuerst auf einem Apple-Gerät. Berücksichtigt werden in Windows registrierte abweichende iCloud-Speicherorte sowie die üblichen Ordner im Benutzerprofil. Über **Ändern…** kannst du einen synchronisierten Vorlagenordner auch direkt wählen. Linux kann über **Ändern…** jeden eingebundenen synchronisierten Ordner verwenden.
+
+Verwende auf allen Geräten denselben iCloud-Account und warte vor dem Bearbeiten auf einem anderen Gerät auf die Synchronisierung. iOS nutzt denselben Ordner und dieselbe Vault-Zuordnung.

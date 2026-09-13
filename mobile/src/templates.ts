@@ -4,14 +4,16 @@ import { Capacitor, registerPlugin } from '@capacitor/core'
 import type { PdfTemplate } from '@merkzeug/core/pdf'
 import { vault } from './vault'
 
-export interface TemplateFolder { name?: string; templates: string[] }
+export interface TemplateFolder { cloud?: boolean; name?: string; templates: string[] }
 const native = registerPlugin<{
+  useCloudTemplateFolder(): Promise<TemplateFolder>
   templateFolder(): Promise<TemplateFolder>
   pickTemplateFolder(): Promise<TemplateFolder>
   templateFile(options: { name: string; path: string }): Promise<{ data?: string }>
 }>('Vault')
 
 export const templateFolder = () => Capacitor.isNativePlatform() ? native.templateFolder() : Promise.resolve({ name: 'Demo templates', templates: [] })
+export const useCloudTemplateFolder = () => native.useCloudTemplateFolder()
 export const pickTemplateFolder = () => Capacitor.isNativePlatform() ? native.pickTemplateFolder() : templateFolder()
 const settingsPath = '/.merkzeug/settings.json'
 export async function assignedTemplate(): Promise<string | null> {

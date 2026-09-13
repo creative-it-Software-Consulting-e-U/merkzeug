@@ -82,6 +82,7 @@ const api = {
   openSettings: (): Promise<void> => ipcRenderer.invoke('settings:open'),
   getLiveTemplate: (): Promise<PdfTemplate | null> => ipcRenderer.invoke('tpl:live'),
   getTemplateState: (): Promise<TemplateState> => ipcRenderer.invoke('tpl:state'),
+  migrateTemplatesToCloud: (): Promise<TemplateState> => ipcRenderer.invoke('tpl:migrateCloud'),
   pickTemplatesRoot: (): Promise<TemplateState> => ipcRenderer.invoke('tpl:pickRoot'),
   createTemplate: (name: string): Promise<TemplateState> => ipcRenderer.invoke('tpl:create', name),
   assignTemplate: (name: string | null): Promise<TemplateState> =>

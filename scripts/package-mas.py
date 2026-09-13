@@ -67,6 +67,7 @@ def main():
                             'crossplatform/resources/calendar/MerkzeugCalendar.swift', '-o', output], cwd=ROOT, env=env, check=True)
             slices.append(output)
         subprocess.run(['xcrun', 'lipo', '-create', *slices, '-output', str(ROOT / 'crossplatform/resources/calendar/merkzeug-calendar')], env=env, check=True)
+    subprocess.run(['python3', str(ROOT / 'scripts/build-icloud-addon.py'), '--arch', args.arch], cwd=ROOT, env=env, check=True)
     with tempfile.TemporaryDirectory(prefix='merkzeug-mas-') as temporary:
         path = Path(temporary) / 'builder.json'
         path.write_text(json.dumps(config))

@@ -8,7 +8,7 @@
     "dev": "electron-vite dev",
     "build": "electron-vite build",
     "start": "electron-vite preview",
-    "build:calhelper": "swiftc -O resources/calendar/MerkzeugCalendar.swift -o resources/calendar/merkzeug-calendar",
+    "build:calhelper": "swiftc -O resources/calendar/MerkzeugCalendar.swift -o resources/calendar/merkzeug-calendar && python3 ../scripts/build-icloud-addon.py",
     "package:mac": "npm run build:calhelper && electron-vite build && electron-builder --mac dir",
     "package:mac:dmg": "npm run build:calhelper && electron-vite build && electron-builder --mac dmg",
     "package:win": "electron-vite build && ELECTRON_BUILDER_7Z_FILTER=BCJ2 electron-builder --win --x64 --arm64",

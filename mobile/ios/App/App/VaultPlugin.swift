@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import WebKit
 import UniformTypeIdentifiers
 import Capacitor
 
@@ -11,6 +12,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
     public let identifier = "VaultPlugin"
     public let jsName = "Vault"
     public let pluginMethods: [CAPPluginMethod] = [
+        CAPPluginMethod(name: "useCloudTemplateFolder", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "templateFolder", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "pickTemplateFolder", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "templateFile", returnType: CAPPluginReturnPromise),
@@ -37,6 +39,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
     private var pendingPick: CAPPluginCall?
     private var pickingTemplates = false
     private var templatesURL: URL?
+    private let templateQueue = DispatchQueue(label: "com.creative-it.merkzeug.templates")
     private static let templateBookmarkKey = "MerkzeugTemplateFolderBookmark"
 
     private var printingDocument = false
@@ -50,12 +53,27 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
                 call.reject("Printing is not available"); return
             }
             self.printingDocument = true
+            Task { @MainActor in
+            do {
             // Paginate the prepared shared print view first, then hand the resulting
             // PDF to AirPrint. Menus and controls are excluded by print CSS.
-            let renderer = MerkzeugPrintRenderer(landscape: call.getBool("landscape") ?? false)
+            let renderer = try MerkzeugPrintRenderer(landscape: call.getBool("landscape") ?? false, margins: call.getObject("margins"))
             renderer.addPrintFormatter(webView.viewPrintFormatter(), startingAtPageAt: 0)
             guard renderer.numberOfPages > 0 else {
                 self.printingDocument = false; call.reject("No printable pages"); return
+            }
+            renderer.prepare(forDrawingPages: NSRange(location: 0, length: renderer.numberOfPages))
+            let furniture = TemplatePrintFurniture(parent: presenter.view)
+            defer { furniture.close() }
+            for page in 0..<renderer.numberOfPages {
+                if let header = call.getString("header"), !header.isEmpty, renderer.headerRect.height > 0 {
+                    if !header.contains("pageNumber"), let cached = renderer.headers[0] { renderer.headers[page] = cached }
+                    else { renderer.headers[page] = try await furniture.image(html: header, size: renderer.headerRect.size, page: page + 1, total: renderer.numberOfPages, footer: false) }
+                }
+                if let footer = call.getString("footer"), !footer.isEmpty, renderer.footerRect.height > 0 {
+                    if !footer.contains("pageNumber"), let cached = renderer.footers[0] { renderer.footers[page] = cached }
+                    else { renderer.footers[page] = try await furniture.image(html: footer, size: renderer.footerRect.size, page: page + 1, total: renderer.numberOfPages, footer: true) }
+                }
             }
             let data = NSMutableData()
             UIGraphicsBeginPDFContextToData(data, renderer.paperRect, nil)
@@ -65,6 +83,12 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
                 renderer.drawPage(at: page, in: UIGraphicsGetPDFContextBounds())
             }
             UIGraphicsEndPDFContext()
+            #if DEBUG && targetEnvironment(simulator)
+            if ProcessInfo.processInfo.environment["MERKZEUG_PRINT_PROOF"] == "1" {
+                let proof = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("Merkzeug-print-proof.pdf")
+                try (data as Data).write(to: proof, options: .atomic)
+            }
+            #endif
             guard data.length > 0, UIPrintInteractionController.canPrint(data as Data) else {
                 self.printingDocument = false; call.reject("Could not prepare printable PDF"); return
             }
@@ -85,6 +109,8 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
                 shown = controller.present(animated: true, completionHandler: completion)
             }
             if !shown { self.printingDocument = false; call.reject("Could not open print dialog") }
+            } catch { self.printingDocument = false; call.reject(error.localizedDescription) }
+            }
         }
     }
 
@@ -168,14 +194,16 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
             return
         }
         if pickingTemplates {
-            do {
-                let bookmark = try url.bookmarkData()
-                UserDefaults.standard.set(bookmark, forKey: Self.templateBookmarkKey)
-                templatesURL?.stopAccessingSecurityScopedResource()
-                templatesURL = url
-                templateFolder(call)
-            } catch { url.stopAccessingSecurityScopedResource(); call.reject(error.localizedDescription) }
             pickingTemplates = false
+            templateQueue.async {
+                do {
+                    let bookmark = try url.bookmarkData()
+                    UserDefaults.standard.set(bookmark, forKey: Self.templateBookmarkKey)
+                    self.templatesURL?.stopAccessingSecurityScopedResource()
+                    self.templatesURL = url
+                    self.templateFolder(call)
+                } catch { url.stopAccessingSecurityScopedResource(); call.reject(error.localizedDescription) }
+            }
             return
         }
         if let old = vaultURL, old != url {
@@ -216,7 +244,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
             return root
         }
         #endif
-        guard let data = UserDefaults.standard.data(forKey: Self.templateBookmarkKey) else { return nil }
+        guard let data = UserDefaults.standard.data(forKey: Self.templateBookmarkKey) else { return try cloudTemplateFolder() }
         var stale = false
         let url = try URL(resolvingBookmarkData: data, bookmarkDataIsStale: &stale)
         guard url.startAccessingSecurityScopedResource() else { throw CocoaError(.fileReadNoPermission) }
@@ -225,7 +253,38 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
         return url
     }
 
+    private func cloudTemplateFolder() throws -> URL? {
+        guard FileManager.default.ubiquityIdentityToken != nil,
+              let container = FileManager.default.url(forUbiquityContainerIdentifier: "iCloud.com.creative-it.merkzeug") else { return nil }
+        let root = container.appendingPathComponent("Documents/Templates", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        let starter = root.appendingPathComponent("Merkzeug", isDirectory: true)
+        if !FileManager.default.fileExists(atPath: starter.path),
+           let source = Bundle.main.resourceURL?.appendingPathComponent("public/pdf-templates/Merkzeug"),
+           FileManager.default.fileExists(atPath: source.path) {
+            // Never overwrite a user's template; another device may have installed it.
+            do { try FileManager.default.copyItem(at: source, to: starter) }
+            catch let error as NSError where error.code == NSFileWriteFileExistsError { }
+        }
+        return root
+    }
+
+    @objc func useCloudTemplateFolder(_ call: CAPPluginCall) {
+        templateQueue.async {
+            do {
+                guard try self.cloudTemplateFolder() != nil else {
+                    call.reject(localized("iCloud Drive is not available. Sign in and enable iCloud Drive in Settings.", "iCloud Drive ist nicht verfügbar. Melde dich an und aktiviere iCloud Drive in den Einstellungen.")); return
+                }
+                self.templatesURL?.stopAccessingSecurityScopedResource()
+                self.templatesURL = nil
+                UserDefaults.standard.removeObject(forKey: Self.templateBookmarkKey)
+                self.templateFolder(call)
+            } catch { call.reject(error.localizedDescription) }
+        }
+    }
+
     @objc func templateFolder(_ call: CAPPluginCall) {
+        templateQueue.async { [self] in
         do {
             guard let root = try restoreTemplateFolder() else { call.resolve(["templates": [String]()]); return }
             var names = [String]()
@@ -240,8 +299,9 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
                 } catch { readError = error }
             }
             if let error = coordinationError ?? readError as NSError? { throw error }
-            call.resolve(["name": root.lastPathComponent, "templates": names.sorted()])
+            call.resolve(["name": root.lastPathComponent, "templates": names.sorted(), "cloud": UserDefaults.standard.data(forKey: Self.templateBookmarkKey) == nil])
         } catch { call.reject(error.localizedDescription) }
+        }
     }
 
     @objc func pickTemplateFolder(_ call: CAPPluginCall) {
@@ -257,8 +317,12 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
     }
 
     @objc func templateFile(_ call: CAPPluginCall) {
+        templateQueue.async { [self] in
         do {
-            guard let root = try restoreTemplateFolder(), let name = call.getString("name"),
+            guard let root = try restoreTemplateFolder() else {
+                call.reject(localized("iCloud Drive is not available. Sign in or choose a templates folder.", "iCloud Drive ist nicht verfügbar. Melde dich an oder wähle einen Vorlagenordner.")); return
+            }
+            guard let name = call.getString("name"),
                   !name.isEmpty, !name.hasPrefix("."), !name.contains("/"), !name.contains("\\"),
                   let path = call.getString("path"), !path.isEmpty, !path.hasPrefix("/"),
                   !path.contains("\\"), !path.split(separator: "/").contains("..") else { throw CocoaError(.fileReadInvalidFileName) }
@@ -275,6 +339,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
             }
             call.resolve(["data": data.base64EncodedString()])
         } catch { call.reject(error.localizedDescription) }
+        }
     }
 
     // MARK: - Pfad-Helfer
@@ -666,10 +731,75 @@ private func localized(_ english: String, _ german: String) -> String {
 
 private final class MerkzeugPrintRenderer: UIPrintPageRenderer {
     private let page: CGRect
-    init(landscape: Bool) {
+    private let content: CGRect
+    let headerRect: CGRect
+    let footerRect: CGRect
+    var headers: [Int: UIImage] = [:]
+    var footers: [Int: UIImage] = [:]
+    init(landscape: Bool, margins: [String: Any]?) throws {
         page = CGRect(x: 0, y: 0, width: landscape ? 842 : 595, height: landscape ? 595 : 842)
+        func points(_ side: String) -> CGFloat {
+            guard let value = margins?[side] as? Double, value.isFinite, value >= 0 else { return 28 }
+            return CGFloat(value) * 72 / 25.4
+        }
+        let top = points("top"), bottom = points("bottom"), left = points("left"), right = points("right")
+        guard left + right < page.width - 20, top + bottom < page.height - 20 else {
+            throw NSError(domain: "MerkzeugPrint", code: 1, userInfo: [NSLocalizedDescriptionKey: localized("Template margins leave no room for content.", "Die Vorlagenränder lassen keinen Platz für den Inhalt.")])
+        }
+        content = CGRect(x: left, y: top, width: page.width - left - right, height: page.height - top - bottom)
+        headerRect = CGRect(x: left, y: 0, width: content.width, height: top)
+        footerRect = CGRect(x: left, y: page.height - bottom, width: content.width, height: bottom)
         super.init()
     }
     override var paperRect: CGRect { page }
-    override var printableRect: CGRect { page.insetBy(dx: 28, dy: 28) }
+    override var printableRect: CGRect { content }
+    override func drawPage(at pageIndex: Int, in printableRect: CGRect) {
+        super.drawPage(at: pageIndex, in: printableRect)
+        headers[pageIndex]?.draw(in: headerRect)
+        footers[pageIndex]?.draw(in: footerRect)
+    }
+}
+
+/// Render page furniture using WebKit CSS, separately from the paginated body.
+/// The web view has no Capacitor bridge, persistent cookies or content JavaScript.
+@MainActor
+private final class TemplatePrintFurniture {
+    private let webView: WKWebView
+    init(parent: UIView) {
+        let config = WKWebViewConfiguration()
+        config.websiteDataStore = .nonPersistent()
+        config.defaultWebpagePreferences.allowsContentJavaScript = false
+        webView = WKWebView(frame: .zero, configuration: config)
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
+        webView.scrollView.contentInset = .zero
+        webView.scrollView.isScrollEnabled = false
+        webView.isUserInteractionEnabled = false
+        webView.accessibilityElementsHidden = true
+        parent.insertSubview(webView, at: 0)
+    }
+    func close() { webView.stopLoading(); webView.removeFromSuperview() }
+    func image(html: String, size: CGSize, page: Int, total: Int, footer: Bool) async throws -> UIImage {
+        // HTML uses CSS pixels; PDF paper coordinates are 72-point inches.
+        let scale: CGFloat = 96 / 72
+        // Keep snapshots below the system status-bar material, which WebKit can
+        // otherwise composite over the top of this offscreen rendering view.
+        let origin = CGPoint(x: 0, y: (webView.superview?.safeAreaInsets.top ?? 0) + 100)
+        webView.frame = CGRect(origin: origin, size: CGSize(width: size.width * scale, height: size.height * scale))
+        let marker = UUID().uuidString
+        let alignment = footer ? "flex-start" : "flex-end"
+        webView.loadHTMLString("<html data-merkzeug-print='\(marker)'><head><meta name='viewport' content='width=device-width,initial-scale=1'><style>html,body{margin:0;padding:0;width:100%;height:100%;background:white;color:black;color-scheme:light}body{font:10px Arial;display:flex;flex-direction:column;justify-content:\(alignment);box-sizing:border-box;padding:8px 0}</style></head><body>\(html)</body></html>", baseURL: nil)
+        var ready = false
+        for _ in 0..<100 {
+            if let value = try? await webView.evaluateJavaScript("document.documentElement.dataset.merkzeugPrint === '\(marker)' && document.readyState === 'complete' && document.fonts.status === 'loaded' && Array.from(document.images).every(i => i.complete)"), (value as? Bool) == true { ready = true; break }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        guard ready else { throw NSError(domain: "MerkzeugPrint", code: 2, userInfo: [NSLocalizedDescriptionKey: localized("Template header or footer did not finish rendering.", "Kopf- oder Fußzeile der Vorlage konnte nicht fertig dargestellt werden.")]) }
+        let imagesOK = try await webView.evaluateJavaScript("Array.from(document.images).every(i => i.naturalWidth > 0)")
+        guard (imagesOK as? Bool) == true else { throw NSError(domain: "MerkzeugPrint", code: 3, userInfo: [NSLocalizedDescriptionKey: localized("A template header or footer image is unavailable.", "Ein Bild in der Kopf- oder Fußzeile ist nicht verfügbar.")]) }
+        _ = try await webView.evaluateJavaScript("document.querySelectorAll('.pageNumber').forEach(e => e.textContent = '\(page)'); document.querySelectorAll('.totalPages').forEach(e => e.textContent = '\(total)'); true")
+        try await Task.sleep(nanoseconds: 20_000_000)
+        let config = WKSnapshotConfiguration()
+        config.rect = webView.bounds
+        return try await webView.takeSnapshot(configuration: config)
+    }
 }

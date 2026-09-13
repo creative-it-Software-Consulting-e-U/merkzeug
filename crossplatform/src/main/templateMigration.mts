@@ -1,4 +1,4 @@
-import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync } from 'node:fs'
+import { constants, copyFileSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync } from 'node:fs'
 import { basename, dirname, join, relative, resolve, sep } from 'node:path'
 
 function inside(parent: string, path: string): boolean {
@@ -7,6 +7,7 @@ function inside(parent: string, path: string): boolean {
 }
 function canonical(path: string): string {
   if (existsSync(path)) return realpathSync(path)
+  if (dirname(path) === path) throw new Error('Template volume is unavailable.')
   return join(canonical(dirname(path)), basename(path))
 }
 /** Copy before switching the configured root. Keep originals as a recovery copy.
@@ -36,7 +37,7 @@ export function migrateTemplateFiles(source: string, destination: string): void 
   for (const path of folders) mkdirSync(join(to, path), { recursive: true })
   for (const path of files) {
     const target = join(to, path)
-    if (!existsSync(target)) cpSync(join(from, path), target, { force: false, errorOnExist: true })
+    if (!existsSync(target)) copyFileSync(join(from, path), target, constants.COPYFILE_EXCL)
     if (lstatSync(target).isSymbolicLink() || !readFileSync(target).equals(readFileSync(join(from, path)))) throw new Error(`Template copy could not be verified: ${path}`)
   }
 }
