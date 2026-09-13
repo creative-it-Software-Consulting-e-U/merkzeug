@@ -160,3 +160,25 @@ public release or proof of native installation/runtime acceptance. Production
 Windows signing still requires the maintainer's chosen signing identity/provider.
 
 See [the release validation runbook](release-validation.md) for native coverage, independent edition selection, protected signing, retained evidence and unresolved acceptance requirements.
+
+## GitHub Actions cost controls
+
+Pull requests and main-branch pushes run **Checks** on Linux, including unit tests,
+release-script tests, type checks and shared web builds. They do not launch the
+native package matrix or screenshot capture. Full native acceptance remains a
+separate, deliberate validation step before release.
+
+Start **Validate release candidates** manually for native packages and acceptance
+checks, or **Store screenshot candidates** manually when new store images are needed:
+
+```sh
+gh workflow run preview-packages.yml --ref YOUR_BRANCH
+gh workflow run store-screenshots.yml --ref YOUR_BRANCH
+```
+
+**Build release draft** still runs for version tags or manual dispatch. The release
+workflow's edition input can restrict a manual build to the required editions.
+Superseded Checks, native candidate runs and screenshot candidate runs on the same
+branch are cancelled. Release runs and uploads remain serialized without cancelling
+an active publication. Xcode Cloud/TestFlight configuration is independent of these
+GitHub Actions controls.

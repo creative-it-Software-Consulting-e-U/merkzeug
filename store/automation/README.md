@@ -34,7 +34,7 @@ python3 scripts/capture-mac-demo.py /tmp/merkzeug-raw
 python3 scripts/frame-store-screenshots.py /tmp/merkzeug-raw /tmp/merkzeug-store --edition macos
 ```
 
-Alternatively use **Store screenshot candidates** in GitHub Actions (manual dispatch or a pull request changing screenshot automation). The end-to-end workflow first succeeded in run `34396519467`. It runs on macOS, isolates every scene's profile and vault, captures the real Electron app and saves raw images, composed images and provenance in a 30-day build artifact. It never modifies the installed app. Output dimensions must be an accepted macOS 16:10 screenshot size.
+Alternatively use **Store screenshot candidates** in GitHub Actions (manual dispatch only; pull requests do not start macOS captures). The end-to-end workflow first succeeded in run `34396519467`. It runs on macOS, isolates every scene's profile and vault, captures the real Electron app and saves raw images, composed images and provenance in a 30-day build artifact. It never modifies the installed app. Output dimensions must be an accepted macOS 16:10 screenshot size.
 
 The macOS app is Electron. Its new Xcode packaging target supports Cloud Archive/signing/distribution, but screenshot capture still needs Electron and a usable graphical session. The iOS Cloud screenshot workflow does not capture the Mac app. Keep this independent macOS capture pipeline until actual Cloud capture is validated; compare the visuals with the signed MAS build before upload.
 
