@@ -79,8 +79,10 @@ for language, scenes in {'en': {'writing': 'Welcome', 'diagram': 'Projects;;Gard
                                        for p in sorted((ROOT/'resources/pdf-templates/Merkzeug').iterdir()) if p.is_file()}
                 }, indent=2) + '\n')
             if scene == 'calendar':
-                notes = list(demo.rglob('2026-09-10-*.md'))
-                if len(notes) != 1 or 'attendees:' not in notes[0].read_text(): raise SystemExit('Calendar event did not create a meeting note')
+                event_id = hashlib.sha256(b'demo-planning\n2026-09-10T09:00:00Z').hexdigest()[:20]
+                notes = list(demo.rglob(f'meeting-{event_id}.md'))
+                if len(notes) != 1 or 'attendees:' not in notes[0].read_text() or title not in notes[0].read_text():
+                    raise SystemExit('Calendar event did not create a meeting note with its stable identity and attendees')
             if not target.is_file(): raise SystemExit('Capture failed: ' + str(target))
             print(target, flush=True)
 print('Desktop build candidates; recapture from the signed MAS build before store upload.')
