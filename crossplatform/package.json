@@ -50,7 +50,7 @@
     "chokidar": "^5.0.0"
   },
   "allowScripts": {
-    "electron@43.3.0": true,
+    "electron@44.2.0": true,
     "esbuild@0.25.12": true,
     "esbuild@0.28.1": true,
     "fsevents@2.3.3": true,
