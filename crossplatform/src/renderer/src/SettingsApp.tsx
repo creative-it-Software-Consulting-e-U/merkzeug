@@ -14,6 +14,7 @@ function cleanError(err: unknown): string {
 /** Einstellungs-Fenster (#settings): PDF-Vorlagen verwalten und dem Vault zuweisen. */
 export function SettingsApp(): React.JSX.Element {
   const [state, setState] = useState<TemplateState | null>(null)
+  const [migrating, setMigrating] = useState(false)
   const [newName, setNewName] = useState('')
   const [error, setError] = useState<string | null>(null)
 
@@ -68,9 +69,16 @@ export function SettingsApp(): React.JSX.Element {
           <span className="settings-path" title={state.templatesRoot}>
             {state.templatesRoot}
           </span>
-          <button onClick={() => run(() => window.merkzeug.pickTemplatesRoot())}>{translate("Change…")}</button>
+          <button disabled={migrating} onClick={() => run(() => window.merkzeug.pickTemplatesRoot())}>{translate("Change…")}</button>
           <button onClick={() => void window.merkzeug.showTemplatesRoot()}>{translate("Show")}</button>
         </div>
+        {state.cloudRoot && state.cloudRoot !== state.templatesRoot && <button disabled={migrating} onClick={() => {
+          setMigrating(true); setError(null)
+          window.merkzeug.migrateTemplatesToCloud().then(setState, e => setError(cleanError(e))).finally(() => setMigrating(false))
+        }}>{translate('Use Merkzeug iCloud templates')}</button>}
+        {state.cloudSupported && <p className="settings-hint">{translate('iCloud migration copies and verifies your templates before switching folders. Originals are kept as a backup; different files with the same name are not overwritten.')}</p>}
+        {state.cloudError && <p role="alert">{state.cloudError}</p>}
+        {state.cloudSupported && !state.cloudRoot && <p className="settings-hint">{translate('iCloud templates are unavailable. Enable iCloud Drive and open Merkzeug on an Apple device. You can also choose an existing synchronized folder with Change…')}</p>}
         <p className="settings-hint">
           {translate("Each template has its own subfolder. Store the templates folder in iCloud Drive, Google Drive, OneDrive or Dropbox to sync templates across devices.")}
         </p>

@@ -1,3 +1,4 @@
+import { refreshTemplateCloud, templateCloudState, migrateTemplatesToCloud } from './templateCloud'
 import { writeFileSync as writeMeetingFile } from 'node:fs'
 import { loadCalendarSources, saveCalendarSources, fetchCalendarSource } from './calendarSources'
 import { readGuidance, appendGuidance } from './vaultGuidance.mjs'
@@ -126,6 +127,7 @@ function templateState(): TemplateState {
   const vault = getSettingsVault()
   return {
     vault,
+    ...templateCloudState(),
     templatesRoot: templatesRoot(),
     templates: listTemplates(),
     assigned: vault ? getVaultTemplateName(vault) : null
@@ -244,7 +246,12 @@ function registerIpc(): void {
   ipcMain.handle('calendar:sourcesLoad', () => loadCalendarSources())
   ipcMain.handle('calendar:sourcesSave', (_e, value: string) => saveCalendarSources(value))
   ipcMain.handle('calendar:fetch', (_e, url: string) => fetchCalendarSource(url))
-  ipcMain.handle('tpl:state', () => templateState())
+  ipcMain.handle('tpl:state', async () => { await refreshTemplateCloud(); return templateState() })
+  ipcMain.handle('tpl:migrateCloud', async () => {
+    await migrateTemplatesToCloud()
+    for (const win of BrowserWindow.getAllWindows()) win.webContents.send('settings:refresh')
+    return templateState()
+  })
   ipcMain.handle('tpl:pickRoot', async (event) => {
     const win = winFromEvent(event) ?? undefined
     const options: Electron.OpenDialogOptions = {
@@ -300,9 +307,10 @@ if (process.env.MERKZEUG_SCREENSHOT && process.env.MERKZEUG_SCREENSHOT_PROFILE) 
   nativeTheme.themeSource = 'light'
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   setLocale(app.commandLine.getSwitchValue('lang') || app.getLocale())
   restoreFolderAccess()
+  await refreshTemplateCloud()
   electronApp.setAppUserModelId('com.creative-it.merkzeug')
 
   protocol.handle('vault-file', (request) => {

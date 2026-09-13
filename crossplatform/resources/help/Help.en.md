@@ -437,3 +437,13 @@ Merkzeug is proprietary software for private and internal business use. The full
 ## Printing
 
 Choose **File → Print…** (⌘P on macOS, Ctrl+P on Windows/Linux). Merkzeug saves pending edits, prepares the same PDF used for export, and opens the system print dialog. The PDF preview stays available after printing or cancellation. It includes the selected template, cover, headers, footers, diagrams and images. Linked documents can optionally be included. No PDF destination needs to be chosen; the temporary PDF is removed when its preview closes. PDF export remains a separate menu action.
+
+## Shared iCloud templates
+
+On macOS, Merkzeug uses **iCloud Drive → Merkzeug → Templates** when iCloud Drive is available. On first use, templates from the old default folder are copied and verified before the configured folder changes. Originals stay in the old folder as a recovery copy. An explicitly chosen custom folder is retained.
+
+In Settings, **Use Merkzeug iCloud templates** copies your current templates to the shared folder and switches after verification. Different files with the same name stop migration without overwriting either version; review them before retrying.
+
+On Windows with iCloud Drive, this action becomes available after the public **Merkzeug** folder has synchronized. Open Merkzeug on an Apple device first. Custom iCloud Drive locations registered with Windows are supported, as are the usual user-profile locations. Use **Change…** to select a synchronized templates folder directly if discovery is unavailable. Linux can use any mounted synchronized folder through **Change…**.
+
+All devices must use the same iCloud account. Allow synchronization to finish before editing templates on another device. iOS uses the same folder and vault assignment.

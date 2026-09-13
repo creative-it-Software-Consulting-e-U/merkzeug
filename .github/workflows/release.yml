@@ -107,6 +107,7 @@ jobs:
           ARCH: ${{ matrix.arch }}
           PREVIEW: ${{ needs.plan.outputs.preview }}
           MAC_CSC_LINK: ${{ needs.plan.outputs.preview == 'false' && matrix.platform == 'mac' && secrets.MAC_CSC_LINK || '' }}
+          MAC_ICLOUD_PROFILE_BASE64: ${{ needs.plan.outputs.preview == 'false' && matrix.platform == 'mac' && secrets.MAC_ICLOUD_PROFILE_BASE64 || '' }}
           MAC_CSC_KEY_PASSWORD: ${{ needs.plan.outputs.preview == 'false' && matrix.platform == 'mac' && secrets.MAC_CSC_KEY_PASSWORD || '' }}
           WINDOWS_CSC_LINK: ${{ needs.plan.outputs.preview == 'false' && matrix.platform == 'win' && secrets.WINDOWS_CSC_LINK || '' }}
           WINDOWS_CSC_KEY_PASSWORD: ${{ needs.plan.outputs.preview == 'false' && matrix.platform == 'win' && secrets.WINDOWS_CSC_KEY_PASSWORD || '' }}
@@ -115,6 +116,8 @@ jobs:
           APPLE_API_ISSUER: ${{ needs.plan.outputs.preview == 'false' && matrix.platform == 'mac' && secrets.APPLE_API_ISSUER || '' }}
         run: |
           if [[ "$PREVIEW" == false && "$PLATFORM" == mac ]]; then
+            export MERKZEUG_MAC_PROFILE="$RUNNER_TEMP/merkzeug-developer-id.provisionprofile"
+            python3 -c 'import os,base64,pathlib; p=pathlib.Path(os.environ["MERKZEUG_MAC_PROFILE"]); p.write_bytes(base64.b64decode(os.environ["MAC_ICLOUD_PROFILE_BASE64"], validate=True)); p.chmod(0o600)'
             export APPLE_API_KEY="$RUNNER_TEMP/merkzeug-notarization.p8"
             python3 -c 'import os,base64,pathlib; pathlib.Path(os.environ["APPLE_API_KEY"]).write_bytes(base64.b64decode(os.environ["APPLE_API_KEY_BASE64"], validate=True))'
           fi
@@ -126,10 +129,10 @@ jobs:
       - name: Verify production publisher signatures
         if: needs.plan.outputs.preview == 'false' && matrix.platform != 'linux'
         run: python3 scripts/verify-desktop-signatures.py ${{ matrix.platform }} ${{ matrix.arch }}
-      - name: Remove temporary notarization key
+      - name: Remove temporary signing files
         if: always() && matrix.platform == 'mac'
         shell: bash
-        run: rm -f "$RUNNER_TEMP/merkzeug-notarization.p8"
+        run: rm -f "$RUNNER_TEMP/merkzeug-notarization.p8" "$RUNNER_TEMP/merkzeug-developer-id.provisionprofile"
       - uses: actions/upload-artifact@v4
         with:
           name: desktop-${{ matrix.platform }}-${{ matrix.arch }}

@@ -30,6 +30,8 @@ if args.signed and args.platform in ['mac', 'win']:
     if args.platform == 'mac':
         for key in ['APPLE_API_KEY', 'APPLE_API_KEY_ID', 'APPLE_API_ISSUER']:
             if not env.get(key): raise SystemExit(f'Missing notarization configuration: {key}')
+        if not Path(env.get('MERKZEUG_MAC_PROFILE', '')).is_file():
+            raise SystemExit('Missing Developer ID iCloud profile: MERKZEUG_MAC_PROFILE')
         config['mac'] = {'notarize': True}
 elif args.platform == 'mac':
     config['mac'] = {'identity': None, 'hardenedRuntime': False, 'notarize': False}
@@ -38,6 +40,7 @@ subprocess.run(['node', str(ROOT / 'scripts/third-party-notices.mjs')], cwd=ROOT
 subprocess.run(['npm.cmd' if os.name == 'nt' else 'npm', 'run', 'build:desktop'], cwd=ROOT, env=env, check=True)
 if args.platform == 'mac':
     subprocess.run(['npm.cmd' if os.name == 'nt' else 'npm', 'run', 'build:calhelper', '-w', 'merkzeug'], cwd=ROOT, env=env, check=True)
+    subprocess.run(['python3', str(ROOT / 'scripts/build-icloud-addon.py'), '--arch', args.arch], cwd=ROOT, env=env, check=True)
 with tempfile.TemporaryDirectory(prefix='merkzeug-package-') as temp:
     path = Path(temp) / 'builder.json'; path.write_text(json.dumps(config))
     # Select the Windows command shim explicitly.

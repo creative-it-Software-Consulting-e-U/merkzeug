@@ -100,7 +100,7 @@ Expand **Working Copy** and enter the exact repository name/remote URL and its c
 
 ### Template styling prompt
 
-Desktop Settings provides **Template styling prompt** for each template; expand it to review and copy a complete agent brief with the template's folder path. IntelliJ offers the same action in **Settings → Tools → Merkzeug**, using the folder currently shown in the settings field. On iOS, open **Help → Template styling prompt** and substitute the folder path on the agent's computer; iOS does not currently export PDFs or preview PDF template styles.
+Desktop Settings provides **Template styling prompt** for each template; expand it to review and copy a complete agent brief with the template's folder path. IntelliJ offers the same action in **Settings → Tools → Merkzeug**, using the folder currently shown in the settings field. On iOS, open **Help → Template styling prompt** and substitute the folder path on the agent's computer; The same prompt is available under **PDF templates**. iOS can preview template content styles; saving a PDF file is not yet available.
 
 Replace the new template name and your colors, fonts, logo and design wishes before sending it. The prompt is in English, includes the complete offline technical reference, and works with older templates that lack instruction files. Copying it does not read note contents or modify existing templates. If clipboard access is unavailable in the web view, select and copy the displayed text manually.
 
@@ -114,4 +114,12 @@ Merkzeug is proprietary software for private and internal business use. The full
 
 ## Printing
 
-Open a note and tap **Print…**. After the preview has finished preparing, tap **Print…** to open AirPrint and choose a printer, page range and copies. Pending edits are saved first. The current note is printed with its Mermaid diagrams and images in the standard layout. Template selection and linked-document printing are currently desktop/IntelliJ features. Cancel AirPrint to return to the preview; **Close** returns to your note.
+Open a note and tap **Print…**. After the preview has finished preparing, tap **Print…** to open AirPrint and choose a printer, page range and copies. Pending edits are saved first. The current note is printed with its Mermaid diagrams and images. A selected template supplies content styles and a cover. AirPrint also applies template headers, footers, page numbers and custom margins. These appear in the native AirPrint preview; the preceding content preview is not paginated. Linked-document printing is not supported on iOS. Cancel AirPrint to return to the preview; **Close** returns to your note.
+
+## PDF templates on iOS
+
+Open **PDF templates → Change…** and choose the folder containing your template subfolders in Files, for example an existing folder in iCloud Drive. Select **Template for this vault**. This choice is saved in `.merkzeug/settings.json` and travels with the vault; the template folder is remembered separately on this device. Select **No template** to use the standard layout.
+
+Enable **Use PDF template while editing** to apply its content styles, including light Mermaid diagrams. The preference is remembered for this vault on this device. **Refresh** reads template changes; returning to the app also refreshes them. Cloud files must be available from their provider. An unavailable template shows an error; printing does not silently replace it with another template.
+
+By default, Merkzeug uses **iCloud Drive → Merkzeug → Templates** and installs the starter template if it is missing. Sign in to iCloud and enable iCloud Drive. The same Apple account must be used on your devices. **Use Merkzeug iCloud templates** returns from a manually selected folder to this shared location. When iCloud is unavailable, you can still choose an existing folder through Files; unavailable templates are reported instead of silently replaced.

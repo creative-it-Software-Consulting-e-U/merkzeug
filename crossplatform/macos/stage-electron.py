@@ -14,7 +14,7 @@ if target.name != 'Merkzeug.app' or target.resolve() == source.resolve():
 info = plistlib.loads((source / 'Contents/Info.plist').read_bytes())
 if info['CFBundleIdentifier'] != 'com.creative-it.merkzeug':
     raise SystemExit('Prepared bundle is not Merkzeug')
-for binary in ['Contents/MacOS/Merkzeug', 'Contents/Resources/calendar/merkzeug-calendar']:
+for binary in ['Contents/MacOS/Merkzeug', 'Contents/Resources/calendar/merkzeug-calendar', 'Contents/Resources/icloud/merkzeug-icloud.node']:
     architectures = subprocess.check_output(['xcrun', 'lipo', '-archs', str(source / binary)], text=True).split()
     if set(architectures) != {'arm64', 'x86_64'}:
         raise SystemExit(f'Expected universal executable: {binary}')

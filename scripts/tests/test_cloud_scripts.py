@@ -88,7 +88,8 @@ class MacArchiveSandbox(unittest.TestCase):
                 (resources / name).write_text('fixture')
             base = {'CFBundleIdentifier': 'com.creative-it.merkzeug',
                     'CFBundleVersion': '42', 'CFBundleShortVersionString': '1.0',
-                    'ITSAppUsesNonExemptEncryption': False}
+                    'ITSAppUsesNonExemptEncryption': False,
+                    'NSUbiquitousContainers': {'iCloud.com.creative-it.merkzeug': {'NSUbiquitousContainerIsDocumentScopePublic': True}}}
             group = '3BNJ4M9R56.com.creative-it.merkzeug'
             for team, groups, sandbox, error in [
                 (None, [], True, 'ElectronTeamID'),
@@ -103,7 +104,8 @@ class MacArchiveSandbox(unittest.TestCase):
                     if team: info['ElectronTeamID'] = team
                     (contents / 'Info.plist').write_bytes(plistlib.dumps(info))
                     entitlements = plistlib.dumps({'com.apple.security.app-sandbox': sandbox,
-                                                  'com.apple.security.application-groups': groups})
+                                                  'com.apple.security.application-groups': groups,
+                                                  'com.apple.developer.ubiquity-container-identifiers': ['iCloud.com.creative-it.merkzeug']})
                     def output(command, **kwargs):
                         return entitlements if command[0] == 'codesign' else 'arm64 x86_64'
                     with patch('sys.argv', ['verify-archive.py', folder, '42']), \

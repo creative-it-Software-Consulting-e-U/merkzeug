@@ -498,3 +498,13 @@ body {
 .search-bar { max-width: calc(100vw - 24px); }
 .appearance-bar { padding: 4px 12px; text-align: right; background: var(--bg-bar); }
 .appearance-bar { display: flex; justify-content: space-between; align-items: center; }
+
+.mobile-template-settings { flex: 0 0 auto; max-height: 38vh; overflow: auto; padding: 6px 12px; border-bottom: 1px solid var(--border); }
+.mobile-template-settings summary { cursor: pointer; }
+.mobile-template-settings label { display: inline-flex; align-items: center; gap: 6px; }
+.mobile-template-settings select { font: inherit; max-width: 100%; }
+.template-live .editor-host { color-scheme: light; background: #fff; color: #1a1916; --bg: #fff; --text: #1a1916; --bg-sidebar: #f5f4f2; --bg-hover: #eee; --bg-active: #ddd; --text-dim: #666; --border: #ddd; }
+.template-live .editor-root { background: white; color: #222; }
+
+.mobile-template-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 0; }
+.mobile-template-controls > label { flex-basis: 100%; justify-content: flex-start; text-align: left; }

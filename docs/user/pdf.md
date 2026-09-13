@@ -16,7 +16,9 @@ Desktop additionally supports selecting multiple notes in one folder and exporti
 
 ## Select a template
 
-**Desktop:** Settings lets you choose the root templates folder, create a template, and assign it to a vault. The assignment is saved in `.merkzeug/settings.json`; the template files themselves must be available on each computer.
+**Desktop:** Settings lets you choose the root templates folder, create a template, and assign it to a vault. On macOS, the old default folder is automatically copied to the available Merkzeug iCloud container before switching. Custom folders are retained; **Use Merkzeug iCloud templates** explicitly copies and switches, preserving originals and refusing conflicting files. Windows offers the same action when iCloud Drive has synchronized the public Merkzeug folder. The assignment is saved in `.merkzeug/settings.json`; the template files themselves must be available on each computer.
+
+**iOS:** Open **PDF templates → Change…**, select the folder containing template subfolders in Files, then choose **Template for this vault**. The assignment uses the same `.merkzeug/settings.json` field as desktop. **Use PDF template while editing** previews content styles, including Mermaid diagrams. **Refresh** reloads files from the selected provider. The default folder is **iCloud Drive → Merkzeug → Templates**. A manually selected Files folder remains available as an alternative.
 
 **IntelliJ:** **PDF template …** selects one template folder and remembers it per project. It does not import the desktop vault assignment automatically.
 
@@ -66,7 +68,7 @@ Template sources and full agent prompt: [Merkzeug starter](../../resources/pdf-t
 
 ### Template styling prompt
 
-Desktop Settings provides **Template styling prompt** for each template; expand it to review and copy a complete agent brief with the template's folder path. IntelliJ offers the same action in **Settings → Tools → Merkzeug**, using the folder currently shown in the settings field. On iOS, open **Help → Template styling prompt** and substitute the folder path on the agent's computer; iOS does not currently export PDFs or preview PDF template styles.
+Desktop Settings provides **Template styling prompt** for each template; expand it to review and copy a complete agent brief with the template's folder path. IntelliJ offers the same action in **Settings → Tools → Merkzeug**, using the folder currently shown in the settings field. On iOS, open **Help → Template styling prompt** and substitute the folder path on the agent's computer; iOS also offers the prompt under **PDF templates** and can preview template content styles; saving a PDF file is not yet available.
 
 Replace the new template name and your colors, fonts, logo and design wishes before sending it. The prompt is in English, includes the complete offline technical reference, and works with older templates that lack instruction files. Copying it does not read note contents or modify existing templates. If clipboard access is unavailable in the web view, select and copy the displayed text manually.
 
@@ -78,4 +80,4 @@ Desktop **File → Print…** (⌘P / Ctrl+P) uses the same generated PDF, inclu
 
 In IntelliJ, activate the Merkzeug editor and choose **File → Print**, or click **Print…**. Merkzeug prepares a PDF preview; use its **Print…** button to open the native print dialog. Other editor tabs retain their own printing behavior.
 
-On iOS, open a note, tap **Print…**, wait for the print preview, then tap **Print…** to open AirPrint. Pending edits are saved before preparing the current note. Diagrams and local images are included. iOS currently uses the standard print layout and prints one note at a time; desktop template selection and linked-document printing are not available on iOS. Cancel AirPrint to return to the preview, or close the preview to return to editing.
+On iOS, open a note, tap **Print…**, wait for the print preview, then tap **Print…** to open AirPrint. Pending edits are saved before preparing the current note. Diagrams and local images are included. iOS prints one note at a time and uses the selected template’s content styles and cover. AirPrint applies template headers, footers, page numbers and custom margins. These appear in the native AirPrint preview; the preceding content preview is not paginated. Linked-document printing is not supported on iOS. Cancel AirPrint to return to the preview, or close the preview to return to editing.

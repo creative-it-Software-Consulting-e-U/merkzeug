@@ -1,5 +1,13 @@
 /** German translations; English message text is the stable source key. */
 export const de: Readonly<Record<string, string>> = {
+  "iCloud templates are not available. Open Merkzeug on an Apple device and enable iCloud Drive.": "iCloud-Vorlagen sind nicht verfügbar. Öffne Merkzeug auf einem Apple-Gerät und aktiviere iCloud Drive.",
+  "The current templates folder is unavailable. Nothing was migrated.": "Der aktuelle Vorlagenordner ist nicht verfügbar. Es wurde nichts übernommen.",
+
+  "Use Merkzeug iCloud templates": "Merkzeug-iCloud-Vorlagen verwenden",
+  "iCloud migration copies and verifies your templates before switching folders. Originals are kept as a backup; different files with the same name are not overwritten.": "Die iCloud-Umstellung kopiert und prüft die Vorlagen vor dem Ordnerwechsel. Originale bleiben als Sicherung erhalten; unterschiedliche Dateien mit gleichem Namen werden nicht überschrieben.",
+  "iCloud templates are unavailable. Enable iCloud Drive and open Merkzeug on an Apple device. You can also choose an existing synchronized folder with Change…": "iCloud-Vorlagen sind nicht verfügbar. Aktiviere iCloud Drive und öffne Merkzeug auf einem Apple-Gerät. Über Ändern… kannst du auch einen vorhandenen synchronisierten Ordner auswählen.",
+
+  "Invalid vault settings.": "Ungültige Vault-Einstellungen.",
   "Print": "Drucken",
   "Print…": "Drucken…",
   "Printing failed": "Drucken fehlgeschlagen",

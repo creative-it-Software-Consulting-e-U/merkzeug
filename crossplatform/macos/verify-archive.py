@@ -22,7 +22,12 @@ if (entitlements.get('com.apple.security.app-sandbox') is not True or
         '3BNJ4M9R56.com.creative-it.merkzeug' not in
         entitlements.get('com.apple.security.application-groups', [])):
     raise SystemExit('Archive is missing the Electron sandbox app group for Mach IPC')
-for name in ['Contents/MacOS/Merkzeug', 'Contents/Resources/calendar/merkzeug-calendar']:
+container = 'iCloud.com.creative-it.merkzeug'
+if container not in entitlements.get('com.apple.developer.ubiquity-container-identifiers', []):
+    raise SystemExit('Archive is missing the shared iCloud container entitlement')
+if not info.get('NSUbiquitousContainers', {}).get(container, {}).get('NSUbiquitousContainerIsDocumentScopePublic'):
+    raise SystemExit('Archive is missing the public iCloud document folder declaration')
+for name in ['Contents/MacOS/Merkzeug', 'Contents/Resources/calendar/merkzeug-calendar', 'Contents/Resources/icloud/merkzeug-icloud.node']:
     architectures = subprocess.check_output(['xcrun', 'lipo', '-archs', str(app / name)], text=True).split()
     if set(architectures) != {'arm64', 'x86_64'}: raise SystemExit(f'Archive is not universal: {name}')
 subprocess.run(['codesign', '--verify', '--deep', '--strict', str(app)], check=True)
