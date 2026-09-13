@@ -60,3 +60,9 @@ Before closing #17, link the reviewed source SHA, CI run, artifact manifest, ins
 The first Windows x64 installation test exposed saves relying solely on filesystem notifications. Each renderer now retains its own last explicit read and rejects stale writes, including synchronous close-time saves; watcher peeks cannot refresh that baseline. Rename/move operations migrate the baseline. This is optimistic conflict detection, not a filesystem transaction against arbitrary external processes. A regression test covers two windows, external edits, peeking, explicit reload and rename.
 
 The first Linux install attempt also exposed electron-builder substituting different architecture names per format (`amd64` / `x86_64`). The packaging script now explicitly writes the selected release architecture into every filename, matching the manifest contract.
+
+## Printing acceptance
+
+After building the desktop app, run `scripts/test-desktop-print.cjs` using the installed Electron executable. It opens an isolated synthetic vault, edits a note through native input, invokes the actual Print menu action, checks PDF generation and saved content, simulates cancellation at the OS spooler boundary, and checks temporary-file cleanup. It never sends paper to a printer. On macOS: `crossplatform/node_modules/electron/dist/Electron.app/Contents/MacOS/Electron scripts/test-desktop-print.cjs`.
+
+The iOS UI test `ScreenshotTests/testPrinting` verifies print preparation, AirPrint presentation, cancellation and returning to the note in an isolated simulator. The IntelliJ smoke test checks native Print handler selection, editor isolation and the common PDF pipeline. Manually verify printer selection and actual paper output on each target OS before claiming physical-printer compatibility. Windows/Linux native print-dialog acceptance remains separate from macOS and simulator validation.

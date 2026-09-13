@@ -1,3 +1,5 @@
+import type { GuidanceHost } from '@merkzeug/editor/VaultGuidance'
+import type { InstructionName } from '@merkzeug/core/vaultGuidance'
 import { t as translate } from '@merkzeug/core/i18n'
 import { Capacitor, registerPlugin } from '@capacitor/core'
 
@@ -10,6 +12,7 @@ export interface FileNode {
 }
 
 export interface VaultInfo {
+  id?: string
   initialPath?: string
   name: string
 }
@@ -67,8 +70,10 @@ export interface VaultBackend {
 }
 
 interface VaultPlugin {
-  restoreVault(): Promise<{ name: string | null; initialPath?: string }>
-  pickVault(): Promise<{ name: string | null }>
+  guidanceRead(options: { name: InstructionName }): Promise<{ content?: string }>
+  guidanceAppend(options: { name: InstructionName; expected: string | null; addition: string }): Promise<void>
+  restoreVault(): Promise<{ name: string | null; id?: string; initialPath?: string }>
+  pickVault(): Promise<{ name: string | null; id?: string }>
   readTree(): Promise<{ tree: FileNode }>
   readFile(options: { path: string }): Promise<{ content: string; mtime: number }>
   writeFile(options: {
@@ -94,12 +99,12 @@ const Vault = registerPlugin<VaultPlugin>('Vault')
 
 const nativeBackend: VaultBackend = {
   async restoreVault() {
-    const { name, initialPath } = await Vault.restoreVault()
-    return name ? { name, initialPath } : null
+    const { name, id, initialPath } = await Vault.restoreVault()
+    return name ? { name, id, initialPath } : null
   },
   async pickVault() {
-    const { name } = await Vault.pickVault()
-    return name ? { name } : null
+    const { name, id } = await Vault.pickVault()
+    return name ? { name, id } : null
   },
   async readTree() {
     return (await Vault.readTree()).tree
@@ -265,3 +270,12 @@ const mockBackend: VaultBackend = {
 }
 
 export const vault: VaultBackend = Capacitor.isNativePlatform() ? nativeBackend : mockBackend
+
+export const guidanceHost: GuidanceHost = {
+  read: async name => Capacitor.isNativePlatform() ? (await Vault.guidanceRead({ name })).content ?? null : demoFiles.get(`/${name}`) ?? null,
+  append: async (name, expected, addition) => {
+    if (Capacitor.isNativePlatform()) return Vault.guidanceAppend({ name, expected, addition })
+    if ((demoFiles.get(`/${name}`) ?? null) !== expected) throw new Error('Instructions changed externally.')
+    demoFiles.set(`/${name}`, (expected ?? '') + addition)
+  }
+}

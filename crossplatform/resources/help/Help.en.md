@@ -74,8 +74,7 @@ The sidebar on the left shows the vault as a hierarchical tree.
   time, macOS asks for permission to access the calendar. On Windows,
   Outlook is started in the background if needed; if Outlook shows a
   security prompt ("A program is trying to access …"), allow access for a
-  few minutes. On Linux the calendar integration is not available yet (an
-  ICS import will follow).
+  few minutes. On Linux and with new Outlook, use **Calendar sources** to import ICS files or subscribe to HTTPS/Webcal feeds.
 - **Automatic naming of new notes:** a new note is initially called
   "New note". If it starts with a **heading 1**, the file is automatically
   named after the title when saving: all lowercase, spaces and special
@@ -212,7 +211,7 @@ For browsing linked notes there is a per-tab **navigation mode** – toggled wit
 
 ## 9. PDF export
 
-- **File → Export as PDF…** (⌘P) exports the active note as a PDF;
+- **File → Export as PDF…** exports the active note as a PDF;
   alternatively right-click a note in the file tree.
 - If the note links to other Markdown files **in the same hierarchy** (its own
   folder or below), the app asks: **"Only this file"** or **"With linked
@@ -360,7 +359,7 @@ the sidebar:
 | ⌘O | Open vault |
 | ⌘W / ⇧⌘W | Close tab / Close window |
 | ⌘S / ⌥⌘S | Save / Save all |
-| ⌘P | Export as PDF |
+| ⌘P / Ctrl+P | Print |
 | ⌘, | Settings (PDF templates) |
 | ⌘B / ⌘I / ⌥⌘X / ⌘E | Bold / Italic / Strikethrough / Inline code |
 | ⌥⌘0 … ⌥⌘6 | Text / Heading 1–6 |
@@ -407,7 +406,34 @@ Create a copy first, then give the agent that folder and this prompt:
 
 The template README includes the full file-format reference and a reusable prompt. Export through Merkzeug to check the result: browser previews alone do not verify page breaks. The settings link **Template guide and agent prompt** opens this section of the online manual; the same instructions are also included in the app's offline help.
 
+## Appearance, tours and agent guidance
+
+Choose **System**, **Light** or **Dark** for appearance. System follows the operating system (the IDE in IntelliJ); your choice is saved. The **Guided tour** starts only after you accept the first-use invitation and can be reopened at any time.
+
+When opening a vault, Merkzeug can suggest root `AGENTS.md` / `CLAUDE.md` instructions for `Note.md` and `Note.assets/`. Review the single proposed text and the full contents of both instruction files. Select the destination files explicitly before choosing **Add**; none is preselected. For example, leave `CLAUDE.md` unchanged when it only redirects to `AGENTS.md`. Missing files are created only when selected. **Later** postpones it for the current session; **Do not suggest again for this vault** suppresses future prompts for that vault. Contradictory or unclear attachment rules require manual review. Concurrent external changes are preserved and require a refreshed preview. Existing shared `assets/` references remain readable.
+
+## Calendar sources
+
+**New meeting note** offers calendar selection. Expand **Calendar sources** to import an `.ics` file or add a named private HTTPS/Webcal subscription. Subscriptions are saved on this device, never in the vault. **Refresh calendars** downloads changes; an error retains the previous snapshot and shows its saved time. Reimporting the same named ICS file updates its source without duplicating notes. Choose a term to create or reopen its meeting note; existing note text is never replaced. CalDAV and calendar write-back are not supported.
+
+In **Settings**, select the PDF template for this vault. Enable **Use PDF template while editing** in the bottom bar to preview its document typography and colors. Disable it to return to the editor theme. Only `.pdf-content` content rules are reused; cover pages, page furniture, print layout and application-wide CSS are excluded. This is a formatting preview, not a paginated PDF proof. PDF export keeps the complete original template and print colors. Linux needs a system keyring for private subscriptions; ICS files can be imported without one.
+
+Mermaid diagrams use the document background instead of a dark code-block panel and switch to the light PDF theme when PDF template editing styles are active, and return to the application theme when the preview is disabled.
+
+### Template styling prompt
+
+Desktop Settings provides **Template styling prompt** for each template; expand it to review and copy a complete agent brief with the template's folder path. IntelliJ offers the same action in **Settings → Tools → Merkzeug**, using the folder currently shown in the settings field. On iOS, open **Help → Template styling prompt** and substitute the folder path on the agent's computer; iOS does not currently export PDFs or preview PDF template styles.
+
+Replace the new template name and your colors, fonts, logo and design wishes before sending it. The prompt is in English, includes the complete offline technical reference, and works with older templates that lack instruction files. Copying it does not read note contents or modify existing templates. If clipboard access is unavailable in the web view, select and copy the displayed text manually.
+
+New starter copies include `AGENTS.md` (format, CSS examples, placeholders, preview limitations and validation) and `STYLING-PROMPT.md` (reusable brief). Keep template-specific design choices in `README.md`. The brief instructs the agent to create a separate copy and preserve existing instructions. Existing desktop templates are not upgraded or overwritten. For manual use, concatenate STYLING-PROMPT.md and AGENTS.md and replace the template-path placeholder.
+
 
 ### License
 
 Merkzeug is proprietary software for private and internal business use. The full End User License Agreement is included at the end of the in-app help and is also available on the [website](https://merkzeug.creative-it.com/license-en.html). Third-party components retain their own licenses.
+
+
+## Printing
+
+Choose **File → Print…** (⌘P on macOS, Ctrl+P on Windows/Linux). Merkzeug saves pending edits, prepares the same PDF used for export, and opens the system print dialog. The PDF preview stays available after printing or cancellation. It includes the selected template, cover, headers, footers, diagrams and images. Linked documents can optionally be included. No PDF destination needs to be chosen; the temporary PDF is removed when its preview closes. PDF export remains a separate menu action.

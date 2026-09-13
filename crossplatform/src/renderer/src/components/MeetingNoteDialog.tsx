@@ -1,3 +1,6 @@
+import { CalendarSources } from '@merkzeug/editor/CalendarSources'
+import { loadSources, sourceEvents } from '@merkzeug/editor/calendarSourceStore'
+import { calendarSourceHost } from '../util/calendarSources'
 import { t as translate, getLocale } from '@merkzeug/core/i18n'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { CalendarEvent, CalendarResult } from '../../../shared/types'
@@ -78,6 +81,7 @@ export function MeetingNoteDialog({ onPick, onCancel }: MeetingNoteDialogProps):
   const [query, setQuery] = useState('')
   const [active, setActive] = useState(0)
   const loadedRanges = useRef(new Set<string>())
+  const generation = useRef(0)
   const searchRef = useRef<HTMLInputElement | null>(null)
   const listRef = useRef<HTMLDivElement | null>(null)
 
@@ -85,7 +89,11 @@ export function MeetingNoteDialog({ onPick, onCancel }: MeetingNoteDialogProps):
     if (loadedRanges.current.has(key)) return
     loadedRanges.current.add(key)
     setLoading(true)
-    void window.merkzeug.listCalendarEvents(fromMs, toMs).then((result) => {
+    const requestGeneration = generation.current
+    void Promise.all([window.merkzeug.listCalendarEvents(fromMs, toMs), loadSources(calendarSourceHost)]).then(([native, sources]) => {
+      if (requestGeneration !== generation.current) return
+      const imported = sourceEvents(sources, fromMs, toMs)
+      const result = sources.length ? { ...native, ok: true, events: [...native.events, ...imported] } : native
       setLoading(false)
       if (!result.ok) {
         setError(result.error ?? 'failed')
@@ -98,6 +106,10 @@ export function MeetingNoteDialog({ onPick, onCancel }: MeetingNoteDialogProps):
         for (const ev of result.events) next.set(eventKey(ev), ev)
         return next
       })
+    }).catch(cause => {
+      if (requestGeneration !== generation.current) return
+      loadedRanges.current.delete(key)
+      setLoading(false); setError('failed'); setErrorMessage(String(cause))
     })
   }
 
@@ -201,13 +213,7 @@ export function MeetingNoteDialog({ onPick, onCancel }: MeetingNoteDialogProps):
       translate("Merkzeug cannot access your calendar. Grant access in ") +
       translate("System Settings → Privacy & Security → Calendars, then try again.")
   } else if (error === 'unsupported') {
-    status =
-      navigator.platform.startsWith('Win')
-        ? translate("Classic Outlook was not found. Calendar integration on Windows ") +
-          translate("uses the Outlook object model; “new Outlook” does not provide it. ") +
-          translate("ICS import is not available yet.")
-        : translate("Calendar integration is currently available only on macOS and Windows (classic ") +
-          translate("Outlook). ICS import is not available yet.")
+    status = translate("Native calendar access is unavailable. Import an ICS file or add a subscription under Calendar sources.")
   } else if (error === 'failed') {
     status = `${translate("Could not read the calendar.")}${errorMessage ? ` (${errorMessage})` : ''}`
   } else if (loading && list.length === 0) {
@@ -218,7 +224,7 @@ export function MeetingNoteDialog({ onPick, onCancel }: MeetingNoteDialogProps):
     status =
       searchOpen && query.trim()
         ? translate("No events found.")
-        : `${translate("No events in the next")} ${UPCOMING_DAYS} Tagen.`
+        : `${translate("No events in the next")} ${UPCOMING_DAYS} ${translate("days")}.`
   }
 
   return (
@@ -227,6 +233,7 @@ export function MeetingNoteDialog({ onPick, onCancel }: MeetingNoteDialogProps):
         // Fokus auf den Dialog, damit Pfeiltasten/Esc sofort funktionieren
         if (el && !el.contains(document.activeElement)) el.focus()
       }}>
+        <CalendarSources host={calendarSourceHost} onChange={() => { generation.current++; loadedRanges.current.clear(); setEvents(new Map()); loadRange('upcoming', nowRef.current, nowRef.current + UPCOMING_DAYS * DAY) }} />
         <div className="meeting-head">
           <h3>{translate("New meeting note")}</h3>
           <button

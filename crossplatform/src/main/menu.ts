@@ -62,7 +62,8 @@ export function buildMenu(hooks: MenuHooks): void {
         item(translate("Save"), 'saveNote', 'Cmd+S'),
         item(translate("Save All"), 'saveAll', 'Alt+Cmd+S'),
         { type: 'separator' },
-        item(translate("Export as PDF…"), 'exportPdf', 'Cmd+P'),
+        item(translate("Print…"), 'printNote', 'CmdOrCtrl+P'),
+        item(translate("Export as PDF…"), 'exportPdf'),
         { type: 'separator' },
         {
           label: translate("Open Vault…"),
@@ -150,6 +151,9 @@ export function buildMenu(hooks: MenuHooks): void {
       label: translate("Help"),
       role: 'help',
       submenu: [
+        item(translate("Guided tour"), 'guidedTour'),
+        item(translate("Desktop tour video (German)"), 'tourVideo'),
+        { type: 'separator' },
         {
           label: translate("Merkzeug Help"),
           accelerator: 'Cmd+?',

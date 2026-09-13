@@ -185,7 +185,7 @@ async function listFixture(path: string, fromMs: number, toMs: number): Promise<
  * Listeneintrag (Notiz ohne Teilnehmerliste ist besser als keine).
  */
 export async function calendarEventDetail(event: CalendarEvent): Promise<CalendarEvent> {
-  if (process.env.MERKZEUG_CALENDAR_FIXTURE || process.platform !== 'win32') return event
+  if (event.identity || process.env.MERKZEUG_CALENDAR_FIXTURE || process.platform !== 'win32') return event
   try {
     const result = await runWindowsHelper(['detail', event.id, event.start])
     const detail = result.ok ? result.events[0] : undefined

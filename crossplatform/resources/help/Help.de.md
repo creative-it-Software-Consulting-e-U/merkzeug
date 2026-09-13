@@ -79,8 +79,7 @@ Links zeigt die Sidebar den Vault als hierarchischen Baum.
   ersten Mal fragt macOS nach der Erlaubnis für den Kalender-Zugriff. Unter
   Windows startet Outlook bei Bedarf im Hintergrund; zeigt Outlook eine
   Sicherheitsabfrage („Ein Programm versucht, auf … zuzugreifen“), erlaube
-  den Zugriff für ein paar Minuten. Unter Linux ist die Kalender-Anbindung
-  noch nicht verfügbar (ein ICS-Import folgt).
+  den Zugriff für ein paar Minuten. Unter Linux und mit neuem Outlook importierst du unter **Kalenderquellen** ICS-Dateien oder abonnierst HTTPS/Webcal-Feeds.
 - **Automatische Benennung neuer Notizen:** Eine neue Notiz heißt zunächst
   „Neue Notiz“. Beginnt sie mit einer **Überschrift 1**, wird die Datei beim
   Speichern automatisch nach dem Titel benannt: alles klein, Leerzeichen und
@@ -226,7 +225,7 @@ in der Toolbar.
 
 ## 9. PDF-Export
 
-- **Ablage → Als PDF exportieren…** (⌘P) exportiert die aktive Notiz als PDF;
+- **Ablage → Als PDF exportieren…** exportiert die aktive Notiz als PDF;
   alternativ per Rechtsklick auf eine Notiz im Dateibaum.
 - Verlinkt die Notiz weitere Markdown-Dateien **in derselben Hierarchie** (im
   eigenen Ordner oder darunter), fragt die App: **„Nur diese Datei“** oder
@@ -375,7 +374,7 @@ Ist der Vault ein **Git-Repository**, erscheint unten in der Sidebar eine Status
 | ⌘O | Vault öffnen |
 | ⌘W / ⇧⌘W | Tab schließen / Fenster schließen |
 | ⌘S / ⌥⌘S | Sichern / Alle sichern |
-| ⌘P | Als PDF exportieren |
+| ⌘P / Ctrl+P | Drucken |
 | ⌘, | Einstellungen (PDF-Vorlagen) |
 | ⌘B / ⌘I / ⌥⌘X / ⌘E | Fett / Kursiv / Durchgestrichen / Inline-Code |
 | ⌥⌘0 … ⌥⌘6 | Text / Überschrift 1–6 |
@@ -422,7 +421,34 @@ Erstelle zuerst eine Kopie und übergib dem Agenten diesen Ordner mit folgendem 
 
 Die README der Vorlage enthält das Dateiformat und einen wiederverwendbaren Prompt. Prüfe das Ergebnis durch einen Export in Merkzeug: Eine Browser-Vorschau allein prüft keine Seitenumbrüche. **Vorlagen-Anleitung und Agenten-Prompt** in den Einstellungen öffnet diesen Abschnitt der Online-Hilfe; dieselbe Anleitung findest du auch in der Offline-Hilfe der App.
 
+## Darstellung, Tour und Agentenhinweise
+
+Wähle **System**, **Hell** oder **Dunkel** für die Darstellung. System folgt dem Betriebssystem (in IntelliJ der IDE); deine Auswahl wird gespeichert. Die **Geführte Tour** startet erst nach deiner Zustimmung zur Einladung beim ersten Start und lässt sich jederzeit wieder öffnen.
+
+Beim Öffnen eines Vaults kann Merkzeug Hinweise in den Stammdateien `AGENTS.md` / `CLAUDE.md` für `Notiz.md` und `Notiz.assets/` vorschlagen. Prüfe den einmal angezeigten Ergänzungstext und die vollständigen Inhalte beider Hinweisdateien. Wähle vor **Hinzufügen** ausdrücklich die Zieldateien aus; keine ist vorausgewählt. Verweist `CLAUDE.md` nur auf `AGENTS.md`, kannst du sie unverändert lassen. Fehlende Dateien werden nur bei Auswahl angelegt. **Später** verschiebt den Hinweis für diese Sitzung; **Für diesen Vault nicht mehr vorschlagen** unterdrückt weitere Hinweise für diesen Vault. Widersprüchliche oder unklare Bilderordner-Regeln müssen manuell geprüft werden. Gleichzeitige externe Änderungen bleiben erhalten und erfordern eine neue Vorschau. Bestehende gemeinsame `assets/`-Verweise bleiben lesbar.
+
+## Kalenderquellen
+
+**Neue Meeting-Notiz** öffnet die Terminauswahl. Unter **Kalenderquellen** kannst du eine `.ics`-Datei importieren oder ein benanntes privates HTTPS/Webcal-Abonnement hinzufügen. Abonnements werden auf diesem Gerät gespeichert, niemals im Vault. **Kalender aktualisieren** lädt Änderungen; bei Fehlern bleibt der vorherige Stand mit Zeitangabe verfügbar. Der erneute Import einer gleichnamigen ICS-Datei aktualisiert die Quelle, ohne Notizen zu duplizieren. Ein Termin erstellt oder öffnet seine Meeting-Notiz; bestehender Notiztext wird nicht ersetzt. CalDAV und das Zurückschreiben in Kalender werden nicht unterstützt.
+
+Wähle unter **Einstellungen** die PDF-Vorlage für diesen Vault. Aktiviere unten **PDF-Vorlage beim Bearbeiten verwenden**, um Textformatierung und Farben anzuzeigen. Deaktiviere die Option für das normale Editor-Design. Es werden nur `.pdf-content`-Inhaltsregeln übernommen; Deckblatt, Kopf-/Fußzeilen, Drucklayout und globale App-Regeln sind ausgenommen. Die Vorschau zeigt Formatierung, keinen seitengetreuen PDF-Proof. Der PDF-Export behält die vollständige Originalvorlage und Druckfarben. Linux benötigt für private Abonnements einen System-Schlüsselbund; ICS-Dateien lassen sich ohne ihn importieren.
+
+Mermaid-Diagramme verwenden den Dokumenthintergrund statt einer dunklen Codeblock-Fläche und wechseln bei aktiver PDF-Vorlagenvorschau zum hellen PDF-Theme. Nach dem Ausschalten folgen sie wieder der Darstellung der Anwendung.
+
+### Vorlagen-Styling-Prompt
+
+In den Desktop-Einstellungen gibt es bei jeder Vorlage **Vorlagen-Styling-Prompt** zum Aufklappen, Prüfen und Kopieren, einschließlich des Vorlagenpfads. IntelliJ bietet dieselbe Aktion unter **Einstellungen → Tools → Merkzeug** mit dem aktuell im Einstellungsfeld angezeigten Ordner. Auf iOS findest du sie unter **Hilfe → Vorlagen-Styling-Prompt**; ergänze dort den Ordnerpfad auf dem Computer des Agenten. iOS bietet derzeit keinen PDF-Export und keine Vorschau von PDF-Vorlagen-Styles.
+
+Ersetze den neuen Vorlagennamen sowie Farben, Schriften, Logo und Gestaltungswünsche vor der Übergabe. Der Prompt ist auf Englisch und enthält die vollständige technische Anleitung offline, auch für ältere Vorlagen ohne Hinweisdateien. Beim Kopieren werden keine Notizinhalte gelesen oder bestehende Vorlagen verändert. Falls die Webansicht keinen Zugriff auf die Zwischenablage hat, markiere und kopiere den angezeigten Text manuell.
+
+Neue Startvorlagen enthalten `AGENTS.md` mit Dateiformat, CSS-Beispielen, Platzhaltern, Vorschau-Grenzen und Prüfhinweisen sowie `STYLING-PROMPT.md` als wiederverwendbaren Arbeitsauftrag. Gestaltungsentscheidungen für die jeweilige Vorlage gehören in `README.md`. Der Auftrag verlangt eine separate Kopie und den Erhalt vorhandener Anweisungen. Bestehende Desktop-Vorlagen werden nicht aktualisiert oder überschrieben. Für die manuelle Nutzung STYLING-PROMPT.md und AGENTS.md zusammenfügen und den Platzhalter für den Vorlagenpfad ersetzen.
+
 
 ### Lizenz
 
 Merkzeug ist proprietäre Software für private und interne geschäftliche Nutzung. Die vollständige Endnutzerlizenz steht am Ende der In-App-Hilfe sowie auf der [Website](https://merkzeug.creative-it.com/license-de.html). Drittanbieter-Komponenten behalten ihre eigenen Lizenzen.
+
+
+## Drucken
+
+Wähle **Ablage → Drucken…** (⌘P unter macOS, Ctrl+P unter Windows/Linux). Merkzeug speichert ausstehende Änderungen, bereitet dieselbe PDF-Datei wie beim Export auf und öffnet den System-Druckdialog. Die PDF-Vorschau bleibt nach Drucken oder Abbrechen verfügbar. Sie enthält die gewählte Vorlage, Deckblatt, Kopf-/Fußzeilen, Diagramme und Bilder. Verlinkte Dokumente können optional aufgenommen werden. Ein Speicherziel ist nicht nötig; die temporäre PDF-Datei wird beim Schließen der Vorschau entfernt. PDF-Export bleibt eine eigene Menüaktion.

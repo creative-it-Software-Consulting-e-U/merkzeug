@@ -66,4 +66,4 @@ Merkzeug is preparing for its first proprietary release. Preview builds and nati
 
 ## License
 
-Merkzeug is proprietary software for private and internal business use under the [Merkzeug End User License Agreement](LICENSE). Dependencies retain their own licenses; distribution packages include third-party notices.
+Merkzeug is proprietary software, available for private and internal business use under the [Merkzeug End User License Agreement](LICENSE). Dependencies retain their own licenses; distribution packages include third-party notices.

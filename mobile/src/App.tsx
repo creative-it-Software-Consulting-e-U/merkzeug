@@ -1,3 +1,11 @@
+import { lazy, Suspense } from 'react'
+const PrintPreview = lazy(() => import('./components/PrintPreview').then(m => ({ default: m.PrintPreview })))
+import { GuidedTour } from '@merkzeug/editor/GuidedTour'
+import { WorkingCopy } from './components/WorkingCopy'
+import { VaultGuidance } from '@merkzeug/editor/VaultGuidance'
+import { guidanceHost } from './vault'
+import { MeetingNotes } from './components/MeetingNotes'
+import { ThemeSelect } from '@merkzeug/editor/ThemeSelect'
 import { t as translate } from '@merkzeug/core/i18n'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Editor } from './components/Editor'
@@ -41,12 +49,28 @@ export default function App(): React.JSX.Element {
   const [dirty, setDirty] = useState(false)
   const [sheet, setSheet] = useState<SheetState | null>(null)
   const [searching, setSearching] = useState(false)
+  const [showMeetings, setShowMeetings] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
+  const [printDoc, setPrintDoc] = useState<{ path: string; content: string } | null>(null)
+  const [preparingPrint, setPreparingPrint] = useState(false)
+  const printPending = useRef(false)
+  async function preparePrint() {
+    if (printPending.current) return
+    printPending.current = true; setPreparingPrint(true)
+    try {
+      const pending: Promise<void>[] = []
+      window.dispatchEvent(new CustomEvent('merkzeug-flush', { detail: pending }))
+      await Promise.all(pending)
+      const result = await vault.readFile(current)
+      setPrintDoc({ path: current, content: result.content })
+    } catch (error) { alert(String(error)) }
+    finally { printPending.current = false; setPreparingPrint(false) }
+  }
   const treeRef = useRef<FileNode | null>(null)
   treeRef.current = tree
   // Solange ein Overlay offen ist, sollen die Kanten-Wischgesten nicht greifen
   const overlayOpenRef = useRef(false)
-  overlayOpenRef.current = sheet !== null || searching || showHelp
+  overlayOpenRef.current = sheet !== null || searching || showHelp || showMeetings
 
   const current = stack[stackIndex]
   const isNote = current.endsWith('.md')
@@ -348,12 +372,16 @@ export default function App(): React.JSX.Element {
     [pruneStack, reloadTree]
   )
 
+  if (printDoc) return <Suspense fallback={<div>{translate('Preparing print preview…')}</div>}><PrintPreview {...printDoc} onClose={() => { setPrintDoc(null); setLoadToken(value => value + 1) }} /></Suspense>
+
   if (restoring) return <div className="start-screen" />
 
   if (!vaultInfo) {
     return (
       <div className="start-screen">
         <h1>Merkzeug</h1>
+        <GuidedTour edition="ios" />
+        <ThemeSelect />
         <p>
           {translate("Choose your vault folder, for example a repository provided by Working Copy.")}
         </p>
@@ -419,6 +447,11 @@ export default function App(): React.JSX.Element {
           ⌂
         </button>
       </header>
+      <GuidedTour edition="ios" />
+      <WorkingCopy key={`git:${vaultInfo.id ?? vaultInfo.name}`} vaultId={vaultInfo.id ?? vaultInfo.name} />
+      <VaultGuidance key={vaultInfo.id ?? vaultInfo.name} vaultId={vaultInfo.id ?? vaultInfo.name} host={guidanceHost} />
+      <div className="appearance-bar">{isNote && <button disabled={preparingPrint} onClick={() => void preparePrint()}>{translate("Print…")}</button>}<button onClick={() => setShowMeetings(true)}>{translate('New meeting note')}</button><ThemeSelect /></div>
+      {showMeetings && <MeetingNotes folder={isNote ? dirname(current) : current} onClose={() => setShowMeetings(false)} onOpen={path => { setShowMeetings(false); void reloadTree(); navigateTo(path) }} />}
       <main className="content" ref={contentRef}>
         {isNote ? (
           <Editor

@@ -27,6 +27,8 @@ just as well as a Working Copy repository.
 - **Search 🔍**: searches file names and the contents of all notes;
   tapping a result opens the note.
 
+Close search with **Done** above the results or **Done** on the keyboard, including when the search field is empty. An external keyboard can also use Escape.
+
 ## Reading and editing
 
 Notes open **read-only** – ideal for looking things up without
@@ -38,7 +40,7 @@ accidental changes. The pencil **✎** switches to edit mode:
 - Typing "/" at the start of a line opens the insert menu (headings,
   lists, tables, images, code blocks …).
 - Images from your photo library are stored automatically in the
-  `assets/` subfolder next to the note when inserted.
+  `NoteName.assets/` folder next to `NoteName.md` when inserted.
 - Mermaid code blocks show a diagram preview.
 
 ## Creating, renaming, deleting
@@ -82,7 +84,34 @@ Open **Help** and choose **Contact Support…** to open the support form with Me
 
 The desktop app and IntelliJ include the Merkzeug PDF starter template, with a cover, styled headings and numbered pages. Create a copy to adapt it with an agent. See the [desktop template guide](https://merkzeug.creative-it.com/help-en.html#pdf-template-starter). PDF export is not available on iOS yet.
 
+## Appearance, tours and agent guidance
+
+Choose **System**, **Light** or **Dark** for appearance. System follows the operating system (the IDE in IntelliJ); your choice is saved. The **Guided tour** starts only after you accept the first-use invitation and can be reopened at any time.
+
+When opening a vault, Merkzeug can suggest root `AGENTS.md` / `CLAUDE.md` instructions for `Note.md` and `Note.assets/`. Review the single proposed text and the full contents of both instruction files. Select the destination files explicitly before choosing **Add**; none is preselected. For example, leave `CLAUDE.md` unchanged when it only redirects to `AGENTS.md`. Missing files are created only when selected. **Later** postpones it for the current session; **Do not suggest again for this vault** suppresses future prompts for that vault. Contradictory or unclear attachment rules require manual review. Concurrent external changes are preserved and require a refreshed preview. Existing shared `assets/` references remain readable.
+
+## Calendar sources
+
+**New meeting note** offers calendar selection. Expand **Calendar sources** to import an `.ics` file or add a named private HTTPS/Webcal subscription. Subscriptions are saved on this device, never in the vault. **Refresh calendars** downloads changes; an error retains the previous snapshot and shows its saved time. Reimporting the same named ICS file updates its source without duplicating notes. Choose a term to create or reopen its meeting note; existing note text is never replaced. CalDAV and calendar write-back are not supported.
+
+On iPhone and iPad, native iOS calendars are also available. Access is requested only when opening meeting notes. If denied, enable calendar access for Merkzeug in iOS Settings. The app reads events without modifying the calendar. New images use `Note.assets/`; moving/renaming a note through Merkzeug moves its companion folder and adjusts its references. Existing shared `assets/` folders are left intact.
+
+Expand **Working Copy** and enter the exact repository name/remote URL and its callback key. The key stays in this device's Keychain. Pending writes are flushed before **Pull**, **Commit** or **Push**. Commit opens Working Copy's change review and message dialog for the repository. Push needs Working Copy's unlocked push feature. Resolve conflicts and credentials in Working Copy. Opening that app is not success: wait for its callback. After interruption or a missing callback, inspect the result there before acknowledging it and starting another operation.
+
+### Template styling prompt
+
+Desktop Settings provides **Template styling prompt** for each template; expand it to review and copy a complete agent brief with the template's folder path. IntelliJ offers the same action in **Settings → Tools → Merkzeug**, using the folder currently shown in the settings field. On iOS, open **Help → Template styling prompt** and substitute the folder path on the agent's computer; iOS does not currently export PDFs or preview PDF template styles.
+
+Replace the new template name and your colors, fonts, logo and design wishes before sending it. The prompt is in English, includes the complete offline technical reference, and works with older templates that lack instruction files. Copying it does not read note contents or modify existing templates. If clipboard access is unavailable in the web view, select and copy the displayed text manually.
+
+New starter copies include `AGENTS.md` (format, CSS examples, placeholders, preview limitations and validation) and `STYLING-PROMPT.md` (reusable brief). Keep template-specific design choices in `README.md`. The brief instructs the agent to create a separate copy and preserve existing instructions. Existing desktop templates are not upgraded or overwritten. For manual use, concatenate STYLING-PROMPT.md and AGENTS.md and replace the template-path placeholder.
+
 
 ### License
 
 Merkzeug is proprietary software for private and internal business use. The full End User License Agreement is included at the end of the in-app help and is also available on the [website](https://merkzeug.creative-it.com/license-en.html). Third-party components retain their own licenses.
+
+
+## Printing
+
+Open a note and tap **Print…**. After the preview has finished preparing, tap **Print…** to open AirPrint and choose a printer, page range and copies. Pending edits are saved first. The current note is printed with its Mermaid diagrams and images in the standard layout. Template selection and linked-document printing are currently desktop/IntelliJ features. Cancel AirPrint to return to the preview; **Close** returns to your note.

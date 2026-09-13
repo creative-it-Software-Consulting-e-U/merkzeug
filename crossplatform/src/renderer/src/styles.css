@@ -12,8 +12,7 @@
   --danger: #d1453b;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
+:root[data-theme="dark"] {
     --bg: #1e1e1e;
     --bg-sidebar: #252526;
     --bg-hover: #2f2f31;
@@ -24,7 +23,6 @@
     --accent: #6ea0ff;
     --danger: #ff6a5e;
   }
-}
 
 * {
   box-sizing: border-box;
@@ -1108,3 +1106,5 @@ button.primary:disabled {
 
 .git-unavailable { padding: 12px; font-size: 12px; }
 .git-unavailable p { margin: 8px 0; line-height: 1.5; }
+.live-template-bar { order: 1; display: flex; flex-wrap: wrap; gap: 12px; padding: 5px 12px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-dim); background: var(--bg-sidebar); }
+.template-live .editor-root { background: white; color: #222; }

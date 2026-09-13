@@ -1,5 +1,6 @@
 declare global {
   interface Window {
+    __merkzeugTheme?: (theme: import('@merkzeug/editor/theme').HostTheme) => void
     __merkzeugSend?: (json: string) => void
     __merkzeugReply: (id: number, value: unknown, error?: string) => void
     __merkzeugChanged: () => void

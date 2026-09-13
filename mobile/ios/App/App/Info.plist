@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>LSApplicationQueriesSchemes</key><array><string>working-copy</string></array>
+    <key>CFBundleURLTypes</key><array><dict><key>CFBundleURLName</key><string>com.creative-it.merkzeug.callbacks</string><key>CFBundleURLSchemes</key><array><string>merkzeug</string></array></dict></array>
+    <key>NSCalendarsFullAccessUsageDescription</key>
+    <string>Merkzeug reads selected calendar events to create meeting notes. It does not change your calendar.</string>
+    <key>NSCalendarsUsageDescription</key>
+    <string>Merkzeug reads selected calendar events to create meeting notes. It does not change your calendar.</string>
   <key>CAPACITOR_DEBUG</key>
 	<string>$(CAPACITOR_DEBUG)</string>
 	<key>CFBundleDevelopmentRegion</key>

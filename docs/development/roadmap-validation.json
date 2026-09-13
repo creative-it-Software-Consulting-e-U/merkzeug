@@ -1,0 +1,188 @@
+{
+  "implementationCommit": "0336daf5ddc633abc9fcf0f387f9fd0fdf2bcd40",
+  "date": "2026-09-10",
+  "automated": {
+    "coreAndHostTests": 35,
+    "releaseToolTests": 19,
+    "typecheck": "passed",
+    "documentationLinks": "passed",
+    "websiteLinks": "passed",
+    "secretScan": "passed"
+  },
+  "desktopFeatures": {
+    "status": "passed",
+    "checks": [
+      "guided tour",
+      "confirmed guidance creation",
+      "live dark/light across windows",
+      "template preview isolation",
+      "ICS import and reimport preserve existing meeting note"
+    ]
+  },
+  "windows": {
+    "en": {
+      "sourceCommit": "0336daf5ddc633abc9fcf0f387f9fd0fdf2bcd40",
+      "workingTreeModified": false,
+      "platform": "win32",
+      "arch": "arm64",
+      "os": "10.0.26200",
+      "locale": "en",
+      "status": "passed",
+      "checks": {
+        "launchAndNotices": "passed",
+        "editAndSave": "passed",
+        "reopen": "passed",
+        "undoRedo": "passed",
+        "readOnlyErrorAndRetry": "passed",
+        "conflictReloadWithoutOverwrite": "passed",
+        "localImageRendering": "passed",
+        "pdfWithTemplateTocLinksDiagramTableImage": "passed"
+      },
+      "limitations": [
+        "Native file dialogs use the existing PDF test destination.",
+        "PDF visual review and OS security-prompt interaction require separate review."
+      ],
+      "version": "1.0.0",
+      "packageSHA256": "754103682ed7596dbaa6c0efd114d5682049a2de4838800b306836cf72737d65",
+      "pdfSHA256": "2bc42a29908ddfa3140789ab0dfd01dc04c046f51d90b4b02cd023a932de12c5"
+    },
+    "de": {
+      "sourceCommit": "0336daf5ddc633abc9fcf0f387f9fd0fdf2bcd40",
+      "workingTreeModified": false,
+      "platform": "win32",
+      "arch": "arm64",
+      "os": "10.0.26200",
+      "locale": "de",
+      "status": "passed",
+      "checks": {
+        "launchAndNotices": "passed",
+        "editAndSave": "passed",
+        "reopen": "passed",
+        "undoRedo": "passed",
+        "readOnlyErrorAndRetry": "passed",
+        "conflictReloadWithoutOverwrite": "passed",
+        "localImageRendering": "passed",
+        "pdfWithTemplateTocLinksDiagramTableImage": "passed"
+      },
+      "limitations": [
+        "Native file dialogs use the existing PDF test destination.",
+        "PDF visual review and OS security-prompt interaction require separate review."
+      ],
+      "version": "1.0.0",
+      "packageSHA256": "754103682ed7596dbaa6c0efd114d5682049a2de4838800b306836cf72737d65",
+      "pdfSHA256": "f31968f6ce39e1adacfe9e1ca85928b3e6f1946bb7b202f5071d5e8825998f6a"
+    },
+    "signed": false,
+    "testInstallationRemoved": true
+  },
+  "ios": {
+    "device": "dedicated iPhone 17 Pro simulator",
+    "runtime": "iOS 27.0",
+    "test": "ScreenshotTests.testRoadmap",
+    "status": "passed",
+    "privatePhysicalDeviceUsed": false,
+    "dedicatedSimulatorRemoved": true
+  },
+  "intellij": {
+    "build": "262.10315.125",
+    "nativeDocumentAndPdfSmoke": "passed",
+    "verifier": "Compatible. 2 usages of deprecated API. 1 usage of internal API"
+  },
+  "publication": "none",
+  "artifacts": {
+    "Merkzeug-1.0.0-win-arm64.exe": "94d3d307cae157f4ef8fc580d194de48f7c11435783e9a1825a3ba6b0afbeb8e",
+    "merkzeug-1.0.0.zip": "b4ed7f2a82870cfacec452ddd108ad8231465eebd8529e4be82bf7337e5defb7",
+    "guided-tour-de.mp4": "bae28c3ad0cb13da536d7d8290b88ed840a356a631d496aed898e4d89ab070ac",
+    "Merkzeug-1.0.0-linux-x64.deb": "aae38360f64e26469751152bdcf31ef16ababbae2e93897d4038b39860a61a04",
+    "Merkzeug-1.0.0-linux-x64.rpm": "21e7e69530d662533656cf4d87e992b43c7e8d812db37c95a4955adbc79e03ba",
+    "Merkzeug-1.0.0-linux-x64.AppImage": "c209cc342bc2f59349cc1cbc581bbfe5512ed945d2b81e387894062d3ab63a41"
+  },
+  "ci": {
+    "commit": "0336daf5ddc633abc9fcf0f387f9fd0fdf2bcd40",
+    "run": "https://github.com/creative-it-Software-Consulting-e-U/merkzeug/actions/runs/34522143509",
+    "checks": "all passed",
+    "desktopBuilds": [
+      "mac-arm64",
+      "mac-x64",
+      "windows-arm64",
+      "windows-x64",
+      "linux-x64"
+    ],
+    "intellijBuild": "passed"
+  },
+  "linux": {
+    "en": {
+      "sourceCommit": "0336daf5ddc633abc9fcf0f387f9fd0fdf2bcd40",
+      "workingTreeModified": true,
+      "platform": "linux",
+      "arch": "x64",
+      "os": "7.0.0-1012-aws",
+      "locale": "en",
+      "status": "passed",
+      "checks": {
+        "launchAndNotices": "passed",
+        "editAndSave": "passed",
+        "reopen": "passed",
+        "undoRedo": "passed",
+        "readOnlyErrorAndRetry": "passed",
+        "conflictReloadWithoutOverwrite": "passed",
+        "localImageRendering": "passed",
+        "pdfWithTemplateTocLinksDiagramTableImage": "passed"
+      },
+      "limitations": [
+        "Native file dialogs use the existing PDF test destination.",
+        "PDF visual review and OS security-prompt interaction require separate review."
+      ],
+      "version": "1.0.0",
+      "packageSHA256": "754103682ed7596dbaa6c0efd114d5682049a2de4838800b306836cf72737d65",
+      "pdfSHA256": "e1ed7ed82592e348253399c3a094bb664e903657ca87e89b336749aa2bded690"
+    },
+    "de": {
+      "sourceCommit": "0336daf5ddc633abc9fcf0f387f9fd0fdf2bcd40",
+      "workingTreeModified": true,
+      "platform": "linux",
+      "arch": "x64",
+      "os": "7.0.0-1012-aws",
+      "locale": "de",
+      "status": "passed",
+      "checks": {
+        "launchAndNotices": "passed",
+        "editAndSave": "passed",
+        "reopen": "passed",
+        "undoRedo": "passed",
+        "readOnlyErrorAndRetry": "passed",
+        "conflictReloadWithoutOverwrite": "passed",
+        "localImageRendering": "passed",
+        "pdfWithTemplateTocLinksDiagramTableImage": "passed"
+      },
+      "limitations": [
+        "Native file dialogs use the existing PDF test destination.",
+        "PDF visual review and OS security-prompt interaction require separate review."
+      ],
+      "version": "1.0.0",
+      "packageSHA256": "754103682ed7596dbaa6c0efd114d5682049a2de4838800b306836cf72737d65",
+      "pdfSHA256": "a9300feb5df0ab5d7ce10cb9c85fb9651e21260eacbc9f1f0198e947a145a01d"
+    },
+    "normalLaunch": {
+      "environment": "Ubuntu 24.04 x64 via SSM, D-Bus and Xvfb",
+      "deb": "alive until 15-second test timeout",
+      "appImage": "alive until 15-second test timeout",
+      "testInstallationRemoved": true,
+      "rpm": "built; native RPM distribution not tested"
+    }
+  },
+  "awsCleanup": {
+    "account": "348854311973",
+    "region": "eu-central-1",
+    "instance": "i-0e349b08ef0c3e61b",
+    "actions": [
+      "EC2 instance terminated",
+      "Temporary EBS volumes deleted",
+      "Temporary IAM role, policies and instance profile deleted",
+      "Temporary security group and SSH key pair deleted",
+      "Temporary S3 objects and bucket deleted"
+    ],
+    "completedAt": "2026-09-10T19:59:43.410862+00:00",
+    "status": "verified-removed"
+  }
+}

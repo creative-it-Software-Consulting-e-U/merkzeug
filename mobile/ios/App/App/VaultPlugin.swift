@@ -11,8 +11,11 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
     public let identifier = "VaultPlugin"
     public let jsName = "Vault"
     public let pluginMethods: [CAPPluginMethod] = [
+        CAPPluginMethod(name: "printDocument", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "restoreVault", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "pickVault", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "guidanceRead", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "guidanceAppend", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "readTree", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "readFile", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "writeFile", returnType: CAPPluginReturnPromise),
@@ -29,6 +32,55 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
     private static let bookmarkKey = "MerkzeugVaultBookmark"
     private var vaultURL: URL?
     private var pendingPick: CAPPluginCall?
+
+    private var printingDocument = false
+
+    @objc func printDocument(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            guard !self.printingDocument else { call.reject("A print dialog is already open"); return }
+            guard UIPrintInteractionController.isPrintingAvailable,
+                  let webView = self.bridge?.webView,
+                  let presenter = self.bridge?.viewController else {
+                call.reject("Printing is not available"); return
+            }
+            self.printingDocument = true
+            // Paginate the prepared shared print view first, then hand the resulting
+            // PDF to AirPrint. Menus and controls are excluded by print CSS.
+            let renderer = MerkzeugPrintRenderer(landscape: call.getBool("landscape") ?? false)
+            renderer.addPrintFormatter(webView.viewPrintFormatter(), startingAtPageAt: 0)
+            guard renderer.numberOfPages > 0 else {
+                self.printingDocument = false; call.reject("No printable pages"); return
+            }
+            let data = NSMutableData()
+            UIGraphicsBeginPDFContextToData(data, renderer.paperRect, nil)
+            renderer.prepare(forDrawingPages: NSRange(location: 0, length: renderer.numberOfPages))
+            for page in 0..<renderer.numberOfPages {
+                UIGraphicsBeginPDFPage()
+                renderer.drawPage(at: page, in: UIGraphicsGetPDFContextBounds())
+            }
+            UIGraphicsEndPDFContext()
+            guard data.length > 0, UIPrintInteractionController.canPrint(data as Data) else {
+                self.printingDocument = false; call.reject("Could not prepare printable PDF"); return
+            }
+            let controller = UIPrintInteractionController.shared
+            let info = UIPrintInfo(dictionary: nil)
+            info.jobName = call.getString("title") ?? "Merkzeug"
+            info.outputType = .general
+            controller.printInfo = info
+            controller.printingItem = data as Data
+            let completion: UIPrintInteractionController.CompletionHandler = { _, _, error in
+                self.printingDocument = false
+                if let error { call.reject(error.localizedDescription) } else { call.resolve() }
+            }
+            let shown: Bool
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                shown = controller.present(from: CGRect(x: presenter.view.bounds.midX, y: 40, width: 1, height: 1), in: presenter.view, animated: true, completionHandler: completion)
+            } else {
+                shown = controller.present(animated: true, completionHandler: completion)
+            }
+            if !shown { self.printingDocument = false; call.reject("Could not open print dialog") }
+        }
+    }
 
     // MARK: - Vault wählen / wiederherstellen
 
@@ -53,7 +105,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
             }
             if FileManager.default.fileExists(atPath: demo.path) {
                 vaultURL = demo
-                var result: [String: Any] = ["name": "Demo Vault"]
+                var result: [String: Any] = ["name": "Demo Vault", "id": "demo-vault"]
                 if let note = ProcessInfo.processInfo.environment["MERKZEUG_DEMO_NOTE"],
                    ["/Welcome.md", "/Projects/Garden.md", "/Willkommen.md", "/Projekte/Garten.md"].contains(note) {
                     result["initialPath"] = note
@@ -78,7 +130,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
             UserDefaults.standard.set(fresh, forKey: Self.bookmarkKey)
         }
         vaultURL = url
-        call.resolve(["name": url.lastPathComponent])
+        call.resolve(["name": url.lastPathComponent, "id": url.absoluteString])
     }
 
     @objc func pickVault(_ call: CAPPluginCall) {
@@ -109,7 +161,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
             UserDefaults.standard.set(bookmark, forKey: Self.bookmarkKey)
         }
         vaultURL = url
-        call.resolve(["name": url.lastPathComponent])
+        call.resolve(["name": url.lastPathComponent, "id": url.absoluteString])
     }
 
     public func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
@@ -239,6 +291,38 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
         }
     }
 
+    @objc func guidanceRead(_ call: CAPPluginCall) {
+        guard let name = call.getString("name"), ["AGENTS.md", "CLAUDE.md"].contains(name),
+              let root = vaultURL else { call.reject("Invalid instruction file"); return }
+        let url = root.appendingPathComponent(name)
+        guard url.resolvingSymlinksInPath().standardizedFileURL == url.standardizedFileURL else { call.reject("Review symbolic links manually"); return }
+        do {
+            if !FileManager.default.fileExists(atPath: url.path) { call.resolve([:]); return }
+            let data = try coordinatedRead(url)
+            guard let content = String(data: data, encoding: .utf8) else { call.reject("Instructions are not UTF-8"); return }
+            call.resolve(["content": content])
+        } catch { call.reject(error.localizedDescription) }
+    }
+
+    @objc func guidanceAppend(_ call: CAPPluginCall) {
+        guard let name = call.getString("name"), ["AGENTS.md", "CLAUDE.md"].contains(name),
+              let addition = call.getString("addition"), let root = vaultURL else { call.reject("Invalid instruction file"); return }
+        let url = root.appendingPathComponent(name)
+        let expected = call.getString("expected")
+        var failure: Error?
+        var coordinatorError: NSError?
+        NSFileCoordinator().coordinate(writingItemAt: url, options: [], error: &coordinatorError) { coordinated in
+            do {
+                guard coordinated.resolvingSymlinksInPath().standardizedFileURL == coordinated.standardizedFileURL else { throw CocoaError(.fileWriteNoPermission) }
+                let current = FileManager.default.fileExists(atPath: coordinated.path) ? try String(contentsOf: coordinated, encoding: .utf8) : nil
+                guard current == expected else { throw NSError(domain: "Merkzeug", code: 409, userInfo: [NSLocalizedDescriptionKey: localized("Instructions changed externally. Review the refreshed preview.", "Die Anweisungen wurden extern geändert. Prüfe die aktualisierte Vorschau.")]) }
+                try ((current ?? "") + addition).write(to: coordinated, atomically: true, encoding: .utf8)
+            } catch { failure = error }
+        }
+        if let error = coordinatorError ?? failure as NSError? { call.reject(error.localizedDescription) }
+        else { call.resolve() }
+    }
+
     @objc func writeFile(_ call: CAPPluginCall) {
         guard let path = call.getString("path"),
               let content = call.getString("content"),
@@ -286,11 +370,13 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
         let noteDir = (notePath as NSString).deletingLastPathComponent
         let safeExt = ext.lowercased().filter { $0.isLetter || $0.isNumber }
         let fileName = "bild-\(UUID().uuidString.prefix(8).lowercased()).\(safeExt)"
-        let relDir = noteDir == "/" ? "/assets" : "\(noteDir)/assets"
+        let folderName = ((notePath as NSString).lastPathComponent as NSString).deletingPathExtension + ".assets"
+        let relDir = noteDir == "/" ? "/\(folderName)" : "\(noteDir)/\(folderName)"
         guard let url = fileURL(for: "\(relDir)/\(fileName)", call: call) else { return }
         do {
             try coordinatedWrite(data, to: url)
-            call.resolve(["relPath": "assets/\(fileName)"])
+            let encoded = folderName.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed.subtracting(CharacterSet(charactersIn: "#?"))) ?? folderName
+            call.resolve(["relPath": "\(encoded)/\(fileName)"])
         } catch {
             call.reject(localized("Could not save image: \(error.localizedDescription)", "Bild konnte nicht gespeichert werden: \(error.localizedDescription)"))
         }
@@ -376,32 +462,46 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
             }
             return
         }
-        guard !FileManager.default.fileExists(atPath: toURL.path) else {
-            call.reject(localized("A file or folder with this name already exists.", "Es gibt bereits eine Datei oder einen Ordner mit diesem Namen."))
-            return
+        if fromURL == toURL { call.resolve(); return }
+        let fm = FileManager.default
+        let oldAssets = fromURL.deletingPathExtension().appendingPathExtension("assets")
+        let newAssets = toURL.deletingPathExtension().appendingPathExtension("assets")
+        let hasAssets = fromURL.pathExtension.lowercased() == "md" && fm.fileExists(atPath: oldAssets.path)
+        guard !fm.fileExists(atPath: toURL.path), !hasAssets || !fm.fileExists(atPath: newAssets.path) else {
+            call.reject(localized("A destination note or attachment folder already exists.", "Am Ziel existiert bereits eine Notiz oder ein Bilderordner.")); return
         }
-        var coordinatorError: NSError?
-        var opError: Error?
-        NSFileCoordinator().coordinate(
-            writingItemAt: fromURL, options: .forMoving,
-            writingItemAt: toURL, options: [],
-            error: &coordinatorError
-        ) { src, dst in
+        guard !hasAssets || oldAssets.resolvingSymlinksInPath() == oldAssets else { call.reject("Review symbolic links manually"); return }
+        var intents = [NSFileAccessIntent.writingIntent(with: fromURL, options: .forMoving), NSFileAccessIntent.writingIntent(with: toURL, options: [])]
+        if hasAssets { intents += [NSFileAccessIntent.writingIntent(with: oldAssets, options: .forMoving), NSFileAccessIntent.writingIntent(with: newAssets, options: [])] }
+        NSFileCoordinator().coordinate(with: intents, queue: OperationQueue.main) { error in
+            if let error = error { call.reject(error.localizedDescription); return }
+            let src = intents[0].url, dst = intents[1].url
+            var movedAssets = false, movedNote = false
+            var original: String?
             do {
-                try FileManager.default.createDirectory(
-                    at: dst.deletingLastPathComponent(),
-                    withIntermediateDirectories: true
-                )
-                try FileManager.default.moveItem(at: src, to: dst)
+                guard !fm.fileExists(atPath: dst.path), !hasAssets || !fm.fileExists(atPath: intents[3].url.path) else { throw CocoaError(.fileWriteFileExists) }
+                if hasAssets {
+                    original = try String(contentsOf: src, encoding: .utf8)
+                    try fm.moveItem(at: intents[2].url, to: intents[3].url)
+                    movedAssets = true
+                }
+                try fm.moveItem(at: src, to: dst)
+                movedNote = true
+                if let original = original {
+                    let old = oldAssets.lastPathComponent, new = newAssets.lastPathComponent
+                    let allowed = CharacterSet.urlPathAllowed.subtracting(CharacterSet(charactersIn: "#?"))
+                    let rewritten = original.replacingOccurrences(of: old + "/", with: new + "/")
+                        .replacingOccurrences(of: (old.addingPercentEncoding(withAllowedCharacters: allowed) ?? old) + "/", with: (new.addingPercentEncoding(withAllowedCharacters: allowed) ?? new) + "/")
+                    if rewritten != original { try rewritten.write(to: dst, atomically: true, encoding: .utf8) }
+                }
+                call.resolve()
             } catch {
-                opError = error
+                // Recover both names on a failed multi-file operation; never overwrite a collision.
+                if movedNote { try? fm.moveItem(at: dst, to: src) }
+                if movedAssets { try? fm.moveItem(at: intents[3].url, to: intents[2].url) }
+                call.reject(localized("Rename failed: \(error.localizedDescription)", "Umbenennen fehlgeschlagen: \(error.localizedDescription)"))
             }
         }
-        if let err = coordinatorError ?? (opError as NSError?) {
-            call.reject(localized("Rename failed: \(err.localizedDescription)", "Umbenennen fehlgeschlagen: \(err.localizedDescription)"))
-            return
-        }
-        call.resolve()
     }
 
     // MARK: - Suche
@@ -454,4 +554,14 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
 private func localized(_ english: String, _ german: String) -> String {
     let language = Locale.preferredLanguages.first?.lowercased() ?? "en"
     return language == "de" || language.hasPrefix("de-") ? german : english
+}
+
+private final class MerkzeugPrintRenderer: UIPrintPageRenderer {
+    private let page: CGRect
+    init(landscape: Bool) {
+        page = CGRect(x: 0, y: 0, width: landscape ? 842 : 595, height: landscape ? 595 : 842)
+        super.init()
+    }
+    override var paperRect: CGRect { page }
+    override var printableRect: CGRect { page.insetBy(dx: 28, dy: 28) }
 }

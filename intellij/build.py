@@ -12,6 +12,7 @@ import shutil
 import subprocess
 import zipfile
 
+MARKETPLACE = '--marketplace' in sys.argv
 ROOT = Path(__file__).resolve().parent.parent
 IDE = Path(os.environ.get('IDEA_HOME', '/Applications/IntelliJ IDEA.app/Contents'))
 BUILD = ROOT / 'intellij/build'
@@ -25,7 +26,7 @@ info = json.loads(info_path.read_text())
 if info['version'] != pin['version'] or info['buildNumber'] != pin['build']:
     raise SystemExit('IDEA_HOME must match intellij/sdk.json; update and verify compatibility before changing SDKs')
 subprocess.run(['node', str(ROOT / 'scripts/third-party-notices.mjs')], cwd=ROOT, check=True)
-subprocess.run(['npm.cmd' if os.name == 'nt' else 'npm', 'run', 'build', '-w', 'merkzeug-intellij-web'], cwd=ROOT, check=True)
+subprocess.run(['npm.cmd' if os.name == 'nt' else 'npm', 'run', 'build', '-w', 'merkzeug-intellij-web'], cwd=ROOT, check=True, env=dict(os.environ, **({'VITE_MERKZEUG_TOURS': 'disabled'} if MARKETPLACE else {})))
 javac = IDE / 'jbr/Contents/Home/bin/javac'
 if not javac.exists():
     javac = IDE / 'jbr/bin/javac'
@@ -39,6 +40,7 @@ sources = sorted((ROOT / 'intellij/src/main/java').rglob('*.java'))
 subprocess.run([str(javac), '-encoding', 'UTF-8', '--release', '21', '-classpath', os.pathsep.join(map(str, jars)), '-d', str(classes), *map(str, sources)], check=True)
 jar = BUILD / 'merkzeug.jar'
 with zipfile.ZipFile(jar, 'w', zipfile.ZIP_DEFLATED) as out:
+    out.writestr('META-INF/merkzeug-version.txt', version + '\n')
     for language, target_name in [('en', 'LICENSE'), ('de', 'EULA.de.md')]:
         terms = (ROOT / f'resources/legal/EULA.{language}.md').read_text() + '\n' + (ROOT / f'resources/legal/INTELLIJ-ADDENDUM.{language}.md').read_text()
         out.writestr('META-INF/' + target_name, terms)

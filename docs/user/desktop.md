@@ -34,7 +34,7 @@ Desktop Git features require a working Git installation. If the sidebar reports 
 
 Git commands operate on the vault repository. Inspect the selected files and commit message before using **Commit & Push**; use **Pull** to receive changes. Merkzeug does not resolve every Git conflict for you: use your preferred Git client when necessary.
 
-The calendar button creates notes from locally configured calendars on macOS or classic Outlook on Windows. It is not available on Linux or with new Outlook. Calendar access may require an OS permission prompt. Meeting-note headings and date labels follow the app language; event titles and participant names remain unchanged.
+The calendar button creates notes from locally configured calendars on macOS or classic Outlook on Windows. On Linux and with new Outlook, import ICS files or add HTTPS/Webcal subscriptions under **Calendar sources**. Calendar access may require an OS permission prompt. Meeting-note headings and date labels follow the app language; event titles and participant names remain unchanged.
 
 ## Detailed reference
 
@@ -45,3 +45,17 @@ Continue with [editing](editing.md) and [PDF export](pdf.md).
 ## Mac App Store preparation
 
 A sandboxed Mac App Store build is being prepared; it is not published yet. The experimental build stores access bookmarks for selected vault and PDF-template folders. Select a folder again if access is revoked or the folder moves. Git, calendar helpers and PDF export still require signed sandbox acceptance testing.
+
+## Appearance, tours and agent guidance
+
+Choose **System**, **Light** or **Dark** for appearance. System follows the operating system (the IDE in IntelliJ); your choice is saved. The **Guided tour** starts only after you accept the first-use invitation and can be reopened at any time.
+
+When opening a vault, Merkzeug can suggest root `AGENTS.md` / `CLAUDE.md` instructions for `Note.md` and `Note.assets/`. Review the single proposed text and the full contents of both instruction files. Select the destination files explicitly before choosing **Add**; none is preselected. For example, leave `CLAUDE.md` unchanged when it only redirects to `AGENTS.md`. Missing files are created only when selected. **Later** postpones it for the current session; **Do not suggest again for this vault** suppresses future prompts for that vault. Contradictory or unclear attachment rules require manual review. Concurrent external changes are preserved and require a refreshed preview. Existing shared `assets/` references remain readable.
+
+## Calendar sources
+
+**New meeting note** offers calendar selection. Expand **Calendar sources** to import an `.ics` file or add a named private HTTPS/Webcal subscription. Subscriptions are saved on this device, never in the vault. **Refresh calendars** downloads changes; an error retains the previous snapshot and shows its saved time. Reimporting the same named ICS file updates its source without duplicating notes. Choose an event to create or reopen its meeting note; existing note text is never replaced. CalDAV and calendar write-back are not supported.
+
+In **Settings**, select the PDF template for this vault. Enable **Use PDF template while editing** in the bottom bar to preview its document typography and colors. Disable it to return to the editor theme. Only `.pdf-content` content rules are reused; cover pages, page furniture, print layout and application-wide CSS are excluded. This is a formatting preview, not a paginated PDF proof. PDF export keeps the complete original template and print colors. Linux needs a system keyring for private subscriptions; ICS files can be imported without one.
+
+Mermaid diagrams use the document background instead of a dark code-block panel and switch to the light PDF theme when PDF template editing styles are active, and return to the application theme when the preview is disabled.

@@ -2,6 +2,8 @@ package com.creativeit.merkzeug;
 
 import com.google.gson.*;
 import com.intellij.ide.BrowserUtil;
+import com.intellij.ide.ui.LafManagerListener;
+import com.intellij.util.ui.UIUtil;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -45,6 +47,7 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
     private boolean ownChange;
     private JsonObject pdfPayload;
     private Path pdfTarget;
+    private boolean printRequested;
     private Path templateDirectory;
 
     public MerkzeugEditor(Project project, VirtualFile file) {
@@ -88,8 +91,32 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
                 if (!ownChange) script("window.__merkzeugChanged?.()");
             }
         }, this);
+        ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(LafManagerListener.TOPIC, manager -> {
+            browser.getComponent().setBackground(UIUtil.getPanelBackground());
+            script("window.__merkzeugTheme?.(" + JSON.toJson(theme()) + ")");
+        });
+        project.getMessageBus().connect(this).subscribe(VirtualFileManager.VFS_CHANGES, new com.intellij.openapi.vfs.newvfs.BulkFileListener() {
+            @Override public void after(java.util.List<? extends com.intellij.openapi.vfs.newvfs.events.VFileEvent> events) {
+                boolean pathChanged = events.stream().anyMatch(event ->
+                    (event instanceof com.intellij.openapi.vfs.newvfs.events.VFileMoveEvent ||
+                     event instanceof com.intellij.openapi.vfs.newvfs.events.VFilePropertyChangeEvent property && VirtualFile.PROP_NAME.equals(property.getPropertyName())) &&
+                    event.getFile() != null && VfsUtilCore.isAncestor(event.getFile(), file, false));
+                if (pathChanged) ApplicationManager.getApplication().invokeLater(() -> {
+                    if (!disposed && file.isValid() && pdfPayload == null) browser.loadURL(origin + "index.html");
+                });
+            }
+        });
+        browser.getComponent().setBackground(UIUtil.getPanelBackground());
         panel.add(browser.getComponent());
         browser.loadURL(origin + "index.html");
+    }
+
+    private static String color(java.awt.Color value) { return String.format("#%02x%02x%02x", value.getRed(), value.getGreen(), value.getBlue()); }
+    private static Map<String, Object> theme() {
+        java.awt.Color bg = UIUtil.getPanelBackground();
+        return Map.of("choice", "system", "dark", (bg.getRed() * 299 + bg.getGreen() * 587 + bg.getBlue() * 114) < 128000,
+            "colors", Map.of("bg", color(bg), "bg-sidebar", color(bg), "text", color(UIUtil.getLabelForeground()),
+                "text-dim", color(UIUtil.getContextHelpForeground())));
     }
 
     private void script(String code) {
@@ -105,7 +132,17 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
         if (disposed || project.isDisposed()) return;
         try {
             Object result = switch (arg(m, "method")) {
-                case "init" -> Map.of("path", file.getPath(), "vault", root().toString().replace('\\', '/'), "readonly", !file.isWritable(), "locale", Locale.getDefault().toLanguageTag());
+                case "init" -> Map.of("path", file.getPath(), "vault", root().toString().replace('\\', '/'), "readonly", !file.isWritable(), "locale", Locale.getDefault().toLanguageTag(), "theme", theme(), "themeChoice", "system", "tourSeen", PropertiesComponent.getInstance().getBoolean("merkzeug.tour.seen", false));
+                case "tourSeen" -> { PropertiesComponent.getInstance().setValue("merkzeug.tour.seen", true); yield true; }
+                case "settings" -> { com.intellij.openapi.options.ShowSettingsUtil.getInstance().showSettingsDialog(project, MerkzeugSettings.class); yield true; }
+                case "guidanceSuppressed" -> guidanceDismissed.contains(root().toString()) || PropertiesComponent.getInstance().getBoolean("merkzeug.guidance." + root(), false);
+                case "guidanceSuppress" -> {
+                    guidanceDismissed.add(root().toString());
+                    if (m.get("never").getAsBoolean()) PropertiesComponent.getInstance().setValue("merkzeug.guidance." + root(), true);
+                    yield true;
+                }
+                case "guidanceRead" -> guidanceRead(arg(m, "name"));
+                case "guidanceAppend" -> { guidanceAppend(m); yield true; }
                 case "read" -> read(arg(m, "path"));
                 case "exists" -> Files.isRegularFile(allowed(arg(m, "path")));
                 case "write" -> write(m);
@@ -114,7 +151,13 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
                 case "redo" -> { if (UndoManager.getInstance(project).isRedoAvailable(this)) UndoManager.getInstance(project).redo(this); yield true; }
                 case "open" -> { open(arg(m, "href")); yield true; }
                 case "image" -> saveImage(m);
-                case "template" -> loadTemplate(m.has("choose") && m.get("choose").getAsBoolean());
+                case "templatePreview" -> {
+                    var preferences = PropertiesComponent.getInstance(project);
+                    if (m.has("enabled")) preferences.setValue("merkzeug.templatePreview", m.get("enabled").getAsBoolean());
+                    yield preferences.getBoolean("merkzeug.templatePreview", false);
+                }
+                case "template" -> loadTemplate();
+                case "exportScope" -> chooseExportScope(m);
                 case "export" -> beginExport(m);
                 case "pdfPayload" -> pdfPayload;
                 case "pdfReady" -> { printPdf(m.get("landscape").getAsBoolean()); yield true; }
@@ -122,7 +165,7 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
                 case "editor" -> { browser.loadURL(origin + "index.html"); yield true; }
                 default -> throw new IllegalArgumentException(Messages.text("Unknown action"));
             };
-            reply(id, result, null);
+            if (!arg(m, "method").equals("calendarFetch")) reply(id, result, null);
         } catch (Exception error) {
             reply(id, null, Objects.toString(error.getMessage(), error.toString()));
         }
@@ -142,6 +185,40 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
         if (!real.startsWith(root())) throw new IOException(Messages.text("File is outside the open project: ") + candidate.getFileName());
         return real;
     }
+    private static final Set<String> guidanceDismissed = java.util.concurrent.ConcurrentHashMap.newKeySet();
+
+    private Path guidancePath(String name) throws IOException {
+        if (!Set.of("AGENTS.md", "CLAUDE.md").contains(name)) throw new IOException("Invalid instruction file");
+        Path path = root().resolve(name);
+        if (Files.isSymbolicLink(path)) throw new IOException("Review symbolic links manually");
+        return path;
+    }
+    private String guidanceRead(String name) throws IOException {
+        Path path = guidancePath(name);
+        if (!Files.exists(path)) return null;
+        return ((Map<?, ?>) read(path.toString())).get("text").toString();
+    }
+    private void guidanceAppend(JsonObject m) throws IOException {
+        String name = arg(m, "name"), addition = arg(m, "addition");
+        String expected = m.has("expected") && !m.get("expected").isJsonNull() ? arg(m, "expected") : null;
+        Path path = guidancePath(name);
+        if (!Objects.equals(guidanceRead(name), expected)) throw new IOException("Instructions changed externally. Review the refreshed preview.");
+        if (expected == null) {
+            Files.writeString(path, addition, StandardOpenOption.CREATE_NEW);
+            LocalFileSystem.getInstance().refreshAndFindFileByNioFile(path);
+        } else {
+            VirtualFile virtual = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(path);
+            if (virtual == null || ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(java.util.List.of(virtual)).hasReadonlyFiles()) throw new IOException("File is read-only");
+            Document target = FileDocumentManager.getInstance().getDocument(virtual);
+            if (target == null) throw new IOException("Cannot open instructions");
+            WriteCommandAction.runWriteCommandAction(project, () -> {
+                if (!target.getText().equals(expected)) throw new IllegalStateException("Instructions changed externally.");
+                target.insertString(target.getTextLength(), addition);
+            });
+            FileDocumentManager.getInstance().saveDocument(target);
+        }
+    }
+
     private Object read(String path) throws IOException {
         Path resolved = allowed(path);
         VirtualFile virtual = LocalFileSystem.getInstance().findFileByNioFile(resolved);
@@ -151,7 +228,7 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
     private Object write(JsonObject m) throws IOException {
         if (!allowed(arg(m, "path")).equals(Paths.get(file.getPath()).toRealPath())) throw new IOException(Messages.text("Wrong document"));
         if (!Long.toString(document.getModificationStamp()).equals(arg(m, "revision"))) throw new IOException(Messages.text("CONFLICT: The document has changed since it was read."));
-        if (ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(file).hasReadonlyFiles()) throw new IOException(Messages.text("File is read-only"));
+        if (ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(java.util.List.of(file)).hasReadonlyFiles()) throw new IOException(Messages.text("File is read-only"));
         String text = arg(m, "text").replace("\r\n", "\n");
         if (!text.equals(document.getText())) {
             ownChange = true;
@@ -190,31 +267,9 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
         LocalFileSystem.getInstance().refreshAndFindFileByNioFile(directory);
         return folder + "/" + name;
     }
-    private Object loadTemplate(boolean choose) throws IOException {
+    private Object loadTemplate() throws IOException {
         PropertiesComponent settings = PropertiesComponent.getInstance(project);
         String stored = settings.getValue("merkzeug.templateDirectory");
-        if (choose) {
-            if (stored == null) {
-                Path starter = Paths.get(com.intellij.openapi.application.PathManager.getConfigPath(), "merkzeug", "pdf-templates", "Merkzeug");
-                if (!Files.exists(starter)) {
-                    Files.createDirectories(starter);
-                    for (String name : new String[]{"kopfzeile.html", "fusszeile.html", "deckblatt.html", "stil.css", "vorlage.json", "README.md"}) {
-                        Path target = starter.resolve(name);
-                        try (InputStream source = getClass().getResourceAsStream("/pdf-templates/Merkzeug/" + name)) {
-                            if (source == null) throw new IOException(Messages.text("Bundled PDF template is missing"));
-                            Files.copy(source, target);
-                        }
-                    }
-                }
-                stored = starter.toString();
-            }
-            JFileChooser picker = new JFileChooser(stored);
-            picker.setDialogTitle(Messages.text("Merkzeug: PDF template folder"));
-            picker.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            if (picker.showOpenDialog(panel) != JFileChooser.APPROVE_OPTION) return null;
-            stored = picker.getSelectedFile().getCanonicalPath();
-            settings.setValue("merkzeug.templateDirectory", stored);
-        }
         if (stored == null) return null;
         templateDirectory = Paths.get(stored).toRealPath();
         Map<String, Object> result = new HashMap<>();
@@ -254,13 +309,35 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
         matcher.appendTail(output);
         return output.toString();
     }
-    private boolean beginExport(JsonObject m) {
+    private int chooseExportScope(JsonObject message) throws IOException {
+        var names = new ArrayList<String>();
+        for (JsonElement item : message.getAsJsonArray("paths")) {
+            Path linked = allowed(item.getAsString());
+            names.add(root().relativize(linked).toString());
+        }
+        String description = Messages.text("Choose which documents to include in the PDF.")
+            + "\n\n" + Messages.text("Linked documents:") + "\n" + String.join("\n", names);
+        return com.intellij.openapi.ui.Messages.showDialog(project, description, Messages.text("Merkzeug: Export PDF"),
+            new String[]{Messages.text("Only this document"), Messages.text("Include linked documents"), Messages.text("Cancel")},
+            0, com.intellij.openapi.ui.Messages.getQuestionIcon());
+    }
+    public void requestPrint() {
+        if (!disposed && pdfPayload == null) script("window.dispatchEvent(new Event('merkzeug-print'))");
+    }
+    private boolean beginExport(JsonObject m) throws IOException {
         if (pdfPayload != null) throw new IllegalStateException(Messages.text("A PDF export is already running"));
-        JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle(Messages.text("Merkzeug: Export PDF"));
-        chooser.setSelectedFile(new File(file.getNameWithoutExtension() + ".pdf"));
-        if (chooser.showSaveDialog(panel) != JFileChooser.APPROVE_OPTION) return false;
-        Path target = chooser.getSelectedFile().toPath().toAbsolutePath();
+        printRequested = m.has("print") && m.get("print").getAsBoolean();
+        if (printRequested) {
+            pdfTarget = Files.createTempFile("merkzeug-print-", ".pdf");
+            pdfPayload = m.getAsJsonObject("payload");
+            browser.loadURL(origin + "index.html?pdf");
+            return true;
+        }
+        var descriptor = new com.intellij.openapi.fileChooser.FileSaverDescriptor(Messages.text("Merkzeug: Export PDF"), "", "pdf");
+        var chosen = com.intellij.openapi.fileChooser.FileChooserFactory.getInstance().createSaveFileDialog(descriptor, project)
+            .save(file.getParent(), file.getNameWithoutExtension() + ".pdf");
+        if (chosen == null) return false;
+        Path target = chosen.getFile().toPath().toAbsolutePath();
         if (!target.toString().toLowerCase(Locale.ROOT).endsWith(".pdf")) target = Paths.get(target + ".pdf");
         if (Files.exists(target) && JOptionPane.showConfirmDialog(panel, Messages.text("Replace the existing PDF?"), "Merkzeug", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) return false;
         pdfTarget = target;
@@ -296,11 +373,18 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
         browser.getCefBrowser().printToPDF(pdfTarget.toString(), settings, (path, ok) -> ApplicationManager.getApplication().invokeLater(() -> finishPdf(ok ? null : Messages.text("Could not generate PDF"))));
     }
     private void finishPdf(String error) {
+        Path printedFile = pdfTarget;
+        boolean printing = printRequested;
+        printRequested = false;
         String target = pdfTarget == null ? "" : pdfTarget.toString();
         pdfPayload = null;
         pdfTarget = null;
         browser.loadURL(origin + "index.html");
-        if (error != null) JOptionPane.showMessageDialog(panel, error, "Merkzeug PDF", JOptionPane.ERROR_MESSAGE);
+        if (error != null) {
+            if (printing && printedFile != null) try { Files.deleteIfExists(printedFile); } catch (IOException ignored) { printedFile.toFile().deleteOnExit(); }
+            JOptionPane.showMessageDialog(panel, error, "Merkzeug PDF", JOptionPane.ERROR_MESSAGE);
+        }
+        else if (printing) new PrintPreview(project, printedFile).show();
         else JOptionPane.showMessageDialog(panel, "PDF saved:\n" + target, "Merkzeug PDF", JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -323,6 +407,15 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
                     if (input == null) throw new FileNotFoundException(path);
                     bytes = input.readAllBytes();
                 }
+                if (path.equals("/index.html") && !"pdf".equals(uri.getQuery())) {
+                    var initialTheme = theme();
+                    String choice = initialTheme.get("choice").toString();
+                    boolean dark = choice.equals("dark") || (choice.equals("system") && Boolean.TRUE.equals(initialTheme.get("dark")));
+                    String meta = Base64.getEncoder().encodeToString(JSON.toJson(initialTheme).getBytes(StandardCharsets.UTF_8));
+                    String html = new String(bytes, StandardCharsets.UTF_8).replace("<html>", "<html data-theme=\"" + (dark ? "dark" : "light") + "\">")
+                        .replace("<head>", "<head><meta name=\"merkzeug-host-theme\" content=\"" + meta + "\">");
+                    bytes = html.getBytes(StandardCharsets.UTF_8);
+                }
                 type = mime(path);
             }
         } catch (Exception e) { bytes = "Not found".getBytes(StandardCharsets.UTF_8); type = "text/plain"; status = 404; }
@@ -335,7 +428,7 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
             @Override public boolean open(CefRequest request, BoolRef handle, CefCallback callback) { handle.set(true); return true; }
             @Override public void getResponseHeaders(CefResponse response, IntRef length, StringRef redirect) {
                 response.setStatus(responseStatus); response.setMimeType(contentType); length.set(data.length);
-                response.setHeaderMap(Map.of("Content-Security-Policy", "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: http:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'"));
+                response.setHeaderMap(Map.of("Content-Security-Policy", "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: http:; font-src 'self' data:; connect-src 'self'; media-src 'self'; object-src 'none'; base-uri 'none'"));
             }
             private boolean copy(byte[] out, int count, IntRef read) {
                 int size = Math.min(count, data.length - offset);
@@ -349,7 +442,7 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
     private static String mime(String path) {
         String ext = path.substring(path.lastIndexOf('.') + 1).toLowerCase(Locale.ROOT);
         return switch (ext) {
-            case "html" -> "text/html"; case "js" -> "application/javascript"; case "css" -> "text/css";
+            case "mp4" -> "video/mp4"; case "html" -> "text/html"; case "js" -> "application/javascript"; case "css" -> "text/css";
             case "svg" -> "image/svg+xml"; case "png" -> "image/png"; case "jpg", "jpeg" -> "image/jpeg";
             case "gif" -> "image/gif"; case "webp" -> "image/webp"; case "bmp" -> "image/bmp"; case "avif" -> "image/avif";
             case "woff2" -> "font/woff2"; case "woff" -> "font/woff"; default -> "application/octet-stream";

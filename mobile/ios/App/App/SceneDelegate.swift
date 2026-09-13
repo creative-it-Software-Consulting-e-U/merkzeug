@@ -11,10 +11,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = MerkzeugViewController()
         window?.makeKeyAndVisible()
 
+        for context in connectionOptions.urlContexts { WorkingCopyPlugin.callback(context.url) }
         SceneDelegateProxy.shared.scene(scene, willConnectTo: session, options: connectionOptions)
     }
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        for context in URLContexts { WorkingCopyPlugin.callback(context.url) }
         SceneDelegateProxy.shared.scene(scene, openURLContexts: URLContexts)
     }
 

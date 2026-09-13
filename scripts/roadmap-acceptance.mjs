@@ -1,0 +1,62 @@
+import { _electron } from 'playwright'
+import assert from 'node:assert/strict'
+import { mkdtemp, mkdir, writeFile, readFile, readdir } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { resolve, join } from 'node:path'
+const temp = await mkdtemp(join(tmpdir(), 'merkzeug-roadmap-'))
+const vault = join(temp, 'vault'); await mkdir(vault)
+await writeFile(join(vault, 'Plan.md'), '# Roadmap acceptance\n\nA note with **formatting**.\n\n```mermaid\ngraph LR\n A[Start] --> B[Finish]\n```\n')
+const output = resolve('release-artifacts/roadmap'); await mkdir(output, { recursive: true })
+await writeFile(join(temp, 'calendar.json'), JSON.stringify({ events: [] }))
+const env = { ...process.env, MERKZEUG_VAULT: vault, MERKZEUG_CALENDAR_FIXTURE: join(temp, 'calendar.json') }; delete env.ELECTRON_RUN_AS_NODE
+const app = await _electron.launch({ executablePath: resolve('crossplatform/node_modules/electron/dist/Electron.app/Contents/MacOS/Electron'), args: [resolve('crossplatform'), `--user-data-dir=${join(temp, 'profile')}`, '--lang=en'], env })
+try {
+ const page = await app.firstWindow(); page.setDefaultTimeout(20000)
+ await page.getByRole('button', { name: 'Start tour', exact: true }).click()
+ await page.getByRole('button', { name: 'Next', exact: true }).click()
+ await page.locator('.tour-dialog').getByRole('button', { name: 'Close', exact: true }).click()
+ await page.locator('.tree-label').filter({ hasText: /^Plan$/ }).click()
+ await page.locator('.ProseMirror h1').waitFor()
+ await page.locator('.mermaid-preview svg').waitFor()
+ await page.getByRole('button', { name: 'Review guidance', exact: true }).click()
+ assert.match(await page.locator('.guidance-dialog').innerText(), /Plan.assets/)
+ await page.locator('.guidance-dialog').getByRole('button', { name: 'Add', exact: true }).click()
+ assert.match(await readFile(join(vault, 'AGENTS.md'), 'utf8'), /Move and rename them together/)
+ const settingsPromise = app.waitForEvent('window')
+ await page.getByRole('button', { name: 'Settings', exact: true }).click()
+ const settings = await settingsPromise
+ await settings.getByLabel('Appearance', { exact: true }).selectOption('dark')
+ await page.waitForFunction(() => document.documentElement.dataset.theme === 'dark')
+ assert.equal(await page.locator('body').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(30, 30, 30)')
+ await page.waitForFunction(() => document.querySelector('.mermaid-preview style')?.textContent?.includes('fill:#ccc'))
+ await page.screenshot({ path: join(output, 'desktop-dark.png') })
+ await settings.getByLabel('Appearance', { exact: true }).selectOption('light')
+ await page.waitForFunction(() => document.documentElement.dataset.theme === 'light')
+ await settings.screenshot({ path: join(output, 'settings.png') })
+ await settings.locator('.settings-select').selectOption('Merkzeug')
+ await settings.close(); await page.bringToFront()
+ await page.getByLabel('Use PDF template while editing').check()
+ await page.waitForFunction(() => document.querySelector('.app')?.classList.contains('template-live'))
+ assert.match(await page.locator('.ProseMirror h1').evaluate(el => getComputedStyle(el).fontFamily), /Georgia/)
+ await page.screenshot({ path: join(output, 'desktop-template.png') })
+ await page.getByLabel('Use PDF template while editing').uncheck()
+ assert.doesNotMatch(await page.locator('.ProseMirror h1').evaluate(el => getComputedStyle(el).fontFamily), /Georgia/)
+ const next = new Date(Date.now() + 86400000).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z')
+ const fixture = 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:roadmap-fixture\r\nDTSTART:' + next + '\r\nDURATION:PT1H\r\nSUMMARY:Synthetic calendar meeting\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n'
+ const openMeetings = async () => { await page.locator('[data-tip="New meeting note (⌃⌘N)"]').click(); await page.locator('.meeting-dialog summary').click() }
+ await openMeetings()
+ await page.getByLabel('Import ICS file', { exact: true }).setInputFiles({ name: 'fixture.ics', mimeType: 'text/calendar', buffer: Buffer.from(fixture) })
+ await page.locator('.meeting-row').filter({ hasText: 'Synthetic calendar meeting' }).click()
+ await page.locator('.ProseMirror h1').filter({ hasText: 'Synthetic calendar meeting' }).waitFor()
+ const meetings = (await readdir(vault)).filter(name => /^meeting-.*\.md$/.test(name))
+ assert.equal(meetings.length, 1)
+ const originalMeeting = await readFile(join(vault, meetings[0]), 'utf8')
+ await openMeetings()
+ await page.getByLabel('Import ICS file', { exact: true }).setInputFiles({ name: 'fixture.ics', mimeType: 'text/calendar', buffer: Buffer.from(fixture.replace('Synthetic calendar meeting', 'Updated calendar meeting')) })
+ await page.locator('.meeting-row').filter({ hasText: 'Updated calendar meeting' }).click()
+ await page.locator('.meeting-dialog').waitFor({ state: 'hidden' })
+ assert.equal((await readdir(vault)).filter(name => /^meeting-.*\.md$/.test(name)).length, 1)
+ assert.equal(await readFile(join(vault, meetings[0]), 'utf8'), originalMeeting)
+ await writeFile(join(output, 'desktop-acceptance.json'), JSON.stringify({ status: 'passed', temporaryVault: vault, checks: ['guided tour', 'confirmed guidance creation', 'live dark/light across windows', 'template preview isolation', 'ICS import and reimport preserve existing meeting note'] }, null, 2))
+ console.log('PASS roadmap desktop acceptance')
+} finally { await app.close() }

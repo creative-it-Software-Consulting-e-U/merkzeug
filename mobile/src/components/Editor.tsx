@@ -1,5 +1,5 @@
 import { t as translate } from '@merkzeug/core/i18n'
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { Editor as SharedEditor, type EditorHandle, type EditorProps } from '@merkzeug/editor'
 import type { EditorHost } from '@merkzeug/editor/host'
 import { vault } from '../vault'
@@ -9,6 +9,11 @@ import '@merkzeug/editor/editor.css'
 const MIME: Record<string, string> = { '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.heic': 'image/heic' }
 export function Editor(props: Omit<EditorProps, 'host'>) {
   const ref = useRef<EditorHandle>(null)
+  useEffect(() => {
+    const flush = (event: Event) => { (event as CustomEvent<Promise<void>[]>).detail.push(ref.current?.flush() ?? Promise.resolve()) }
+    window.addEventListener('merkzeug-flush', flush)
+    return () => window.removeEventListener('merkzeug-flush', flush)
+  }, [])
   const latestPath = useRef(props.filePath)
   latestPath.current = props.filePath
   const host = useMemo<EditorHost>(() => {
@@ -41,8 +46,8 @@ export function Editor(props: Omit<EditorProps, 'host'>) {
       },
       onSaveError: message => alert(translate("Could not save changes: ") + message),
       onVaultChanged: listener => {
-        listeners.add(listener); document.addEventListener('visibilitychange', visible)
-        return () => { listeners.delete(listener); document.removeEventListener('visibilitychange', visible) }
+        listeners.add(listener); document.addEventListener('visibilitychange', visible); window.addEventListener('merkzeug-external-change', visible)
+        return () => { listeners.delete(listener); document.removeEventListener('visibilitychange', visible); window.removeEventListener('merkzeug-external-change', visible) }
       }
     }
   }, [])

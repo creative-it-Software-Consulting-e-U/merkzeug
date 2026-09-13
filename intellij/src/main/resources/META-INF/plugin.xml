@@ -2,12 +2,59 @@
   <id>com.creativeit.merkzeug</id>
   <name>Merkzeug</name>
   <version>1.0.0</version>
-  <vendor>creative-it</vendor>
-  <description><![CDATA[WYSIWYG Markdown editor with Mermaid, frontmatter, images and PDF export using shared Merkzeug components. Local preview release.]]></description>
-  <idea-version since-build="262.10315" until-build="262.*"/>
+  <vendor email="guenther.wieser@creative-it.com" url="https://merkzeug.creative-it.com/">creative-it Software Consulting e.U.</vendor>
+  <description><![CDATA[
+    <p>Merkzeug is a visual Markdown editor for IntelliJ IDEA, with formatting tools, Mermaid diagrams,
+    frontmatter, PDF export and printing. Your notes stay ordinary Markdown files in your project.</p>
+    <h3>Visual editing alongside your Markdown source editor</h3>
+    <p>Merkzeug adds a separate editor tab for the same Markdown file. Keep the built-in Markdown
+    editor for source editing and switch to Merkzeug for visual editing. Both work with the same
+    IntelliJ document. The JetBrains Markdown plugin is optional and is not replaced.</p>
+    <p>Other Markdown plugins can remain installed; compatibility depends on their editor registration.
+    Compatibility with every third-party Markdown plugin is not guaranteed.</p>
+    <h3>Images stay with their notes — including IntelliJ refactoring</h3>
+    <p>Images inserted or pasted into <code>Plan.md</code> are saved as separate files in the sibling
+    folder <code>Plan.assets/</code>, referenced by relative paths in the Markdown. The note and its
+    companion folder can be versioned and shared together.</p>
+    <p>Merkzeug extends IntelliJ's own <b>Refactor → Move</b> and <b>Refactor → Rename</b> actions with this
+    pairing rule. Renaming <code>Plan.md</code> to <code>Draft.md</code> also renames
+    <code>Plan.assets/</code> to <code>Draft.assets/</code> and updates companion-folder references in
+    the note. Moving a note includes its companion folder. Native Undo/Redo applies to both.</p>
+    <p>Existing destinations stop the operation; companion folders are not merged or overwritten.
+    Existing shared <code>assets/</code> folders remain supported and are not treated as belonging to
+    one note. This rule applies to IntelliJ Move/Rename refactoring, not external filesystem actions,
+    copying or deletion. Symbolic-link companions require manual handling.</p>
+    <h3>Fits your IDE workflow</h3>
+    <ul>
+      <li>IntelliJ owns document saving, version control and undo history.</li>
+      <li>File → Print opens a printable PDF preview for the active Merkzeug editor.</li>
+      <li>Appearance follows the IDE theme, with optional PDF content styles while editing.</li>
+      <li>Project-specific PDF templates, including automatic discovery of desktop Merkzeug templates.</li>
+      <li>Copyable template styling prompts with an offline technical reference for coding agents.</li>
+      <li>Optional attachment guidance for coding agents: preview existing AGENTS.md and CLAUDE.md
+      contents and explicitly select which files receive the guidance.</li>
+    </ul>
+    <p>Available as an additional editor tab for local .md files. The JetBrains Markdown plugin is optional.</p>
+    <p>Proprietary software, free for private and internal business use under the Merkzeug End User License Agreement.</p>
+    <p>Preview for IntelliJ IDEA 2026.2.2 (build 262.10315.125), with JCEF enabled.</p>
+  ]]></description>
+  <change-notes><![CDATA[
+    <p>First Marketplace preview.</p>
+    <ul>
+      <li>Visual Markdown editing, Mermaid diagrams, frontmatter and PDF export.</li>
+      <li>Companion image folders follow IntelliJ Move/Rename, with link updates and Undo/Redo.</li>
+      <li>Project PDF templates, desktop template discovery and PDF styles while editing.</li>
+      <li>Offline template styling prompts and explicit selection of coding-agent guidance files.</li>
+    </ul>
+  ]]></change-notes>
+  <idea-version since-build="262.10315.125" until-build="262.10315.125"/>
   <depends>com.intellij.modules.platform</depends>
   <depends>com.intellij.modules.jcef</depends>
   <extensions defaultExtensionNs="com.intellij">
+    <projectConfigurable parentId="tools" id="com.creativeit.merkzeug.settings" displayName="Merkzeug" instance="com.creativeit.merkzeug.MerkzeugSettings"/>
+    <renamePsiElementProcessor implementation="com.creativeit.merkzeug.CompanionRenameProcessor" order="first"/>
+    <refactoring.moveHandler implementation="com.creativeit.merkzeug.CompanionMoveHandler" order="first"/>
+    <printHandler implementation="com.creativeit.merkzeug.MerkzeugPrintHandler" order="first"/>
     <fileEditorProvider implementation="com.creativeit.merkzeug.MerkzeugEditorProvider"/>
   </extensions>
   <actions>

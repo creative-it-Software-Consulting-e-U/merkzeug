@@ -26,44 +26,12 @@ export interface GitResult {
   output: string
 }
 
-/** Person in einem Kalendertermin (Organisator/Teilnehmer) */
-export interface CalendarPerson {
-  name?: string
-  email?: string
-  /** true bei optionaler Teilnahme */
-  optional?: boolean
-}
-
-/** Termin aus einem lokal eingebundenen Kalender */
-export interface CalendarEvent {
-  id: string
-  title: string
-  /** ISO-8601 */
-  start: string
-  /** ISO-8601 */
-  end: string
-  allDay: boolean
-  location?: string
-  /** Name des Kalenders, aus dem der Termin stammt */
-  calendar?: string
-  organizer?: CalendarPerson
-  attendees: CalendarPerson[]
-  /** Teilnehmerzahl, falls die Liste (noch) nicht geladen ist (Windows: erst beim Anklicken) */
-  attendeeCount?: number
-  /** erkannter Besprechungs-Link (Teams/Zoom/Meet/Webex) */
-  meetingUrl?: string
-}
-
-export interface CalendarResult {
-  ok: boolean
-  /** denied = Zugriff verweigert, unsupported = Plattform ohne Anbindung */
-  error?: 'denied' | 'unsupported' | 'failed'
-  message?: string
-  events: CalendarEvent[]
-}
+export type { CalendarPerson, CalendarEvent, CalendarResult } from '@merkzeug/core/calendar'
 
 /** Aktionen, die das Menü an den Renderer schickt */
 export type MenuAction =
+  | 'guidedTour'
+  | 'tourVideo'
   | 'newNote'
   | 'newMeetingNote'
   | 'newFolder'
@@ -89,6 +57,7 @@ export type MenuAction =
   | 'toggleSplit'
   | 'moveTabOtherPane'
   | 'toggleAssets'
+  | 'printNote'
   | 'exportPdf'
 
 export type { PdfDoc, PdfTemplate, PdfTemplateMargins } from '@merkzeug/core/pdf'

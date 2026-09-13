@@ -1,8 +1,6 @@
 package com.creativeit.merkzeug;
 
 import com.intellij.ide.BrowserUtil;
-import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
@@ -18,10 +16,12 @@ public final class ContactSupportAction extends AnAction {
             ? "Merkzeug: Support kontaktieren…" : "Merkzeug: Contact Support…");
     }
     @Override public void actionPerformed(@NotNull AnActionEvent event) {
-        var plugin = PluginManagerCore.getPlugin(PluginId.getId("com.creativeit.merkzeug"));
+
         String language = "de".equals(Locale.getDefault().getLanguage()) ? "de" : "en";
         String url = "https://support.apps.creative-it.com/?app=merkzeug&lang=" + language + "&environment=IntelliJ";
-        if (plugin != null) url += "&appVersion=" + URLEncoder.encode(plugin.getVersion(), StandardCharsets.UTF_8);
+        try (var resource = getClass().getResourceAsStream("/META-INF/merkzeug-version.txt")) {
+            if (resource != null) url += "&appVersion=" + URLEncoder.encode(new String(resource.readAllBytes(), StandardCharsets.UTF_8).trim(), StandardCharsets.UTF_8);
+        } catch (java.io.IOException ignored) { /* Support remains available without version metadata. */ }
         BrowserUtil.browse(url);
     }
 }

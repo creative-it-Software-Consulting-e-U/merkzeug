@@ -37,3 +37,7 @@ overflow on document content. Headers and footers also appear on the cover.
 
 Export from the actual app to check pagination; an HTML preview is not sufficient.
 Only share documents with an agent if you intend to give it access to their content.
+
+## Detailed styling kit
+
+Read [AGENTS.md](AGENTS.md) for the full styling contract, CSS examples, preview limitations and validation checklist. [STYLING-PROMPT.md](STYLING-PROMPT.md) is the reusable task brief: replace the folder placeholder and design wishes, then append AGENTS.md when passing it to an agent. App copy actions include both automatically. Keep this README for this template's palette, typography and design decisions.

@@ -1,7 +1,7 @@
 @import '@merkzeug/editor/editor.css';
 @import '@merkzeug/export/print.css';
 :root { --bg: #fff; --bg-sidebar: #f5f4f2; --bg-hover: #eee; --bg-active: #ddd; --border: #ddd; --text: #37352f; --text-dim: #777; --accent: #2f6feb; --danger: #b42318; }
-@media (prefers-color-scheme: dark) { :root { --bg: #1e1f22; --bg-sidebar: #2b2d30; --bg-hover: #393b40; --bg-active: #444; --border: #45464a; --text: #ddd; --text-dim: #aaa; --accent: #6ea0ff; --danger: #ff8070; } }
+:root[data-theme="dark"] { --bg: #1e1f22; --bg-sidebar: #2b2d30; --bg-hover: #393b40; --bg-active: #444; --border: #45464a; --text: #ddd; --text-dim: #aaa; --accent: #6ea0ff; --danger: #ff8070; }
 * { box-sizing: border-box; }
 html, body, #root { margin: 0; height: 100%; font-family: -apple-system, BlinkMacSystemFont, sans-serif; color: var(--text); background: var(--bg); }
 .ide-app { height: 100%; display: flex; flex-direction: column; overflow: hidden; }
@@ -13,3 +13,29 @@ button:disabled { opacity: .5; }
 .error { background: #ffe5e5; color: #922; padding: 10px; }
 .diagram-zoom { width: 90vw; max-height: 90vh; overflow: auto; }
 .diagram-zoom svg { width: 100%; }
+
+.format-toolbar { gap: 2px; padding: 4px 8px; flex-wrap: nowrap; overflow: visible; flex-wrap: wrap; flex-shrink: 0; }
+.format-toolbar button, .format-toolbar select { flex-shrink: 0; min-height: 28px; border: 0; background: transparent; color: var(--text); border-radius: 3px; }
+.format-toolbar button:hover, .format-toolbar select:hover { background: var(--bg-hover); }
+.format-toolbar select option { color: var(--text); background: var(--bg); }
+.format-toolbar .status { min-width: 8px; }
+.status-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.editor-extras { padding: 8px; border-bottom: 1px solid var(--border); }
+
+.format-toolbar button { display: inline-flex; align-items: center; justify-content: center; }
+.format-menu { position: relative; }
+.format-menu summary { cursor: pointer; list-style: none; padding: 6px 8px; display: flex; border-radius: 3px; }
+.format-menu summary:hover { background: var(--bg-hover); }
+.format-menu summary::-webkit-details-marker { display: none; }
+.format-menu > div { position: absolute; top: 100%; left: 0; z-index: 50; padding: 4px; min-width: 180px; background: var(--bg-sidebar); border: 1px solid var(--border); border-radius: 4px; box-shadow: 0 4px 12px #0004; }
+.format-menu > div button { display: block; width: 100%; text-align: left; white-space: nowrap; }
+
+.editor-extras { font-size: 12px; flex-shrink: 0; }
+.editor-extra-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.editor-extra-actions .tour-tools { margin: 0; justify-content: flex-start; }
+.editor-extra-actions > button, .editor-extra-actions .tour-tools > button, .editor-extra-actions .tour-video-launch { font: inherit; }
+.editor-extras .vault-guidance { margin-top: 8px; padding: 8px 0 0; border-top: 1px solid var(--border); border-bottom: 0; }
+
+.template-preview-toggle { display: inline-flex; align-items: center; gap: 5px; }
+/* PDF content starts on paper even when the surrounding IDE uses a dark theme. */
+.template-live .editor-host { color-scheme: light; background: #fff; color: #1a1916; --bg: #fff; --text: #1a1916; --bg-sidebar: #f5f4f2; --bg-hover: #eee; --bg-active: #ddd; --text-dim: #666; --border: #ddd; }

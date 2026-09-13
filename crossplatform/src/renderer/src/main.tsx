@@ -1,3 +1,4 @@
+import { initializeTheme } from '@merkzeug/editor/theme'
 import './locale'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
@@ -7,6 +8,8 @@ import { ZoomApp } from './ZoomApp'
 import { PdfApp } from './PdfApp'
 import { SettingsApp } from './SettingsApp'
 import './styles.css'
+
+initializeTheme()
 
 function Root(): React.JSX.Element {
   const hash = window.location.hash

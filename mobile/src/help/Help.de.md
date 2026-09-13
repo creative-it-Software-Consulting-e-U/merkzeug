@@ -28,6 +28,8 @@ funktioniert auch jeder andere Ordner aus der Dateien-App.
 - **Suche 🔍**: durchsucht Dateinamen und Inhalte aller Notizen; ein
   Tippen auf einen Treffer öffnet die Notiz.
 
+Schließe die Suche mit **Fertig** über den Ergebnissen oder **Fertig** auf der Tastatur, auch bei leerem Suchfeld. Mit einer externen Tastatur funktioniert außerdem Escape.
+
 ## Lesen und Bearbeiten
 
 Notizen öffnen sich **schreibgeschützt** – ideal zum Nachschlagen ohne
@@ -40,7 +42,7 @@ Bearbeitungsmodus:
 - „/" am Zeilenanfang öffnet das Einfüge-Menü (Überschriften, Listen,
   Tabellen, Bilder, Codeblöcke …).
 - Bilder aus der Foto-Mediathek werden beim Einfügen automatisch im
-  Unterordner `assets/` neben der Notiz abgelegt.
+  Ordner `Notizname.assets/` neben `Notizname.md` abgelegt.
 - Mermaid-Codeblöcke zeigen eine Diagramm-Vorschau.
 
 ## Anlegen, Umbenennen, Löschen
@@ -86,7 +88,34 @@ Desktop, iOS und IntelliJ verwenden denselben Merkzeug-Editor. Frontmatter bleib
 
 Desktop-App und IntelliJ enthalten die PDF-Startvorlage Merkzeug mit Deckblatt, gestalteten Überschriften und Seitennummern. Eine Kopie lässt sich mit einem Agenten anpassen. Siehe die [Vorlagen-Anleitung](https://merkzeug.creative-it.com/help-de.html#pdf-startvorlage). Auf iOS ist PDF-Export noch nicht verfügbar.
 
+## Darstellung, Tour und Agentenhinweise
+
+Wähle **System**, **Hell** oder **Dunkel** für die Darstellung. System folgt dem Betriebssystem (in IntelliJ der IDE); deine Auswahl wird gespeichert. Die **Geführte Tour** startet erst nach deiner Zustimmung zur Einladung beim ersten Start und lässt sich jederzeit wieder öffnen.
+
+Beim Öffnen eines Vaults kann Merkzeug Hinweise in den Stammdateien `AGENTS.md` / `CLAUDE.md` für `Notiz.md` und `Notiz.assets/` vorschlagen. Prüfe den einmal angezeigten Ergänzungstext und die vollständigen Inhalte beider Hinweisdateien. Wähle vor **Hinzufügen** ausdrücklich die Zieldateien aus; keine ist vorausgewählt. Verweist `CLAUDE.md` nur auf `AGENTS.md`, kannst du sie unverändert lassen. Fehlende Dateien werden nur bei Auswahl angelegt. **Später** verschiebt den Hinweis für diese Sitzung; **Für diesen Vault nicht mehr vorschlagen** unterdrückt weitere Hinweise für diesen Vault. Widersprüchliche oder unklare Bilderordner-Regeln müssen manuell geprüft werden. Gleichzeitige externe Änderungen bleiben erhalten und erfordern eine neue Vorschau. Bestehende gemeinsame `assets/`-Verweise bleiben lesbar.
+
+## Kalenderquellen
+
+**Neue Meeting-Notiz** öffnet die Terminauswahl. Unter **Kalenderquellen** kannst du eine `.ics`-Datei importieren oder ein benanntes privates HTTPS/Webcal-Abonnement hinzufügen. Abonnements werden auf diesem Gerät gespeichert, niemals im Vault. **Kalender aktualisieren** lädt Änderungen; bei Fehlern bleibt der vorherige Stand mit Zeitangabe verfügbar. Der erneute Import einer gleichnamigen ICS-Datei aktualisiert die Quelle, ohne Notizen zu duplizieren. Ein Termin erstellt oder öffnet seine Meeting-Notiz; bestehender Notiztext wird nicht ersetzt. CalDAV und das Zurückschreiben in Kalender werden nicht unterstützt.
+
+Auf iPhone und iPad stehen auch die nativen iOS-Kalender zur Verfügung. Zugriff wird erst beim Öffnen der Meeting-Notizen angefragt. Falls du ihn abgelehnt hast, aktiviere den Kalenderzugriff für Merkzeug in den iOS-Einstellungen. Die App liest Termine, ohne den Kalender zu ändern. Neue Bilder verwenden `Notiz.assets/`; beim Verschieben/Umbenennen durch Merkzeug wird der Begleitordner mitgenommen und die Verweise werden angepasst. Bestehende gemeinsame `assets/`-Ordner bleiben erhalten.
+
+Öffne **Working Copy** und gib den genauen Repository-Namen bzw. die Remote-URL und den Callback-Schlüssel ein. Der Schlüssel bleibt im Schlüsselbund dieses Geräts. Vor **Pull**, **Commit** oder **Push** werden ausstehende Änderungen gespeichert. Commit öffnet die Änderungsprüfung und Nachrichteneingabe von Working Copy für das Repository. Push benötigt dessen freigeschaltete Push-Funktion. Konflikte und Zugangsdaten werden in Working Copy geklärt. Das Öffnen der App ist noch kein Erfolg: Warte auf ihren Rückruf. Bei Unterbrechungen oder fehlendem Rückruf prüfe dort das Ergebnis, bevor du es bestätigst und einen weiteren Vorgang startest.
+
+### Vorlagen-Styling-Prompt
+
+In den Desktop-Einstellungen gibt es bei jeder Vorlage **Vorlagen-Styling-Prompt** zum Aufklappen, Prüfen und Kopieren, einschließlich des Vorlagenpfads. IntelliJ bietet dieselbe Aktion unter **Einstellungen → Tools → Merkzeug** mit dem aktuell im Einstellungsfeld angezeigten Ordner. Auf iOS findest du sie unter **Hilfe → Vorlagen-Styling-Prompt**; ergänze dort den Ordnerpfad auf dem Computer des Agenten. iOS bietet derzeit keinen PDF-Export und keine Vorschau von PDF-Vorlagen-Styles.
+
+Ersetze den neuen Vorlagennamen sowie Farben, Schriften, Logo und Gestaltungswünsche vor der Übergabe. Der Prompt ist auf Englisch und enthält die vollständige technische Anleitung offline, auch für ältere Vorlagen ohne Hinweisdateien. Beim Kopieren werden keine Notizinhalte gelesen oder bestehende Vorlagen verändert. Falls die Webansicht keinen Zugriff auf die Zwischenablage hat, markiere und kopiere den angezeigten Text manuell.
+
+Neue Startvorlagen enthalten `AGENTS.md` mit Dateiformat, CSS-Beispielen, Platzhaltern, Vorschau-Grenzen und Prüfhinweisen sowie `STYLING-PROMPT.md` als wiederverwendbaren Arbeitsauftrag. Gestaltungsentscheidungen für die jeweilige Vorlage gehören in `README.md`. Der Auftrag verlangt eine separate Kopie und den Erhalt vorhandener Anweisungen. Bestehende Desktop-Vorlagen werden nicht aktualisiert oder überschrieben. Für die manuelle Nutzung STYLING-PROMPT.md und AGENTS.md zusammenfügen und den Platzhalter für den Vorlagenpfad ersetzen.
+
 
 ### Lizenz
 
 Merkzeug ist proprietäre Software für private und interne geschäftliche Nutzung. Die vollständige Endnutzerlizenz steht am Ende der In-App-Hilfe sowie auf der [Website](https://merkzeug.creative-it.com/license-de.html). Drittanbieter-Komponenten behalten ihre eigenen Lizenzen.
+
+
+## Drucken
+
+Öffne eine Notiz und tippe auf **Drucken…**. Sobald die Vorschau fertig ist, öffnet **Drucken…** den AirPrint-Dialog mit Drucker, Seitenbereich und Kopien. Ausstehende Änderungen werden zuvor gespeichert. Gedruckt wird die aktuelle Notiz samt Mermaid-Diagrammen und Bildern im Standardlayout. Vorlagenauswahl und Drucken verlinkter Dokumente sind derzeit Desktop-/IntelliJ-Funktionen. Mit Abbrechen gelangst du zur Vorschau zurück; **Schließen** öffnet wieder deine Notiz.

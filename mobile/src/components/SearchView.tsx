@@ -23,6 +23,7 @@ export function SearchView({ onOpen, onClose }: SearchViewProps): React.JSX.Elem
   }, [])
 
   useEffect(() => {
+    const id = ++requestId.current
     const trimmed = query.trim()
     if (!trimmed) {
       setResults([])
@@ -30,7 +31,6 @@ export function SearchView({ onOpen, onClose }: SearchViewProps): React.JSX.Elem
       return
     }
     setBusy(true)
-    const id = ++requestId.current
     const timer = setTimeout(() => {
       vault
         .search(trimmed)
@@ -45,37 +45,40 @@ export function SearchView({ onOpen, onClose }: SearchViewProps): React.JSX.Elem
           setBusy(false)
         })
     }, DEBOUNCE_MS)
-    return () => clearTimeout(timer)
+    return () => { clearTimeout(timer); requestId.current++ }
   }, [query])
 
   return (
-    <div className="search-view">
-      <div className="search-bar">
+    <div className="vault-search-view">
+      <form className="vault-search-bar" role="search" onSubmit={event => { event.preventDefault(); onClose() }}>
         <input
           ref={inputRef}
-          className="search-input"
-          type="search"
+          className="vault-search-input"
+          type="text"
+          role="searchbox"
+          enterKeyHint="done"
           placeholder={translate("Search vault …")}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={event => { if (event.key === 'Escape') { event.preventDefault(); onClose() } }}
           autoCapitalize="off"
           autoCorrect="off"
         />
-        <button className="bar-btn" onClick={onClose}>
+        <button className="bar-btn" type="submit">
           {translate("Done")}
         </button>
-      </div>
+      </form>
       {query.trim() && !busy && results.length === 0 ? (
         <div className="folder-empty">{translate("No matches.")}</div>
       ) : (
-        <ul className="folder-list search-results">
+        <ul className="folder-list vault-search-results">
           {results.map((result) => (
             <li key={result.path}>
-              <button className="folder-row search-row" onClick={() => onOpen(result.path)}>
-                <span className="search-row-text">
-                  <span className="search-row-name">{basename(result.path, '.md')}</span>
-                  <span className="search-row-path">{dirname(result.path)}</span>
-                  {result.snippet && <span className="search-row-snippet">{result.snippet}</span>}
+              <button className="folder-row vault-search-row" onClick={() => onOpen(result.path)}>
+                <span className="vault-search-row-text">
+                  <span className="vault-search-row-name">{basename(result.path, '.md')}</span>
+                  <span className="vault-search-row-path">{dirname(result.path)}</span>
+                  {result.snippet && <span className="vault-search-row-snippet">{result.snippet}</span>}
                 </span>
                 <span className="folder-row-chevron">›</span>
               </button>

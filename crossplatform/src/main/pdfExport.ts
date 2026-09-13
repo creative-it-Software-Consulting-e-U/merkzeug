@@ -1,7 +1,8 @@
 import { t as translate } from '@merkzeug/core/i18n'
 import { collectLinkedDocs as collectShared, fillTemplate } from '@merkzeug/core/exportPlan'
 import { BrowserWindow, dialog, ipcMain, shell } from 'electron'
-import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, readFileSync, writeFileSync, mkdtempSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { basename, dirname, isAbsolute, join, normalize, relative, resolve } from 'node:path'
 import { is } from '@electron-toolkit/utils'
 import { frontmatterList, pdfExportTitle, splitFrontmatter } from '../shared/docTitle'
@@ -118,9 +119,9 @@ async function renderPdf(
   }
 }
 
-async function exportPdf(win: BrowserWindow, notePath: string): Promise<void> {
+async function exportPdf(win: BrowserWindow, notePath: string, print = false): Promise<void> {
   // Debug-/Testmodus: Ziel aus der Umgebung, keine Dialoge
-  const debugTarget = process.env.MERKZEUG_PDF_TARGET
+  const debugTarget = print ? undefined : process.env.MERKZEUG_PDF_TARGET
   const vault = getWindowVault(win.id)
 
   // Vorlage: dem Vault zugewiesen (Debug-/Testläufe: aus der Umgebung)
@@ -176,7 +177,7 @@ async function exportPdf(win: BrowserWindow, notePath: string): Promise<void> {
   if (template) template = applyPlaceholders(template, notePath, withLinked)
 
   let target = debugTarget ?? null
-  if (!target) {
+  if (!target && !print) {
     // Nur der Dateiname als defaultPath: so wählt das System den Ordner
     // (zuletzt verwendetes Verzeichnis, wie unter macOS üblich) — ein
     // kompletter Pfad würde den Dialog jedes Mal in denselben Ordner zwingen
@@ -193,7 +194,9 @@ async function exportPdf(win: BrowserWindow, notePath: string): Promise<void> {
     const files = withLinked ? [notePath, ...linked] : [notePath]
     const docs: PdfDoc[] = files.map((p) => ({ path: p, content: readFileSync(p, 'utf8') }))
     sendProgress(win, { phase: 'start', done: 0, total: docs.length + 1 })
-    writeFileSync(target, await renderPdf(vault, docs, template, win))
+    const data = await renderPdf(vault, docs, template, win)
+    if (print) await printPdfDocument(win, data)
+    else writeFileSync(target!, data)
   } catch (err) {
     sendProgress(win, { phase: 'error' })
     if (debugTarget) throw err
@@ -201,7 +204,34 @@ async function exportPdf(win: BrowserWindow, notePath: string): Promise<void> {
     return
   }
   sendProgress(win, { phase: 'done' })
-  if (!debugTarget) shell.showItemInFolder(target)
+  if (!debugTarget && !print) shell.showItemInFolder(target!)
+}
+
+/** Print the generated PDF itself, including template headers and pagination. */
+async function printPdfDocument(parent: BrowserWindow, data: Buffer): Promise<void> {
+  const directory = mkdtempSync(join(tmpdir(), 'merkzeug-print-'))
+  const file = join(directory, 'document.pdf')
+  writeFileSync(file, data)
+  const preview = new BrowserWindow({ parent, width: 1000, height: 800,
+    title: translate("Print"), webPreferences: { sandbox: true, nodeIntegration: false, contextIsolation: true } })
+  preview.webContents.setWindowOpenHandler(() => ({ action: 'deny' }))
+  preview.webContents.on('before-input-event', (event, input) => {
+    if (input.type === 'keyDown' && input.key.toLowerCase() === 'p' && (input.control || input.meta)) {
+      event.preventDefault()
+      preview.webContents.print({ silent: false, printBackground: true })
+    }
+  })
+  preview.on('closed', () => rmSync(directory, { recursive: true, force: true }))
+  try {
+    await preview.loadFile(file)
+    // Current Electron supports printing the embedded PDF viewer. Keep the preview
+    // alive after submitting/cancelling so its toolbar can also print again.
+    preview.webContents.print({ silent: false, printBackground: true }, (ok, reason) => {
+      if (!ok && reason && !/cancel/i.test(reason) && !preview.isDestroyed()) {
+        void dialog.showMessageBox(preview, { type: 'error', message: translate("Printing failed"), detail: reason })
+      }
+    })
+  } catch (error) { preview.destroy(); throw error }
 }
 
 /**
@@ -288,8 +318,17 @@ async function exportPdfMulti(win: BrowserWindow, notePaths: string[]): Promise<
   if (!debugTarget) shell.showItemInFolder(targetFor(files[0]))
 }
 
+const pendingPrints = new Set<number>()
+
 export function registerPdfIpc(): void {
   ipcMain.on('pdf:error', (event, message: string) => readyRejectors.get(event.sender.id)?.(new Error(message)))
+  ipcMain.handle('pdf:print', async (event, notePath: string) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
+    if (!win || pendingPrints.has(win.id)) return
+    pendingPrints.add(win.id)
+    try { await exportPdf(win, notePath, true) }
+    finally { pendingPrints.delete(win.id) }
+  })
   ipcMain.handle('pdf:export', async (event, notePath: string) => {
     const win = BrowserWindow.fromWebContents(event.sender)
     if (win) await exportPdf(win, notePath)

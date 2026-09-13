@@ -154,9 +154,11 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   const rootRef = useRef<HTMLDivElement | null>(null)
   const hostRef = useRef<HTMLDivElement | null>(null)
   const crepeRef = useRef<Crepe | null>(null)
+  const mermaidSourcesRef = useRef(new Map<string, string>())
   const filePathRef = useRef(filePath)
   const dirtyRef = useRef(false)
   const latestMarkdownRef = useRef<string | null>(null)
+  const baselineMarkdownRef = useRef<string | null>(null)
   // YAML-Frontmatter der Datei: wird im Editor nicht angezeigt, beim
   // Speichern aber unverändert wieder vorangestellt
   const frontmatterRef = useRef('')
@@ -201,8 +203,19 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   // Pfadwechsel ohne Neuladen (Umbenennen/Verschieben): nur Speicherziel anpassen
   filePathRef.current = filePath
 
+  // Explicit save/print must not wait for Milkdown's debounced markdown listener.
+  const captureCurrentMarkdown = useCallback(() => {
+    if (!crepeRef.current || baselineMarkdownRef.current === null) return
+    const current = crepeRef.current.getMarkdown()
+    latestMarkdownRef.current = current
+    if (current !== (lastSavedRef.current ?? baselineMarkdownRef.current)) {
+      dirtyRef.current = true
+    }
+  }, [])
+
   const doSave = useCallback(async (): Promise<void> => {
     if (savingRef.current) await savingRef.current
+    captureCurrentMarkdown()
     if (conflictRef.current) throw new Error(translate("Resolve external changes before saving"))
     if (!dirtyRef.current || latestMarkdownRef.current === null) return
     const path = filePathRef.current
@@ -231,9 +244,10 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
     } finally {
       if (savingRef.current === operation) savingRef.current = null
     }
-  }, [host, onDirtyChange, onSaved])
+  }, [host, onDirtyChange, onSaved, captureCurrentMarkdown])
 
   const flushSync = useCallback((): void => {
+    captureCurrentMarkdown()
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
     if (conflictRef.current || !dirtyRef.current || latestMarkdownRef.current === null) return
     if (!host.writeFileSync) { void doSave().catch(() => {}); return }
@@ -245,7 +259,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       onDirtyChange?.(false)
       onSaved?.(latestMarkdownRef.current)
     }
-  }, [host, doSave, onDirtyChange, onSaved])
+  }, [host, doSave, onDirtyChange, onSaved, captureCurrentMarkdown])
 
   const scheduleSave = useCallback((): void => {
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
@@ -294,6 +308,34 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   )
 
   // „+ Feld“-Menü bei Klick außerhalb oder Escape schließen
+  useEffect(() => {
+    let generation = 0
+    const refresh = () => {
+      const current = ++generation
+      rootRef.current?.querySelectorAll<HTMLElement>('.mermaid-preview').forEach(preview => {
+        const token = Array.from(preview.classList).find(name => name.startsWith('mermaid-source-'))
+        const source = token ? mermaidSourcesRef.current.get(token) : undefined
+        if (!source) return
+        void renderMermaid(source, !!rootRef.current?.closest('.template-live')).then(svg => {
+          if (current !== generation || !preview.isConnected) return
+          const button = preview.querySelector('button')
+          preview.innerHTML = svg
+          if (button) preview.append(button)
+        }).catch(() => {})
+      })
+    }
+    let templateLive = !!rootRef.current?.closest('.template-live')
+    const observer = new MutationObserver(() => {
+      const next = !!rootRef.current?.closest('.template-live')
+      if (next !== templateLive) { templateLive = next; refresh() }
+    })
+    for (let ancestor = rootRef.current?.parentElement; ancestor; ancestor = ancestor.parentElement) {
+      observer.observe(ancestor, { attributes: true, attributeFilter: ['class'] })
+    }
+    window.addEventListener('merkzeug-theme', refresh)
+    return () => { generation++; observer.disconnect(); window.removeEventListener('merkzeug-theme', refresh) }
+  }, [])
+
   useEffect(() => {
     if (!fmMenuOpen) return
     const close = (e: MouseEvent): void => {
@@ -499,9 +541,11 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       fmDirtyRef.current = false
       // bis der Editor steht, keinen (alten) Inhalt speichern
       latestMarkdownRef.current = null
+      baselineMarkdownRef.current = null
       if (cancelled || !rootRef.current) return
       setFmText(frontmatterInner(frontmatter))
       rootRef.current.innerHTML = ''
+      mermaidSourcesRef.current.clear()
 
       crepe = new Crepe({
         root: rootRef.current,
@@ -530,13 +574,19 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
             copyText: translate("Copy"),
             renderPreview: (language: string, content2: string, apply: (v: null | string | HTMLElement) => void) => {
               if (language !== 'mermaid' || !content2.trim()) return null
-              renderMermaid(content2)
-                .then((svg) => {
+              const templateLive = !!rootRef.current?.closest('.template-live')
+              renderMermaid(content2, templateLive)
+                .then(async svg => {
+                  // The mode can change while Mermaid is loading or rendering.
+                  const current = !!rootRef.current?.closest('.template-live')
+                  if (current !== templateLive) svg = await renderMermaid(content2, current)
                   // Kein addEventListener hier: Crepe sanitisiert die Vorschau
                   // (innerHTML), Listener gehen verloren. Klicks behandelt der
                   // Capture-Handler des Editors (handleClickCapture).
                   const wrap = document.createElement('div')
-                  wrap.className = 'mermaid-preview'
+                  const token = `mermaid-source-${mermaidSourcesRef.current.size + 1}`
+                  mermaidSourcesRef.current.set(token, content2)
+                  wrap.className = `mermaid-preview ${token}`
                   wrap.innerHTML = svg
                   const zoomBtn = document.createElement('button')
                   zoomBtn.className = 'mermaid-zoom-btn'
@@ -635,6 +685,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
         return
       }
       baseline = crepe.getMarkdown()
+      baselineMarkdownRef.current = baseline
       latestMarkdownRef.current = body
       lastSavedRef.current = null
       // dirty nur behalten, wenn während des Ladens Frontmatter editiert wurde;

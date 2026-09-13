@@ -1,3 +1,7 @@
+import { TemplateStylingPrompt } from '@merkzeug/editor/TemplateStylingPrompt'
+import { CalendarSources } from '@merkzeug/editor/CalendarSources'
+import { calendarSourceHost } from './util/calendarSources'
+import { ThemeSelect } from '@merkzeug/editor/ThemeSelect'
 import { t as translate, getLocale } from '@merkzeug/core/i18n'
 import { useCallback, useEffect, useState } from 'react'
 import type { TemplateState } from '../../shared/types'
@@ -53,7 +57,10 @@ export function SettingsApp(): React.JSX.Element {
 
   return (
     <div className="settings-app">
-      <h1>{translate("PDF templates")}</h1>
+      <h1>{translate("Settings")}</h1>
+      <ThemeSelect />
+      <CalendarSources host={calendarSourceHost} />
+      <h2>{translate("PDF templates")}</h2>
 
       <section className="settings-section">
         <h2>{translate("Templates folder")}</h2>
@@ -78,10 +85,10 @@ export function SettingsApp(): React.JSX.Element {
             </div>
           )}
           {state.templates.map((name) => (
-            <div key={name} className="settings-list-row">
+            <div key={name}><div className="settings-list-row">
               <span>{name}</span>
               <button onClick={() => void window.merkzeug.showTemplate(name)}>{translate("Edit")}</button>
-            </div>
+            </div><TemplateStylingPrompt path={`${state.templatesRoot.replace(/[/\\]$/, '')}/${name}`} /></div>
           ))}
         </div>
         <div className="settings-new">
