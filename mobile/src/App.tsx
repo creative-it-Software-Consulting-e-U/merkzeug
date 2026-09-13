@@ -1,3 +1,6 @@
+import { assignedTemplate, loadTemplate } from './templates'
+import { TemplateSettings } from './components/TemplateSettings'
+import type { PdfTemplate } from '@merkzeug/core/pdf'
 import { lazy, Suspense } from 'react'
 const PrintPreview = lazy(() => import('./components/PrintPreview').then(m => ({ default: m.PrintPreview })))
 import { GuidedTour } from '@merkzeug/editor/GuidedTour'
@@ -52,6 +55,7 @@ export default function App(): React.JSX.Element {
   const [showMeetings, setShowMeetings] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
   const [printDoc, setPrintDoc] = useState<{ path: string; content: string } | null>(null)
+  const [pdfTemplate, setPdfTemplate] = useState<PdfTemplate | null>(null)
   const [preparingPrint, setPreparingPrint] = useState(false)
   const printPending = useRef(false)
   async function preparePrint() {
@@ -62,6 +66,8 @@ export default function App(): React.JSX.Element {
       window.dispatchEvent(new CustomEvent('merkzeug-flush', { detail: pending }))
       await Promise.all(pending)
       const result = await vault.readFile(current)
+      const templateName = await assignedTemplate()
+      setPdfTemplate(templateName ? await loadTemplate(templateName) : null)
       setPrintDoc({ path: current, content: result.content })
     } catch (error) { alert(String(error)) }
     finally { printPending.current = false; setPreparingPrint(false) }
@@ -372,7 +378,7 @@ export default function App(): React.JSX.Element {
     [pruneStack, reloadTree]
   )
 
-  if (printDoc) return <Suspense fallback={<div>{translate('Preparing print preview…')}</div>}><PrintPreview {...printDoc} onClose={() => { setPrintDoc(null); setLoadToken(value => value + 1) }} /></Suspense>
+  if (printDoc) return <Suspense fallback={<div>{translate('Preparing print preview…')}</div>}><PrintPreview {...printDoc} template={pdfTemplate} onClose={() => { setPrintDoc(null); setLoadToken(value => value + 1) }} /></Suspense>
 
   if (restoring) return <div className="start-screen" />
 
@@ -452,6 +458,7 @@ export default function App(): React.JSX.Element {
       <VaultGuidance key={vaultInfo.id ?? vaultInfo.name} vaultId={vaultInfo.id ?? vaultInfo.name} host={guidanceHost} />
       <div className="appearance-bar">{isNote && <button disabled={preparingPrint} onClick={() => void preparePrint()}>{translate("Print…")}</button>}<button onClick={() => setShowMeetings(true)}>{translate('New meeting note')}</button><ThemeSelect /></div>
       {showMeetings && <MeetingNotes folder={isNote ? dirname(current) : current} onClose={() => setShowMeetings(false)} onOpen={path => { setShowMeetings(false); void reloadTree(); navigateTo(path) }} />}
+      <TemplateSettings key={`templates:${vaultInfo.id ?? vaultInfo.name}`} vaultId={vaultInfo.id ?? vaultInfo.name} onChange={setPdfTemplate} />
       <main className="content" ref={contentRef}>
         {isNote ? (
           <Editor

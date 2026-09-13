@@ -104,7 +104,7 @@ Auf iPhone und iPad stehen auch die nativen iOS-Kalender zur Verfügung. Zugriff
 
 ### Vorlagen-Styling-Prompt
 
-In den Desktop-Einstellungen gibt es bei jeder Vorlage **Vorlagen-Styling-Prompt** zum Aufklappen, Prüfen und Kopieren, einschließlich des Vorlagenpfads. IntelliJ bietet dieselbe Aktion unter **Einstellungen → Tools → Merkzeug** mit dem aktuell im Einstellungsfeld angezeigten Ordner. Auf iOS findest du sie unter **Hilfe → Vorlagen-Styling-Prompt**; ergänze dort den Ordnerpfad auf dem Computer des Agenten. iOS bietet derzeit keinen PDF-Export und keine Vorschau von PDF-Vorlagen-Styles.
+In den Desktop-Einstellungen gibt es bei jeder Vorlage **Vorlagen-Styling-Prompt** zum Aufklappen, Prüfen und Kopieren, einschließlich des Vorlagenpfads. IntelliJ bietet dieselbe Aktion unter **Einstellungen → Tools → Merkzeug** mit dem aktuell im Einstellungsfeld angezeigten Ordner. Auf iOS findest du sie unter **Hilfe → Vorlagen-Styling-Prompt**; ergänze dort den Ordnerpfad auf dem Computer des Agenten. Derselbe Prompt ist auch unter **PDF-Vorlagen** verfügbar. iOS kann die Inhalts-Styles einer Vorlage beim Bearbeiten anzeigen; das Speichern einer PDF-Datei ist noch nicht verfügbar.
 
 Ersetze den neuen Vorlagennamen sowie Farben, Schriften, Logo und Gestaltungswünsche vor der Übergabe. Der Prompt ist auf Englisch und enthält die vollständige technische Anleitung offline, auch für ältere Vorlagen ohne Hinweisdateien. Beim Kopieren werden keine Notizinhalte gelesen oder bestehende Vorlagen verändert. Falls die Webansicht keinen Zugriff auf die Zwischenablage hat, markiere und kopiere den angezeigten Text manuell.
 
@@ -118,4 +118,12 @@ Merkzeug ist proprietäre Software für private und interne geschäftliche Nutzu
 
 ## Drucken
 
-Öffne eine Notiz und tippe auf **Drucken…**. Sobald die Vorschau fertig ist, öffnet **Drucken…** den AirPrint-Dialog mit Drucker, Seitenbereich und Kopien. Ausstehende Änderungen werden zuvor gespeichert. Gedruckt wird die aktuelle Notiz samt Mermaid-Diagrammen und Bildern im Standardlayout. Vorlagenauswahl und Drucken verlinkter Dokumente sind derzeit Desktop-/IntelliJ-Funktionen. Mit Abbrechen gelangst du zur Vorschau zurück; **Schließen** öffnet wieder deine Notiz.
+Öffne eine Notiz und tippe auf **Drucken…**. Sobald die Vorschau fertig ist, öffnet **Drucken…** den AirPrint-Dialog mit Drucker, Seitenbereich und Kopien. Ausstehende Änderungen werden zuvor gespeichert. Gedruckt wird die aktuelle Notiz samt Mermaid-Diagrammen und Bildern. Eine ausgewählte Vorlage liefert Inhalts-Styles und Deckblatt. Seitenkopf, Seitenfuß, eigene Seitenränder und das Drucken verlinkter Dokumente werden auf iOS noch nicht unterstützt. Mit Abbrechen gelangst du zur Vorschau zurück; **Schließen** öffnet wieder deine Notiz.
+
+## PDF-Vorlagen auf iOS
+
+Öffne **PDF-Vorlagen → Ändern…** und wähle in Dateien den Ordner mit den Vorlagen-Unterordnern, etwa einen vorhandenen Ordner in iCloud Drive. Wähle **Vorlage für diesen Vault**. Die Auswahl wird in `.merkzeug/settings.json` gespeichert und reist mit dem Vault; den Vorlagenordner merkt sich dieses Gerät separat. **Keine Vorlage** verwendet das Standardlayout.
+
+**PDF-Vorlage beim Bearbeiten verwenden** übernimmt die Inhalts-Styles einschließlich heller Mermaid-Diagramme. Die Einstellung wird pro Vault auf diesem Gerät gespeichert. **Neu einlesen** lädt Änderungen; auch bei der Rückkehr zur App werden Vorlagen aktualisiert. Cloud-Dateien müssen über ihren Anbieter verfügbar sein. Bei nicht verfügbaren Vorlagen erscheint ein Fehler; beim Drucken wird keine andere Vorlage stillschweigend eingesetzt.
+
+Die automatische Merkzeug-iCloud-Ablage und Desktop-Migration werden in Ticket #51 vorbereitet. Bis zur Einrichtung wird ein vorhandener Ordner ausdrücklich ausgewählt.

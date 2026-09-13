@@ -1,5 +1,6 @@
 /** German translations; English message text is the stable source key. */
 export const de: Readonly<Record<string, string>> = {
+  "Invalid vault settings.": "Ungültige Vault-Einstellungen.",
   "Print": "Drucken",
   "Print…": "Drucken…",
   "Printing failed": "Drucken fehlgeschlagen",

@@ -33,6 +33,8 @@ The legacy native macOS application is archived and excluded from current CI and
 
 ## Validation
 
+The [iOS template workstream](ios-templates.md) records the remaining iCloud setup and migration work for issue #51.
+
 CI checks types, shared-core tests, release tooling, documentation links and web builds. It does not establish native runtime support on every OS. Before publishing, also verify installation, editing, saving, reopening, conflict handling and PDF layout on each distributed platform. Use the [release checklist](releases.md).
 
 For IntelliJ, see the [plugin README](../../intellij/README.md). For iOS, see the [mobile README](../../mobile/README.md). Locale tests cover German language variants and English fallback; native adapters should be checked with German and English host settings.

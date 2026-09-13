@@ -11,6 +11,9 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
     public let identifier = "VaultPlugin"
     public let jsName = "Vault"
     public let pluginMethods: [CAPPluginMethod] = [
+        CAPPluginMethod(name: "templateFolder", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "pickTemplateFolder", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "templateFile", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "printDocument", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "restoreVault", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "pickVault", returnType: CAPPluginReturnPromise),
@@ -32,6 +35,9 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
     private static let bookmarkKey = "MerkzeugVaultBookmark"
     private var vaultURL: URL?
     private var pendingPick: CAPPluginCall?
+    private var pickingTemplates = false
+    private var templatesURL: URL?
+    private static let templateBookmarkKey = "MerkzeugTemplateFolderBookmark"
 
     private var printingDocument = false
 
@@ -105,6 +111,11 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
             }
             if FileManager.default.fileExists(atPath: demo.path) {
                 vaultURL = demo
+                if ProcessInfo.processInfo.environment["MERKZEUG_DEMO_TEMPLATES"] != nil {
+                    let settings = demo.appendingPathComponent(".merkzeug/settings.json")
+                    try? FileManager.default.createDirectory(at: settings.deletingLastPathComponent(), withIntermediateDirectories: true)
+                    try? "{\"pdfTemplate\":\"Acceptance\"}".write(to: settings, atomically: true, encoding: .utf8)
+                }
                 var result: [String: Any] = ["name": "Demo Vault", "id": "demo-vault"]
                 if let note = ProcessInfo.processInfo.environment["MERKZEUG_DEMO_NOTE"],
                    ["/Welcome.md", "/Projects/Garden.md", "/Willkommen.md", "/Projekte/Garten.md"].contains(note) {
@@ -136,6 +147,8 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
     @objc func pickVault(_ call: CAPPluginCall) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
+            guard self.pendingPick == nil else { call.reject(localized("A folder picker is already open", "Eine Ordnerauswahl ist bereits geöffnet")); return }
+            self.pickingTemplates = false
             self.pendingPick = call
             let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.folder])
             picker.allowsMultipleSelection = false
@@ -154,6 +167,17 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
             call.reject(localized("Access to the folder was denied.", "Zugriff auf den Ordner wurde verweigert."))
             return
         }
+        if pickingTemplates {
+            do {
+                let bookmark = try url.bookmarkData()
+                UserDefaults.standard.set(bookmark, forKey: Self.templateBookmarkKey)
+                templatesURL?.stopAccessingSecurityScopedResource()
+                templatesURL = url
+                templateFolder(call)
+            } catch { url.stopAccessingSecurityScopedResource(); call.reject(error.localizedDescription) }
+            pickingTemplates = false
+            return
+        }
         if let old = vaultURL, old != url {
             old.stopAccessingSecurityScopedResource()
         }
@@ -165,8 +189,92 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
     }
 
     public func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
-        pendingPick?.resolve([:])
+        if pickingTemplates, let call = pendingPick { templateFolder(call) }
+        else { pendingPick?.resolve([:]) }
         pendingPick = nil
+        pickingTemplates = false
+    }
+
+    // MARK: - PDF template folder (independent from the note vault)
+
+    private func restoreTemplateFolder() throws -> URL? {
+        if let url = templatesURL { return url }
+        #if DEBUG && targetEnvironment(simulator)
+        if ProcessInfo.processInfo.environment["MERKZEUG_DEMO_MODE"] == "1",
+           let json = ProcessInfo.processInfo.environment["MERKZEUG_DEMO_TEMPLATES"],
+           let data = json.data(using: .utf8),
+           let files = try? JSONDecoder().decode([String: String].self, from: data) {
+            let root = FileManager.default.temporaryDirectory.appendingPathComponent("Demo Templates")
+            if FileManager.default.fileExists(atPath: root.path) { try FileManager.default.removeItem(at: root) }
+            for (path, text) in files {
+                guard !path.hasPrefix("/"), !path.contains("\\"), !path.split(separator: "/").contains("..") else { throw CocoaError(.fileReadInvalidFileName) }
+                let url = root.appendingPathComponent(path)
+                try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+                try text.write(to: url, atomically: true, encoding: .utf8)
+            }
+            templatesURL = root
+            return root
+        }
+        #endif
+        guard let data = UserDefaults.standard.data(forKey: Self.templateBookmarkKey) else { return nil }
+        var stale = false
+        let url = try URL(resolvingBookmarkData: data, bookmarkDataIsStale: &stale)
+        guard url.startAccessingSecurityScopedResource() else { throw CocoaError(.fileReadNoPermission) }
+        if stale { UserDefaults.standard.set(try url.bookmarkData(), forKey: Self.templateBookmarkKey) }
+        templatesURL = url
+        return url
+    }
+
+    @objc func templateFolder(_ call: CAPPluginCall) {
+        do {
+            guard let root = try restoreTemplateFolder() else { call.resolve(["templates": [String]()]); return }
+            var names = [String]()
+            var readError: Error?
+            var coordinationError: NSError?
+            NSFileCoordinator().coordinate(readingItemAt: root, options: [], error: &coordinationError) { actual in
+                do {
+                    for entry in try FileManager.default.contentsOfDirectory(at: actual, includingPropertiesForKeys: [.isDirectoryKey, .isSymbolicLinkKey], options: [.skipsHiddenFiles]) {
+                        let values = try entry.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
+                        if values.isDirectory == true && values.isSymbolicLink != true { names.append(entry.lastPathComponent) }
+                    }
+                } catch { readError = error }
+            }
+            if let error = coordinationError ?? readError as NSError? { throw error }
+            call.resolve(["name": root.lastPathComponent, "templates": names.sorted()])
+        } catch { call.reject(error.localizedDescription) }
+    }
+
+    @objc func pickTemplateFolder(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            guard self.pendingPick == nil else { call.reject(localized("A folder picker is already open", "Eine Ordnerauswahl ist bereits geöffnet")); return }
+            self.pendingPick = call
+            self.pickingTemplates = true
+            let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.folder])
+            picker.allowsMultipleSelection = false
+            picker.delegate = self
+            self.bridge?.viewController?.present(picker, animated: true)
+        }
+    }
+
+    @objc func templateFile(_ call: CAPPluginCall) {
+        do {
+            guard let root = try restoreTemplateFolder(), let name = call.getString("name"),
+                  !name.isEmpty, !name.hasPrefix("."), !name.contains("/"), !name.contains("\\"),
+                  let path = call.getString("path"), !path.isEmpty, !path.hasPrefix("/"),
+                  !path.contains("\\"), !path.split(separator: "/").contains("..") else { throw CocoaError(.fileReadInvalidFileName) }
+            let template = root.appendingPathComponent(name, isDirectory: true).standardizedFileURL
+            let url = template.appendingPathComponent(path).standardizedFileURL
+            let resolved = url.resolvingSymlinksInPath().standardizedFileURL
+            guard resolved.path.hasPrefix(root.resolvingSymlinksInPath().path + "/" + name + "/") else { throw CocoaError(.fileReadNoPermission) }
+            guard FileManager.default.fileExists(atPath: template.path) else { throw CocoaError(.fileNoSuchFile) }
+            // Coordination also requests provider download before reading cloud files.
+            let data: Data
+            do { data = try coordinatedRead(url) }
+            catch let error as NSError where error.domain == NSCocoaErrorDomain && [NSFileReadNoSuchFileError, NSFileNoSuchFileError].contains(error.code) {
+                call.resolve([:]); return
+            }
+            call.resolve(["data": data.base64EncodedString()])
+        } catch { call.reject(error.localizedDescription) }
     }
 
     // MARK: - Pfad-Helfer

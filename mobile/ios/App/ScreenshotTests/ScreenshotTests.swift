@@ -6,6 +6,32 @@ final class ScreenshotTests: XCTestCase {
     func testEnglish() throws { try capture(locale: "en") }
     func testGerman() throws { try capture(locale: "de") }
 
+    func testTemplates() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+        let files = ["Welcome.md": "# Template acceptance\n\nA styled note.\n\n```mermaid\nflowchart LR\n A --> B\n```\n"]
+        let templates = ["Acceptance/stil.css": ".pdf-content { background: #fff8e8; color: #173c55; } .pdf-content .milkdown .ProseMirror h1 { font-family: Georgia; color: #173c55; }", "Acceptance/deckblatt.html": "<h1>Template cover acceptance</h1>"]
+        app.launchEnvironment = ["MERKZEUG_DEMO_MODE": "1", "MERKZEUG_DEMO_FILES": String(data: try JSONSerialization.data(withJSONObject: files), encoding: .utf8)!, "MERKZEUG_DEMO_TEMPLATES": String(data: try JSONSerialization.data(withJSONObject: templates), encoding: .utf8)!, "MERKZEUG_DEMO_NOTE": "/Welcome.md"]
+        app.launch()
+        if app.buttons["Start tour"].waitForExistence(timeout: 10) { app.buttons.matching(identifier: "Later").allElementsBoundByIndex.last?.tap() }
+        let settings = app.descendants(matching: .any).matching(identifier: "PDF templates").firstMatch
+        XCTAssertTrue(settings.waitForExistence(timeout: 60), app.debugDescription)
+        settings.tap()
+        let checkbox = app.descendants(matching: .any).matching(identifier: "Use PDF template while editing").firstMatch
+        XCTAssertTrue(checkbox.waitForExistence(timeout: 10), app.debugDescription)
+        if (checkbox.value as? String) != "1" { checkbox.tap() }
+        XCTAssertEqual(checkbox.value as? String, "1", app.debugDescription)
+        let screenshot = XCTAttachment(screenshot: app.screenshot())
+        screenshot.name = "iOS template styles"; screenshot.lifetime = .keepAlways; add(screenshot)
+        settings.tap()
+        app.buttons["Print…"].tap()
+        XCTAssertTrue(app.staticTexts["Template cover acceptance"].waitForExistence(timeout: 30), app.debugDescription)
+        let preview = XCTAttachment(screenshot: app.screenshot())
+        preview.name = "iOS template print preview"; preview.lifetime = .keepAlways; add(preview)
+        app.buttons["Close"].tap()
+        app.terminate()
+    }
+
     func testPrinting() throws {
         let app = XCUIApplication()
         app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
