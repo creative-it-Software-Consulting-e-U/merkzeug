@@ -5,6 +5,7 @@ const repository=path.resolve(__dirname,'..');
 const root=fs.mkdtempSync(path.join(require('os').tmpdir(),'merkzeug-print-test-'));
 fs.mkdirSync(path.join(root,'vault'));fs.writeFileSync(path.join(root,'vault','Print.md'),'# Print test\n\nOriginal content.\n');
 app.setPath('userData',path.join(root,'profile'));process.env.MERKZEUG_VAULT=path.join(root,'vault');
+process.env.MERKZEUG_TEMPLATES_ROOT=path.join(root,'templates');
 let printed=false, printFile,preview;
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 app.on('web-contents-created',(_,contents)=>{
@@ -36,7 +37,11 @@ app.whenReady().then(async()=>{
  assert(await win.webContents.executeJavaScript('document.querySelector(".ProseMirror").textContent.includes("PRINT_FRESH_CONTENT")'),'input reached editor');
 
  let printItem;const walk=m=>{for(const i of m.items){if(i.accelerator==='CmdOrCtrl+P')printItem=i;if(i.submenu)walk(i.submenu)}};walk(Menu.getApplicationMenu());assert(printItem);
- printItem.click(printItem,win,{});
+ // macOS Spaces may keep the user's foreground app focused. Route this
+ // synthetic menu invocation to our test window without switching Spaces.
+ const focusedWindow=BrowserWindow.getFocusedWindow;
+ BrowserWindow.getFocusedWindow=()=>win;
+ try {printItem.click(printItem,win,{})} finally {BrowserWindow.getFocusedWindow=focusedWindow}
  for(let i=0;i<200&&!printed;i++)await wait(250);
  assert(printed,'PDF must reach print dialog');
  assert(fs.readFileSync(path.join(root,'vault','Print.md'),'utf8').replaceAll('\\','').includes('PRINT_FRESH_CONTENT'),'pending edits flushed');
