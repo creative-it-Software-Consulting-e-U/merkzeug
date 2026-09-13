@@ -10,8 +10,8 @@
     "@merkzeug/core": "1.0.0",
     "@merkzeug/editor": "1.0.0",
     "@merkzeug/export": "1.0.0",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   },
   "devDependencies": {
     "vite": "^8.3.0",

@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-PIN = '8.5.0'
+PIN = '8.5.1'
 package = ROOT / 'mobile/ios/App/CapApp-SPM/Package.swift'
 installed = ROOT / 'mobile/node_modules/@capacitor/ios/package.json'
 if not installed.exists():
