@@ -158,6 +158,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   const filePathRef = useRef(filePath)
   const dirtyRef = useRef(false)
   const latestMarkdownRef = useRef<string | null>(null)
+  const baselineMarkdownRef = useRef<string | null>(null)
   // YAML-Frontmatter der Datei: wird im Editor nicht angezeigt, beim
   // Speichern aber unverändert wieder vorangestellt
   const frontmatterRef = useRef('')
@@ -202,8 +203,19 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   // Pfadwechsel ohne Neuladen (Umbenennen/Verschieben): nur Speicherziel anpassen
   filePathRef.current = filePath
 
+  // Explicit save/print must not wait for Milkdown's debounced markdown listener.
+  const captureCurrentMarkdown = useCallback(() => {
+    if (!crepeRef.current || baselineMarkdownRef.current === null) return
+    const current = crepeRef.current.getMarkdown()
+    latestMarkdownRef.current = current
+    if (current !== (lastSavedRef.current ?? baselineMarkdownRef.current)) {
+      dirtyRef.current = true
+    }
+  }, [])
+
   const doSave = useCallback(async (): Promise<void> => {
     if (savingRef.current) await savingRef.current
+    captureCurrentMarkdown()
     if (conflictRef.current) throw new Error(translate("Resolve external changes before saving"))
     if (!dirtyRef.current || latestMarkdownRef.current === null) return
     const path = filePathRef.current
@@ -232,9 +244,10 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
     } finally {
       if (savingRef.current === operation) savingRef.current = null
     }
-  }, [host, onDirtyChange, onSaved])
+  }, [host, onDirtyChange, onSaved, captureCurrentMarkdown])
 
   const flushSync = useCallback((): void => {
+    captureCurrentMarkdown()
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
     if (conflictRef.current || !dirtyRef.current || latestMarkdownRef.current === null) return
     if (!host.writeFileSync) { void doSave().catch(() => {}); return }
@@ -246,7 +259,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       onDirtyChange?.(false)
       onSaved?.(latestMarkdownRef.current)
     }
-  }, [host, doSave, onDirtyChange, onSaved])
+  }, [host, doSave, onDirtyChange, onSaved, captureCurrentMarkdown])
 
   const scheduleSave = useCallback((): void => {
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
@@ -528,6 +541,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       fmDirtyRef.current = false
       // bis der Editor steht, keinen (alten) Inhalt speichern
       latestMarkdownRef.current = null
+      baselineMarkdownRef.current = null
       if (cancelled || !rootRef.current) return
       setFmText(frontmatterInner(frontmatter))
       rootRef.current.innerHTML = ''
@@ -671,6 +685,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
         return
       }
       baseline = crepe.getMarkdown()
+      baselineMarkdownRef.current = baseline
       latestMarkdownRef.current = body
       lastSavedRef.current = null
       // dirty nur behalten, wenn während des Ladens Frontmatter editiert wurde;

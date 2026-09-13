@@ -91,3 +91,7 @@ Merkzeug is proprietary software for private and internal business use under the
 ## Neben anderen Markdown-Editoren
 
 Merkzeug ergänzt einen eigenen Editor-Tab für lokale `.md`-Dateien. Der mitgelieferte Markdown-Editor kann parallel installiert bleiben: Über die Tabs am unteren Rand wechselst du zwischen Quelltext-/Split-Ansicht und Merkzeug. Beide verwenden dasselbe IntelliJ-Dokument; Merkzeug ersetzt das Markdown-Plugin nicht und benötigt es auch nicht. Das Zusammenspiel mit weiteren Markdown-Plugins hängt von deren Editor-Registrierung ab und ist nicht pauschal für alle Plugins zugesichert.
+
+## Printing
+
+With the Merkzeug editor active, **File → Print** uses Merkzeug's PDF rendering. The toolbar also offers **Print…**. A PDF preview opens with a **Print…** button for the native print dialog. Templates, headers/footers, diagrams, images and optional linked documents use the same rendering as PDF export. No save destination is required. Close the preview to remove the temporary PDF. Printing in another Markdown editor tab continues to use that editor's handler.

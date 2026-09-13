@@ -47,6 +47,7 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
     private boolean ownChange;
     private JsonObject pdfPayload;
     private Path pdfTarget;
+    private boolean printRequested;
     private Path templateDirectory;
 
     public MerkzeugEditor(Project project, VirtualFile file) {
@@ -320,8 +321,18 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
             new String[]{Messages.text("Only this document"), Messages.text("Include linked documents"), Messages.text("Cancel")},
             0, com.intellij.openapi.ui.Messages.getQuestionIcon());
     }
-    private boolean beginExport(JsonObject m) {
+    public void requestPrint() {
+        if (!disposed && pdfPayload == null) script("window.dispatchEvent(new Event('merkzeug-print'))");
+    }
+    private boolean beginExport(JsonObject m) throws IOException {
         if (pdfPayload != null) throw new IllegalStateException(Messages.text("A PDF export is already running"));
+        printRequested = m.has("print") && m.get("print").getAsBoolean();
+        if (printRequested) {
+            pdfTarget = Files.createTempFile("merkzeug-print-", ".pdf");
+            pdfPayload = m.getAsJsonObject("payload");
+            browser.loadURL(origin + "index.html?pdf");
+            return true;
+        }
         var descriptor = new com.intellij.openapi.fileChooser.FileSaverDescriptor(Messages.text("Merkzeug: Export PDF"), "", "pdf");
         var chosen = com.intellij.openapi.fileChooser.FileChooserFactory.getInstance().createSaveFileDialog(descriptor, project)
             .save(file.getParent(), file.getNameWithoutExtension() + ".pdf");
@@ -362,11 +373,18 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
         browser.getCefBrowser().printToPDF(pdfTarget.toString(), settings, (path, ok) -> ApplicationManager.getApplication().invokeLater(() -> finishPdf(ok ? null : Messages.text("Could not generate PDF"))));
     }
     private void finishPdf(String error) {
+        Path printedFile = pdfTarget;
+        boolean printing = printRequested;
+        printRequested = false;
         String target = pdfTarget == null ? "" : pdfTarget.toString();
         pdfPayload = null;
         pdfTarget = null;
         browser.loadURL(origin + "index.html");
-        if (error != null) JOptionPane.showMessageDialog(panel, error, "Merkzeug PDF", JOptionPane.ERROR_MESSAGE);
+        if (error != null) {
+            if (printing && printedFile != null) try { Files.deleteIfExists(printedFile); } catch (IOException ignored) { printedFile.toFile().deleteOnExit(); }
+            JOptionPane.showMessageDialog(panel, error, "Merkzeug PDF", JOptionPane.ERROR_MESSAGE);
+        }
+        else if (printing) new PrintPreview(project, printedFile).show();
         else JOptionPane.showMessageDialog(panel, "PDF saved:\n" + target, "Merkzeug PDF", JOptionPane.INFORMATION_MESSAGE);
     }
 

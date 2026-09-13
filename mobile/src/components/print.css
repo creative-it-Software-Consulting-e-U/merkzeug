@@ -1,0 +1,7 @@
+.mobile-print-preview { background: white; color: #1a1a1a; min-height: 100vh; overflow: auto; }
+.mobile-print-actions { position: sticky; top: 0; z-index: 10; padding: calc(env(safe-area-inset-top) + 8px) 12px 8px; background: white; display: flex; gap: 12px; color: #1a1a1a; }
+.mobile-print-actions button { font: inherit; color: #165da8; }
+@media print {
+  .mobile-print-actions { display: none !important; }
+  .mobile-print-preview { min-height: 0; overflow: visible; }
+}

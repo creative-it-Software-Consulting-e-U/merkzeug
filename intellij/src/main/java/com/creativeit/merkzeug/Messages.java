@@ -45,6 +45,8 @@ final class Messages {
         Map.entry("Template image is outside the template folder", "Vorlagenbild liegt außerhalb des Vorlagenordners"),
         Map.entry("Template resource is not an image", "Vorlagenressource ist kein Bild"),
         Map.entry("A PDF export is already running", "Ein PDF-Export läuft bereits"),
+        Map.entry("Print", "Drucken"),
+        Map.entry("Print…", "Drucken…"),
         Map.entry("Merkzeug: Export PDF", "Merkzeug: PDF exportieren"),
         Map.entry("Replace the existing PDF?", "Vorhandene PDF ersetzen?"),
         Map.entry("Could not generate PDF", "PDF konnte nicht erzeugt werden"),

@@ -1,3 +1,5 @@
+import { lazy, Suspense } from 'react'
+const PrintPreview = lazy(() => import('./components/PrintPreview').then(m => ({ default: m.PrintPreview })))
 import { GuidedTour } from '@merkzeug/editor/GuidedTour'
 import { WorkingCopy } from './components/WorkingCopy'
 import { VaultGuidance } from '@merkzeug/editor/VaultGuidance'
@@ -49,6 +51,21 @@ export default function App(): React.JSX.Element {
   const [searching, setSearching] = useState(false)
   const [showMeetings, setShowMeetings] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
+  const [printDoc, setPrintDoc] = useState<{ path: string; content: string } | null>(null)
+  const [preparingPrint, setPreparingPrint] = useState(false)
+  const printPending = useRef(false)
+  async function preparePrint() {
+    if (printPending.current) return
+    printPending.current = true; setPreparingPrint(true)
+    try {
+      const pending: Promise<void>[] = []
+      window.dispatchEvent(new CustomEvent('merkzeug-flush', { detail: pending }))
+      await Promise.all(pending)
+      const result = await vault.readFile(current)
+      setPrintDoc({ path: current, content: result.content })
+    } catch (error) { alert(String(error)) }
+    finally { printPending.current = false; setPreparingPrint(false) }
+  }
   const treeRef = useRef<FileNode | null>(null)
   treeRef.current = tree
   // Solange ein Overlay offen ist, sollen die Kanten-Wischgesten nicht greifen
@@ -355,6 +372,8 @@ export default function App(): React.JSX.Element {
     [pruneStack, reloadTree]
   )
 
+  if (printDoc) return <Suspense fallback={<div>{translate('Preparing print preview…')}</div>}><PrintPreview {...printDoc} onClose={() => { setPrintDoc(null); setLoadToken(value => value + 1) }} /></Suspense>
+
   if (restoring) return <div className="start-screen" />
 
   if (!vaultInfo) {
@@ -431,7 +450,7 @@ export default function App(): React.JSX.Element {
       <GuidedTour edition="ios" />
       <WorkingCopy key={`git:${vaultInfo.id ?? vaultInfo.name}`} vaultId={vaultInfo.id ?? vaultInfo.name} />
       <VaultGuidance key={vaultInfo.id ?? vaultInfo.name} vaultId={vaultInfo.id ?? vaultInfo.name} host={guidanceHost} />
-      <div className="appearance-bar"><button onClick={() => setShowMeetings(true)}>{translate('New meeting note')}</button><ThemeSelect /></div>
+      <div className="appearance-bar">{isNote && <button disabled={preparingPrint} onClick={() => void preparePrint()}>{translate("Print…")}</button>}<button onClick={() => setShowMeetings(true)}>{translate('New meeting note')}</button><ThemeSelect /></div>
       {showMeetings && <MeetingNotes folder={isNote ? dirname(current) : current} onClose={() => setShowMeetings(false)} onOpen={path => { setShowMeetings(false); void reloadTree(); navigateTo(path) }} />}
       <main className="content" ref={contentRef}>
         {isNote ? (

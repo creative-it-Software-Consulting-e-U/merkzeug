@@ -124,6 +124,11 @@ public final class SmokeStarter implements ApplicationStarter {
                     if (actual != choice) throw new AssertionError("Wrong PDF scope choice: " + actual);
                 }
                 System.out.println("MERKZEUG_SMOKE native PDF scope choices and cancellation passed");
+                com.intellij.openapi.actionSystem.DataContext printContext = key ->
+                    com.intellij.openapi.actionSystem.PlatformDataKeys.FILE_EDITOR.is(key) ? editor : null;
+                if (!(com.intellij.ide.actions.PrintActionHandler.getHandler(printContext) instanceof MerkzeugPrintHandler)) throw new AssertionError("Native Print action does not select Merkzeug");
+                if (new MerkzeugPrintHandler().canPrint(key -> null)) throw new AssertionError("Print handler must not claim other editors");
+                System.out.println("MERKZEUG_SMOKE native Print handler selection passed");
                 JFrame window = new JFrame("Merkzeug integration test");
                 window.setContentPane(editor.getComponent()); window.setSize(1050, 900); window.setVisible(true);
                 var browserField = MerkzeugEditor.class.getDeclaredField("browser"); browserField.setAccessible(true);
@@ -136,7 +141,7 @@ public final class SmokeStarter implements ApplicationStarter {
                     }
                 });
                 javax.swing.Timer statusTimer = new javax.swing.Timer(500, event -> {
-                    browser.getCefBrowser().executeJavaScript("(() => { const status = document.querySelector('.status')?.textContent; if (document.querySelectorAll('.format-toolbar > button').length === 13 && document.querySelectorAll('.format-toolbar details').length === 2 && !document.querySelector('.theme-select, .meeting-notes') && document.querySelector('.ProseMirror') && ['Synced with IntelliJ', 'Mit IntelliJ synchronisiert'].includes(status)) { console.log('MERKZEUG_INITIAL_READY'); } })()", browser.getCefBrowser().getURL(), 0);
+                    browser.getCefBrowser().executeJavaScript("(() => { const status = document.querySelector('.status')?.textContent; if (document.querySelectorAll('.format-toolbar > button').length === 14 && document.querySelectorAll('.format-toolbar details').length === 2 && !document.querySelector('.theme-select, .meeting-notes') && document.querySelector('.ProseMirror') && ['Synced with IntelliJ', 'Mit IntelliJ synchronisiert'].includes(status)) { console.log('MERKZEUG_INITIAL_READY'); } })()", browser.getCefBrowser().getURL(), 0);
                     if (statusReady.get()) ((javax.swing.Timer) event.getSource()).stop();
                 });
                 statusTimer.start();

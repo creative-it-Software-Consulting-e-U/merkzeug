@@ -11,6 +11,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
     public let identifier = "VaultPlugin"
     public let jsName = "Vault"
     public let pluginMethods: [CAPPluginMethod] = [
+        CAPPluginMethod(name: "printDocument", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "restoreVault", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "pickVault", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "guidanceRead", returnType: CAPPluginReturnPromise),
@@ -31,6 +32,55 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
     private static let bookmarkKey = "MerkzeugVaultBookmark"
     private var vaultURL: URL?
     private var pendingPick: CAPPluginCall?
+
+    private var printingDocument = false
+
+    @objc func printDocument(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            guard !self.printingDocument else { call.reject("A print dialog is already open"); return }
+            guard UIPrintInteractionController.isPrintingAvailable,
+                  let webView = self.bridge?.webView,
+                  let presenter = self.bridge?.viewController else {
+                call.reject("Printing is not available"); return
+            }
+            self.printingDocument = true
+            // Paginate the prepared shared print view first, then hand the resulting
+            // PDF to AirPrint. Menus and controls are excluded by print CSS.
+            let renderer = MerkzeugPrintRenderer(landscape: call.getBool("landscape") ?? false)
+            renderer.addPrintFormatter(webView.viewPrintFormatter(), startingAtPageAt: 0)
+            guard renderer.numberOfPages > 0 else {
+                self.printingDocument = false; call.reject("No printable pages"); return
+            }
+            let data = NSMutableData()
+            UIGraphicsBeginPDFContextToData(data, renderer.paperRect, nil)
+            renderer.prepare(forDrawingPages: NSRange(location: 0, length: renderer.numberOfPages))
+            for page in 0..<renderer.numberOfPages {
+                UIGraphicsBeginPDFPage()
+                renderer.drawPage(at: page, in: UIGraphicsGetPDFContextBounds())
+            }
+            UIGraphicsEndPDFContext()
+            guard data.length > 0, UIPrintInteractionController.canPrint(data as Data) else {
+                self.printingDocument = false; call.reject("Could not prepare printable PDF"); return
+            }
+            let controller = UIPrintInteractionController.shared
+            let info = UIPrintInfo(dictionary: nil)
+            info.jobName = call.getString("title") ?? "Merkzeug"
+            info.outputType = .general
+            controller.printInfo = info
+            controller.printingItem = data as Data
+            let completion: UIPrintInteractionController.CompletionHandler = { _, _, error in
+                self.printingDocument = false
+                if let error { call.reject(error.localizedDescription) } else { call.resolve() }
+            }
+            let shown: Bool
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                shown = controller.present(from: CGRect(x: presenter.view.bounds.midX, y: 40, width: 1, height: 1), in: presenter.view, animated: true, completionHandler: completion)
+            } else {
+                shown = controller.present(animated: true, completionHandler: completion)
+            }
+            if !shown { self.printingDocument = false; call.reject("Could not open print dialog") }
+        }
+    }
 
     // MARK: - Vault wählen / wiederherstellen
 
@@ -504,4 +554,14 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
 private func localized(_ english: String, _ german: String) -> String {
     let language = Locale.preferredLanguages.first?.lowercased() ?? "en"
     return language == "de" || language.hasPrefix("de-") ? german : english
+}
+
+private final class MerkzeugPrintRenderer: UIPrintPageRenderer {
+    private let page: CGRect
+    init(landscape: Bool) {
+        page = CGRect(x: 0, y: 0, width: landscape ? 842 : 595, height: landscape ? 595 : 842)
+        super.init()
+    }
+    override var paperRect: CGRect { page }
+    override var printableRect: CGRect { page.insetBy(dx: 28, dy: 28) }
 }

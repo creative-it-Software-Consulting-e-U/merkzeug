@@ -60,6 +60,7 @@ const api = {
   writeFileSync: (path: string, content: string): boolean =>
     ipcRenderer.sendSync('file:writeSync', path, content),
   openMermaidZoom: (svg: string): Promise<void> => ipcRenderer.invoke('zoom:openMermaid', svg),
+  printNote: (path: string): Promise<void> => ipcRenderer.invoke('pdf:print', path),
   exportPdf: (path: string): Promise<void> => ipcRenderer.invoke('pdf:export', path),
   exportPdfMulti: (paths: string[]): Promise<void> => ipcRenderer.invoke('pdf:exportMulti', paths),
   // nur für das unsichtbare PDF-Fenster (#pdf)

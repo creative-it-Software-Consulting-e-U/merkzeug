@@ -114,3 +114,8 @@ Neue Startvorlagen enthalten `AGENTS.md` mit Dateiformat, CSS-Beispielen, Platzh
 ### Lizenz
 
 Merkzeug ist proprietäre Software für private und interne geschäftliche Nutzung. Die vollständige Endnutzerlizenz steht am Ende der In-App-Hilfe sowie auf der [Website](https://merkzeug.creative-it.com/license-de.html). Drittanbieter-Komponenten behalten ihre eigenen Lizenzen.
+
+
+## Drucken
+
+Öffne eine Notiz und tippe auf **Drucken…**. Sobald die Vorschau fertig ist, öffnet **Drucken…** den AirPrint-Dialog mit Drucker, Seitenbereich und Kopien. Ausstehende Änderungen werden zuvor gespeichert. Gedruckt wird die aktuelle Notiz samt Mermaid-Diagrammen und Bildern im Standardlayout. Vorlagenauswahl und Drucken verlinkter Dokumente sind derzeit Desktop-/IntelliJ-Funktionen. Mit Abbrechen gelangst du zur Vorschau zurück; **Schließen** öffnet wieder deine Notiz.

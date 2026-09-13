@@ -6,6 +6,32 @@ final class ScreenshotTests: XCTestCase {
     func testEnglish() throws { try capture(locale: "en") }
     func testGerman() throws { try capture(locale: "de") }
 
+    func testPrinting() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+        let files = ["Welcome.md": "# Print acceptance\n\nSaved content for printing.\n\n```mermaid\nflowchart LR\n A --> B\n```\n"]
+        app.launchEnvironment = ["MERKZEUG_DEMO_MODE": "1", "MERKZEUG_DEMO_FILES": String(data: try JSONSerialization.data(withJSONObject: files), encoding: .utf8)!, "MERKZEUG_DEMO_NOTE": "/Welcome.md"]
+        app.launch()
+        if app.buttons["Start tour"].waitForExistence(timeout: 10) { app.buttons.matching(identifier: "Later").allElementsBoundByIndex.last?.tap() }
+        XCTAssertTrue(app.buttons["Print…"].waitForExistence(timeout: 60))
+        app.buttons["Print…"].tap()
+        let printButton = app.buttons["Print…"]
+        XCTAssertTrue(printButton.waitForExistence(timeout: 30))
+        let ready = NSPredicate(format: "enabled == true")
+        expectation(for: ready, evaluatedWith: printButton)
+        waitForExpectations(timeout: 60)
+        printButton.tap()
+        let cancel = app.buttons["Cancel"].firstMatch
+        XCTAssertTrue(cancel.waitForExistence(timeout: 20), app.debugDescription)
+        let screenshot = XCTAttachment(screenshot: app.screenshot())
+        screenshot.name = "AirPrint preview"; screenshot.lifetime = .keepAlways; add(screenshot)
+        cancel.tap()
+        XCTAssertTrue(app.buttons["Close"].waitForExistence(timeout: 10))
+        app.buttons["Close"].tap()
+        XCTAssertTrue(app.buttons["Edit"].waitForExistence(timeout: 10))
+        app.terminate()
+    }
+
     func testRoadmap() throws {
         let app = XCUIApplication()
         app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]

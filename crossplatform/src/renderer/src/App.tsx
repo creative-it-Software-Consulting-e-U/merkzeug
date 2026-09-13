@@ -138,6 +138,13 @@ export function App(): React.JSX.Element {
     await window.merkzeug.exportPdf(path)
   }, [])
 
+  const printNote = useCallback(async (path: string): Promise<void> => {
+    try {
+      for (const handle of editorRefs.current.values()) await handle?.flush()
+      await window.merkzeug.printNote(path)
+    } catch (error) { alert(String(error)) }
+  }, [])
+
   /** Mehrfachauswahl einzeln als PDFs in einen Zielordner exportieren. */
   const exportPdfMulti = useCallback(async (paths: string[]): Promise<void> => {
     for (const handle of editorRefs.current.values()) await handle?.flush()
@@ -831,6 +838,11 @@ export function App(): React.JSX.Element {
         case 'toggleAssets':
           setAssetsVisible((prev) => !prev)
           break
+        case 'printNote': {
+          const tab = activeTab()
+          if (tab?.kind === 'note') void printNote(tab.path)
+          break
+        }
         case 'exportPdf': {
           const tab = activeTab()
           if (tab?.kind === 'note') void exportPdf(tab.path)
@@ -839,7 +851,7 @@ export function App(): React.JSX.Element {
       }
     })
     return off
-  }, [activeEditor, activeTab, closeTab, createAtSelection, exportPdf, moveTabToOtherPane, stepHistory, updateTab])
+  }, [activeEditor, activeTab, closeTab, createAtSelection, exportPdf, printNote, moveTabToOtherPane, stepHistory, updateTab])
 
   // Maus- und Trackpad-Gesten für Zurück/Vorwärts im Navigationsmodus
   useEffect(() => {

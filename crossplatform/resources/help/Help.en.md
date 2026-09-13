@@ -211,7 +211,7 @@ For browsing linked notes there is a per-tab **navigation mode** – toggled wit
 
 ## 9. PDF export
 
-- **File → Export as PDF…** (⌘P) exports the active note as a PDF;
+- **File → Export as PDF…** exports the active note as a PDF;
   alternatively right-click a note in the file tree.
 - If the note links to other Markdown files **in the same hierarchy** (its own
   folder or below), the app asks: **"Only this file"** or **"With linked
@@ -359,7 +359,7 @@ the sidebar:
 | ⌘O | Open vault |
 | ⌘W / ⇧⌘W | Close tab / Close window |
 | ⌘S / ⌥⌘S | Save / Save all |
-| ⌘P | Export as PDF |
+| ⌘P / Ctrl+P | Print |
 | ⌘, | Settings (PDF templates) |
 | ⌘B / ⌘I / ⌥⌘X / ⌘E | Bold / Italic / Strikethrough / Inline code |
 | ⌥⌘0 … ⌥⌘6 | Text / Heading 1–6 |
@@ -432,3 +432,8 @@ New starter copies include `AGENTS.md` (format, CSS examples, placeholders, prev
 ### License
 
 Merkzeug is proprietary software for private and internal business use. The full End User License Agreement is included at the end of the in-app help and is also available on the [website](https://merkzeug.creative-it.com/license-en.html). Third-party components retain their own licenses.
+
+
+## Printing
+
+Choose **File → Print…** (⌘P on macOS, Ctrl+P on Windows/Linux). Merkzeug saves pending edits, prepares the same PDF used for export, and opens the system print dialog. The PDF preview stays available after printing or cancellation. It includes the selected template, cover, headers, footers, diagrams and images. Linked documents can optionally be included. No PDF destination needs to be chosen; the temporary PDF is removed when its preview closes. PDF export remains a separate menu action.

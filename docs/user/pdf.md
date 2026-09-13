@@ -4,7 +4,7 @@ PDF export is available in the desktop app and IntelliJ plugin. It runs locally 
 
 ## Export a note or a document set
 
-On desktop, choose **File → Export as PDF…** or use **⌘P / Ctrl+P**. In IntelliJ, click **Export PDF**. Choose a destination and confirm replacement if that file exists.
+On desktop, choose **File → Export as PDF…**. In IntelliJ, click **Export PDF**. Choose a destination and confirm replacement if that file exists.
 
 When the current note links to eligible documents, you can export it with those documents appended. Selection includes directly linked Markdown files within the index note's folder hierarchy, sorted alphabetically by path. It does not recursively crawl links from every appended document. Links to included documents become PDF destinations.
 
@@ -71,3 +71,11 @@ Desktop Settings provides **Template styling prompt** for each template; expand 
 Replace the new template name and your colors, fonts, logo and design wishes before sending it. The prompt is in English, includes the complete offline technical reference, and works with older templates that lack instruction files. Copying it does not read note contents or modify existing templates. If clipboard access is unavailable in the web view, select and copy the displayed text manually.
 
 New starter copies include `AGENTS.md` (format, CSS examples, placeholders, preview limitations and validation) and `STYLING-PROMPT.md` (reusable brief). Keep template-specific design choices in `README.md`. The brief instructs the agent to create a separate copy and preserve existing instructions. Existing desktop templates are not upgraded or overwritten. For manual use, concatenate STYLING-PROMPT.md and AGENTS.md and replace the template-path placeholder.
+
+## Printing
+
+Desktop **File → Print…** (⌘P / Ctrl+P) uses the same generated PDF, including templates and optional linked documents, and opens the system print dialog. Its PDF preview stays open until closed; closing it removes the temporary PDF. Exporting to a file remains separate.
+
+In IntelliJ, activate the Merkzeug editor and choose **File → Print**, or click **Print…**. Merkzeug prepares a PDF preview; use its **Print…** button to open the native print dialog. Other editor tabs retain their own printing behavior.
+
+On iOS, open a note, tap **Print…**, wait for the print preview, then tap **Print…** to open AirPrint. Pending edits are saved before preparing the current note. Diagrams and local images are included. iOS currently uses the standard print layout and prints one note at a time; desktop template selection and linked-document printing are not available on iOS. Cancel AirPrint to return to the preview, or close the preview to return to editing.

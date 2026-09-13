@@ -5,7 +5,7 @@
   <vendor email="guenther.wieser@creative-it.com" url="https://merkzeug.creative-it.com/">creative-it Software Consulting e.U.</vendor>
   <description><![CDATA[
     <p>Merkzeug is a visual Markdown editor for IntelliJ IDEA, with formatting tools, Mermaid diagrams,
-    frontmatter and PDF export. Your notes stay ordinary Markdown files in your project.</p>
+    frontmatter, PDF export and printing. Your notes stay ordinary Markdown files in your project.</p>
     <h3>Visual editing alongside your Markdown source editor</h3>
     <p>Merkzeug adds a separate editor tab for the same Markdown file. Keep the built-in Markdown
     editor for source editing and switch to Merkzeug for visual editing. Both work with the same
@@ -27,6 +27,7 @@
     <h3>Fits your IDE workflow</h3>
     <ul>
       <li>IntelliJ owns document saving, version control and undo history.</li>
+      <li>File → Print opens a printable PDF preview for the active Merkzeug editor.</li>
       <li>Appearance follows the IDE theme, with optional PDF content styles while editing.</li>
       <li>Project-specific PDF templates, including automatic discovery of desktop Merkzeug templates.</li>
       <li>Copyable template styling prompts with an offline technical reference for coding agents.</li>
@@ -53,6 +54,7 @@
     <projectConfigurable parentId="tools" id="com.creativeit.merkzeug.settings" displayName="Merkzeug" instance="com.creativeit.merkzeug.MerkzeugSettings"/>
     <renamePsiElementProcessor implementation="com.creativeit.merkzeug.CompanionRenameProcessor" order="first"/>
     <refactoring.moveHandler implementation="com.creativeit.merkzeug.CompanionMoveHandler" order="first"/>
+    <printHandler implementation="com.creativeit.merkzeug.MerkzeugPrintHandler" order="first"/>
     <fileEditorProvider implementation="com.creativeit.merkzeug.MerkzeugEditorProvider"/>
   </extensions>
   <actions>

@@ -1,5 +1,9 @@
 /** German translations; English message text is the stable source key. */
 export const de: Readonly<Record<string, string>> = {
+  "Print": "Drucken",
+  "Print…": "Drucken…",
+  "Printing failed": "Drucken fehlgeschlagen",
+  "Preparing print preview…": "Druckvorschau wird vorbereitet…",
   "Template styling prompt": "Vorlagen-Styling-Prompt",
   "Copy styling prompt": "Styling-Prompt kopieren",
   "Prompt copied.": "Prompt kopiert.",

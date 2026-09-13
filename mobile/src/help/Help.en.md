@@ -110,3 +110,8 @@ New starter copies include `AGENTS.md` (format, CSS examples, placeholders, prev
 ### License
 
 Merkzeug is proprietary software for private and internal business use. The full End User License Agreement is included at the end of the in-app help and is also available on the [website](https://merkzeug.creative-it.com/license-en.html). Third-party components retain their own licenses.
+
+
+## Printing
+
+Open a note and tap **Print…**. After the preview has finished preparing, tap **Print…** to open AirPrint and choose a printer, page range and copies. Pending edits are saved first. The current note is printed with its Mermaid diagrams and images in the standard layout. Template selection and linked-document printing are currently desktop/IntelliJ features. Cancel AirPrint to return to the preview; **Close** returns to your note.

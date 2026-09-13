@@ -57,6 +57,7 @@ export type MenuAction =
   | 'toggleSplit'
   | 'moveTabOtherPane'
   | 'toggleAssets'
+  | 'printNote'
   | 'exportPdf'
 
 export type { PdfDoc, PdfTemplate, PdfTemplateMargins } from '@merkzeug/core/pdf'

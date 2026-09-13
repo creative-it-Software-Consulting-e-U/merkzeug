@@ -225,7 +225,7 @@ in der Toolbar.
 
 ## 9. PDF-Export
 
-- **Ablage → Als PDF exportieren…** (⌘P) exportiert die aktive Notiz als PDF;
+- **Ablage → Als PDF exportieren…** exportiert die aktive Notiz als PDF;
   alternativ per Rechtsklick auf eine Notiz im Dateibaum.
 - Verlinkt die Notiz weitere Markdown-Dateien **in derselben Hierarchie** (im
   eigenen Ordner oder darunter), fragt die App: **„Nur diese Datei“** oder
@@ -374,7 +374,7 @@ Ist der Vault ein **Git-Repository**, erscheint unten in der Sidebar eine Status
 | ⌘O | Vault öffnen |
 | ⌘W / ⇧⌘W | Tab schließen / Fenster schließen |
 | ⌘S / ⌥⌘S | Sichern / Alle sichern |
-| ⌘P | Als PDF exportieren |
+| ⌘P / Ctrl+P | Drucken |
 | ⌘, | Einstellungen (PDF-Vorlagen) |
 | ⌘B / ⌘I / ⌥⌘X / ⌘E | Fett / Kursiv / Durchgestrichen / Inline-Code |
 | ⌥⌘0 … ⌥⌘6 | Text / Überschrift 1–6 |
@@ -447,3 +447,8 @@ Neue Startvorlagen enthalten `AGENTS.md` mit Dateiformat, CSS-Beispielen, Platzh
 ### Lizenz
 
 Merkzeug ist proprietäre Software für private und interne geschäftliche Nutzung. Die vollständige Endnutzerlizenz steht am Ende der In-App-Hilfe sowie auf der [Website](https://merkzeug.creative-it.com/license-de.html). Drittanbieter-Komponenten behalten ihre eigenen Lizenzen.
+
+
+## Drucken
+
+Wähle **Ablage → Drucken…** (⌘P unter macOS, Ctrl+P unter Windows/Linux). Merkzeug speichert ausstehende Änderungen, bereitet dieselbe PDF-Datei wie beim Export auf und öffnet den System-Druckdialog. Die PDF-Vorschau bleibt nach Drucken oder Abbrechen verfügbar. Sie enthält die gewählte Vorlage, Deckblatt, Kopf-/Fußzeilen, Diagramme und Bilder. Verlinkte Dokumente können optional aufgenommen werden. Ein Speicherziel ist nicht nötig; die temporäre PDF-Datei wird beim Schließen der Vorschau entfernt. PDF-Export bleibt eine eigene Menüaktion.

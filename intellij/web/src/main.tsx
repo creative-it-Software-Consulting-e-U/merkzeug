@@ -106,7 +106,12 @@ function App() {
     window.addEventListener('keydown', handler, true)
     return () => window.removeEventListener('keydown', handler, true)
   })
-  async function exportPdf() {
+  useEffect(() => {
+    const print = () => { void exportPdf(true) }
+    window.addEventListener('merkzeug-print', print)
+    return () => window.removeEventListener('merkzeug-print', print)
+  })
+  async function exportPdf(print = false) {
     if (!info || busy) return
     setBusy(true); setError('')
     try {
@@ -123,7 +128,7 @@ function App() {
         vault: info.vault, docs,
         template: template ? fillTemplate(template, current.text, info.path.split('/').pop()!.replace(/\.md$/i, ''), include) : null
       }
-      await request('export', { payload })
+      await request('export', { payload, print })
     } catch (e) { setError(String(e)) }
     finally { setBusy(false) }
   }
@@ -142,6 +147,7 @@ function App() {
         {([['rowAbove', 'Insert Row Above'], ['rowBelow', 'Insert Row Below'], ['colBefore', 'Insert column to the left'], ['colAfter', 'Insert column to the right'], ['deleteRow', 'Delete Row'], ['deleteCol', 'Delete Column']] as const).map(([value, label]) => <button key={value} disabled={!info || info.readonly} onMouseDown={e => e.preventDefault()} onClick={e => { ref.current?.tableCommand(value); e.currentTarget.closest('details')?.removeAttribute('open') }}>{translate(label)}</button>)}
       </div></details>
       <span className="status" title={status} aria-label={status} role="status"><span className="status-text">{status}</span></span>
+      <button disabled={busy} onClick={() => void exportPdf(true)}>{translate("Print…")}</button>
       <button disabled={busy} onClick={() => void exportPdf()}>{busy ? translate("Exporting …") : translate("Export PDF")}</button>
       <button title="Merkzeug" aria-label="Merkzeug" aria-expanded={extras} onClick={() => setExtras(!extras)}>⋯</button>
     </header>
