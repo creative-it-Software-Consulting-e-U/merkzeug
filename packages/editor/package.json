@@ -19,10 +19,10 @@
     "@merkzeug/core": "1.0.0"
   },
   "peerDependencies": {
-    "react": "^19.2.8",
-    "@milkdown/crepe": "^7.22.0",
-    "@milkdown/kit": "^7.22.0",
-    "mermaid": "^11.16.1"
+    "@milkdown/crepe": "^7.22.1",
+    "@milkdown/kit": "^7.22.1",
+    "mermaid": "^11.16.1",
+    "react": "^19.3.0"
   },
   "license": "UNLICENSED"
 }
