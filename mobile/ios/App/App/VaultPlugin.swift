@@ -4,6 +4,22 @@ import WebKit
 import UniformTypeIdentifiers
 import Capacitor
 
+// BEGIN VAULT PATH RESOLVER — Foundation-only, exercised by native regression tests.
+enum VaultPathResolver {
+    static func resolve(_ path: String, in vault: URL) -> URL? {
+        // Normalize the existing root first. Foundation can shorten /private/var
+        // for an existing directory but retain it for a not-yet-created child.
+        let root = vault.standardizedFileURL
+        let trimmed = path.hasPrefix("/") ? String(path.dropFirst()) : path
+        let url = root.appendingPathComponent(trimmed).standardizedFileURL
+        guard url.path == root.path || url.path.hasPrefix(root.path + "/") else {
+            return nil
+        }
+        return url
+    }
+}
+// END VAULT PATH RESOLVER
+
 /// Zugriff auf den Vault-Ordner: Dokument-Picker, security-scoped Bookmark
 /// und koordinierte Datei-Zugriffe (Pflicht bei File-Provider-Ordnern wie
 /// denen von Working Copy).
@@ -351,10 +367,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
             call.reject(localized("No vault is open.", "Kein Vault geöffnet."))
             return nil
         }
-        let trimmed = path.hasPrefix("/") ? String(path.dropFirst()) : path
-        let url = vault.appendingPathComponent(trimmed).standardizedFileURL
-        guard url.path == vault.standardizedFileURL.path
-            || url.path.hasPrefix(vault.standardizedFileURL.path + "/") else {
+        guard let url = VaultPathResolver.resolve(path, in: vault) else {
             call.reject(localized("Path is outside the vault.", "Pfad liegt außerhalb des Vaults."))
             return nil
         }

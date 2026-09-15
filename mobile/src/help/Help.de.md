@@ -96,6 +96,8 @@ Beim Öffnen eines Vaults kann Merkzeug Hinweise in den Stammdateien `AGENTS.md`
 
 ## Kalenderquellen
 
+Meeting-Notizen werden im aktuellen Vault-Ordner angelegt, bei einer geöffneten Notiz im selben Ordner wie diese. Das gilt auch für den Stammordner eines über Dateien gewählten Vaults.
+
 **Neue Meeting-Notiz** öffnet die Terminauswahl. Unter **Kalenderquellen** kannst du eine `.ics`-Datei importieren oder ein benanntes privates HTTPS/Webcal-Abonnement hinzufügen. Abonnements werden auf diesem Gerät gespeichert, niemals im Vault. **Kalender aktualisieren** lädt Änderungen; bei Fehlern bleibt der vorherige Stand mit Zeitangabe verfügbar. Der erneute Import einer gleichnamigen ICS-Datei aktualisiert die Quelle, ohne Notizen zu duplizieren. Ein Termin erstellt oder öffnet seine Meeting-Notiz; bestehender Notiztext wird nicht ersetzt. CalDAV und das Zurückschreiben in Kalender werden nicht unterstützt.
 
 Auf iPhone und iPad stehen auch die nativen iOS-Kalender zur Verfügung. Zugriff wird erst beim Öffnen der Meeting-Notizen angefragt. Falls du ihn abgelehnt hast, aktiviere den Kalenderzugriff für Merkzeug in den iOS-Einstellungen. Die App liest Termine, ohne den Kalender zu ändern. Neue Bilder verwenden `Notiz.assets/`; beim Verschieben/Umbenennen durch Merkzeug wird der Begleitordner mitgenommen und die Verweise werden angepasst. Bestehende gemeinsame `assets/`-Ordner bleiben erhalten.

@@ -75,3 +75,18 @@ The previous installed IntelliJ preview initialized its status to Loading and di
 iOS vault search and help reused the shared editor's `.search-bar`/`.search-input` styles. These supplied popup positioning and column layout to the full-screen mobile toolbar. Distinct `vault-search-*` classes keep Done reachable. A search form and keyboard Done hint support completion with an empty query; clearing or closing the search invalidates pending results.
 
 The native `ScreenshotTests.testSearchDismissal` reproduced the Done-button failure before the CSS correction and passed afterwards: empty search, populated search and empty keyboard submission all close the overlay. IntelliJ status/document/PDF smoke, 35 automated tests, TypeScript, documentation and website checks passed. Test logs are retained in `release-artifacts/roadmap/search-status-regression/`. The dedicated iOS simulator was removed; no private physical device was used.
+
+## iOS meeting-note path regression, 15 September
+
+A device test reported successful calendar listing followed by “Path is outside the
+vault” when selecting an event. Apple Foundation can normalize an existing
+`/private/var` or `/private/tmp` directory differently from a missing child file.
+The native resolver now normalizes the vault root before appending the relative
+note path. The boundary check remains in place.
+
+The native Foundation regression reproduces the previous rejection and verifies
+creating/reopening root and nested notes, plus rejection of parent traversal and
+similarly named sibling folders. It runs on macOS through `test:release` and is
+skipped on Linux. This is a filesystem regression check, not physical iOS calendar
+or File Provider acceptance; the updated TestFlight build still needs the reported
+device flow retested. No private calendar data is used in the fixture.
