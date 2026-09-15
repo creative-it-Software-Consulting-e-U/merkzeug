@@ -152,6 +152,17 @@ body {
   padding: 10px;
 }
 
+/* Long presses here open app actions, not WebKit text selection/callouts.
+   Keep this scoped so note content remains selectable. */
+.folder-row,
+.folder-row *,
+.sheet,
+.sheet * {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
 /* ---- Action-Sheet ---- */
 
 .sheet-backdrop {

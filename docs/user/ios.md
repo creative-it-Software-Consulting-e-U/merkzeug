@@ -12,7 +12,7 @@ Merkzeug remembers the selected folder permission. Use the home button to choose
 
 ## Read and edit
 
-Notes open read-only. Tap the pencil to enable editing. Use back/forward buttons or edge swipes to navigate. Search finds notes by filename and content. Close it with **Done** in the search bar or on the keyboard, even with an empty query; Escape also works on an external keyboard. Press and hold an item to rename or delete it; use **＋** to create a note or folder.
+Notes open read-only. Tap the pencil to enable editing. Use back/forward buttons or edge swipes to navigate. Search finds notes by filename and content. Close it with **Done** in the search bar or on the keyboard, even with an empty query; Escape also works on an external keyboard. Press and hold an item to rename or delete it without selecting the filename or menu text; use **＋** to create a note or folder.
 
 Edits save automatically. After a pull in Working Copy, return to Merkzeug or tap refresh. If local edits conflict with external changes, resolve the conflict before proceeding. Commit, push and pull in Working Copy; the Merkzeug mobile app does not perform Git operations.
 

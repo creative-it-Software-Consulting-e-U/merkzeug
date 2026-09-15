@@ -20,7 +20,7 @@ just as well as a Working Copy repository.
 
 ## Navigating
 
-- The folder view lists subfolders and notes; tap an entry to open it.
+- The folder view lists subfolders and notes; tap an entry to open it. Press and hold for **Rename** or **Delete**. File names and action-menu labels are not selectable; note text remains selectable.
 - Links inside notes take you straight to the linked note or folder.
 - **Back and forward**: with the ‹ › buttons at the top left – or by
   swiping from the left or right edge of the screen.

@@ -21,7 +21,7 @@ funktioniert auch jeder andere Ordner aus der Dateien-App.
 ## Navigieren
 
 - Die Ordneransicht zeigt Unterordner und Notizen als Liste; Antippen
-  öffnet den Eintrag.
+  öffnet den Eintrag. Langes Drücken öffnet **Umbenennen** und **Löschen**. Dateinamen und Menübeschriftungen sind nicht als Text auswählbar; Notiztext bleibt auswählbar.
 - Links in Notizen führen direkt zur verlinkten Notiz oder zum Ordner.
 - **Zurück und vorwärts**: mit den Pfeiltasten ‹ › oben links – oder per
   Wischgeste von der linken bzw. rechten Bildschirmkante.
