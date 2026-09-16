@@ -1,7 +1,7 @@
 [
   {
     "version": "1.0",
-    "status": "preparation",
+    "status": "approved",
     "date": null,
     "platforms": [
       "macOS",
@@ -14,14 +14,18 @@
         "Follow links, read Mermaid diagrams, and edit frontmatter.",
         "On Mac: create meeting notes from calendar events, use Git, and export PDFs with reusable templates.",
         "On iPhone and iPad: open folders through Files, including compatible providers such as Working Copy.",
-        "English and German interfaces, built-in guides and contact support."
+        "English and German interfaces, built-in guides and contact support.",
+        "iOS calendar meeting notes, shared iCloud PDF templates, optional template styling while editing and AirPrint.",
+        "Companion image folders stay with notes when moved or renamed through Merkzeug."
       ],
       "de": [
         "Markdown-Sammlungen in eigenen Ordnern und Repositories erkunden und visuell bearbeiten.",
         "Links folgen, Mermaid-Diagramme lesen und Frontmatter bearbeiten.",
         "Am Mac: Meeting-Notizen aus Kalenderterminen erstellen, Git verwenden und PDFs mit wiederverwendbaren Vorlagen exportieren.",
         "Auf iPhone und iPad: Ordner über Dateien öffnen, auch über kompatible Anbieter wie Working Copy.",
-        "Deutsche und englische Oberfläche, integrierte Hilfe und Support-Kontakt."
+        "Deutsche und englische Oberfläche, integrierte Hilfe und Support-Kontakt.",
+        "iOS-Kalendernotizen, gemeinsame iCloud-PDF-Vorlagen, optionale Vorlagen-Styles beim Bearbeiten und AirPrint.",
+        "Zugehörige Bildordner bleiben beim Verschieben oder Umbenennen über Merkzeug bei ihren Notizen."
       ]
     }
   }

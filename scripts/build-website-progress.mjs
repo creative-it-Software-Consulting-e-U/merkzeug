@@ -9,7 +9,7 @@ const releases=JSON.parse(await read('release-notes.json'));
 for(const lang of ['en','de']){
  const en=lang==='en', home=en?'index.html':'de.html', name=`release-notes-${lang}.html`;
  let base=await read(home);
- const states=en?{review:'In review & testing',planned:'Planned',exploring:'Exploring'}:{review:'In Prüfung & Test',planned:'Geplant',exploring:'In Evaluierung'};
+ const states=en?{approved:'Approved by Apple',review:'In review & testing',planned:'Planned',exploring:'Exploring'}:{approved:'Von Apple freigegeben',review:'In Prüfung & Test',planned:'Geplant',exploring:'In Evaluierung'};
  const groups=Object.entries(states).map(([status,label])=>{
   const items=roadmap.items.filter(i=>i.status===status).map(i=>`<li><span class="roadmap-title">${escape(i.title[lang])}</span><span class="caption">${escape(i.platform.split(' / ')[en?0:1]||i.platform)}</span><span class="issue-links">${i.issues.map(n=>`<a href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug/issues/${n}" aria-label="${escape(i.title[lang])} — GitHub #${n}">#${n}</a>`).join(' ')}</span></li>`).join('');
   return `<div class="roadmap-group"><h3>${label}</h3><ul class="roadmap-list">${items}</ul></div>`;
@@ -19,14 +19,15 @@ for(const lang of ['en','de']){
  const latestVersion=escape(latest.version);
  const teaserText=latest.status==='released'
   ? (en?`Merkzeug ${latestVersion} is available. Read what changed in this release and earlier updates.`:`Merkzeug ${latestVersion} ist verfügbar. Lies, was diese Version und frühere Updates mitbringen.`)
+  : latest.status==='approved' ? (en?`Version ${latestVersion} is approved by Apple. Explore the features of the first release.`:`Version ${latestVersion} ist von Apple freigegeben. Entdecke die Funktionen der ersten Version.`)
   : (en?`Version ${latestVersion} is being prepared. Read what is included; published updates will appear here as they become available.`:`Version ${latestVersion} wird vorbereitet. Hier findest du die vorgesehenen Inhalte; veröffentlichte Updates kommen hinzu, sobald sie verfügbar sind.`);
  const teaser=`<section id="release-notes" class="feature-section"><p class="eyebrow">Release Notes</p><h2>${en?'What’s new in Merkzeug.':'Was sich in Merkzeug tut.'}</h2><p>${teaserText}</p><a class="button secondary" href="${name}">${en?'Read the release notes':'Release Notes lesen'}</a></section>`;
  base=base.replace(/<!-- progress:start -->[\s\S]*?<!-- progress:end -->/,`<!-- progress:start -->${roadmapHtml}${teaser}<!-- progress:end -->`);
  await writeFile(new URL(home,root),base);
  const entries=releases.map(r=>{
-  if(!['preparation','released'].includes(r.status))throw Error(`Invalid release state: ${r.status}`);
+  if(!['preparation','approved','released'].includes(r.status))throw Error(`Invalid release state: ${r.status}`);
   if(r.status==='released'&&!r.date)throw Error('Published releases require their actual publication date');
-  const status=r.status==='released'?(en?'Released':'Veröffentlicht'):(en?'In preparation — not yet available':'In Vorbereitung — noch nicht verfügbar');
+  const status=r.status==='released'?(en?'Released':'Veröffentlicht'):r.status==='approved'?(en?'Approved by Apple — awaiting App Store activation':'Von Apple freigegeben – App-Store-Freischaltung ausstehend'):(en?'In preparation — not yet available':'In Vorbereitung — noch nicht verfügbar');
   return `<article class="release-entry"><p class="eyebrow">${escape(r.platforms.join(' · '))}</p><h2>Merkzeug ${escape(r.version)}</h2><p class="release-status">${status}${r.date?` · <time datetime="${escape(r.date)}">${escape(r.date)}</time>`:''}</p><ul>${r.highlights[lang].map(t=>`<li>${escape(t)}</li>`).join('')}</ul></article>`;
  }).join('');
  const title=en?'Release notes':'Release Notes';
@@ -37,7 +38,7 @@ for(const lang of ['en','de']){
  .replace(/(<meta (?:name="description"|property="og:description") content=")[^"]*/g,`$1${description}`)
  .replace(/(<meta property="og:title" content=")[^"]*/,`$1${title} · Merkzeug`)
  .replace(new RegExp(`href="${en?'de.html':'index.html'}" lang=`),`href="release-notes-${en?'de':'en'}.html" lang=`);
- const intro=en?'A record of published updates and a clearly marked preview of the first release.':'Veröffentlichte Updates und ein klar gekennzeichneter Ausblick auf die erste Version.';
+ const intro=en?'Features, updates and release status for Merkzeug.':'Funktionen, Updates und Veröffentlichungsstatus von Merkzeug.';
  await writeFile(new URL(name,root),head+`<main id="content" class="guide"><h1>${title}</h1><p class="lead">${intro}</p>${entries}<p><a href="${home}#roadmap">${en?'See what’s planned next':'Zur Roadmap'}</a></p></main>`+base.slice(base.indexOf('<footer>')));
 }
 console.log('Built localized roadmap sections and release notes.');

@@ -8,10 +8,15 @@ const slug = text => text.replace(/<[^>]+>/g,'').toLowerCase().replace(/[^\p{L}\
 const pages=[];
 for(const lang of ['en','de']) {
  const base=await read(`website/${lang==='en'?'index.html':'de.html'}`);
- for(const edition of ['desktop','ios']) {
-  const name=edition==='desktop'?`help-${lang}.html`:`help-ios-${lang}.html`;
-  const source=edition==='desktop'?`crossplatform/resources/help/Help.${lang}.md`:`mobile/src/help/Help.${lang}.md`;
+ for(const edition of ['desktop','ios','intellij']) {
+  const name=edition==='desktop'?`help-${lang}.html`:`help-${edition}-${lang}.html`;
+  const source=edition==='desktop'?`crossplatform/resources/help/Help.${lang}.md`:edition==='ios'?`mobile/src/help/Help.${lang}.md`:`docs/user/intellij${lang==='de'?'.de':''}.md`;
   let body=await marked.parse(await read(source));
+  if(edition==='intellij') {
+   body=body.replace(/href="(?:pdf\.md(?:#[^"]*)?|troubleshooting\.md)"/g, `href="help-${lang}.html"`)
+    .replace(/href="\.\.\/\.\.\/resources\/legal\/EULA\.(en|de)\.md"/g, `href="license-intellij-${lang}.html"`)
+    .replace(/<p>For failures,[\s\S]*?<\/p>/, '');
+  }
   const ids=[];
   body=body.replace(/<h([1-6])>(.*?)<\/h\1>/g,(_,n,text)=>{
    const id=slug(text); ids.push(id); return `<h${n} id="${id}">${text}</h${n}>`;
@@ -24,12 +29,12 @@ for(const lang of ['en','de']) {
    return `href="#${id}"`;
   });
   const other=name.replace(`-${lang}`,lang==='en'?'-de':'-en');
-  const title=lang==='en'?`Merkzeug ${edition==='desktop'?'Desktop':'iPhone & iPad'} Guide`:`Merkzeug ${edition==='desktop'?'Desktop':'iPhone & iPad'} – Hilfe`;
+  const title=lang==='en'?`Merkzeug ${edition==='desktop'?'Desktop':edition==='ios'?'iPhone & iPad':'IntelliJ IDEA'} Guide`:`Merkzeug ${edition==='desktop'?'Desktop':edition==='ios'?'iPhone & iPad':'IntelliJ IDEA'} – Hilfe`;
   let head=base.slice(0,base.indexOf('<main'));
   head=head.replace(/<title>.*?<\/title>/,`<title>${title}</title>`).replace(/<link rel="canonical"[^>]+>/,`<link rel="canonical" href="https://merkzeug.creative-it.com/${name}">`);
   head=head.replace(new RegExp(`href="${lang==='en'?'de.html':'index.html'}" lang=`),`href="${other}" lang=`);
-  const intro=lang==='en'?'Guide to the current development version. The first App Store release is being prepared.':'Hilfe zur aktuellen Entwicklungsversion. Die erste App-Store-Version wird vorbereitet.';
-  const links=`<p><a href="help-${lang}.html">Desktop</a> · <a href="help-ios-${lang}.html">iPhone &amp; iPad</a></p>`;
+  const intro=lang==='en'?'Choose your edition: Mac, iPhone & iPad, or IntelliJ IDEA.':'Wähle deine Edition: Mac, iPhone & iPad oder IntelliJ IDEA.';
+  const links=`<p><a href="help-${lang}.html">Desktop</a> · <a href="help-ios-${lang}.html">iPhone &amp; iPad</a> · <a href="help-intellij-${lang}.html">IntelliJ IDEA</a></p>`;
   const footer=base.slice(base.indexOf('<footer>'));
   await writeFile(new URL(`website/${name}`,root),head+`<main id="content" class="guide"><p class="notice">${intro}</p>${links}${body}</main>`+footer);
   pages.push(name);
@@ -38,6 +43,6 @@ for(const lang of ['en','de']) {
 const files=['','de.html','release-notes-en.html','release-notes-de.html','privacy-en.html','privacy-de.html','legal-en.html','legal-de.html','license-en.html','license-de.html','license-intellij-en.html','license-intellij-de.html',...pages];
 await writeFile(new URL('website/sitemap.xml',root),'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+files.map(p=>`<url><loc>https://merkzeug.creative-it.com/${p}</loc></url>`).join('')+'</urlset>\n');
 await writeFile(new URL('website/robots.txt',root),'User-agent: *\nAllow: /\nSitemap: https://merkzeug.creative-it.com/sitemap.xml\n');
-console.log('Built four localized manuals and sitemap.');
+console.log('Built six localized manuals and sitemap.');
 
 await import('./build-licenses.mjs');

@@ -11,6 +11,7 @@ on:
       - 'scripts/check-website.py'
       - 'crossplatform/resources/help/**'
       - 'mobile/src/help/**'
+      - 'docs/user/intellij*.md'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 permissions:

@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Explore and edit Markdown collections — from personal notebooks to documentation written by coding agents."><title>Merkzeug Desktop Guide</title><link rel="stylesheet" href="style.css"><link rel="icon" href="assets/icon.png"><link rel="canonical" href="https://merkzeug.creative-it.com/help-en.html"><meta property="og:title" content="Your Markdown. Connected. · Merkzeug"><meta property="og:description" content="Explore and edit Markdown collections — from personal notebooks to documentation written by coding agents."><meta property="og:type" content="website"><meta property="og:image" content="https://merkzeug.creative-it.com/assets/mac-en.png"></head><body><a class="skip" href="#content">Skip to content</a><header><a class="brand" href="index.html"><img src="assets/icon.png" alt="" width="36" height="36"><strong>Merkzeug</strong></a><nav aria-label="Main navigation"><a href="help-en.html">Help</a><a href="https://support.apps.creative-it.com/?app=merkzeug&amp;lang=en">Support</a><a href="help-de.html" lang="de">Deutsch</a></nav></header><main id="content" class="guide"><p class="notice">Guide to the current development version. The first App Store release is being prepared.</p><p><a href="help-en.html">Desktop</a> · <a href="help-ios-en.html">iPhone &amp; iPad</a></p><h1 id="merkzeug-help">Merkzeug – Help</h1>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Explore and edit Markdown collections — from personal notebooks to documentation written by coding agents."><title>Merkzeug Desktop Guide</title><link rel="stylesheet" href="style.css"><link rel="icon" href="assets/icon.png"><link rel="canonical" href="https://merkzeug.creative-it.com/help-en.html"><meta property="og:title" content="Your Markdown. Connected. · Merkzeug"><meta property="og:description" content="Explore and edit Markdown collections — from personal notebooks to documentation written by coding agents."><meta property="og:type" content="website"><meta property="og:image" content="https://merkzeug.creative-it.com/assets/mac-en.png"></head><body><a class="skip" href="#content">Skip to content</a><header><a class="brand" href="index.html"><img src="assets/icon.png" alt="" width="36" height="36"><strong>Merkzeug</strong></a><nav aria-label="Main navigation"><a href="help-en.html">Help</a><a href="https://support.apps.creative-it.com/?app=merkzeug&amp;lang=en">Support</a><a href="help-de.html" lang="de">Deutsch</a></nav></header><main id="content" class="guide"><p class="notice">Choose your edition: Mac, iPhone & iPad, or IntelliJ IDEA.</p><p><a href="help-en.html">Desktop</a> · <a href="help-ios-en.html">iPhone &amp; iPad</a> · <a href="help-intellij-en.html">IntelliJ IDEA</a></p><h1 id="merkzeug-help">Merkzeug – Help</h1>
 <p>The interface and this help use German on a German system and English otherwise. You can switch the help language independently.</p>
 <p>Merkzeug is a Notion-style editor for Markdown notes – this edition runs on
 <strong>macOS, Windows and Linux</strong>. You edit your notes <strong>WYSIWYG</strong> (formatted, without
@@ -202,7 +202,7 @@ image paths inside the note), when <strong>moving</strong> it moves along, when
 </ul>
 <h2 id="9-pdf-export">9. PDF export</h2>
 <ul>
-<li><p><strong>File → Export as PDF…</strong> (⌘P) exports the active note as a PDF;
+<li><p><strong>File → Export as PDF…</strong> exports the active note as a PDF;
 alternatively right-click a note in the file tree.</p>
 </li>
 <li><p>If the note links to other Markdown files <strong>in the same hierarchy</strong> (its own
@@ -382,8 +382,8 @@ message instead of hanging.</li>
 <td>Save / Save all</td>
 </tr>
 <tr>
-<td>⌘P</td>
-<td>Export as PDF</td>
+<td>⌘P / Ctrl+P</td>
+<td>Print</td>
 </tr>
 <tr>
 <td>⌘,</td>
@@ -472,4 +472,11 @@ message instead of hanging.</li>
 <p>New starter copies include <code>AGENTS.md</code> (format, CSS examples, placeholders, preview limitations and validation) and <code>STYLING-PROMPT.md</code> (reusable brief). Keep template-specific design choices in <code>README.md</code>. The brief instructs the agent to create a separate copy and preserve existing instructions. Existing desktop templates are not upgraded or overwritten. For manual use, concatenate STYLING-PROMPT.md and AGENTS.md and replace the template-path placeholder.</p>
 <h3 id="license">License</h3>
 <p>Merkzeug is proprietary software for private and internal business use. The full End User License Agreement is included at the end of the in-app help and is also available on the <a href="https://merkzeug.creative-it.com/license-en.html">website</a>. Third-party components retain their own licenses.</p>
+<h2 id="printing">Printing</h2>
+<p>Choose <strong>File → Print…</strong> (⌘P on macOS, Ctrl+P on Windows/Linux). Merkzeug saves pending edits, prepares the same PDF used for export, and opens the system print dialog. The PDF preview stays available after printing or cancellation. It includes the selected template, cover, headers, footers, diagrams and images. Linked documents can optionally be included. No PDF destination needs to be chosen; the temporary PDF is removed when its preview closes. PDF export remains a separate menu action.</p>
+<h2 id="shared-icloud-templates">Shared iCloud templates</h2>
+<p>On macOS, Merkzeug uses <strong>iCloud Drive → Merkzeug → Templates</strong> when iCloud Drive is available. On first use, templates from the old default folder are copied and verified before the configured folder changes. Originals stay in the old folder as a recovery copy. An explicitly chosen custom folder is retained.</p>
+<p>In Settings, <strong>Use Merkzeug iCloud templates</strong> copies your current templates to the shared folder and switches after verification. Different files with the same name stop migration without overwriting either version; review them before retrying.</p>
+<p>On Windows with iCloud Drive, this action becomes available after the public <strong>Merkzeug</strong> folder has synchronized. Open Merkzeug on an Apple device first. Custom iCloud Drive locations registered with Windows are supported, as are the usual user-profile locations. Use <strong>Change…</strong> to select a synchronized templates folder directly if discovery is unavailable. Linux can use any mounted synchronized folder through <strong>Change…</strong>.</p>
+<p>All devices must use the same iCloud account. Allow synchronization to finish before editing templates on another device. iOS uses the same folder and vault assignment.</p>
 </main><footer><span>© 2026 creative-it Software Consulting e.U.</span><nav aria-label="Footer"><a href="release-notes-en.html">Release Notes</a><a href="privacy-en.html">Privacy</a><a href="license-en.html">License</a><a href="legal-en.html">Legal notice</a><a href="https://apps.creative-it.com/">More apps</a><a href="https://www.creative-it.com/">creative-it</a></nav></footer></body></html>

@@ -5,13 +5,13 @@ GitHub Pages hosts the site, following GeoHook's custom-domain setup. Only this
 website directory is uploaded; repository visibility is independent of hosting.
 
 Landing and legal pages are edited directly. `node scripts/build-website.mjs`
-generates the four manuals from the help Markdown shipped in the desktop/iOS
-apps, plus the sitemap and robots file. Run `python3 scripts/check-website.py`
+generates six manuals from the help Markdown shipped in the desktop/iOS
+apps and `docs/user/intellij.md` / `docs/user/intellij.de.md`, plus the sitemap and robots file. Run `python3 scripts/check-website.py`
 after changes. Keep English/German legal text and revision dates in sync.
 
 The Pages workflow builds, validates and deploys on relevant main-branch changes,
 or manually. It never publishes app binaries. All screenshots use fictional data.
-Add store/download links only after those distributions are actually available.
+Store links can accompany an approved release awaiting activation, provided the pending availability is explicit. Do not claim public availability until confirmed.
 
 DNS: CNAME `merkzeug.creative-it.com` →
 `creative-it-software-consulting-e-u.github.io`. Configure the custom domain in
@@ -36,8 +36,10 @@ turn a backlog item into a dated release promise. VS Code remains a longer-term
 platform direction in the platform section, without an invented GitHub ticket.
 
 `release-notes.json` is the localized release history, following GeoHook's
-structured release-notes approach. `preparation` entries have no publication date
+structured release-notes approach. `approved` entries identify Apple-approved versions awaiting manual Store activation, with no invented publication date. `preparation` entries have no publication date
 and are visibly unreleased. Set `released` and the actual date only after public
 availability is confirmed. Keep edition-specific limitations in the copy.
 `build-website.mjs` renders this data into static pages/sections and includes the
 release history in the sitemap. No GitHub API requests run in visitors' browsers.
+
+Official localized App Store badge SVGs are sourced unchanged from Apple’s `tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us` and `/de-de` endpoints. Preserve their artwork and aspect ratio. The IntelliJ link targets plugin 34221, channel `beta`.

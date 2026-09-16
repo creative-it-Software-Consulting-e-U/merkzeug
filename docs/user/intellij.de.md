@@ -1,0 +1,87 @@
+# Merkzeug für IntelliJ IDEA
+
+## Voraussetzungen und Installation
+
+Das aktuelle Plugin unterstützt IntelliJ IDEA **2026.2.2, Build 262.10315.125**, mit aktiviertem JCEF-Plugin. Andere IDE-Produkte und Build-Reihen wurden nicht geprüft.
+
+Der [Marketplace-Eintrag von Merkzeug (ID 34221)](https://plugins.jetbrains.com/plugin/34221-merkzeug) verwendet den Kanal **beta**. Dort findest du verfügbare Versionen und kompatible IDE-Builds.
+
+So installierst du die Beta und erhältst Updates:
+
+1. Öffne **Settings → Plugins → Zahnrad → Manage Plugin Repositories…**.
+2. Ergänze `https://plugins.jetbrains.com/plugins/beta/34221`.
+3. Suche im Marketplace-Tab nach **Merkzeug**, installiere die kompatible Version und starte IntelliJ bei Bedarf neu.
+4. Öffne eine lokale `.md`-Datei und wähle den Editor-Tab **Merkzeug**.
+
+Beta-Kanäle sind eigene Repositories; die Suche im Standard-Marketplace allein zeigt ihre Versionen möglicherweise nicht. Siehe auch die [JetBrains-Dokumentation zu Kanälen](https://plugins.jetbrains.com/docs/marketplace/custom-release-channels.html).
+
+Für eine vom Entwickler bereitgestellte Beta-ZIP:
+
+1. Öffne **Settings → Plugins → Zahnrad → Install Plugin from Disk…**.
+2. Wähle `merkzeug-VERSION.zip` und starte IntelliJ neu, falls verlangt.
+3. Öffne eine lokale `.md`-Datei und wähle unten den Editor-Tab **Merkzeug**.
+
+Marketplace-Updates erhältst du über die Plugin-Verwaltung; Beta-ZIPs installierst du erneut über denselben Dialog. Zum Entfernen deinstalliere Merkzeug unter **Settings → Plugins**. Die Notizen bleiben normale Markdown-Dateien.
+
+## Gemeinsam mit anderen Markdown-Editoren
+
+Merkzeug ergänzt einen eigenen Editor-Tab. Der mitgelieferte Markdown-Editor kann parallel installiert bleiben: Über die Tabs am unteren Rand wechselst du zwischen Quelltext-/Split-Ansicht und Merkzeug. Beide verwenden dasselbe IntelliJ-Dokument. Merkzeug ersetzt das Markdown-Plugin nicht und benötigt es auch nicht. Das Zusammenspiel mit weiteren Markdown-Plugins hängt von deren Editor-Registrierung ab und ist nicht pauschal zugesichert.
+
+## Bearbeiten und Speichern
+
+Die Werkzeugleiste bietet Absatzformate, Fett, Kursiv, Durchstreichen, Inline-Code, Listen, Zitate, Codeblöcke, Links, Bilder, Tabellen und Trennlinien. Außerdem stehen Slash-Menü, Frontmatter und Mermaid-Diagramme zur Verfügung. Mermaid-Code lässt sich direkt am Diagramm bearbeiten.
+
+Suchen (**⌘F / Ctrl+F**), Rückgängig und Wiederherstellen bleiben über Tastenkürzel erreichbar. IntelliJ verwaltet Dokument, Speichern, Git und Rückgängig-Verlauf. **⌘S / Ctrl+S** speichert ausdrücklich. Neue Dateien erzeugst du über IntelliJs Projektwerkzeuge; Kalender und Meeting-Notizen gehören zu den eigenständigen Apps.
+
+Ändert ein anderer Editor das Dokument, lädt Merkzeug es neu, sofern keine lokalen Änderungen vorliegen. Andernfalls kannst du im Konflikthinweis die andere Version laden oder bewusst deine eigenen Änderungen behalten.
+
+## Bilder und zugehörige Ordner
+
+Bilder, die du in `Plan.md` einfügst oder hineinkopierst, werden in einem benachbarten Ordner `Plan.assets/` gespeichert. Markdown verweist relativ darauf, zum Beispiel `![Diagramm](Plan.assets/image-….png)`. Desktop- und iOS-Version verwenden dasselbe Muster. Nimm beim Committen oder Teilen sowohl die Notiz als auch ihren Bildordner mit.
+
+Vorhandene Verweise auf gemeinsame `assets/`-Ordner bleiben gültig. Diese Ordner werden keiner einzelnen Notiz zugeordnet und nicht automatisch migriert.
+
+### IntelliJ übernimmt die Refactoring-Regeln
+
+Verwende **Refactor → Rename** oder **Refactor → Move** für die Markdown-Datei. Gibt es neben `Plan.md` den Ordner `Plan.assets/`, nimmt Merkzeug ihn in das Refactoring auf. Beim Umbenennen zu `Draft.md` wird daraus `Draft.assets/`; die Verweise in der Notiz werden angepasst. Beim Verschieben bleibt der Ordner neben der Notiz. Der Move-Dialog zeigt beide Einträge; eine eigene Auswahl beider Einträge führt nicht zur doppelten Ausführung. Rückgängig/Wiederherstellen gilt für das Paar.
+
+Vorhandene Zieldateien oder Zielordner verhindern die Aktion; Ordner werden nicht zusammengeführt. Gemeinsame `assets/`-Ordner und Notizen ohne eigenen Bildordner behalten IntelliJs Standardverhalten. Symbolische Verknüpfungen erfordern manuelle Behandlung. Die Integration gilt für IntelliJ-Refactorings, nicht für externe Dateisystemoperationen, Kopieren oder Löschen.
+
+## PDF-Vorlagen und Export
+
+1. Öffne **Settings → Tools → Merkzeug** und wähle den PDF-Vorlagenordner für dieses Projekt. Ohne Auswahl wird ohne Vorlage exportiert.
+2. Klicke **PDF exportieren**.
+3. Bei verlinkten Dokumenten wähle **Nur dieses Dokument** oder **Verlinkte Dokumente einschließen**. Abbrechen beendet den Export.
+4. Wähle Dateinamen und Speicherort.
+
+Der Export verwendet den aktuellen IntelliJ-Dokumentinhalt. Die Auswahl der Vorlage gilt pro Projekt. **Use bundled PDF template** legt eine bearbeitbare Startvorlage unter `merkzeug/pdf-templates/Merkzeug` im IDE-Konfigurationsordner an; vorhandene Dateien werden nicht überschrieben.
+
+Die Auswahl **Desktop templates** erkennt Standard-Vorlagenordner der Desktop-App auf macOS, Windows und Linux, einschließlich eines angepassten `templatesRoot` und einer geerbten Umgebungsvariable `MERKZEUG_TEMPLATES_ROOT`. Wähle eine Vorlage und übernimm die Einstellungen. **Refresh** sucht erneut. Dabei werden keine Dateien kopiert und die aktuelle Auswahl wird nicht automatisch geändert. Alternativ wähle den konkreten Unterordner mit `stil.css` und `vorlage.json` manuell. Beide Editionen können dieselben Dateien verwenden.
+
+## PDF-Styles beim Bearbeiten
+
+Aktiviere im **⋯**-Menü **PDF-Vorlage beim Bearbeiten verwenden**. Merkzeug merkt sich die Einstellung pro Projekt. Schrift und Inhaltsfarben stammen dann aus der Vorlage; Frontmatter und Mermaid-Diagramme passen sich an. Werkzeugleiste, Dialoge und IDE behalten das IntelliJ-Theme. Ohne diese Option folgt der Editor dem aktiven IDE-Theme einschließlich laufender Änderungen.
+
+Die Vorschau zeigt Inhaltsformatierung, nicht Seitenumbrüche, Deckblatt oder Kopf-/Fußzeilen des PDFs. Sie aktualisiert sich nach geänderten PDF-Einstellungen und wenn das Editorfenster wieder den Fokus erhält.
+
+## Drucken
+
+Bei aktivem Merkzeug-Editor verwendet **File → Print** dessen PDF-Aufbereitung. Auch die Werkzeugleiste bietet **Drucken…**. In der PDF-Vorschau öffnet **Drucken…** den Druckdialog. Vorlagen, Kopf-/Fußzeilen, Bilder, Diagramme und optional verlinkte Dokumente werden wie beim PDF-Export aufbereitet. Ein Speicherort ist nicht erforderlich; beim Schließen wird das temporäre PDF entfernt. Ein anderer Markdown-Editor-Tab behält seinen eigenen Druckbefehl.
+
+## Hinweise für Coding-Agenten
+
+Im **⋯**-Menü kannst du Hinweise zur Paarung von `Note.md` und `Note.assets/` prüfen. Merkzeug zeigt den vorgeschlagenen Text einmal und den vollständigen Inhalt vorhandener `AGENTS.md` und `CLAUDE.md`. Wähle ausdrücklich, in welche Dateien er eingefügt werden soll; keine ist vorgewählt. Verweist `CLAUDE.md` nur auf `AGENTS.md`, kannst du sie unverändert lassen.
+
+Fehlende Dateien werden nur bei Auswahl angelegt. **Später** verschiebt den Hinweis; **Für diesen Vault nicht mehr vorschlagen** unterdrückt ihn. Widersprüche und externe Änderungen erfordern erneute Prüfung. Bestehende Anweisungen werden nicht stillschweigend ersetzt.
+
+### Vorlagen mit einem Agenten gestalten
+
+**Template styling prompt** unter **Settings → Tools → Merkzeug** liefert einen kopierbaren englischen Auftrag mit Vorlagenpfad und technischer Offline-Referenz. Ergänze Namen, Farben, Schriften, Logo und Gestaltungswünsche. Der Auftrag sieht eine separate Kopie vor, damit die bestehende Vorlage erhalten bleibt. Notizinhalte werden dabei nicht gelesen; das Kopieren ändert keine Dateien. Neue Startvorlagen enthalten zusätzlich `AGENTS.md` und `STYLING-PROMPT.md`.
+
+## Grenzen, Lizenz und Support
+
+Dateien und Bilder außerhalb des aktuellen Projektstamms sind nicht zugänglich. Links öffnen andere Dateien; die Navigation zu Überschriften in anderen Dokumenten ist noch unvollständig. Beim PDF-Export wird der Editor vorübergehend verlassen und anschließend neu geladen. Desktop-Vault-Einstellungen, native Kalender und Massenexport gehören nicht zum Plugin. Die Marketplace-Ausgabe enthält die noch unveröffentlichte Tour und das Video nicht.
+
+Merkzeug ist proprietäre Software für private und interne geschäftliche Nutzung gemäß der [Endbenutzer-Lizenzvereinbarung](../../resources/legal/EULA.de.md). Lizenz und Hinweise zu Drittanbietern liegen auch dem Plugin bei.
+
+Über **Help → Merkzeug: Contact Support…** öffnest du das Supportformular mit App, Sprache, Plattform und Plugin-Version. Notizinhalte und Repository-Pfade werden nicht übertragen. Nach einem Plugin-Update ist gegebenenfalls ein IntelliJ-Neustart notwendig.

@@ -2,14 +2,27 @@
 
 ## Requirements and installation
 
-The current preview targets IntelliJ IDEA 2026.2.2, build **262.10315.125**, with the JCEF plugin enabled. Other IDE products and build branches have not been verified.
+The current plugin targets IntelliJ IDEA 2026.2.2, build **262.10315.125**, with the JCEF plugin enabled. Other IDE products and build branches have not been verified.
 
-1. Obtain the beta `merkzeug-VERSION.zip` from the maintainer or build it using the IntelliJ development guide. A public Marketplace release is not yet available.
+The [Marketplace listing for Merkzeug (ID 34221)](https://plugins.jetbrains.com/plugin/34221-merkzeug) uses the **beta** channel. Check it for available versions and IDE compatibility.
+
+To install the beta and receive its updates:
+
+1. Open **Settings → Plugins → gear menu → Manage Plugin Repositories…**.
+2. Add `https://plugins.jetbrains.com/plugins/beta/34221`.
+3. Search for **Merkzeug** in the Marketplace tab, install the compatible version and restart if requested.
+4. Open a local `.md` file and select the **Merkzeug** editor tab.
+
+A beta channel is a separate repository; searching the default Marketplace alone may not show its releases. See [JetBrains’ channel documentation](https://plugins.jetbrains.com/docs/marketplace/custom-release-channels.html).
+
+For a beta ZIP supplied by the maintainer:
+
+1. Obtain `merkzeug-VERSION.zip` from the maintainer.
 2. Open **Settings → Plugins → gear menu → Install Plugin from Disk…**.
 3. Select the ZIP and restart IntelliJ if requested.
 4. Open a local `.md` file and choose the **Merkzeug** editor tab.
 
-The built-in Markdown editor remains available. Update through the same disk-install procedure. To remove Merkzeug, uninstall it in Settings → Plugins and restart when requested. Notes remain ordinary Markdown files.
+The built-in Markdown editor remains available. Marketplace installations receive updates through IntelliJ’s plugin manager; update a beta ZIP through the same disk-install procedure. To remove Merkzeug, uninstall it in Settings → Plugins and restart when requested. Notes remain ordinary Markdown files.
 
 ## Editing
 
@@ -38,13 +51,12 @@ Existing destination files or folders stop the action; folders are never merged.
 
 The PDF uses the current IntelliJ document content, including edits already accepted by the IDE. The template selection is remembered per project. See the [PDF guide](pdf.md) for template files, frontmatter and supported document selection.
 
-## Preview limitations
+## Scope and limitations
 
 - Files and images outside the current project root are not accessible through the plugin.
 - Cross-document links open the target file; cross-document heading navigation is incomplete.
 - PDF export temporarily switches away from the editor, then reloads the document.
 - Desktop vault settings, native OS calendars and bulk PDF export are not part of the plugin.
-- This is a local preview distribution; JetBrains Marketplace publication is not configured.
 
 For failures, see [troubleshooting](troubleshooting.md). Contributors can use the [plugin development guide](../../intellij/README.md).
 
@@ -76,21 +88,21 @@ Mermaid diagrams use the document background instead of a dark code-block panel 
 
 ### Template styling prompt
 
-Desktop Settings provides **Template styling prompt** for each template; expand it to review and copy a complete agent brief with the template's folder path. IntelliJ offers the same action in **Settings → Tools → Merkzeug**, using the folder currently shown in the settings field. On iOS, open **Help → Template styling prompt** and substitute the folder path on the agent's computer; iOS does not currently export PDFs or preview PDF template styles.
+Desktop Settings provides **Template styling prompt** for each template; expand it to review and copy a complete agent brief with the template's folder path. IntelliJ offers the same action in **Settings → Tools → Merkzeug**, using the folder currently shown in the settings field. On iOS, open **Help → Template styling prompt** and substitute the folder path on the agent's computer. iOS supports template styling while editing and AirPrint; standalone PDF export remains a desktop/plugin feature.
 
 Replace the new template name and your colors, fonts, logo and design wishes before sending it. The prompt is in English, includes the complete offline technical reference, and works with older templates that lack instruction files. Copying it does not read note contents or modify existing templates. If clipboard access is unavailable in the web view, select and copy the displayed text manually.
 
 New starter copies include `AGENTS.md` (format, CSS examples, placeholders, preview limitations and validation) and `STYLING-PROMPT.md` (reusable brief). Keep template-specific design choices in `README.md`. The brief instructs the agent to create a separate copy and preserve existing instructions. Existing desktop templates are not upgraded or overwritten. For manual use, concatenate STYLING-PROMPT.md and AGENTS.md and replace the template-path placeholder.
 
 
-## License and Marketplace preview
+## License and Marketplace edition
 
 Merkzeug is proprietary software for private and internal business use under the [shared End User License Agreement](../../resources/legal/EULA.en.md), also supplied in German. The plugin archive includes this license and third-party notices. The Marketplace build omits the unpublished guided tour and video. It is currently limited to IntelliJ IDEA build 262.10315.125; the Markdown plugin is optional. Move uses a theme-aware destination dialog built with public IntelliJ APIs; the native refactoring transaction still includes both the note and its attachments.
 
 
-## Neben anderen Markdown-Editoren
+## Alongside other Markdown editors
 
-Merkzeug ergänzt einen eigenen Editor-Tab für lokale `.md`-Dateien. Der mitgelieferte Markdown-Editor kann parallel installiert bleiben: Über die Tabs am unteren Rand wechselst du zwischen Quelltext-/Split-Ansicht und Merkzeug. Beide verwenden dasselbe IntelliJ-Dokument; Merkzeug ersetzt das Markdown-Plugin nicht und benötigt es auch nicht. Das Zusammenspiel mit weiteren Markdown-Plugins hängt von deren Editor-Registrierung ab und ist nicht pauschal für alle Plugins zugesichert.
+Merkzeug adds its own editor tab for local `.md` files. Keep the built-in Markdown editor installed and use the tabs at the bottom to switch between source/split view and Merkzeug. Both use the same IntelliJ document. Merkzeug neither replaces nor requires the Markdown plugin. Compatibility with other Markdown plugins depends on their editor registration; universal compatibility is not claimed.
 
 ## Printing
 
