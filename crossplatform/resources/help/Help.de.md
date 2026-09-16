@@ -396,9 +396,9 @@ Ist der Vault ein **Git-Repository**, erscheint unten in der Sidebar eine Status
 
 Desktop, iOS und IntelliJ verwenden denselben Merkzeug-Editor. Frontmatter bleibt beim Bearbeiten erhalten und kann im Editor geöffnet werden. Scheitert das Speichern, bleibt die Änderung als ungespeichert markiert. Bei gleichzeitigen externen Änderungen kannst du die externe Fassung neu laden oder ausdrücklich deine eigene Version behalten.
 
-## Mac-App-Store-Testversionen
+## Ordnerzugriff der Mac-App-Store-Version
 
-Experimentelle Mac-App-Store-Versionen merken sich die Zugriffsberechtigung beim Auswählen eines Vaults oder PDF-Vorlagenordners. Wenn macOS den Zugriff entzieht oder der Ordner verschoben wird, wähle ihn erneut aus. Die Sandbox-Prüfung dieser Versionen ist noch nicht abgeschlossen.
+Die Mac-App-Store-Version merkt sich die Zugriffsberechtigung beim Auswählen eines Vaults oder PDF-Vorlagenordners. Wenn macOS den Zugriff entzieht oder der Ordner verschoben wird, wähle ihn erneut aus.
 
 
 ## Support und Rückmeldungen
@@ -411,7 +411,7 @@ Wähle **Hilfe → Support kontaktieren…**, um das Supportformular mit Merkzeu
 
 Merkzeug enthält die fertige PDF-Vorlage **Merkzeug**: ein Deckblatt in warmem Papierweiß, Serifenschrift für Überschriften, blaue Akzente, Kopfzeilen und nummerierte Fußzeilen. Wähle sie unter **Einstellungen → Vorlage für diesen Vault** aus. Bestehende Vaults behalten ihre Auswahl, auch **Keine Vorlage**. **Erstellen** legt eine bearbeitbare Kopie unter einem neuen Namen an; **Bearbeiten** öffnet ihren Ordner. App-Updates überschreiben deine Anpassungen nicht. Auch in einem neu gewählten Vorlagenordner wird die Standardvorlage bereitgestellt, sofern er beschreibbar ist.
 
-Entferne `deckblatt.html` oder benenne die Datei um, wenn du kein Deckblatt möchtest. Passe `stil.css` für Dokumentstile sowie `kopfzeile.html` / `fusszeile.html` für Inline-Stile der Kopf- und Fußzeilen an. Die Seitenränder stehen in `vorlage.json`. Die deutschen Dateinamen und Platzhalter `{{titel}}` / `{{datum}}` gehören zum gemeinsamen Dateiformat. Lege Logos im Vorlagenordner ab und verwende relative Bildpfade. Die Vorlage funktioniert auch in IntelliJ: **PDF-Vorlage…** öffnet zunächst den mitgelieferten Vorlagenordner, wenn keine andere Vorlage ausgewählt ist. Auf iOS ist PDF-Export noch nicht verfügbar.
+Entferne `deckblatt.html` oder benenne die Datei um, wenn du kein Deckblatt möchtest. Passe `stil.css` für Dokumentstile sowie `kopfzeile.html` / `fusszeile.html` für Inline-Stile der Kopf- und Fußzeilen an. Die Seitenränder stehen in `vorlage.json`. Die deutschen Dateinamen und Platzhalter `{{titel}}` / `{{datum}}` gehören zum gemeinsamen Dateiformat. Lege Logos im Vorlagenordner ab und verwende relative Bildpfade. Die Vorlage funktioniert auch in IntelliJ: **PDF-Vorlage…** öffnet zunächst den mitgelieferten Vorlagenordner, wenn keine andere Vorlage ausgewählt ist. iOS verwendet Vorlagen für Editor-Styles und AirPrint; PDF-Dateiexport ist eine Desktop- und IntelliJ-Funktion.
 
 ### Vorlage mit einem Agenten anpassen
 
@@ -437,7 +437,7 @@ Mermaid-Diagramme verwenden den Dokumenthintergrund statt einer dunklen Codebloc
 
 ### Vorlagen-Styling-Prompt
 
-In den Desktop-Einstellungen gibt es bei jeder Vorlage **Vorlagen-Styling-Prompt** zum Aufklappen, Prüfen und Kopieren, einschließlich des Vorlagenpfads. IntelliJ bietet dieselbe Aktion unter **Einstellungen → Tools → Merkzeug** mit dem aktuell im Einstellungsfeld angezeigten Ordner. Auf iOS findest du sie unter **Hilfe → Vorlagen-Styling-Prompt**; ergänze dort den Ordnerpfad auf dem Computer des Agenten. iOS bietet derzeit keinen PDF-Export und keine Vorschau von PDF-Vorlagen-Styles.
+In den Desktop-Einstellungen gibt es bei jeder Vorlage **Vorlagen-Styling-Prompt** zum Aufklappen, Prüfen und Kopieren, einschließlich des Vorlagenpfads. IntelliJ bietet dieselbe Aktion unter **Einstellungen → Tools → Merkzeug** mit dem aktuell im Einstellungsfeld angezeigten Ordner. Auf iOS findest du sie unter **Hilfe → Vorlagen-Styling-Prompt**; ergänze dort den Ordnerpfad auf dem Computer des Agenten. iOS unterstützt PDF-Vorlagen-Styles beim Bearbeiten und Drucken über AirPrint, aber keinen separaten PDF-Dateiexport.
 
 Ersetze den neuen Vorlagennamen sowie Farben, Schriften, Logo und Gestaltungswünsche vor der Übergabe. Der Prompt ist auf Englisch und enthält die vollständige technische Anleitung offline, auch für ältere Vorlagen ohne Hinweisdateien. Beim Kopieren werden keine Notizinhalte gelesen oder bestehende Vorlagen verändert. Falls die Webansicht keinen Zugriff auf die Zwischenablage hat, markiere und kopiere den angezeigten Text manuell.
 

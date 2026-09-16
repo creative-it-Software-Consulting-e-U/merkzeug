@@ -381,9 +381,9 @@ the sidebar:
 
 Desktop, iOS and IntelliJ use the same Merkzeug editor. Frontmatter is preserved and can be opened in the editor. Failed saves leave changes marked as unsaved. When external changes conflict with your edits, reload the external version or explicitly keep your own version.
 
-## Mac App Store preview builds
+## Mac App Store folder access
 
-Experimental Mac App Store builds request persistent access when you select a vault or PDF-template folder. If macOS revokes access or the folder moves, select it again. Store-build sandbox validation is still in progress.
+The Mac App Store edition remembers access when you select a vault or PDF-template folder. If macOS revokes access or the folder moves, select it again.
 
 
 ## Support and feedback
@@ -396,7 +396,7 @@ Use **Help → Contact Support…** to open the support form with Merkzeug, your
 
 Merkzeug ships a ready-to-use **Merkzeug** PDF template: a warm paper cover, serif headings, blue accents, page headers and numbered footers. In **Settings → Template for this vault**, select **Merkzeug**. Existing vaults keep their current selection, including **No template**. **Create** makes an editable copy under a new name; **Edit** opens its folder. Your changes are never overwritten by an app update. Changing the templates root makes the starter available there too, if the folder is writable.
 
-Remove or rename `deckblatt.html` to omit the cover. Customize `stil.css` for document styles and `kopfzeile.html` / `fusszeile.html` for inline header/footer styles. Margins are in `vorlage.json`. Keep the German filenames and `{{titel}}` / `{{datum}}` placeholders; they are the shared template format. Put logo images in the template folder and reference them using relative paths. The template works in IntelliJ too: **PDF template…** opens the bundled starter folder initially when no other template is selected. PDF export is not yet available on iOS.
+Remove or rename `deckblatt.html` to omit the cover. Customize `stil.css` for document styles and `kopfzeile.html` / `fusszeile.html` for inline header/footer styles. Margins are in `vorlage.json`. Keep the German filenames and `{{titel}}` / `{{datum}}` placeholders; they are the shared template format. Put logo images in the template folder and reference them using relative paths. The template works in IntelliJ too: **PDF template…** opens the bundled starter folder initially when no other template is selected. iOS uses templates for editor styling and AirPrint; PDF-file export is a desktop and IntelliJ feature.
 
 ### Adapt a template with an agent
 
@@ -422,7 +422,7 @@ Mermaid diagrams use the document background instead of a dark code-block panel 
 
 ### Template styling prompt
 
-Desktop Settings provides **Template styling prompt** for each template; expand it to review and copy a complete agent brief with the template's folder path. IntelliJ offers the same action in **Settings → Tools → Merkzeug**, using the folder currently shown in the settings field. On iOS, open **Help → Template styling prompt** and substitute the folder path on the agent's computer; iOS does not currently export PDFs or preview PDF template styles.
+Desktop Settings provides **Template styling prompt** for each template; expand it to review and copy a complete agent brief with the template's folder path. IntelliJ offers the same action in **Settings → Tools → Merkzeug**, using the folder currently shown in the settings field. On iOS, open **Help → Template styling prompt** and substitute the folder path on the agent's computer; iOS supports PDF template styles while editing and printing through AirPrint, but does not offer a separate PDF-file export.
 
 Replace the new template name and your colors, fonts, logo and design wishes before sending it. The prompt is in English, includes the complete offline technical reference, and works with older templates that lack instruction files. Copying it does not read note contents or modify existing templates. If clipboard access is unavailable in the web view, select and copy the displayed text manually.
 

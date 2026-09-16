@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Check local website destinations, anchors and image descriptions before publishing."""
+import re
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit, unquote
@@ -15,7 +16,15 @@ class Page(HTMLParser):
    if a.get(key): self.refs.append(a[key])
 pages={p:Page(p.read_text()) for p in root.glob('*.html')}
 errors=[]
+# Check source HTML too: stale launch claims can hide in image alt text.
+stale_launch_copy = re.compile(
+ r'development preview|Entwicklungsvorschau|Mac[- ]App[- ]Store (?:preview|test) builds|'
+ r'Mac-App-Store-Testversionen|Experimental Mac App Store|Experimentelle Mac-App-Store|'
+ r'first (?:app )?store release is being prepared|erste (?:App-)?Store-Version wird vorbereitet',
+ re.IGNORECASE)
 for path,page in pages.items():
+ for match in stale_launch_copy.finditer(path.read_text()):
+  errors.append(f'{path.name}: obsolete launch wording: {match.group()}')
  errors.extend(f'{path.name}: {e}' for e in page.errors)
  for ref in page.refs:
   u=urlsplit(ref)

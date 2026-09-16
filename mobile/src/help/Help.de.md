@@ -86,7 +86,7 @@ Desktop, iOS und IntelliJ verwenden denselben Merkzeug-Editor. Frontmatter bleib
 
 ## PDF-Vorlagen am Desktop
 
-Desktop-App und IntelliJ enthalten die PDF-Startvorlage Merkzeug mit Deckblatt, gestalteten Überschriften und Seitennummern. Eine Kopie lässt sich mit einem Agenten anpassen. Siehe die [Vorlagen-Anleitung](https://merkzeug.creative-it.com/help-de.html#pdf-startvorlage). Auf iOS ist PDF-Export noch nicht verfügbar.
+Desktop-App und IntelliJ enthalten die PDF-Startvorlage Merkzeug mit Deckblatt, gestalteten Überschriften und Seitennummern. Eine Kopie lässt sich mit einem Agenten anpassen. Siehe die [Vorlagen-Anleitung](https://merkzeug.creative-it.com/help-de.html#pdf-startvorlage). iOS verwendet Vorlagen für Editor-Styles und AirPrint; PDF-Dateiexport ist eine Desktop- und IntelliJ-Funktion.
 
 ## Darstellung, Tour und Agentenhinweise
 
@@ -106,7 +106,7 @@ Auf iPhone und iPad stehen auch die nativen iOS-Kalender zur Verfügung. Zugriff
 
 ### Vorlagen-Styling-Prompt
 
-In den Desktop-Einstellungen gibt es bei jeder Vorlage **Vorlagen-Styling-Prompt** zum Aufklappen, Prüfen und Kopieren, einschließlich des Vorlagenpfads. IntelliJ bietet dieselbe Aktion unter **Einstellungen → Tools → Merkzeug** mit dem aktuell im Einstellungsfeld angezeigten Ordner. Auf iOS findest du sie unter **Hilfe → Vorlagen-Styling-Prompt**; ergänze dort den Ordnerpfad auf dem Computer des Agenten. Derselbe Prompt ist auch unter **PDF-Vorlagen** verfügbar. iOS kann die Inhalts-Styles einer Vorlage beim Bearbeiten anzeigen; das Speichern einer PDF-Datei ist noch nicht verfügbar.
+In den Desktop-Einstellungen gibt es bei jeder Vorlage **Vorlagen-Styling-Prompt** zum Aufklappen, Prüfen und Kopieren, einschließlich des Vorlagenpfads. IntelliJ bietet dieselbe Aktion unter **Einstellungen → Tools → Merkzeug** mit dem aktuell im Einstellungsfeld angezeigten Ordner. Auf iOS findest du sie unter **Hilfe → Vorlagen-Styling-Prompt**; ergänze dort den Ordnerpfad auf dem Computer des Agenten. Derselbe Prompt ist auch unter **PDF-Vorlagen** verfügbar. iOS kann die Inhalts-Styles einer Vorlage beim Bearbeiten anzeigen; einen separaten PDF-Dateiexport gibt es nicht.
 
 Ersetze den neuen Vorlagennamen sowie Farben, Schriften, Logo und Gestaltungswünsche vor der Übergabe. Der Prompt ist auf Englisch und enthält die vollständige technische Anleitung offline, auch für ältere Vorlagen ohne Hinweisdateien. Beim Kopieren werden keine Notizinhalte gelesen oder bestehende Vorlagen verändert. Falls die Webansicht keinen Zugriff auf die Zwischenablage hat, markiere und kopiere den angezeigten Text manuell.
 
