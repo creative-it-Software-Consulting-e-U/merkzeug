@@ -133,3 +133,11 @@ Standardmäßig verwendet Merkzeug **iCloud Drive → Merkzeug → Templates** u
 ### Dateinamen von Meeting-Notizen
 
 Eine Meeting-Notiz verwendet ihre erste Überschrift als Dateinamen. Großschreibung, Leerzeichen und Umlaute bleiben erhalten; unzulässige Dateinamen-Zeichen werden ersetzt. Bei Namenskollisionen kommt ein Zusatz hinzu, ohne eine andere Notiz oder deren Bildordner zu überschreiben. Nach dem Speichern einer geänderten Überschrift benennt Merkzeug die Notiz und ihren `.assets/`-Ordner um. Die Kalenderzuordnung bleibt im Frontmatter: Derselbe Termin öffnet im gewählten Ordner seine vorhandene Notiz, auch bei älteren `meeting-…`-Namen. Diese Namen werden beim Bearbeiten und Speichern der Überschrift aktualisiert. Behalte die Kalender-Identitätsfelder für diese Zuordnung bei.
+
+## Links beim Umbenennen und Verschieben
+
+Beim Umbenennen einer Notiz oder eines Ordners durch Merkzeug werden lokale Markdown-Verweise darauf in anderen Markdown-Dateien desselben Vaults aktualisiert. Das gilt auch, wenn eine gespeicherte Überschrift automatisch den Dateinamen ändert. Der zugehörige `.assets/`-Ordner und Bildverweise folgen der Notiz. Beim Verschieben werden zusätzlich ihre ausgehenden relativen Links angepasst; gemeinsame Bilderordner bleiben an ihrem Ort.
+
+Unterstützt werden direkte Links, Bilder und Referenz-Linkdefinitionen, auch mit URL-kodierten Namen und `#abschnitt`-Anhängen. Linktexte und Linktitel bleiben erhalten. Abschnittsanhänge werden beibehalten, bei Änderungen einer Überschrift aber nicht neu berechnet. Codebeispiele, Frontmatter, externe URLs und gewöhnlicher Text werden nicht verändert. HTML-Links und Wiki-Link-Syntax sind nicht enthalten.
+
+Berücksichtigt werden reguläre Markdown-Dateien im Vault; versteckte/ignorierte Ordner und symbolische Links werden nicht verfolgt. Umbenennungen außerhalb von Merkzeug werden nicht als Refactoring erkannt. Namenskollisionen oder zwischenzeitlich geänderte Inhalte stoppen den Vorgang. Offene Dokumente ohne eigene Änderungen werden neu geladen; ungespeicherte konkurrierende Änderungen bleiben zur Prüfung erhalten.

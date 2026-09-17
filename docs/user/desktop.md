@@ -61,3 +61,11 @@ In **Settings**, select the PDF template for this vault. Enable **Use PDF templa
 Mermaid diagrams use the document background instead of a dark code-block panel and switch to the light PDF theme when PDF template editing styles are active, and return to the application theme when the preview is disabled.
 
 Meeting notes follow their first heading when created and saved, preserving case and spaces except for filesystem restrictions. Renaming carries the companion image folder; collisions keep both notes. Calendar identity in frontmatter lets the same event reopen the existing note in the selected folder.
+
+## Links when renaming or moving notes
+
+Renaming a note or folder through Merkzeug updates local Markdown links to it in other Markdown files in the same vault. This also applies when a saved heading automatically changes a note's filename. Companion `.assets/` folders and links to their images follow the note. Moving a note also recalculates its outgoing relative links; shared image folders stay in place.
+
+Inline links, images and reference-style link definitions are supported, including URL-encoded names and `#section` suffixes. Link labels and titles stay unchanged. Section suffixes are preserved, not recalculated when a heading changes. Code examples, frontmatter, external URLs and ordinary prose are not rewritten. HTML links and wiki-link syntax are not included.
+
+Only regular Markdown files inside the vault are considered; hidden/ignored folders and symbolic links are not followed. Renames outside Merkzeug are not detected as refactoring. Destination collisions or stale file contents stop the operation. Open documents reload when clean; unsaved conflicting edits are preserved for review rather than silently overwritten.

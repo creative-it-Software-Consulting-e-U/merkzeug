@@ -373,12 +373,16 @@ export default function App(): React.JSX.Element {
       const newName = node.isDirectory ? input : `${input.replace(/\.md$/i, '')}.md`
       const to = normalizePath(joinPath(dirname(node.path), newName))
       try {
+        meetingRenamePending.current = true
+        const pending: Promise<void>[] = []
+        window.dispatchEvent(new CustomEvent('merkzeug-flush', { detail: pending }))
+        await Promise.all(pending)
         await vault.rename(node.path, to)
         pruneStack(node.path)
         await reloadTree()
       } catch (err) {
         alert(`${translate("Rename failed:")} ${String(err)}`)
-      }
+      } finally { meetingRenamePending.current = false }
     },
     [pruneStack, reloadTree]
   )

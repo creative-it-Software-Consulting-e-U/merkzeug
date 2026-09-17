@@ -389,13 +389,14 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
         var children: [[String: Any]] = []
         let entries = (try? FileManager.default.contentsOfDirectory(
             at: url,
-            includingPropertiesForKeys: [.isDirectoryKey],
+            includingPropertiesForKeys: [.isDirectoryKey, .isSymbolicLinkKey],
             options: [.skipsHiddenFiles]
         )) ?? []
         let sorted = entries.sorted {
             $0.lastPathComponent.localizedStandardCompare($1.lastPathComponent) == .orderedAscending
         }
         for entry in sorted {
+            if (try? entry.resourceValues(forKeys: [.isSymbolicLinkKey]))?.isSymbolicLink == true { continue }
             let childName = entry.lastPathComponent
             let childRel = relPath == "/" ? "/\(childName)" : "\(relPath)/\(childName)"
             let isDir = (try? entry.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory ?? false
@@ -652,40 +653,63 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
         let fm = FileManager.default
         let oldAssets = fromURL.deletingPathExtension().appendingPathExtension("assets")
         let newAssets = toURL.deletingPathExtension().appendingPathExtension("assets")
-        let hasAssets = fromURL.pathExtension.lowercased() == "md" && fm.fileExists(atPath: oldAssets.path)
+        let sourceIsDirectory = (try? fromURL.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory ?? false
+        let hasAssets = !sourceIsDirectory && fromURL.pathExtension.lowercased() == "md" && fm.fileExists(atPath: oldAssets.path)
         guard !fm.fileExists(atPath: toURL.path), !hasAssets || !fm.fileExists(atPath: newAssets.path) else {
             call.reject(localized("A destination note or attachment folder already exists.", "Am Ziel existiert bereits eine Notiz oder ein Bilderordner.")); return
         }
         guard !hasAssets || oldAssets.resolvingSymlinksInPath() == oldAssets else { call.reject("Review symbolic links manually"); return }
+        // Prepare all content changes in JS using the shared Markdown parser; validate and
+        // commit them under native file coordination together with the filesystem move.
+        var edits: [(src: URL, dst: URL, before: String, after: String)] = []
+        var seenEdits = Set<String>()
+        for item in call.getArray("edits", JSObject.self) ?? [] {
+            guard let path = item["path"] as? String, let target = item["target"] as? String,
+                  let before = item["before"] as? String, let after = item["after"] as? String,
+                  let src = fileURL(for: path, call: call), let dst = fileURL(for: target, call: call) else { call.reject(localized("Invalid refactoring edit", "Ungültige Refactoring-Änderung")); return }
+            guard src.resolvingSymlinksInPath() == src, dst.resolvingSymlinksInPath() == dst else { call.reject("Review symbolic links manually"); return }
+            var expected = src.path
+            for (old, new) in [(fromURL.path, toURL.path)] + (hasAssets ? [(oldAssets.path, newAssets.path)] : []) {
+                if src.path == old || src.path.hasPrefix(old + "/") { expected = new + src.path.dropFirst(old.count); break }
+            }
+            guard src.pathExtension.lowercased() == "md", dst.path == expected, seenEdits.insert(src.path).inserted else { call.reject(localized("Invalid refactoring edit", "Ungültige Refactoring-Änderung")); return }
+            edits.append((src, dst, before, after))
+        }
         var intents = [NSFileAccessIntent.writingIntent(with: fromURL, options: .forMoving), NSFileAccessIntent.writingIntent(with: toURL, options: [])]
         if hasAssets { intents += [NSFileAccessIntent.writingIntent(with: oldAssets, options: .forMoving), NSFileAccessIntent.writingIntent(with: newAssets, options: [])] }
+        for edit in edits { intents.append(NSFileAccessIntent.writingIntent(with: edit.src, options: [])) }
         NSFileCoordinator().coordinate(with: intents, queue: OperationQueue.main) { error in
             if let error = error { call.reject(error.localizedDescription); return }
             let src = intents[0].url, dst = intents[1].url
             var movedAssets = false, movedNote = false
-            var original: String?
+            var written: [Int] = []
             do {
                 guard !fm.fileExists(atPath: dst.path), !hasAssets || !fm.fileExists(atPath: intents[3].url.path) else { throw CocoaError(.fileWriteFileExists) }
-                if hasAssets {
-                    original = try String(contentsOf: src, encoding: .utf8)
-                    try fm.moveItem(at: intents[2].url, to: intents[3].url)
-                    movedAssets = true
+                for edit in edits {
+                    guard try String(contentsOf: edit.src, encoding: .utf8) == edit.before else { throw NSError(domain: "CONFLICT", code: 1, userInfo: [NSLocalizedDescriptionKey: localized("CONFLICT: File changed during refactoring", "CONFLICT: Datei wurde während des Refactorings geändert")]) }
+                    guard fm.isWritableFile(atPath: edit.src.path) else { throw CocoaError(.fileWriteNoPermission) }
                 }
-                try fm.moveItem(at: src, to: dst)
-                movedNote = true
-                if let original = original {
-                    let old = oldAssets.lastPathComponent, new = newAssets.lastPathComponent
-                    let allowed = CharacterSet.urlPathAllowed.subtracting(CharacterSet(charactersIn: "#?"))
-                    let rewritten = original.replacingOccurrences(of: old + "/", with: new + "/")
-                        .replacingOccurrences(of: (old.addingPercentEncoding(withAllowedCharacters: allowed) ?? old) + "/", with: (new.addingPercentEncoding(withAllowedCharacters: allowed) ?? new) + "/")
-                    if rewritten != original { try rewritten.write(to: dst, atomically: true, encoding: .utf8) }
+                if hasAssets { try fm.moveItem(at: intents[2].url, to: intents[3].url); movedAssets = true }
+                try fm.moveItem(at: src, to: dst); movedNote = true
+                for (index, edit) in edits.enumerated() {
+                    guard try String(contentsOf: edit.dst, encoding: .utf8) == edit.before else { throw NSError(domain: "CONFLICT", code: 1) }
+                    try edit.after.write(to: edit.dst, atomically: true, encoding: .utf8)
+                    written.append(index)
                 }
                 call.resolve()
             } catch {
-                // Recover both names on a failed multi-file operation; never overwrite a collision.
-                if movedNote { try? fm.moveItem(at: dst, to: src) }
-                if movedAssets { try? fm.moveItem(at: intents[3].url, to: intents[2].url) }
-                call.reject(localized("Rename failed: \(error.localizedDescription)", "Umbenennen fehlgeschlagen: \(error.localizedDescription)"))
+                var recoveryFailed = false
+                for index in written.reversed() {
+                    let edit = edits[index]
+                    do {
+                        guard try String(contentsOf: edit.dst, encoding: .utf8) == edit.after else { throw NSError(domain: "CONFLICT", code: 1) }
+                        try edit.before.write(to: edit.dst, atomically: true, encoding: .utf8)
+                    } catch { recoveryFailed = true }
+                }
+                if movedNote { do { try fm.moveItem(at: dst, to: src) } catch { recoveryFailed = true } }
+                if movedAssets { do { try fm.moveItem(at: intents[3].url, to: intents[2].url) } catch { recoveryFailed = true } }
+                let detail = recoveryFailed ? localized("Some files require recovery. ", "Einige Dateien müssen wiederhergestellt werden. ") : ""
+                call.reject(localized("Rename failed: \(detail)\(error.localizedDescription)", "Umbenennen fehlgeschlagen: \(detail)\(error.localizedDescription)"))
             }
         }
     }

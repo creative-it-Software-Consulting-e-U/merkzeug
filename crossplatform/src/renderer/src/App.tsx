@@ -514,9 +514,12 @@ export function App(): React.JSX.Element {
     [handleCreateFolder, handleCreateNote]
   )
 
+  const manualRefactoring = useRef(false)
   const handleRename = useCallback(
     async (path: string, newName: string): Promise<void> => {
       try {
+        manualRefactoring.current = true
+        for (const handle of editorRefs.current.values()) await handle?.flush()
         const newPath = await window.merkzeug.renamePath(path, newName)
         setPanes((prev) => {
           const mapPath = (p: string): string =>
@@ -534,7 +537,7 @@ export function App(): React.JSX.Element {
         await refreshTree()
       } catch (err) {
         alert(String(err))
-      }
+      } finally { manualRefactoring.current = false }
     },
     [refreshTree]
   )
@@ -546,7 +549,7 @@ export function App(): React.JSX.Element {
   const handleEditorSaved = useCallback(
     (tabId: string, markdown: string): void => {
       const tab = panesRef.current.flatMap((p) => p.tabs).find((t) => t.id === tabId)
-      if (!tab || tab.kind !== 'note') return
+      if (!tab || tab.kind !== 'note' || manualRefactoring.current) return
       const meeting = meetingIdentity(markdown) !== null
       if (!meeting && !tab.autoName) return
       const title = meeting ? firstHeading(markdown) : leadingH1(markdown)
@@ -579,6 +582,8 @@ export function App(): React.JSX.Element {
   const handleMove = useCallback(
     async (src: string, destDir: string): Promise<void> => {
       try {
+        manualRefactoring.current = true
+        for (const handle of editorRefs.current.values()) await handle?.flush()
         const newPath = await window.merkzeug.movePath(src, destDir)
         setPanes((prev) => {
           const mapPath = (p: string): string =>
@@ -591,7 +596,7 @@ export function App(): React.JSX.Element {
         await refreshTree()
       } catch (err) {
         alert(String(err))
-      }
+      } finally { manualRefactoring.current = false }
     },
     [refreshTree]
   )

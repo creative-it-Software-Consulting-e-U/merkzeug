@@ -1,7 +1,10 @@
+import { randomUUID } from 'node:crypto'
+import { planLinkEdits } from '@merkzeug/core/linkRefactoring'
 import { t as translate } from '@merkzeug/core/i18n'
 import { shell } from 'electron'
 import {
   readFileSync,
+  readdirSync, lstatSync, accessSync, constants, unlinkSync, realpathSync,
   writeFileSync,
   mkdirSync,
   existsSync,
@@ -9,7 +12,7 @@ import {
   statSync
 } from 'node:fs'
 import { readdir } from 'node:fs/promises'
-import { join, dirname, basename, extname, resolve, sep } from 'node:path'
+import { join, dirname, basename, extname, resolve, sep, relative, isAbsolute } from 'node:path'
 import type { FileNode } from '../shared/types'
 import { isIgnoredDir } from './ignore'
 
@@ -111,7 +114,7 @@ export function createFolder(dir: string): string {
  * Name mit einer anderen Datei, wird "-2", "-3", … angehängt.
  * Liefert den neuen Pfad (bzw. den alten, wenn er schon passt).
  */
-export function autoRenameNote(path: string, base: string): string {
+export function autoRenameNote(path: string, base: string, root = dirname(path)): string {
   const dir = dirname(path)
   if (basename(path, '.md') === base) return path
   let candidate = base
@@ -120,74 +123,80 @@ export function autoRenameNote(path: string, base: string): string {
     candidate = `${base}-${n}`
     n += 1
   }
-  return join(dir, `${candidate}.md`) === path ? path : renamePath(path, `${candidate}.md`)
+  return join(dir, `${candidate}.md`) === path ? path : renamePath(path, `${candidate}.md`, root)
 }
 
-/** Ersetzt Verweise auf den alten Assets-Ordner in einer Notiz (auch URL-codiert). */
-function rewriteAssetLinks(content: string, oldBase: string, newBase: string): string {
-  const variants: Array<[string, string]> = [
-    [`${oldBase}.assets/`, `${newBase}.assets/`],
-    [`${encodeURI(oldBase)}.assets/`, `${encodeURI(newBase)}.assets/`]
-  ]
-  let result = content
-  for (const [from, to] of variants) {
-    result = result.split(from).join(to)
-  }
-  return result
+function writeRefactoredFile(path: string, text: string): void {
+  const temporary = join(dirname(path), `.merkzeug-refactor-${randomUUID()}.tmp`)
+  try {
+    writeFileSync(temporary, text, { encoding: 'utf8', flag: 'wx', mode: statSync(path).mode })
+    renameSync(temporary, path)
+  } finally { if (existsSync(temporary)) unlinkSync(temporary) }
 }
 
-/**
- * Benennt Datei oder Ordner um. Bei Notizen wird der Assets-Ordner mit
- * umbenannt und die Bildpfade in der Notiz werden angepasst.
- * Liefert den neuen Pfad.
- */
-export function renamePath(path: string, newName: string): string {
-  const dir = dirname(path)
-  const stat = statSync(path)
-  if (stat.isDirectory() || extname(path) !== '.md') {
-    const target = join(dir, newName)
-    if (existsSync(target)) throw new Error(`${translate("Already exists: “")}${newName}“.`)
-    renameSync(path, target)
-    return target
+/** Rename/move and all affected Markdown destinations form one recoverable operation. */
+export function refactorPath(source: string, target: string, root: string): string {
+  source = resolve(source); target = resolve(target); root = resolve(root)
+  if (source === target) return source
+  const contained = (base: string, p: string) => { const rel = relative(base, p); return rel !== '..' && !rel.startsWith('..' + sep) && !isAbsolute(rel) }
+  if (source === root || ![source, target].every(p => contained(root, p))) throw new Error(translate('Path is outside the vault'))
+  if (!contained(realpathSync(root), realpathSync(source)) || !contained(realpathSync(root), realpathSync(dirname(target)))) throw new Error(translate('Path is outside the vault'))
+  if (lstatSync(source).isSymbolicLink()) throw new Error(translate('Review symbolic links manually'))
+  if (lstatSync(source).isDirectory() && target.startsWith(source + sep)) throw new Error(translate('A folder cannot be moved into itself.'))
+  const pairs = [{ from: source, to: target }]
+  if (!lstatSync(source).isDirectory() && extname(source).toLowerCase() === '.md' && existsSync(assetsDirFor(source))) pairs.push({ from: assetsDirFor(source), to: assetsDirFor(target) })
+  for (const pair of pairs) {
+    if (existsSync(pair.to)) throw new Error(translate('Already exists: “') + basename(pair.to) + '”.')
+    if (lstatSync(pair.from).isSymbolicLink()) throw new Error(translate('Review symbolic links manually'))
+    accessSync(dirname(pair.from), constants.W_OK); accessSync(dirname(pair.to), constants.W_OK)
   }
-  const oldBase = basename(path, '.md')
-  const newBase = newName.endsWith('.md') ? basename(newName, '.md') : newName
-  const target = join(dir, `${newBase}.md`)
-  if (target === path) return path
-  if (existsSync(target)) throw new Error(`${translate("Already exists: “")}${newBase}.md“.`)
-  const oldAssets = join(dir, `${oldBase}.assets`)
-  const newAssets = join(dir, `${newBase}.assets`)
-  if (existsSync(oldAssets) && existsSync(newAssets)) throw new Error(`${translate('Already exists: “')}${newBase}.assets“.`)
-  renameSync(path, target)
-  if (existsSync(oldAssets)) {
-    try { renameSync(oldAssets, newAssets) } catch (error) { renameSync(target, path); throw error }
-    const content = readFileSync(target, 'utf8')
-    const rewritten = rewriteAssetLinks(content, oldBase, newBase)
-    if (rewritten !== content) writeFileSync(target, rewritten, 'utf8')
-  }
-  return target
-}
-
-/** Verschiebt Datei/Ordner in einen Zielordner; Assets-Ordner wandert mit. */
-export function movePath(src: string, destDir: string): string {
-  const name = basename(src)
-  const target = join(destDir, name)
-  if (resolve(src) === resolve(target)) return src
-  if (existsSync(target)) throw new Error(`${translate("The destination already contains “")}${name}“.`)
-  const srcStat = statSync(src)
-  if (srcStat.isDirectory() && (resolve(destDir) + sep).startsWith(resolve(src) + sep)) {
-    throw new Error(translate("A folder cannot be moved into itself."))
-  }
-  const companion = extname(src) === '.md' ? assetsDirFor(src) : null
-  if (companion && existsSync(companion) && existsSync(join(destDir, basename(companion)))) throw new Error(`${translate('Already exists: “')}${basename(companion)}“.`)
-  renameSync(src, target)
-  if (extname(src) === '.md') {
-    const assets = assetsDirFor(src)
-    if (existsSync(assets)) {
-      try { renameSync(assets, join(destDir, basename(assets))) } catch (error) { renameSync(target, src); throw error }
+  const slash = (p: string) => { const value = p.replaceAll('\\', '/'); return value.startsWith('/') ? value : '/' + value }
+  const native = (p: string) => process.platform === 'win32' && /^\/[A-Za-z]:\//.test(p) ? p.slice(1) : p
+  const files: { path: string; content: string }[] = []
+  const scan = (dir: string) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      if (entry.isSymbolicLink()) continue
+      const path = join(dir, entry.name)
+      if (entry.isDirectory()) { if (!entry.name.startsWith('.') && !isIgnoredDir(path)) scan(path) }
+      else if (/\.md$/i.test(entry.name)) files.push({ path: slash(path), content: readFileSync(path, 'utf8') })
     }
   }
+  scan(root)
+  const edits = planLinkEdits(files, pairs.map(p => ({ from: slash(p.from), to: slash(p.to) })), slash(root)).map(edit => ({ ...edit, path: native(edit.path), target: native(edit.target) }))
+  for (const edit of edits) {
+    accessSync(edit.path, constants.W_OK)
+    if (readFileSync(edit.path, 'utf8') !== edit.before) throw new Error('CONFLICT: ' + translate('File changed during refactoring'))
+  }
+  const moved: typeof pairs = [], written: typeof edits = []
+  try {
+    for (const pair of pairs) { renameSync(pair.from, pair.to); moved.push(pair) }
+    for (const edit of edits) {
+      if (readFileSync(edit.target, 'utf8') !== edit.before) throw new Error('CONFLICT: ' + translate('File changed during refactoring'))
+      writeRefactoredFile(edit.target, edit.after); written.push(edit)
+    }
+  } catch (error) {
+    const failures: unknown[] = []
+    for (const edit of written.reverse()) {
+      try {
+        if (readFileSync(edit.target, 'utf8') !== edit.after) throw new Error(translate('Concurrent modification: ') + edit.target)
+        writeRefactoredFile(edit.target, edit.before)
+      } catch (e) { failures.push(e) }
+    }
+    for (const pair of moved.reverse()) {
+      try { if (existsSync(pair.from)) throw new Error(translate('Recovery destination exists: ') + pair.from); renameSync(pair.to, pair.from) } catch (e) { failures.push(e) }
+    }
+    if (failures.length) throw new AggregateError([error, ...failures], translate('Refactoring failed; some files require recovery'))
+    throw error
+  }
   return target
+}
+export function renamePath(path: string, newName: string, root = dirname(path)): string {
+  if (!newName || /[/\\]/.test(newName) || newName === '.' || newName === '..') throw new Error(translate('Invalid filename'))
+  if (!lstatSync(path).isDirectory() && /\.md$/i.test(path) && !/\.md$/i.test(newName)) newName += '.md'
+  return refactorPath(path, join(dirname(path), newName), root)
+}
+export function movePath(src: string, destDir: string, root = dirname(src)): string {
+  return refactorPath(src, join(destDir, basename(src)), root)
 }
 
 /** Legt Datei/Ordner in den Papierkorb; bei Notizen auch den Assets-Ordner. */

@@ -6,6 +6,8 @@ import java.util.Map;
 /** English source messages with a German OS-locale translation. */
 final class Messages {
     private static final Map<String, String> GERMAN = Map.ofEntries(
+        Map.entry("Cannot read Markdown file: ", "Markdown-Datei kann nicht gelesen werden: "),
+        Map.entry("Markdown changed during refactoring", "Markdown wurde während des Refactorings geändert"),
         Map.entry("Move note and attachments", "Notiz und Begleitordner verschieben"),
         Map.entry("Move", "Verschieben"),
         Map.entry("Destination folder", "Zielordner"),

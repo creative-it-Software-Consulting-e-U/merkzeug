@@ -55,3 +55,11 @@ Speichern, Git-Integration und Undo-Verlauf bleiben bei IntelliJ. Merkzeug folgt
 Merkzeug ist proprietäre Software, kostenlos für private und interne geschäftliche Nutzung gemäß der Merkzeug-Endnutzerlizenz. Es ergänzt einen eigenen Editor-Tab; das JetBrains-Markdown-Plugin ist optional.
 
 Vorschau für IntelliJ IDEA 2026.2.2–2026.2.3, Builds 262.10315.125–262.10968.63, mit aktiviertem JCEF.
+
+### Link refactoring
+
+Rename/Move updates local Markdown links in other project notes, including notes without a companion image folder. Moving a note also recalculates outgoing relative links. Inline links, images and reference-style definitions are supported independently of the optional Markdown editor plugin. Code examples and external URLs remain unchanged; all changes participate in native Undo/Redo.
+
+### Link-Refactoring
+
+Rename/Move aktualisiert lokale Markdown-Links in anderen Projektnotizen, auch ohne eigenen Bilderordner. Beim Verschieben werden zusätzlich ausgehende relative Links angepasst. Direkte Links, Bilder und Referenz-Linkdefinitionen werden unabhängig vom optionalen Markdown-Editor-Plugin unterstützt. Codebeispiele und externe URLs bleiben unverändert; alle Änderungen sind Teil von Rückgängig/Wiederherstellen.

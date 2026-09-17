@@ -85,3 +85,9 @@ Dateien und Bilder außerhalb des aktuellen Projektstamms sind nicht zugänglich
 Merkzeug ist proprietäre Software für private und interne geschäftliche Nutzung gemäß der [Endbenutzer-Lizenzvereinbarung](../../resources/legal/EULA.de.md). Lizenz und Hinweise zu Drittanbietern liegen auch dem Plugin bei.
 
 Über **Help → Merkzeug: Contact Support…** öffnest du das Supportformular mit App, Sprache, Plattform und Plugin-Version. Notizinhalte und Repository-Pfade werden nicht übertragen. Nach einem Plugin-Update ist gegebenenfalls ein IntelliJ-Neustart notwendig.
+
+## Links zwischen Markdown-Dateien
+
+**Refactor → Rename/Move** aktualisiert auch eingehende Markdown-Links im Projekt, einschließlich Notizen ohne `.assets/`-Ordner. Beim Verschieben werden ausgehende relative Links und Verweise auf Begleitbilder angepasst. Das Markdown-Editor-Plugin ist dafür optional: Merkzeug erkennt Markdown-Linkziele selbst und integriert die Änderungen in das native Refactoring, einschließlich offener ungespeicherter Dokumente und Rückgängig/Wiederherstellen.
+
+Unterstützt werden direkte Links, Bilder und Referenz-Linkdefinitionen. URL-Kodierung, Linktexte, Linktitel und `#abschnitt`-Anhänge bleiben erhalten; das Umbenennen von Überschriftenankern ist ein eigener Vorgang. Codebeispiele, Frontmatter, externe URLs und gewöhnlicher Text bleiben unverändert. HTML- und Wiki-Links sind nicht enthalten. Der Suchbereich umfasst Projektinhalte, keine ausgeschlossenen Ordner, symbolischen Links oder externen Dateien. Sprachspezifische Ordner-/Package-Refactorings bleiben beim jeweiligen Sprach-Plugin. Allgemeine Datei-Refactorings von Ordnern aktualisieren ebenfalls Markdown-Pfade. Änderungen außerhalb von IntelliJ lösen diesen Vorgang nicht aus.

@@ -252,13 +252,19 @@ public final class SmokeStarter implements ApplicationStarter {
         });
     }
     private static void testCompanionRefactoring(Project project, Path test) throws Exception {
-        String rewritten = CompanionRenameProcessor.rewriteReferences("![x](Plan.assets/x.png) ![x](./Plan.assets/x.png) ![other](OtherPlan.assets/x.png) ![remote](../Other/Plan.assets/x.png)", "Plan", "Draft Note");
+        String rewritten = MarkdownLinkRefactoring.rewrite("![x](Plan.assets/x.png) ![x](./Plan.assets/x.png) ![other](OtherPlan.assets/x.png) ![remote](../Other/Plan.assets/x.png)", "/v/Note.md", java.util.List.of(new MarkdownLinkRefactoring.Move("/v/Plan.assets", "/v/Draft Note.assets")), "/v");
         if (!rewritten.equals("![x](Draft%20Note.assets/x.png) ![x](./Draft%20Note.assets/x.png) ![other](OtherPlan.assets/x.png) ![remote](../Other/Plan.assets/x.png)")) throw new AssertionError("Companion reference escaping or boundaries failed");
-        if (!CompanionRenameProcessor.rewriteReferences("![x](Old%20Note.assets/x.png)", "Old Note", "New Note").contains("New%20Note.assets/")) throw new AssertionError("Encoded source link failed");
+        String codeFixture = "```md\n[x](Plan.md)\n```\n";
+        if (!MarkdownLinkRefactoring.rewrite(codeFixture, "/v/Index.md", java.util.List.of(new MarkdownLinkRefactoring.Move("/v/Plan.md", "/v/Draft.md")), "/v").equals(codeFixture)) throw new AssertionError("Parser changes code");
         Path base = Files.createTempDirectory(test, "refactoring-");
         Files.createDirectories(base.resolve("Plan.assets"));
         Files.writeString(base.resolve("Plan.assets/image.svg"), "<svg xmlns=\"http://www.w3.org/2000/svg\"/>");
-        Files.writeString(base.resolve("Plan.md"), "![Image](Plan.assets/image.svg)\n");
+        Files.writeString(base.resolve("Plan.md"), "![Image](Plan.assets/image.svg)\n[Other](Other.md#topic)\n");
+        Files.writeString(base.resolve("Other.md"), "# Other\n");
+        Files.writeString(base.resolve("Backlinks.md"), "[Plan](Plan.md#topic)\n![Shared](Plan.assets/image.svg)\n\n[ref]: Plan.md \"Title\"\n\n`[Code](Plan.md)`\n\n```md\n[Code](Plan.md)\n```\n");
+        Files.createDirectories(base.resolve("folder"));
+        Files.writeString(base.resolve("folder/Inner.md"), "[Outside](../Other.md)\n");
+        Files.writeString(base.resolve("FolderLink.md"), "[Inside](folder/Inner.md)\n");
         Files.createDirectories(base.resolve("assets"));
         Files.writeString(base.resolve("assets/shared.txt"), "shared");
         Files.createDirectories(base.resolve("target"));
@@ -289,7 +295,11 @@ public final class SmokeStarter implements ApplicationStarter {
         ApplicationManager.getApplication().invokeAndWait(() -> FileDocumentManager.getInstance().saveAllDocuments());
         if (!Files.exists(base.resolve("Draft.assets/image.svg")) || Files.exists(base.resolve("Plan.assets"))) throw new AssertionError("Rename did not pair attachments");
         if (!Files.readString(base.resolve("Draft.md")).contains("Draft.assets/image.svg")) throw new AssertionError("Rename did not update Markdown image link");
+        String backlinks = Files.readString(base.resolve("Backlinks.md"));
+        if (!backlinks.contains("[Plan](Draft.md#topic)") || !backlinks.contains("![Shared](Draft.assets/image.svg)") || !backlinks.contains("[ref]: Draft.md")) throw new AssertionError("Incoming rename links not updated: " + backlinks);
+        if (!backlinks.contains("`[Code](Plan.md)`") || !backlinks.contains("```md\n[Code](Plan.md)")) throw new AssertionError("Code example changed");
         undoRefactoring(project, false);
+        if (!Files.readString(base.resolve("Backlinks.md")).contains("[Plan](Plan.md#topic)")) throw new AssertionError("Incoming link undo failed");
         if (!Files.exists(base.resolve("Plan.md")) || !Files.exists(base.resolve("Plan.assets/image.svg"))) throw new AssertionError("Rename undo did not restore pair");
         undoRefactoring(project, true);
         Files.createDirectories(base.resolve("Collision.assets")); root.refresh(false, true);
@@ -324,6 +334,8 @@ public final class SmokeStarter implements ApplicationStarter {
         ApplicationManager.getApplication().invokeAndWait(() -> FileDocumentManager.getInstance().saveAllDocuments());
         if (!Files.exists(base.resolve("target/Draft.md")) || !Files.exists(base.resolve("target/Draft.assets/image.svg"))) throw new AssertionError("Move did not pair attachments");
         if (!Files.readString(base.resolve("target/Draft.md")).contains("Draft.assets/image.svg")) throw new AssertionError("Moved attachment link is incorrect");
+        if (!Files.readString(base.resolve("target/Draft.md")).contains("[Other](../Other.md#topic)")) throw new AssertionError("Outgoing move link not rebased");
+        if (!Files.readString(base.resolve("Backlinks.md")).contains("[Plan](target/Draft.md#topic)")) throw new AssertionError("Incoming move link not rebased");
         if (!Files.exists(base.resolve("assets/shared.txt"))) throw new AssertionError("Shared assets moved");
         undoRefactoring(project, false);
         if (!Files.exists(base.resolve("Draft.md")) || !Files.exists(base.resolve("Draft.assets/image.svg"))) throw new AssertionError("Move undo did not restore pair");
@@ -333,6 +345,34 @@ public final class SmokeStarter implements ApplicationStarter {
             try { CompanionMoveHandler.processor(project, new com.intellij.psi.PsiElement[]{manager.findFile(root.findChild("Draft.md"))}, manager.findDirectory(root.findChild("target")), null, () -> {}); throw new AssertionError("Move collision accepted"); }
             catch (com.intellij.util.IncorrectOperationException expected) { }
         });
+        com.intellij.openapi.project.DumbService.getInstance(project).waitForSmartMode();
+        var plainRenamed = new java.util.concurrent.CountDownLatch(1);
+        ApplicationManager.getApplication().invokeAndWait(() -> {
+            var other = com.intellij.psi.PsiManager.getInstance(project).findFile(root.findChild("Other.md"));
+            var document = FileDocumentManager.getInstance().getDocument(root.findChild("Backlinks.md"));
+            com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction(project, () -> document.insertString(document.getTextLength(), "\n[Unsaved](Other.md)\n"));
+            com.intellij.psi.PsiDocumentManager.getInstance(project).commitAllDocuments();
+            var processor = new com.intellij.refactoring.rename.RenameProcessor(project, other, "Other Renamed.md", false, false) {
+                @Override public void performRefactoring(com.intellij.usageView.UsageInfo[] usages) { super.performRefactoring(usages); plainRenamed.countDown(); }
+            };
+            processor.setPreviewUsages(false); processor.run();
+        });
+        if (!plainRenamed.await(45, java.util.concurrent.TimeUnit.SECONDS)) throw new AssertionError("Plain note rename timed out");
+        ApplicationManager.getApplication().invokeAndWait(() -> FileDocumentManager.getInstance().saveAllDocuments());
+        if (!Files.readString(base.resolve("Backlinks.md")).contains("[Unsaved](Other%20Renamed.md)")) throw new AssertionError("Unsaved incoming link or companion-free rename failed");
+        if (!Files.readString(base.resolve("Draft.md")).contains("Other%20Renamed.md#topic")) throw new AssertionError("Companion-free rename failed");
+        com.intellij.openapi.project.DumbService.getInstance(project).waitForSmartMode();
+        var folderRenamed = new java.util.concurrent.CountDownLatch(1);
+        ApplicationManager.getApplication().invokeAndWait(() -> {
+            var folder = com.intellij.psi.PsiManager.getInstance(project).findDirectory(root.findChild("folder"));
+            var processor = new com.intellij.refactoring.rename.RenameProcessor(project, folder, "renamed-folder", false, false) {
+                @Override public void performRefactoring(com.intellij.usageView.UsageInfo[] usages) { super.performRefactoring(usages); folderRenamed.countDown(); }
+            };
+            processor.setPreviewUsages(false); processor.run();
+        });
+        if (!folderRenamed.await(45, java.util.concurrent.TimeUnit.SECONDS)) throw new AssertionError("Folder rename timed out");
+        ApplicationManager.getApplication().invokeAndWait(() -> FileDocumentManager.getInstance().saveAllDocuments());
+        if (!Files.readString(base.resolve("FolderLink.md")).contains("renamed-folder/Inner.md")) throw new AssertionError("Folder incoming link not updated");
         System.out.println("MERKZEUG_SMOKE native paired rename/move, Markdown links, undo/redo, collisions and shared assets passed");
     }
 
@@ -351,6 +391,7 @@ public final class SmokeStarter implements ApplicationStarter {
                 var manager = com.intellij.openapi.command.undo.UndoManager.getInstance(project);
                 if (redo) manager.redo(null); else manager.undo(null);
             } finally { confirm.stop(); }
+            FileDocumentManager.getInstance().saveAllDocuments();
         });
     }
 

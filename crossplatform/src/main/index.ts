@@ -203,13 +203,18 @@ function registerIpc(): void {
     listCalendarEvents(fromMs, toMs)
   )
   ipcMain.handle('calendar:detail', (_e, event: CalendarEvent) => calendarEventDetail(event))
+  const refactorRoot = (event: Electron.IpcMainInvokeEvent): string => {
+    const root = getWindowVault(winFromEvent(event)?.id ?? -1)
+    if (!root) throw new Error('No vault is open.')
+    return root
+  }
   const moved = (source: string, target: string): string => {
     for (const files of revisions.values()) files.move(source, target)
     return target
   }
-  ipcMain.handle('file:rename', (_e, path: string, newName: string) => moved(path, renamePath(path, newName)))
-  ipcMain.handle('file:autoRename', (_e, path: string, base: string) => moved(path, autoRenameNote(path, base)))
-  ipcMain.handle('file:move', (_e, src: string, destDir: string) => moved(src, movePath(src, destDir)))
+  ipcMain.handle('file:rename', (e, path: string, newName: string) => moved(path, renamePath(path, newName, refactorRoot(e))))
+  ipcMain.handle('file:autoRename', (e, path: string, base: string) => moved(path, autoRenameNote(path, base, refactorRoot(e))))
+  ipcMain.handle('file:move', (e, src: string, destDir: string) => moved(src, movePath(src, destDir, refactorRoot(e))))
   ipcMain.handle('file:trash', (_e, path: string) => trashPath(path))
   ipcMain.handle('file:exists', (_e, path: string) => existsSync(path))
   ipcMain.handle('file:showInFolder', (_e, path: string) => shell.showItemInFolder(path))

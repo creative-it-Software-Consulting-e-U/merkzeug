@@ -24,6 +24,10 @@
     Existing shared <code>assets/</code> folders remain supported and are not treated as belonging to
     one note. This rule applies to IntelliJ Move/Rename refactoring, not external filesystem actions,
     copying or deletion. Symbolic-link companions require manual handling.</p>
+    <p>Rename/Move also updates local Markdown links in other project notes, with or without a
+    companion folder. Moving a note recalculates outgoing relative links. Inline links, images
+    and reference-style definitions are supported, independently of the optional Markdown editor
+    plugin; code examples and external URLs remain unchanged. Changes participate in native Undo/Redo.</p>
     <h3>Fits your IDE workflow</h3>
     <ul>
       <li>IntelliJ owns document saving, version control and undo history.</li>
@@ -53,6 +57,7 @@
   <extensions defaultExtensionNs="com.intellij">
     <projectConfigurable parentId="tools" id="com.creativeit.merkzeug.settings" displayName="Merkzeug" instance="com.creativeit.merkzeug.MerkzeugSettings"/>
     <renamePsiElementProcessor implementation="com.creativeit.merkzeug.CompanionRenameProcessor" order="first"/>
+    <renamePsiElementProcessor implementation="com.creativeit.merkzeug.MarkdownDirectoryRenameProcessor" order="first"/>
     <refactoring.moveHandler implementation="com.creativeit.merkzeug.CompanionMoveHandler" order="first"/>
     <printHandler implementation="com.creativeit.merkzeug.MerkzeugPrintHandler" order="first"/>
     <fileEditorProvider implementation="com.creativeit.merkzeug.MerkzeugEditorProvider"/>

@@ -1,3 +1,4 @@
+import { planLinkEdits, movedLinkPath, type LinkEdit } from '@merkzeug/core/linkRefactoring'
 import type { GuidanceHost } from '@merkzeug/editor/VaultGuidance'
 import type { InstructionName } from '@merkzeug/core/vaultGuidance'
 import { t as translate } from '@merkzeug/core/i18n'
@@ -91,7 +92,7 @@ interface VaultPlugin {
   stat(options: { path: string }): Promise<FileStat>
   createFolder(options: { path: string }): Promise<void>
   deleteItem(options: { path: string }): Promise<void>
-  rename(options: { from: string; to: string }): Promise<void>
+  rename(options: { from: string; to: string; edits: LinkEdit[] }): Promise<void>
   search(options: { query: string }): Promise<{ results: SearchResult[] }>
 }
 
@@ -134,7 +135,16 @@ const nativeBackend: VaultBackend = {
     await Vault.deleteItem({ path })
   },
   async rename(from, to) {
-    await Vault.rename({ from, to })
+    const tree = (await Vault.readTree()).tree
+    const paths: string[] = []
+    const visit = (node: FileNode) => { if (node.isDirectory) node.children?.forEach(visit); else if (/\.md$/i.test(node.path)) paths.push(node.path) }
+    visit(tree)
+    const files = []
+    for (const path of paths) files.push({ path, content: (await Vault.readFile({ path })).content })
+    const moves = [{ from, to }]
+    if (!(await Vault.stat({ path: from })).isDirectory && /\.md$/i.test(from) && (await Vault.exists({ path: from.slice(0, -3) + '.assets' })).exists) moves.push({ from: from.slice(0, -3) + '.assets', to: to.slice(0, -3) + '.assets' })
+    await Vault.rename({ from, to, edits: planLinkEdits(files, moves) })
+    window.dispatchEvent(new Event('merkzeug-external-change'))
   },
   async search(query) {
     return (await Vault.search({ query })).results
@@ -241,20 +251,15 @@ const mockBackend: VaultBackend = {
     return Promise.resolve()
   },
   rename: (from, to) => {
-    if (demoFiles.has(from)) {
-      demoFiles.set(to, demoFiles.get(from)!)
-      demoFiles.delete(from)
-    }
-    for (const key of [...demoFiles.keys()]) {
-      if (key.startsWith(`${from}/`)) {
-        demoFiles.set(to + key.slice(from.length), demoFiles.get(key)!)
-        demoFiles.delete(key)
-      }
-    }
-    if (demoFolders.has(from)) {
-      demoFolders.delete(from)
-      demoFolders.add(to)
-    }
+    if (demoFiles.has(to) || demoFolders.has(to)) return Promise.reject(new Error('Destination exists'))
+    const moves = [{ from, to }]
+    const edits = planLinkEdits([...demoFiles].map(([path, content]) => ({ path, content })), moves)
+    const after = new Map(edits.map(edit => [edit.path, edit.after]))
+    const files = [...demoFiles]; demoFiles.clear()
+    for (const [path, content] of files) demoFiles.set(movedLinkPath(path, moves), after.get(path) ?? content)
+    const folders = [...demoFolders]; demoFolders.clear()
+    for (const path of folders) demoFolders.add(movedLinkPath(path, moves))
+    window.dispatchEvent(new Event('merkzeug-external-change'))
     return Promise.resolve()
   },
   search: (query) => {

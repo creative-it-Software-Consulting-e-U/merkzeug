@@ -11,11 +11,12 @@ import java.util.Arrays;
 
 /** Preserve the native Move dialog and processor, including usage updates and undo. */
 public final class CompanionMoveHandler extends MoveFilesOrDirectoriesHandler {
+    private static boolean supported(PsiElement e) { return e instanceof PsiDirectory d && !com.intellij.openapi.roots.ProjectRootManager.getInstance(e.getProject()).getFileIndex().isInSourceContent(d.getVirtualFile()) || e instanceof PsiFile f && f.getName().toLowerCase(java.util.Locale.ROOT).endsWith(".md"); }
     @Override public boolean canMove(PsiElement[] elements, PsiElement target, PsiReference reference) {
-        return Arrays.stream(elements).anyMatch(e -> CompanionAssets.companion(e) != null) && super.canMove(elements, target, reference);
+        return Arrays.stream(elements).anyMatch(e -> supported(e)) && super.canMove(elements, target, reference);
     }
     @Override public boolean tryToMove(PsiElement element, Project project, DataContext context, PsiReference reference, Editor editor) {
-        return CompanionAssets.companion(element) != null && super.tryToMove(element, project, context, reference, editor);
+        return supported(element) && super.tryToMove(element, project, context, reference, editor);
     }
     @Override public PsiElement[] adjustForMove(Project project, PsiElement[] elements, PsiElement target) { return CompanionAssets.expand(elements); }
     @Override public void doMove(Project project, PsiElement[] elements, PsiElement target, MoveCallback callback) {
@@ -70,7 +71,11 @@ public final class CompanionMoveHandler extends MoveFilesOrDirectoriesHandler {
         return new MoveFilesOrDirectoriesProcessor(project, expanded, destination, true, false, false, callback, done) {
             @Override protected void performRefactoring(com.intellij.usageView.UsageInfo[] usages) {
                 CompanionAssets.checkMove(myElementsToMove, destination);
-                super.performRefactoring(usages);
+                var moves = Arrays.stream(myElementsToMove).map(e -> (PsiFileSystemItem)e)
+                    .map(e -> new MarkdownLinkRefactoring.Move(e.getVirtualFile().getPath(), destination.getVirtualFile().getPath() + "/" + e.getName())).toList();
+                var edits = MarkdownLinkRefactoring.prepare(project, moves);
+                super.performRefactoring(MarkdownLinkRefactoring.linkUsages(usages));
+                MarkdownLinkRefactoring.apply(project, edits);
             }
         };
     }

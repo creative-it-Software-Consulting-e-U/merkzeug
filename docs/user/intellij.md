@@ -40,7 +40,7 @@ Existing shared `assets/` links remain supported. Merkzeug does not migrate thos
 
 Use IntelliJ **Refactor → Rename** or **Refactor → Move** on a Markdown file. If `Plan.md` has a sibling `Plan.assets/` folder, Merkzeug includes that folder in the same refactoring: renaming to `Draft.md` also renames the folder to `Draft.assets/` and updates companion-folder references in the note. Moving a note keeps its companion folder beside it. The native Move dialog shows both entries; selecting both yourself does not duplicate the operation. Undo/Redo applies to the pair.
 
-Existing destination files or folders stop the action; folders are never merged. Shared `assets/` folders and Markdown files without their own companion folder retain normal IntelliJ behavior. Symbolic-link companions require manual handling. This integration applies to IntelliJ refactoring actions, not external filesystem operations, copy or delete actions. Open Merkzeug editors refresh their paths after a rename or move.
+Existing destination files or folders stop the action; folders are never merged. Shared `assets/` folders stay in place. Markdown notes without a companion folder also receive link updates. Symbolic-link companions require manual handling. This integration applies to IntelliJ refactoring actions, not external filesystem operations, copy or delete actions. Open Merkzeug editors refresh their paths after a rename or move.
 
 ## PDF export
 
@@ -107,3 +107,9 @@ Merkzeug adds its own editor tab for local `.md` files. Keep the built-in Markdo
 ## Printing
 
 With the Merkzeug editor active, **File → Print** uses Merkzeug's PDF rendering. The toolbar also offers **Print…**. A PDF preview opens with a **Print…** button for the native print dialog. Templates, headers/footers, diagrams, images and optional linked documents use the same rendering as PDF export. No save destination is required. Close the preview to remove the temporary PDF. Printing in another Markdown editor tab continues to use that editor's handler.
+
+## Links across Markdown files
+
+Native **Refactor → Rename/Move** also updates incoming Markdown links in project content, including notes without an `.assets/` folder. Move recalculates outgoing relative links and links to companion images. The Markdown editor plugin is optional: Merkzeug parses Markdown destinations itself and combines these changes with native refactoring, including open unsaved documents and Undo/Redo.
+
+Inline links, images and reference-style definitions are supported. URL encoding, link labels, titles and `#section` suffixes are preserved; heading-anchor renames are a separate operation. Code examples, frontmatter, external URLs and ordinary prose are left alone. HTML links and wiki links are not included. Only indexed project content is scanned, not excluded folders, symlinks or external files. Native language-specific directory/package refactorings remain owned by their language plugin. Refactoring a directory through the generic file operation updates Markdown paths too. Filesystem changes outside IntelliJ do not trigger this operation.

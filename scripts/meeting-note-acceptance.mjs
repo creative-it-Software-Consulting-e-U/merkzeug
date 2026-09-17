@@ -10,6 +10,7 @@ const vault = join(temp, 'vault'); await mkdir(vault)
 const content = '---\ncalendar-event: "synthetic-event"\ncalendar-start: "2026-09-17T09:00:00Z"\n---\n\n# Team Meeting\n\nSaved notes\n'
 const old = join(vault, 'meeting-0123456789abcdefabcd.md')
 await writeFile(old, content)
+await writeFile(join(vault, 'index.md'), '[Meeting](meeting-0123456789abcdefabcd.md)')
 await mkdir(old.slice(0, -3) + '.assets')
 await writeFile(join(old.slice(0, -3) + '.assets', 'sample.txt'), 'attachment')
 const env = { ...process.env, MERKZEUG_VAULT: vault }; delete env.ELECTRON_RUN_AS_NODE
@@ -23,6 +24,7 @@ try {
  await page.waitForFunction(() => [...document.querySelectorAll('.tree-label')].some(el => el.textContent === 'Updated Meeting'))
  const renamed = join(vault, 'Updated Meeting.md')
  assert.match(await readFile(renamed, 'utf8'), /# Updated Meeting/)
+ assert.equal(await readFile(join(vault, 'index.md'), 'utf8'), '[Meeting](Updated%20Meeting.md)')
  await access(join(vault, 'Updated Meeting.assets', 'sample.txt'))
  const reopened = await page.evaluate(({vault, content}) => window.merkzeug.createMeetingNote(vault, 'unused.md', content), {vault, content})
  assert.equal(reopened, renamed)

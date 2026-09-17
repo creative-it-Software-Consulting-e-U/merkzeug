@@ -37,3 +37,11 @@ Expand **Working Copy** and enter the exact repository name/remote URL and its c
 Meeting notes are created in the current vault folder, or beside the open note. Selecting a calendar event also works at the root of a vault selected through Files; existing meeting notes are reopened without replacing their contents.
 
 Meeting notes use their first heading as the filename and follow saved heading changes, including their companion image folders. Invalid filename characters are replaced and collisions receive a suffix. The calendar identity remains in frontmatter so selecting the same event in that folder reopens the existing note.
+
+## Links when renaming or moving notes
+
+Renaming a note or folder through Merkzeug updates local Markdown links to it in other Markdown files in the same vault. This also applies when a saved heading automatically changes a note's filename. Companion `.assets/` folders and links to their images follow the note. Moving a note also recalculates its outgoing relative links; shared image folders stay in place.
+
+Inline links, images and reference-style link definitions are supported, including URL-encoded names and `#section` suffixes. Link labels and titles stay unchanged. Section suffixes are preserved, not recalculated when a heading changes. Code examples, frontmatter, external URLs and ordinary prose are not rewritten. HTML links and wiki-link syntax are not included.
+
+Only regular Markdown files inside the vault are considered; hidden/ignored folders and symbolic links are not followed. Renames outside Merkzeug are not detected as refactoring. Destination collisions or stale file contents stop the operation. Open documents reload when clean; unsaved conflicting edits are preserved for review rather than silently overwritten.

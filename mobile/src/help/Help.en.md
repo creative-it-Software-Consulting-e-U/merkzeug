@@ -127,3 +127,11 @@ By default, Merkzeug uses **iCloud Drive → Merkzeug → Templates** and instal
 ### Meeting-note filenames
 
 A meeting note uses its first heading as the filename. Case, spaces and accents are preserved; characters forbidden in cross-platform filenames are replaced, and a suffix resolves collisions without replacing another note or image folder. After saving a changed heading, Merkzeug renames the note and its companion `.assets/` folder. Calendar identity stays in frontmatter: choosing the same event again reopens its existing note in the selected folder, including notes created with the older `meeting-…` names. Those older names update when you edit and save the heading. Keep the calendar identity fields to preserve this association.
+
+## Links when renaming or moving notes
+
+Renaming a note or folder through Merkzeug updates local Markdown links to it in other Markdown files in the same vault. This also applies when a saved heading automatically changes a note's filename. Companion `.assets/` folders and links to their images follow the note. Moving a note also recalculates its outgoing relative links; shared image folders stay in place.
+
+Inline links, images and reference-style link definitions are supported, including URL-encoded names and `#section` suffixes. Link labels and titles stay unchanged. Section suffixes are preserved, not recalculated when a heading changes. Code examples, frontmatter, external URLs and ordinary prose are not rewritten. HTML links and wiki-link syntax are not included.
+
+Only regular Markdown files inside the vault are considered; hidden/ignored folders and symbolic links are not followed. Renames outside Merkzeug are not detected as refactoring. Destination collisions or stale file contents stop the operation. Open documents reload when clean; unsaved conflicting edits are preserved for review rather than silently overwritten.

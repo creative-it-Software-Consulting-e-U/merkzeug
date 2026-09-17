@@ -1,5 +1,12 @@
 /** German translations; English message text is the stable source key. */
 export const de: Readonly<Record<string, string>> = {
+  "Path is outside the vault": "Pfad liegt außerhalb des Vaults",
+  "Review symbolic links manually": "Symbolische Links bitte manuell prüfen",
+  "File changed during refactoring": "Datei wurde während des Refactorings geändert",
+  "Concurrent modification:": "Zwischenzeitliche Änderung:",
+  "Recovery destination exists:": "Ziel für Wiederherstellung existiert bereits:",
+  "Refactoring failed; some files require recovery": "Refactoring fehlgeschlagen; einige Dateien müssen wiederhergestellt werden",
+  "Invalid filename": "Ungültiger Dateiname",
   "iCloud templates are not available. Open Merkzeug on an Apple device and enable iCloud Drive.": "iCloud-Vorlagen sind nicht verfügbar. Öffne Merkzeug auf einem Apple-Gerät und aktiviere iCloud Drive.",
   "The current templates folder is unavailable. Nothing was migrated.": "Der aktuelle Vorlagenordner ist nicht verfügbar. Es wurde nichts übernommen.",
 
