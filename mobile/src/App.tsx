@@ -1,3 +1,4 @@
+import { meetingIdentity, firstHeading, headingFileBase } from '@merkzeug/core/meetingFiles'
 import { assignedTemplate, loadTemplate } from './templates'
 import { TemplateSettings } from './components/TemplateSettings'
 import type { PdfTemplate } from '@merkzeug/core/pdf'
@@ -78,6 +79,27 @@ export default function App(): React.JSX.Element {
   const overlayOpenRef = useRef(false)
   overlayOpenRef.current = sheet !== null || searching || showHelp || showMeetings
 
+  const meetingRenamePending = useRef(false)
+  const renameSavedMeeting = async (path: string, markdown: string): Promise<void> => {
+    const title = firstHeading(markdown)
+    if (!meetingIdentity(markdown) || !title || meetingRenamePending.current) return
+    const base = headingFileBase(title)
+    const prefix = dirname(path).replace(/\/$/, '') + '/'
+    let target = prefix + base + '.md'
+    if (target === path) return
+    meetingRenamePending.current = true
+    try {
+      let n = 2
+      while (target !== path && (await vault.exists(target) || await vault.exists(target.slice(0, -3) + '.assets'))) {
+        target = prefix + base + `-${n++}.md`
+      }
+      if (target === path) return
+      await vault.rename(path, target)
+      setStack(previous => previous.map(p => p === path ? target : p))
+      await reloadTree()
+    } catch (error) { alert(String(error)) }
+    finally { meetingRenamePending.current = false }
+  }
   const current = stack[stackIndex]
   const isNote = current.endsWith('.md')
 
@@ -468,6 +490,7 @@ export default function App(): React.JSX.Element {
             readonly={!editMode}
             onLinkClick={handleLinkClick}
             onDirtyChange={setDirty}
+            onSaved={markdown => { void renameSavedMeeting(current, markdown) }}
           />
         ) : (
           <FolderList

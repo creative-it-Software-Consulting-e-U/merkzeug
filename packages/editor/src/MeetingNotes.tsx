@@ -5,7 +5,7 @@ import type { CalendarEvent } from '@merkzeug/core/calendar'
 import { localDate, meetingNoteContent, meetingNoteFileName, meetingTimeLabel } from '@merkzeug/core/meetingNote'
 import type { CalendarResult } from '@merkzeug/core/calendar'
 import type { CalendarSourceHost } from './calendarSourceStore'
-export interface MeetingHost { sources: CalendarSourceHost; list(from: number, to: number): Promise<CalendarResult>; create(path: string, content: string): Promise<void> }
+export interface MeetingHost { sources: CalendarSourceHost; list(from: number, to: number): Promise<CalendarResult>; create(path: string, content: string): Promise<string> }
 
 export function MeetingNotes({ host, folder, onOpen, onClose }: { host: MeetingHost; folder: string; onOpen: (path: string) => void; onClose: () => void }) {
   const [day, setDay] = useState(localDate(new Date()))
@@ -32,10 +32,10 @@ export function MeetingNotes({ host, folder, onOpen, onClose }: { host: MeetingH
     if (creating.current) return
     creating.current = true; setBusy(true); setError('')
     try {
-      // Stable identity keeps repeat selections and changed titles on the same note.
+      // Hosts find existing calendar identities independently of the current filename.
       const path = `${folder.replace(/\/$/, '')}/${await meetingNoteFileName(event)}`
-      await host.create(path, meetingNoteContent(event))
-      onOpen(path)
+      const created = await host.create(path, meetingNoteContent(event))
+      onOpen(created)
     } catch (e) { setError(String(e)) }
     finally { creating.current = false; setBusy(false) }
   }

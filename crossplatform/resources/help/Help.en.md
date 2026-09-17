@@ -447,3 +447,7 @@ In Settings, **Use Merkzeug iCloud templates** copies your current templates to 
 On Windows with iCloud Drive, this action becomes available after the public **Merkzeug** folder has synchronized. Open Merkzeug on an Apple device first. Custom iCloud Drive locations registered with Windows are supported, as are the usual user-profile locations. Use **Change…** to select a synchronized templates folder directly if discovery is unavailable. Linux can use any mounted synchronized folder through **Change…**.
 
 All devices must use the same iCloud account. Allow synchronization to finish before editing templates on another device. iOS uses the same folder and vault assignment.
+
+### Meeting-note filenames
+
+A meeting note uses its first heading as the filename. Case, spaces and accents are preserved; characters forbidden in cross-platform filenames are replaced, and a suffix resolves collisions without replacing another note or image folder. After saving a changed heading, Merkzeug renames the note and its companion `.assets/` folder. Calendar identity stays in frontmatter: choosing the same event again reopens its existing note in the selected folder, including notes created with the older `meeting-…` names. Those older names update when you edit and save the heading. Keep the calendar identity fields to preserve this association.

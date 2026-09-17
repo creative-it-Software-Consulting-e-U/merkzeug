@@ -462,3 +462,7 @@ In den Einstellungen kopiert **Merkzeug-iCloud-Vorlagen verwenden** die aktuelle
 Unter Windows mit iCloud Drive wird die Aktion verfügbar, sobald der öffentliche Ordner **Merkzeug** synchronisiert wurde. Öffne Merkzeug dafür zuerst auf einem Apple-Gerät. Berücksichtigt werden in Windows registrierte abweichende iCloud-Speicherorte sowie die üblichen Ordner im Benutzerprofil. Über **Ändern…** kannst du einen synchronisierten Vorlagenordner auch direkt wählen. Linux kann über **Ändern…** jeden eingebundenen synchronisierten Ordner verwenden.
 
 Verwende auf allen Geräten denselben iCloud-Account und warte vor dem Bearbeiten auf einem anderen Gerät auf die Synchronisierung. iOS nutzt denselben Ordner und dieselbe Vault-Zuordnung.
+
+### Dateinamen von Meeting-Notizen
+
+Eine Meeting-Notiz verwendet ihre erste Überschrift als Dateinamen. Großschreibung, Leerzeichen und Umlaute bleiben erhalten; unzulässige Dateinamen-Zeichen werden ersetzt. Bei Namenskollisionen kommt ein Zusatz hinzu, ohne eine andere Notiz oder deren Bildordner zu überschreiben. Nach dem Speichern einer geänderten Überschrift benennt Merkzeug die Notiz und ihren `.assets/`-Ordner um. Die Kalenderzuordnung bleibt im Frontmatter: Derselbe Termin öffnet im gewählten Ordner seine vorhandene Notiz, auch bei älteren `meeting-…`-Namen. Diese Namen werden beim Bearbeiten und Speichern der Überschrift aktualisiert. Behalte die Kalender-Identitätsfelder für diese Zuordnung bei.

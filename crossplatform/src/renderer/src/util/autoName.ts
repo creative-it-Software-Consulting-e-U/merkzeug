@@ -21,7 +21,7 @@ export function slugifyTitle(title: string): string {
 
 /** Liefert den Text der Überschrift 1, wenn die Notiz mit ihr beginnt. */
 export function leadingH1(markdown: string): string | null {
-  const firstLine = markdown.split('\n').find((line) => line.trim() !== '')
+  const firstLine = markdown.replace(/^---\r?\n[\s\S]*?\r?\n---(?:\r?\n|$)/, '').split('\n').find((line) => line.trim() !== '')
   const match = firstLine?.match(/^#\s+(.+)/)
   return match ? match[1].trim() : null
 }

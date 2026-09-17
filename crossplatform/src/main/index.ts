@@ -1,5 +1,6 @@
 import { refreshTemplateCloud, templateCloudState, migrateTemplatesToCloud } from './templateCloud'
-import { writeFileSync as writeMeetingFile } from 'node:fs'
+import { writeFileSync as writeMeetingFile, readdirSync, readFileSync as readMeetingFile } from 'node:fs'
+import { ensureMeetingFile } from '@merkzeug/core/meetingFiles'
 import { loadCalendarSources, saveCalendarSources, fetchCalendarSource } from './calendarSources'
 import { readGuidance, appendGuidance } from './vaultGuidance.mjs'
 import type { InstructionName } from '@merkzeug/core/vaultGuidance'
@@ -188,12 +189,12 @@ function registerIpc(): void {
   ipcMain.handle('file:read', (event, path: string, options?: { peek?: boolean }) => filesFor(event.sender).read(path, options))
   ipcMain.handle('file:write', (event, path: string, content: string) => filesFor(event.sender).write(path, content))
   ipcMain.handle('file:createNote', (_e, dir: string) => createNote(dir))
-  ipcMain.handle('file:createMeeting', (_e, dir: string, name: string, content: string) => {
-    if (!/^meeting-[0-9a-f]{20}\.md$/.test(name)) throw new Error('Invalid meeting note name.')
-    const path = join(dir, name)
-    try { writeMeetingFile(path, content, { flag: 'wx' }) } catch (error) { if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error }
-    return path
-  })
+  ipcMain.handle('file:createMeeting', (_e, dir: string, _name: string, content: string) => ensureMeetingFile(dir, content, {
+    list: async folder => readdirSync(folder, { withFileTypes: true }).filter(entry => entry.isFile()).map(entry => join(folder, entry.name)),
+    read: async path => readMeetingFile(path, 'utf8'),
+    exists: async path => existsSync(path),
+    create: async (path, text) => { writeMeetingFile(path, text, { flag: 'wx' }) }
+  }))
   ipcMain.handle('file:createNoteFrom', (_e, dir: string, base: string, content: string) =>
     createNoteFrom(dir, base, content)
   )

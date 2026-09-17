@@ -116,11 +116,11 @@ export function autoRenameNote(path: string, base: string): string {
   if (basename(path, '.md') === base) return path
   let candidate = base
   let n = 2
-  while (existsSync(join(dir, `${candidate}.md`))) {
+  while (join(dir, `${candidate}.md`) !== path && (existsSync(join(dir, `${candidate}.md`)) || existsSync(join(dir, `${candidate}.assets`)))) {
     candidate = `${base}-${n}`
     n += 1
   }
-  return renamePath(path, `${candidate}.md`)
+  return join(dir, `${candidate}.md`) === path ? path : renamePath(path, `${candidate}.md`)
 }
 
 /** Ersetzt Verweise auf den alten Assets-Ordner in einer Notiz (auch URL-codiert). */

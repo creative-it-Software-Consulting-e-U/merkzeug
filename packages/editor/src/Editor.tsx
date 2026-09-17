@@ -232,8 +232,8 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       if (frontmatterRef.current + latestMarkdownRef.current === full) {
         dirtyRef.current = false
         onDirtyChange?.(false)
+        onSaved?.(full)
       }
-      onSaved?.(markdown)
     } catch (error) {
       setSaveError(String(error))
       if (String(error).includes('CONFLICT')) {
@@ -257,7 +257,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       lastSavedRef.current = latestMarkdownRef.current
       lastDiskRef.current = full
       onDirtyChange?.(false)
-      onSaved?.(latestMarkdownRef.current)
+      onSaved?.(full)
     }
   }, [host, doSave, onDirtyChange, onSaved, captureCurrentMarkdown])
 

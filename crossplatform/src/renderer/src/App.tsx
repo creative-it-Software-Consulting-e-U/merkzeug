@@ -1,3 +1,4 @@
+import { meetingIdentity, firstHeading, headingFileBase } from '@merkzeug/core/meetingFiles'
 import { GuidedTour } from '@merkzeug/editor/GuidedTour'
 import { VaultGuidance, type GuidanceHost } from '@merkzeug/editor/VaultGuidance'
 import { LiveTemplate } from './components/LiveTemplate'
@@ -545,10 +546,12 @@ export function App(): React.JSX.Element {
   const handleEditorSaved = useCallback(
     (tabId: string, markdown: string): void => {
       const tab = panesRef.current.flatMap((p) => p.tabs).find((t) => t.id === tabId)
-      if (!tab || tab.kind !== 'note' || !tab.autoName) return
-      const title = leadingH1(markdown)
+      if (!tab || tab.kind !== 'note') return
+      const meeting = meetingIdentity(markdown) !== null
+      if (!meeting && !tab.autoName) return
+      const title = meeting ? firstHeading(markdown) : leadingH1(markdown)
       if (!title) return
-      const slug = slugifyTitle(title)
+      const slug = meeting ? headingFileBase(title) : slugifyTitle(title)
       if (!slug || slug === basename(tab.path, '.md')) return
       const oldPath = tab.path
       void (async () => {

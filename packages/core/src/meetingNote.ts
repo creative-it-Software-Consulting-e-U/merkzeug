@@ -1,3 +1,4 @@
+import { headingFileBase } from './meetingFiles'
 import { t as translate, getLocale } from '@merkzeug/core/i18n'
 /** Erzeugt Dateiname und Inhalt einer Meeting-Notiz aus einem Kalendertermin. */
 
@@ -102,10 +103,7 @@ export function meetingNoteContent(ev: CalendarEvent): string {
   return lines.join('\n')
 }
 
-/** Stable name for repeated imports/selections; presentation uses the note's title. */
+/** The calendar identity is retained in frontmatter, not hidden in the filename. */
 export async function meetingNoteFileName(event: CalendarEvent): Promise<string> {
-  const bytes = new TextEncoder().encode(event.identity ?? `${event.id}\n${event.start}`)
-  const digest = await globalThis.crypto.subtle.digest('SHA-256', bytes)
-  const id = Array.from(new Uint8Array(digest)).map(v => v.toString(16).padStart(2, '0')).join('').slice(0, 20)
-  return `meeting-${id}.md`
+  return `${headingFileBase(event.title)}.md`
 }
