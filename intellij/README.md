@@ -8,7 +8,7 @@ The bundled plugin description for the IDE and Marketplace is maintained in [`pl
 
 ## Build
 
-The SDK version and build are pinned in `sdk.json`. The current target is IDEA 2026.2.2, build 262.10315.125. Other SDKs are rejected until compatibility is reviewed.
+The SDK version and build are pinned in `sdk.json`. The baseline is IDEA 2026.2.2, build 262.10315.125. IDEA 2026.2.3, build 262.10968.63, is also verified by the native smoke suite and listed in `compatibleSdks`. Other SDKs are rejected until compatibility is reviewed.
 
 ```sh
 # From the repository root:

@@ -36,7 +36,7 @@
     </ul>
     <p>Available as an additional editor tab for local .md files. The JetBrains Markdown plugin is optional.</p>
     <p>Proprietary software, free for private and internal business use under the Merkzeug End User License Agreement.</p>
-    <p>Preview for IntelliJ IDEA 2026.2.2 (build 262.10315.125), with JCEF enabled.</p>
+    <p>Preview for IntelliJ IDEA 2026.2.2–2026.2.3 (builds 262.10315.125–262.10968.63), with JCEF enabled.</p>
   ]]></description>
   <change-notes><![CDATA[
     <p>First Marketplace preview.</p>
@@ -47,7 +47,7 @@
       <li>Offline template styling prompts and explicit selection of coding-agent guidance files.</li>
     </ul>
   ]]></change-notes>
-  <idea-version since-build="262.10315.125" until-build="262.10315.125"/>
+  <idea-version since-build="262.10315.125" until-build="262.10968.63"/>
   <depends>com.intellij.modules.platform</depends>
   <depends>com.intellij.modules.jcef</depends>
   <extensions defaultExtensionNs="com.intellij">

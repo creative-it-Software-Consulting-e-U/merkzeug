@@ -23,7 +23,8 @@ pin = json.loads((ROOT / 'intellij/sdk.json').read_text())
 info_path = IDE / 'product-info.json'
 if not info_path.exists(): info_path = IDE / 'Resources/product-info.json'
 info = json.loads(info_path.read_text())
-if info['version'] != pin['version'] or info['buildNumber'] != pin['build']:
+supported = [pin, *pin.get('compatibleSdks', [])]
+if not any(info['version'] == sdk['version'] and info['buildNumber'] == sdk['build'] for sdk in supported):
     raise SystemExit('IDEA_HOME must match intellij/sdk.json; update and verify compatibility before changing SDKs')
 subprocess.run(['node', str(ROOT / 'scripts/third-party-notices.mjs')], cwd=ROOT, check=True)
 subprocess.run(['npm.cmd' if os.name == 'nt' else 'npm', 'run', 'build', '-w', 'merkzeug-intellij-web'], cwd=ROOT, check=True, env=dict(os.environ, **({'VITE_MERKZEUG_TOURS': 'disabled'} if MARKETPLACE else {})))
