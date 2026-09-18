@@ -35,6 +35,19 @@ Suchen (**⌘F / Ctrl+F**), Rückgängig und Wiederherstellen bleiben über Tast
 
 Ändert ein anderer Editor das Dokument, lädt Merkzeug es neu, sofern keine lokalen Änderungen vorliegen. Andernfalls kannst du im Konflikthinweis die andere Version laden oder bewusst deine eigenen Änderungen behalten.
 
+## Lese- und Navigationsmodus (geplant)
+
+Aktuell richtet sich der Modus nach den Schreibrechten der Datei; ein manueller Schalter Lesen/Bearbeiten ist noch nicht verfügbar. Das folgende Verhalten ist für diesen Schalter vorgesehen.
+
+Jeder Merkzeug-Editor bleibt seiner IntelliJ-Datei zugeordnet. Ein interner Link wird die Zieldatei über IntelliJ in einem eigenen Editor-Tab öffnen oder ihren bereits offenen Tab aktivieren. Der Inhalt des ursprünglichen Editors wird dabei nicht durch eine andere Datei ersetzt.
+
+- Der Schalter Lesen/Bearbeiten wird für den aktuellen Tab gelten. Schreibgeschützte Dateien bleiben schreibgeschützt.
+- Im Lesemodus wird ein einfacher Klick einem Link folgen.
+- Im Editiermodus wird der Linktext bearbeitbar sein; ⌘Klick unter macOS beziehungsweise Strg+Klick unter Windows/Linux wird den Link öffnen.
+- Überschriftenlinks werden zur entsprechenden Überschrift im Zieldokument springen. Dokumentübergreifende Überschriftensprünge sind aktuell noch unvollständig.
+- Navigationssprünge werden in IntelliJs Verlauf für **Navigate → Back/Forward** integriert, sodass du zur ursprünglichen Stelle zurückkehren kannst.
+
+
 ## Bilder und zugehörige Ordner
 
 Bilder, die du in `Plan.md` einfügst oder hineinkopierst, werden in einem benachbarten Ordner `Plan.assets/` gespeichert. Markdown verweist relativ darauf, zum Beispiel `![Diagramm](Plan.assets/image-….png)`. Desktop- und iOS-Version verwenden dasselbe Muster. Nimm beim Committen oder Teilen sowohl die Notiz als auch ihren Bildordner mit.

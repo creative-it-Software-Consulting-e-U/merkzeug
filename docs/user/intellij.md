@@ -32,6 +32,19 @@ Selecting a whole table cell highlights the cell; click inside its text to place
 
 If another editor changes the document, Merkzeug reloads it when there are no local edits. Otherwise a conflict banner lets you reload the other version or deliberately keep your own version.
 
+## Reading and navigation modes (planned)
+
+The current plugin follows the file's write permissions; a manual Read/Edit switch is not available yet. The following describes the planned behavior.
+
+Each Merkzeug editor stays associated with its IntelliJ file. Following an internal link will ask IntelliJ to open the destination in its own editor tab or activate its already open tab; it will not replace the source editor's document.
+
+- The Read/Edit switch will apply to the current tab. A write-protected file will remain read-only.
+- In Read mode, a normal click will follow a link.
+- In Edit mode, link text will be editable; ⌘-click on macOS or Ctrl-click on Windows/Linux will follow the link.
+- Heading links will jump to the corresponding heading in the destination document. Cross-document heading navigation is currently incomplete.
+- Navigation jumps will integrate with IntelliJ's **Navigate → Back/Forward** history so you can return to the source location.
+
+
 ## Images and companion folders
 
 Images inserted through the image picker or pasted into `Plan.md` are written as separate image files in a sibling folder named `Plan.assets/`. Markdown uses relative references such as `![Diagram](Plan.assets/image-….png)`. The same `Note.md` / `Note.assets/` layout is used by the desktop and iOS editions. Include both the note and its companion folder when committing to Git or sharing the note.

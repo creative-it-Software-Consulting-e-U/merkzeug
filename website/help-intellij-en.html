@@ -20,7 +20,18 @@
 <p>The built-in Markdown editor remains available. Marketplace installations receive updates through IntelliJ’s plugin manager; update a beta ZIP through the same disk-install procedure. To remove Merkzeug, uninstall it in Settings → Plugins and restart when requested. Notes remain ordinary Markdown files.</p>
 <h2 id="editing">Editing</h2>
 <p>Use the shared visual editor, slash menu, formatting tools, frontmatter panel and Mermaid diagrams. The compact toolbar provides paragraph styles, bold, italic, strikethrough, inline code, lists, quotes, code blocks, links, images, tables and dividers. Search (⌘F / Ctrl+F), undo and redo remain available through keyboard shortcuts without duplicate toolbar buttons. Changes update IntelliJ&#39;s document; IntelliJ owns disk saving, Git integration and undo history. <strong>⌘S / Ctrl+S</strong> explicitly saves.</p>
+<p>Selecting a whole table cell highlights the cell; click inside its text to place the caret and edit. Text and links retain their colors while the cell is selected, including when using PDF-template styles.</p>
 <p>If another editor changes the document, Merkzeug reloads it when there are no local edits. Otherwise a conflict banner lets you reload the other version or deliberately keep your own version.</p>
+<h2 id="reading-and-navigation-modes-planned">Reading and navigation modes (planned)</h2>
+<p>The current plugin follows the file&#39;s write permissions; a manual Read/Edit switch is not available yet. The following describes the planned behavior.</p>
+<p>Each Merkzeug editor stays associated with its IntelliJ file. Following an internal link will ask IntelliJ to open the destination in its own editor tab or activate its already open tab; it will not replace the source editor&#39;s document.</p>
+<ul>
+<li>The Read/Edit switch will apply to the current tab. A write-protected file will remain read-only.</li>
+<li>In Read mode, a normal click will follow a link.</li>
+<li>In Edit mode, link text will be editable; ⌘-click on macOS or Ctrl-click on Windows/Linux will follow the link.</li>
+<li>Heading links will jump to the corresponding heading in the destination document. Cross-document heading navigation is currently incomplete.</li>
+<li>Navigation jumps will integrate with IntelliJ&#39;s <strong>Navigate → Back/Forward</strong> history so you can return to the source location.</li>
+</ul>
 <h2 id="images-and-companion-folders">Images and companion folders</h2>
 <p>Images inserted through the image picker or pasted into <code>Plan.md</code> are written as separate image files in a sibling folder named <code>Plan.assets/</code>. Markdown uses relative references such as <code>![Diagram](Plan.assets/image-….png)</code>. The same <code>Note.md</code> / <code>Note.assets/</code> layout is used by the desktop and iOS editions. Include both the note and its companion folder when committing to Git or sharing the note.</p>
 <p>Existing shared <code>assets/</code> links remain supported. Merkzeug does not migrate those images into a companion folder or infer that the shared folder belongs to one note.</p>

@@ -23,6 +23,16 @@
 <p>Die Werkzeugleiste bietet Absatzformate, Fett, Kursiv, Durchstreichen, Inline-Code, Listen, Zitate, Codeblöcke, Links, Bilder, Tabellen und Trennlinien. Außerdem stehen Slash-Menü, Frontmatter und Mermaid-Diagramme zur Verfügung. Mermaid-Code lässt sich direkt am Diagramm bearbeiten.</p>
 <p>Suchen (<strong>⌘F / Ctrl+F</strong>), Rückgängig und Wiederherstellen bleiben über Tastenkürzel erreichbar. IntelliJ verwaltet Dokument, Speichern, Git und Rückgängig-Verlauf. <strong>⌘S / Ctrl+S</strong> speichert ausdrücklich. Neue Dateien erzeugst du über IntelliJs Projektwerkzeuge; Kalender und Meeting-Notizen gehören zu den eigenständigen Apps.</p>
 <p>Ändert ein anderer Editor das Dokument, lädt Merkzeug es neu, sofern keine lokalen Änderungen vorliegen. Andernfalls kannst du im Konflikthinweis die andere Version laden oder bewusst deine eigenen Änderungen behalten.</p>
+<h2 id="lese-und-navigationsmodus-geplant">Lese- und Navigationsmodus (geplant)</h2>
+<p>Aktuell richtet sich der Modus nach den Schreibrechten der Datei; ein manueller Schalter Lesen/Bearbeiten ist noch nicht verfügbar. Das folgende Verhalten ist für diesen Schalter vorgesehen.</p>
+<p>Jeder Merkzeug-Editor bleibt seiner IntelliJ-Datei zugeordnet. Ein interner Link wird die Zieldatei über IntelliJ in einem eigenen Editor-Tab öffnen oder ihren bereits offenen Tab aktivieren. Der Inhalt des ursprünglichen Editors wird dabei nicht durch eine andere Datei ersetzt.</p>
+<ul>
+<li>Der Schalter Lesen/Bearbeiten wird für den aktuellen Tab gelten. Schreibgeschützte Dateien bleiben schreibgeschützt.</li>
+<li>Im Lesemodus wird ein einfacher Klick einem Link folgen.</li>
+<li>Im Editiermodus wird der Linktext bearbeitbar sein; ⌘Klick unter macOS beziehungsweise Strg+Klick unter Windows/Linux wird den Link öffnen.</li>
+<li>Überschriftenlinks werden zur entsprechenden Überschrift im Zieldokument springen. Dokumentübergreifende Überschriftensprünge sind aktuell noch unvollständig.</li>
+<li>Navigationssprünge werden in IntelliJs Verlauf für <strong>Navigate → Back/Forward</strong> integriert, sodass du zur ursprünglichen Stelle zurückkehren kannst.</li>
+</ul>
 <h2 id="bilder-und-zugehörige-ordner">Bilder und zugehörige Ordner</h2>
 <p>Bilder, die du in <code>Plan.md</code> einfügst oder hineinkopierst, werden in einem benachbarten Ordner <code>Plan.assets/</code> gespeichert. Markdown verweist relativ darauf, zum Beispiel <code>![Diagramm](Plan.assets/image-….png)</code>. Desktop- und iOS-Version verwenden dasselbe Muster. Nimm beim Committen oder Teilen sowohl die Notiz als auch ihren Bildordner mit.</p>
 <p>Vorhandene Verweise auf gemeinsame <code>assets/</code>-Ordner bleiben gültig. Diese Ordner werden keiner einzelnen Notiz zugeordnet und nicht automatisch migriert.</p>
