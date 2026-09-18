@@ -99,7 +99,7 @@ public final class SmokeStarter implements ApplicationStarter {
                     var instructionFile = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(test.resolve(name));
                     com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider.allowWriting(List.of(instructionFile));
                 }
-                Files.writeString(test.resolve("stil.css"), ".pdf-content .milkdown .ProseMirror p { font-size: 31px; } header { font-size: 99px; }");
+                Files.writeString(test.resolve("stil.css"), ".pdf-content .milkdown .ProseMirror p { font-size: 31px; color: #232323; } header { font-size: 99px; }");
                 com.intellij.ide.util.PropertiesComponent.getInstance(project).setValue("merkzeug.templateDirectory", test.toString());
                 MerkzeugEditor editor = new MerkzeugEditor(project, file);
                 var scopeMethod = MerkzeugEditor.class.getDeclaredMethod("chooseExportScope", JsonObject.class);
@@ -174,8 +174,26 @@ public final class SmokeStarter implements ApplicationStarter {
                                   if (!document.querySelector('.editor-extras')) { document.querySelector('button[aria-label="Merkzeug"]').click(); return; }
                                   const toggle = document.querySelector('.template-preview-toggle input');
                                   const paragraph = document.querySelector('.editor-root p');
+                                  const checkCellSelection = () => {
+                                    const cell = document.querySelector('.editor-root td');
+                                    if (!cell) throw new Error('Missing table selection fixture');
+                                    const text = cell.querySelector('p') || cell;
+                                    cell.classList.add('selectedCell');
+                                    const range = document.createRange(); range.selectNodeContents(text);
+                                    const selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range);
+                                    const normal = getComputedStyle(text).color;
+                                    const selected = getComputedStyle(text, '::selection');
+                                    if (selected.color !== normal || selected.backgroundColor !== 'rgba(0, 0, 0, 0)') throw new Error('Unreadable cell selection: ' + selected.color + ' vs ' + normal);
+                                    for (const link of cell.querySelectorAll('a')) {
+                                      if (getComputedStyle(link, '::selection').color !== getComputedStyle(link).color) throw new Error('Selected link lost its color');
+                                    }
+                                    selection.removeAllRanges(); cell.classList.remove('selectedCell');
+                                    console.log('MERKZEUG_TABLE_SELECTION_PASSED ' + normal);
+                                  };
+
                                   if (!window.previewTestStage) {
                                     const svg = document.querySelector('.mermaid-preview svg'); if (!svg) return;
+                                    checkCellSelection();
                                     window.__merkzeugTheme({ dark: true, choice: 'system' });
                                     window.previewOriginalSvg = svg.id;
                                     window.previewTestStage = -1; return;
@@ -196,6 +214,7 @@ public final class SmokeStarter implements ApplicationStarter {
                                     let backdrop = svg;
                                     while (backdrop && ['rgba(0, 0, 0, 0)', 'transparent'].includes(getComputedStyle(backdrop).backgroundColor)) backdrop = backdrop.parentElement;
                                     if (!backdrop || getComputedStyle(backdrop).backgroundColor !== 'rgb(255, 255, 255)') throw new Error('Mermaid is not rendered on the light PDF paper surface');
+                                    checkCellSelection();
                                     window.previewLightSvg = svg.id;
                                     toggle.click(); window.previewTestStage = 2; return;
                                   }
@@ -205,6 +224,7 @@ public final class SmokeStarter implements ApplicationStarter {
                                     const svg = document.querySelector('.mermaid-preview svg');
                                     if (!svg || svg.id === window.previewLightSvg) return;
                                     if (getComputedStyle(svg.querySelector('.node rect')).fill !== window.previewDarkFill) throw new Error('Mermaid did not restore the IDE theme');
+                                    checkCellSelection();
                                     window.previewTestStage = 3; console.log('MERKZEUG_TEMPLATE_PREVIEW_PASSED');
                                   }
                                   const actions = [...document.querySelectorAll('.editor-extra-actions > button, .editor-extra-actions .tour-tools > button')];

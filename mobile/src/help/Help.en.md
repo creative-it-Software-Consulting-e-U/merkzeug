@@ -43,6 +43,8 @@ accidental changes. The pencil **✎** switches to edit mode:
   `NoteName.assets/` folder next to `NoteName.md` when inserted.
 - Mermaid code blocks show a diagram preview.
 
+Selecting a whole table cell highlights the cell; click inside its text to place the caret and edit. Text and links retain their colors while the cell is selected, including when using PDF-template styles.
+
 ## Creating, renaming, deleting
 
 - **＋** in the folder view creates a new note or folder. New notes open

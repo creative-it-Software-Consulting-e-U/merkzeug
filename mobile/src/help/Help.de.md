@@ -77,6 +77,8 @@ Bearbeitungsmodus:
 
 Desktop, iOS und IntelliJ verwenden denselben Merkzeug-Editor. Frontmatter bleibt beim Bearbeiten erhalten und kann im Editor geöffnet werden. Scheitert das Speichern, bleibt die Änderung als ungespeichert markiert. Bei gleichzeitigen externen Änderungen kannst du die externe Fassung neu laden oder ausdrücklich deine eigene Version behalten.
 
+Bei Auswahl einer ganzen Tabellenzelle wird die Zelle hervorgehoben. Klicke in den Text, um den Cursor zu setzen und zu bearbeiten. Text und Links behalten bei der Zellauswahl ihre Farben, auch mit PDF-Vorlagenstilen.
+
 
 ## Support und Rückmeldungen
 

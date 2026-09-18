@@ -166,6 +166,8 @@ Der Editor zeigt die Notiz formatiert an; gespeichert wird Markdown.
   Vorlagen-Zeile ein. Eigene Felder darüber hinaus werden gespeichert, aber
   nicht ausgewertet.
 
+Bei Auswahl einer ganzen Tabellenzelle wird die Zelle hervorgehoben. Klicke in den Text, um den Cursor zu setzen und zu bearbeiten. Text und Links behalten bei der Zellauswahl ihre Farben, auch mit PDF-Vorlagenstilen.
+
 ## 5. Links
 
 - **⌘K** öffnet den Link-Dialog zum Einfügen eines formatierten Links; bestehende

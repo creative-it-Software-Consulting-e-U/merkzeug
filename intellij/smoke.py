@@ -35,7 +35,7 @@ flowchart LR
 
 | Plattform | Editor | PDF |
 | --- | --- | --- |
-| Desktop | Gemeinsam | Electron |
+| [Desktop](anhang.md) | Gemeinsam | Electron |
 | IntelliJ | Gemeinsam | JCEF |
 
 [Zum Anhang](anhang.md)

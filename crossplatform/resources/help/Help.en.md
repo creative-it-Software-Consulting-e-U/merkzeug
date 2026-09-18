@@ -156,6 +156,8 @@ The editor shows the note formatted; what is saved is Markdown.
   `pdf-linked-title:`, `pdf-exclude:`, `pdf-toc:` and `language:`) and inserts a template line on
   click. Any other fields are preserved but not interpreted.
 
+Selecting a whole table cell highlights the cell; click inside its text to place the caret and edit. Text and links retain their colors while the cell is selected, including when using PDF-template styles.
+
 ## 5. Links
 
 - **⌘K** opens the link dialog for inserting a formatted link; edit existing
