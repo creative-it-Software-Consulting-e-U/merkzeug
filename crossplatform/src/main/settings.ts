@@ -2,7 +2,15 @@ import { app } from 'electron'
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 
+export interface SavedWindow {
+  vault: string | null
+  bounds: { x: number; y: number; width: number; height: number }
+  maximized: boolean
+  fullScreen: boolean
+}
+
 interface Settings {
+  windows?: SavedWindow[]
   lastVault?: string
   recentVaults: string[]
   folderBookmarks?: Record<string, string>
@@ -55,5 +63,18 @@ export function getStoredTemplatesRoot(): string | undefined {
 
 export function setStoredTemplatesRoot(path: string): void {
   loadSettings().templatesRoot = path
+  saveSettings()
+}
+
+export function getSavedWindows(): SavedWindow[] {
+  const windows = loadSettings().windows
+  if (!Array.isArray(windows)) return []
+  return windows.filter(w => w && (w.vault === null || typeof w.vault === 'string') &&
+    w.bounds && ['x', 'y', 'width', 'height'].every(k => Number.isFinite(w.bounds[k as keyof SavedWindow['bounds']])) &&
+    w.bounds.width >= 720 && w.bounds.height >= 480)
+}
+
+export function saveWindows(windows: SavedWindow[]): void {
+  loadSettings().windows = windows
   saveSettings()
 }

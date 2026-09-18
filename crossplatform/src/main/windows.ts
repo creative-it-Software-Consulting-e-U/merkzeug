@@ -1,5 +1,6 @@
 import { t as translate } from '@merkzeug/core/i18n'
-import { BrowserWindow, shell, nativeTheme } from 'electron'
+import { app, BrowserWindow, shell, nativeTheme, screen } from 'electron'
+import { saveWindows, type SavedWindow } from './settings'
 import { join } from 'node:path'
 import { is } from '@electron-toolkit/utils'
 
@@ -10,17 +11,45 @@ export function getWindowVault(winId: number): string | null {
   return windowVaults.get(winId) ?? null
 }
 
+let quitting = false
+let saveTimer: ReturnType<typeof setTimeout> | undefined
+function saveWindowSession(): void {
+  if (quitting || process.env.MERKZEUG_VAULT || process.env.MERKZEUG_SCREENSHOT) return
+  saveWindows([...windowVaults].flatMap(([id, vault]) => {
+    const win = BrowserWindow.fromId(id)
+    return !win || win.isDestroyed() ? [] : [{ vault, bounds: win.getNormalBounds(), maximized: win.isMaximized(), fullScreen: win.isFullScreen() }]
+  }))
+}
+function scheduleSessionSave(): void {
+  clearTimeout(saveTimer)
+  saveTimer = setTimeout(saveWindowSession, 200)
+}
+app.on('before-quit', () => {
+  clearTimeout(saveTimer)
+  saveWindowSession()
+  quitting = true // Closing windows during Quit must not erase the saved session.
+})
+
 export function setWindowVault(winId: number, vault: string | null): void {
   windowVaults.set(winId, vault)
+  scheduleSessionSave()
 }
 
-export function createMainWindow(vault: string | null): BrowserWindow {
+export function createMainWindow(vault: string | null, saved?: SavedWindow): BrowserWindow {
+  // Rehome windows from disconnected displays, keeping them reachable.
+  const area = saved ? screen.getDisplayMatching(saved.bounds).workArea : undefined
+  const bounds = saved && area ? {
+    width: Math.min(saved.bounds.width, area.width), height: Math.min(saved.bounds.height, area.height),
+    x: Math.max(area.x, Math.min(saved.bounds.x, area.x + area.width - Math.min(saved.bounds.width, area.width))),
+    y: Math.max(area.y, Math.min(saved.bounds.y, area.y + area.height - Math.min(saved.bounds.height, area.height)))
+  } : {}
   const win = new BrowserWindow({
     show: false,
     backgroundColor: nativeTheme.shouldUseDarkColors ? '#1e1e1e' : '#ffffff',
     enableLargerThanScreen: Boolean(process.env.MERKZEUG_SCREENSHOT && process.env.MERKZEUG_SCREENSHOT_PROFILE),
     width: 1280,
     height: 850,
+    ...bounds,
     minWidth: 720,
     minHeight: 480,
     title: 'Merkzeug',
@@ -32,9 +61,20 @@ export function createMainWindow(vault: string | null): BrowserWindow {
     }
   })
 
-  win.once('ready-to-show', () => win.show())
+  win.once('ready-to-show', () => {
+    if (saved?.maximized) win.maximize()
+    win.show()
+    if (saved?.fullScreen) win.setFullScreen(true)
+  })
   windowVaults.set(win.id, vault)
-  win.once('closed', () => windowVaults.delete(win.id))
+  win.once('closed', () => { windowVaults.delete(win.id); scheduleSessionSave() })
+  win.on('move', scheduleSessionSave)
+  win.on('resize', scheduleSessionSave)
+  win.on('maximize', scheduleSessionSave)
+  win.on('unmaximize', scheduleSessionSave)
+  win.on('enter-full-screen', scheduleSessionSave)
+  win.on('leave-full-screen', scheduleSessionSave)
+  scheduleSessionSave()
 
   // Zurück-/Vorwärts-Maustasten und Touchpad-Gesten unter Windows
   win.on('app-command', (_e, cmd) => {

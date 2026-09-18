@@ -29,6 +29,7 @@ import { gitCommitPush, gitPull, gitPush, gitStatus, retryGit } from './git'
 import {
   addRecentVault,
   getLastVault,
+  getSavedWindows,
   getRecentVaults,
   setStoredTemplatesRoot
 } from './settings'
@@ -143,10 +144,6 @@ function registerIpc(): void {
     let vault = getWindowVault(win.id)
     if (!vault && process.env.MERKZEUG_VAULT && existsSync(process.env.MERKZEUG_VAULT)) {
       vault = process.env.MERKZEUG_VAULT
-    }
-    if (!vault) {
-      const last = getLastVault()
-      if (last && existsSync(last)) vault = last
     }
     if (vault) {
       // Vault aus der Umgebung (Debug-/Testläufe) nicht in den Einstellungen speichern
@@ -340,7 +337,13 @@ app.whenReady().then(async () => {
     process.env.MERKZEUG_VAULT && existsSync(process.env.MERKZEUG_VAULT)
       ? process.env.MERKZEUG_VAULT
       : null
-  const mainWin = createMainWindow(envVault)
+  const session = envVault || process.env.MERKZEUG_SCREENSHOT ? [] : getSavedWindows()
+    .filter(w => !w.vault || existsSync(w.vault))
+  const lastVault = getLastVault()
+  const mainWin = session.length
+    ? createMainWindow(session[0].vault, session[0])
+    : createMainWindow(envVault ?? (lastVault && existsSync(lastVault) ? lastVault : null))
+  for (const saved of session.slice(1)) createMainWindow(saved.vault, saved)
 
   // Debug-Hook: Screenshot aufnehmen und beenden (MERKZEUG_SCREENSHOT=/pfad.png).
   // MERKZEUG_CLICK="Schritt1,Schritt2": "menu:<aktion>" schickt eine Menü-Aktion,
@@ -438,7 +441,10 @@ app.whenReady().then(async () => {
   }
 
   app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createMainWindow(null)
+    if (BrowserWindow.getAllWindows().length === 0) {
+      const last = getLastVault()
+      createMainWindow(last && existsSync(last) ? last : null)
+    }
   })
 })
 

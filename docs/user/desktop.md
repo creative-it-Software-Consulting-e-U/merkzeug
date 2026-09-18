@@ -26,6 +26,10 @@ For an update, quit Merkzeug and install the newer version. Notes live in your v
 
 Use **File → Open Vault…** to switch folders, or **Recent Vaults** to reopen one. Notes can be organized in subfolders. Right-click an item to rename it, create items or move it to the trash.
 
+## Restoring windows
+
+Quitting Merkzeug preserves all open vault windows for the next launch, including their bounds and fullscreen/maximized state. Individually closed windows are not restored. Missing vault folders are skipped, and windows from disconnected displays are moved onto an available display. Settings, help and preview windows are not part of the restored session.
+
 ## Reading, navigation and Git
 
 Navigation mode makes the editor read-only and follows note links in the current tab. Back/forward navigation restores your reading position. Tabs, two panes and separate windows are available on desktop.

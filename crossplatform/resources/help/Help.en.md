@@ -461,3 +461,5 @@ Renaming a note or folder through Merkzeug updates local Markdown links to it in
 Inline links, images and reference-style link definitions are supported, including URL-encoded names and `#section` suffixes. Link labels and titles stay unchanged. Section suffixes are preserved, not recalculated when a heading changes. Code examples, frontmatter, external URLs and ordinary prose are not rewritten. HTML links and wiki-link syntax are not included.
 
 Only regular Markdown files inside the vault are considered; hidden/ignored folders and symbolic links are not followed. Renames outside Merkzeug are not detected as refactoring. Destination collisions or stale file contents stop the operation. Open documents reload when clean; unsaved conflicting edits are preserved for review rather than silently overwritten.
+
+When you quit Merkzeug, all open vault windows are restored on the next launch, including their size, position and fullscreen/maximized state. Windows closed individually before quitting stay closed. Missing vault folders are skipped; windows from disconnected displays are moved onto an available display.
