@@ -206,6 +206,7 @@ export function PaneView(props: PaneProps): React.JSX.Element {
           </button>
           <button
             className={`toolbar-btn icon${activeTab.navMode ? ' toggled' : ''}`}
+            data-tour="reading-mode"
             data-tip={
               activeTab.navMode
                 ? translate("Exit navigation mode (⌘R)")

@@ -452,6 +452,7 @@ export default function App(): React.JSX.Element {
         {isNote ? (
           <button
             className={`bar-btn${editMode ? ' active' : ''}`}
+            data-tour="reading-mode"
             onClick={() => setEditMode((v) => !v)}
             title={editMode ? translate("Read only") : translate("Edit")}
           >

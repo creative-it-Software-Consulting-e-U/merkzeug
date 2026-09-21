@@ -6,6 +6,7 @@ const steps = {
   desktop: [
     ['.sidebar, .welcome', 'Your vault', 'Open a folder of Markdown notes. Your files stay in that folder and can be opened with other tools.'],
     ['.editor-host', 'Write and connect ideas', 'Edit text directly, type / for blocks, paste images, and follow links between notes. Images belong to a folder named after the note, such as Plan.assets.'],
+    ['.active-pane [data-tour="reading-mode"]', 'Read and navigate', "Open a note to find the book button in its toolbar. Turn on navigation mode to read without changing text and follow links in the same tab. Use Back and Forward to retrace your steps; turn navigation mode off to edit again."],
     ['.frontmatter-bar', 'Document metadata', 'Use frontmatter for titles, tags, meeting participants and export options.'],
     ['.git-bar', 'Git integration', 'With Git installed and a repository open, review changes and explicitly pull, commit or push. Merkzeug never treats opening a Git client as successful synchronization.'],
     ['.live-template-bar', 'PDF export and templates', 'Export with File → Export PDF. Choose a template in Settings and optionally preview its formatting while editing. Linked documents, diagrams and images can be included.'],
@@ -14,6 +15,7 @@ const steps = {
   ios: [
     ['.topbar, .start-screen', 'Your vault', 'Choose a folder from Files, including a repository provided by Working Copy.'],
     ['.editor-host', 'Write and connect ideas', 'Switch to editing, type / for blocks, paste images and link notes. Images are saved beside the note in its .assets folder.'],
+    ['[data-tour="reading-mode"]', 'Read and navigate', "Existing notes open in read mode. Open a note to find the pencil button at the top: tap it to edit, and tap it again to return to reading. Follow links between notes and use Back and Forward to navigate. New notes start in edit mode."],
     ['.working-copy', 'Working Copy actions', 'Configure the exact repository and callback key for this vault. Pull, Commit and Push open Working Copy; the result is confirmed by its callback.'],
     ['.appearance-bar', 'Meeting notes', 'Create notes from your iOS calendars or ICS subscriptions. Calendar access is requested only when you open meeting notes.'],
     ['.theme-select', 'Make it yours', 'Choose System, Light or Dark. PDF export is available in the desktop and IntelliJ editions.']

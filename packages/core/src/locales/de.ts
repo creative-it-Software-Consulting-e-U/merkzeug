@@ -415,5 +415,8 @@ export const de: Readonly<Record<string, string>> = {
   "Vault paths can be relative to the note (“folder/note.md”), relative to the vault root (“/projects/plan.md”), or absolute. Folder links open the folder overview.": "Vault-Pfade können relativ zur Notiz, relativ zur Vault-Wurzel oder absolut sein. Links auf Ordner öffnen die Ordnerübersicht.",
   "Choose your vault folder, for example a repository provided by Working Copy.": "Wähle deinen Vault-Ordner, beispielsweise ein Repository von Working Copy.",
   "title: My title\ntags: [example]": "title: Mein Titel\ntags: [beispiel]",
-  "Help language": "Sprache der Hilfe"
+  "Help language": "Sprache der Hilfe",
+  "Read and navigate": "Lesen und navigieren",
+  "Open a note to find the book button in its toolbar. Turn on navigation mode to read without changing text and follow links in the same tab. Use Back and Forward to retrace your steps; turn navigation mode off to edit again.": "Öffne eine Notiz, um den Buch-Schalter in ihrer Werkzeugleiste zu sehen. Aktiviere den Navigationsmodus, um ohne Textänderungen zu lesen und Links im selben Tab zu folgen. Mit Zurück und Vorwärts navigierst du durch den Verlauf; zum Bearbeiten schaltest du den Navigationsmodus wieder aus.",
+  "Existing notes open in read mode. Open a note to find the pencil button at the top: tap it to edit, and tap it again to return to reading. Follow links between notes and use Back and Forward to navigate. New notes start in edit mode.": "Bestehende Notizen öffnen sich im Lesemodus. Öffne eine Notiz, um oben den Stift-Schalter zu sehen: Tippe darauf zum Bearbeiten und erneut, um zum Lesen zurückzukehren. Folge Links zwischen Notizen und nutze Zurück und Vorwärts zum Navigieren. Neue Notizen starten im Editiermodus."
 }
