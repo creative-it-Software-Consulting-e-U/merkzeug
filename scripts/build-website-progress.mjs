@@ -9,7 +9,7 @@ const releases=JSON.parse(await read('release-notes.json'));
 for(const lang of ['en','de']){
  const en=lang==='en', home=en?'index.html':'de.html', name=`release-notes-${lang}.html`;
  let base=await read(home);
- const states=en?{approved:'Approved by Apple',review:'In review & testing',planned:'Planned',exploring:'Exploring'}:{approved:'Von Apple freigegeben',review:'In Prüfung & Test',planned:'Geplant',exploring:'In Evaluierung'};
+ const states=en?{released:'Available',approved:'Approved by Apple',review:'In review & testing',planned:'Planned',exploring:'Exploring'}:{released:'Verfügbar',approved:'Von Apple freigegeben',review:'In Prüfung & Test',planned:'Geplant',exploring:'In Evaluierung'};
  const groups=Object.entries(states).map(([status,label])=>{
   const items=roadmap.items.filter(i=>i.status===status).map(i=>`<li><span class="roadmap-title">${escape(i.title[lang])}</span><span class="caption">${escape(i.platform.split(' / ')[en?0:1]||i.platform)}</span><span class="issue-links">${i.issues.map(n=>`<a href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug/issues/${n}" aria-label="${escape(i.title[lang])} — GitHub #${n}">#${n}</a>`).join(' ')}</span></li>`).join('');
   return `<div class="roadmap-group"><h3>${label}</h3><ul class="roadmap-list">${items}</ul></div>`;

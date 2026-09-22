@@ -4,7 +4,7 @@
 
 Das aktuelle Plugin unterstützt IntelliJ IDEA **2026.2.2–2026.2.3, Builds 262.10315.125–262.10968.63**, mit aktiviertem JCEF-Plugin. Andere IDE-Produkte und Build-Reihen wurden nicht geprüft.
 
-Der [Marketplace-Eintrag von Merkzeug (ID 34221)](https://plugins.jetbrains.com/plugin/34221-merkzeug) verwendet den Kanal **beta**. Dort findest du verfügbare Versionen und kompatible IDE-Builds.
+Der [Marketplace-Eintrag von Merkzeug (ID 34221)](https://plugins.jetbrains.com/plugin/34221-merkzeug) bietet die freigegebene Version **1.0.1** im Kanal **beta**, kompatibel mit IntelliJ IDEA 2026.2.2–2026.2.3.
 
 So installierst du die Beta und erhältst Updates:
 

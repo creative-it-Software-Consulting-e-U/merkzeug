@@ -4,7 +4,7 @@
 
 The current plugin targets IntelliJ IDEA 2026.2.2–2026.2.3, builds **262.10315.125–262.10968.63**, with the JCEF plugin enabled. Other IDE products and build branches have not been verified.
 
-The [Marketplace listing for Merkzeug (ID 34221)](https://plugins.jetbrains.com/plugin/34221-merkzeug) uses the **beta** channel. Check it for available versions and IDE compatibility.
+The [Marketplace listing for Merkzeug (ID 34221)](https://plugins.jetbrains.com/plugin/34221-merkzeug) offers the approved **1.0.1** release in the **beta** channel, compatible with IntelliJ IDEA 2026.2.2–2026.2.3.
 
 To install the beta and receive its updates:
 
