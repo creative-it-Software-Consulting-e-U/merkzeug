@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.creativeit.merkzeug</id>
   <name>Merkzeug</name>
-  <version>1.0.1</version>
+  <version>1.1.0</version>
   <vendor email="guenther.wieser@creative-it.com" url="https://merkzeug.creative-it.com/">creative-it Software Consulting e.U.</vendor>
   <description><![CDATA[
     <p>Merkzeug is a visual Markdown editor for IntelliJ IDEA, with formatting tools, Mermaid diagrams,

@@ -46,7 +46,7 @@ class CloudPreparation(unittest.TestCase):
             xcrun.write_text('#!/bin/sh\nprintf "%s\\n" "$*" >> "$COMMAND_LOG"\n')
             xcrun.chmod(0o755)
             log = root / 'commands'
-            for version, expected in [('1.0.0', '1.0'), ('1.1.2', '1.1.2')]:
+            for version, expected in [('1.0.0', '1.0'), ('1.1.0', '1.1'), ('1.1.2', '1.1.2')]:
                 (root / 'VERSION').write_text(version+'\n')
                 log.write_text('')
                 result = subprocess.run(['bash', str(script)], env=dict(os.environ, PATH=str(tools)+os.pathsep+os.environ['PATH'], CI_PRIMARY_REPOSITORY_PATH=str(root), CI_BUILD_NUMBER='29', CI_XCODEBUILD_ACTION='archive', COMMAND_LOG=str(log)), capture_output=True)

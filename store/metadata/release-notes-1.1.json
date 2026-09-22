@@ -1,0 +1,45 @@
+{
+  "version": "1.1",
+  "platforms": {
+    "IOS": {
+      "en-US": [
+        "Create meeting notes from your iPhone or iPad calendars; fixed a vault-path error when selecting an event.",
+        "Use PDF template styles while editing, share templates through iCloud and print with AirPrint.",
+        "Long-press file menus no longer accidentally select text; dismissing search is more reliable.",
+        "Links between notes stay intact when you rename or move files in Merkzeug.",
+        "Meeting notes use their first heading as the filename and follow later heading changes.",
+        "Selected table text stays readable on light backgrounds and with PDF template styles.",
+        "The guided tour now explains reading mode and navigation between linked notes."
+      ],
+      "de-DE": [
+        "Meeting-Notizen aus den Kalendern auf iPhone und iPad erstellen; ein Vault-Pfadfehler bei der Terminauswahl wurde behoben.",
+        "PDF-Vorlagen-Styles beim Bearbeiten nutzen, Vorlagen über iCloud teilen und mit AirPrint drucken.",
+        "Langes Drücken in der Dateiliste markiert nicht mehr versehentlich Menütext; die Suche lässt sich zuverlässiger schließen.",
+        "Links zwischen Notizen bleiben beim Umbenennen und Verschieben in Merkzeug erhalten.",
+        "Meeting-Notizen verwenden die erste Überschrift als Dateinamen und folgen späteren Änderungen der Überschrift.",
+        "Markierter Tabellentext bleibt auf hellen Hintergründen und mit PDF-Vorlagen-Styles lesbar.",
+        "Die geführte Tour erklärt jetzt den Lesemodus und die Navigation zwischen verlinkten Notizen."
+      ]
+    },
+    "MAC_OS": {
+      "en-US": [
+        "Your open vault windows and their positions are restored when Merkzeug starts again.",
+        "Print notes using your PDF templates and share templates with iPhone and iPad through iCloud.",
+        "Tour commands are now in the Help menu, leaving more room for your notes.",
+        "Links between notes stay intact when you rename or move files in Merkzeug.",
+        "Meeting notes use their first heading as the filename and follow later heading changes.",
+        "Selected table text stays readable on light backgrounds and with PDF template styles.",
+        "The guided tour now explains reading mode and navigation between linked notes."
+      ],
+      "de-DE": [
+        "Geöffnete Vault-Fenster und ihre Positionen werden beim nächsten Start wiederhergestellt.",
+        "Notizen mit PDF-Vorlagen drucken und Vorlagen über iCloud mit iPhone und iPad teilen.",
+        "Die Tour ist jetzt über das Hilfe-Menü erreichbar und lässt mehr Platz für deine Notizen.",
+        "Links zwischen Notizen bleiben beim Umbenennen und Verschieben in Merkzeug erhalten.",
+        "Meeting-Notizen verwenden die erste Überschrift als Dateinamen und folgen späteren Änderungen der Überschrift.",
+        "Markierter Tabellentext bleibt auf hellen Hintergründen und mit PDF-Vorlagen-Styles lesbar.",
+        "Die geführte Tour erklärt jetzt den Lesemodus und die Navigation zwischen verlinkten Notizen."
+      ]
+    }
+  }
+}

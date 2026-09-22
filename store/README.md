@@ -42,3 +42,7 @@ Confirm the supported device families, current Apple screenshot dimensions, UI l
 ## Automated localized screenshot artwork
 
 See [the screenshot pipeline](automation/README.md) for real iPhone/iPad UI tests, shared native caption rendering, macOS capture, CI artifacts and Xcode Cloud result export. These are review candidates, not an automatic Store submission.
+
+## Apple version 1.1
+
+Localized, platform-specific release notes are in `metadata/release-notes-1.1.json`. The same items populate the website release history and the iOS/macOS 1.1 “What’s New” fields in App Store Connect. Version 1.1 is a draft, not submitted for review or released. Source SemVer is 1.1.0; both Xcode Cloud archive scripts use Apple marketing version 1.1. Existing 1.0 builds cannot be reused for this update.
