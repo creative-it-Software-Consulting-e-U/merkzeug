@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.creativeit.merkzeug</id>
   <name>Merkzeug</name>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <vendor email="guenther.wieser@creative-it.com" url="https://merkzeug.creative-it.com/">creative-it Software Consulting e.U.</vendor>
   <description><![CDATA[
     <p>Merkzeug is a visual Markdown editor for IntelliJ IDEA, with formatting tools, Mermaid diagrams,
@@ -43,12 +43,12 @@
     <p>Preview for IntelliJ IDEA 2026.2.2–2026.2.3 (builds 262.10315.125–262.10968.63), with JCEF enabled.</p>
   ]]></description>
   <change-notes><![CDATA[
-    <p>First Marketplace preview.</p>
+    <p>Version 1.0.1 — editing and refactoring improvements.</p>
     <ul>
-      <li>Visual Markdown editing, Mermaid diagrams, frontmatter and PDF export.</li>
-      <li>Companion image folders follow IntelliJ Move/Rename, with link updates and Undo/Redo.</li>
-      <li>Project PDF templates, desktop template discovery and PDF styles while editing.</li>
-      <li>Offline template styling prompts and explicit selection of coding-agent guidance files.</li>
+      <li>Rename and Move update incoming Markdown links across project notes, including notes without image folders. Moving notes also recalculates outgoing relative links; native Undo/Redo is supported.</li>
+      <li>Print notes through File → Print or the editor toolbar using the PDF template.</li>
+      <li>Selected table text remains readable on light backgrounds and PDF template styles.</li>
+      <li>Compatibility extended to IntelliJ IDEA 2026.2.3.</li>
     </ul>
   ]]></change-notes>
   <idea-version since-build="262.10315.125" until-build="262.10968.63"/>

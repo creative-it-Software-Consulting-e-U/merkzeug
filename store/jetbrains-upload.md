@@ -1,6 +1,6 @@
 # Merkzeug Marketplace upload
 
-Prepared for a manual first upload. No Marketplace submission is performed by the build scripts. Run `python3 scripts/prepare-jetbrains-upload.py` after validation to collect the ZIP, SVG icon, screenshots, copyable text and checksums in `release-artifacts/jetbrains-1.0.0/upload/`.
+Updates are uploaded to the existing Marketplace listing (ID 34221), in the `beta` channel. Version 1.0.1 supersedes the approved 1.0.0 beta. No Marketplace submission is performed by the build scripts. Run `python3 scripts/prepare-jetbrains-upload.py` after validation to collect the ZIP, SVG icon, screenshots, copyable text and checksums in `release-artifacts/jetbrains-1.0.0/upload/`.
 
 ## Form fields
 
@@ -17,8 +17,8 @@ Prepared for a manual first upload. No Marketplace submission is performed by th
 | Suggested channel | beta |
 | Suggested tags | Markdown, Editor, PDF (choose the corresponding available tags) |
 | Plugin ID | com.creativeit.merkzeug |
-| Version | 1.0.0 |
-| Supported IDE | IntelliJ IDEA 2026.2.2, build 262.10315.125, with JCEF |
+| Version | 1.0.1 |
+| Supported IDE | IntelliJ IDEA 2026.2.2–2026.2.3, builds 262.10315.125–262.10968.63, with JCEF |
 | Source code URL | Leave empty. The source repository is private. |
 
 Paste `EULA.en.md` from the upload kit into the custom-license field. It combines the [shared English EULA](../resources/legal/EULA.en.md) with the [IntelliJ-only supplement](../resources/legal/INTELLIJ-ADDENDUM.en.md). The German file in the kit combines the corresponding German texts. The general website, desktop and mobile license has no IntelliJ-specific references. The published website addresses are https://merkzeug.creative-it.com/license-intellij-en.html and https://merkzeug.creative-it.com/license-intellij-de.html. Both were verified against the source text after deployment on 11 September 2026. For future uploads, verify that the hosted license still matches the packaged EULA.
@@ -27,7 +27,7 @@ Review the new license text before public distribution. This is a newly prepared
 
 ## Files
 
-- Build `python3 intellij/build.py --marketplace` and upload **`intellij/dist/merkzeug-1.0.0.zip`**. Upload the ZIP unchanged, not the inner JAR or the folder of supporting materials.
+- Build `python3 intellij/build.py --marketplace` and upload **`intellij/dist/merkzeug-1.0.1.zip`**. Upload the ZIP unchanged, not the inner JAR or the folder of supporting materials.
 - Plugin description and release notes are embedded in `plugin.xml`; copyable English/German listing text is in [the Marketplace description](jetbrains-marketplace.md).
 - The 40 × 40 SVG logo is embedded as `META-INF/pluginIcon.svg`.
 - Screenshots are captured from the real IntelliJ/JCEF editor using a synthetic notebook. No personal documents are used. See `intellij/capture-marketplace.py`.
@@ -44,7 +44,7 @@ Open **Settings → Tools → Merkzeug** to choose a PDF template or discover ex
 
 ## Review notes for JetBrains
 
-The plugin provides an additional file editor for local `.md` files through `FileEditorProvider`. It depends on the IntelliJ platform and JCEF, not on the Markdown plugin. It uses IntelliJ document saving and undo. The companion-folder refactoring handlers are limited to notes with a matching sibling `.assets` directory and reject conflicting destinations.
+The plugin provides an additional file editor for local `.md` files through `FileEditorProvider`. It depends on the IntelliJ platform and JCEF, not on the Markdown plugin. It uses IntelliJ document saving and undo. Companion-folder refactoring keeps matching sibling `.assets` directories with their notes and rejects conflicting destinations. Local Markdown links across project notes are updated even for notes without a companion directory.
 
 No account, telemetry or advertising service is included. Remote images may contact their source hosts and user-selected external links/support open in the browser. Agent instructions are only written after an explicit user selection and existing-content preview. No agent service is invoked by copying a template prompt.
 
@@ -58,7 +58,7 @@ MERKZEUG_SMOKE_NO_MARKDOWN=1 python3 intellij/smoke.py
 python3 intellij/capture-marketplace.py
 ```
 
-The current build range is deliberately exact. Do not broaden it until additional IDE builds have been verified. Native runtime validation on macOS does not establish Windows/Linux acceptance.
+The current build range is deliberately limited to IntelliJ IDEA 2026.2.2–2026.2.3. Do not broaden it until additional IDE builds have been verified. Native runtime validation on macOS does not establish Windows/Linux acceptance.
 
 [Upload instructions](https://plugins.jetbrains.com/docs/marketplace/uploading-a-new-plugin.html) · [Approval guidelines](https://plugins.jetbrains.com/docs/marketplace/jetbrains-marketplace-approval-guidelines.html) · [Custom EULA requirements](https://plugins.jetbrains.com/docs/marketplace/eula.html)
 
