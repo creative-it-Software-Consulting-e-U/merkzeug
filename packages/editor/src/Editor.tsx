@@ -938,7 +938,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       const target = e.target as HTMLElement
       // Mermaid-Zoom: Lupen-Button oder ⌘-Klick auf das Diagramm
       const preview = target.closest('.mermaid-preview')
-      if (preview && (target.closest('.mermaid-zoom-btn') || e.metaKey)) {
+      if (preview && (target.closest('.mermaid-zoom-btn') || e.metaKey || e.ctrlKey)) {
         const svg = preview.querySelector('svg')
         if (svg) {
           e.preventDefault()

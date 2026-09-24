@@ -1,4 +1,4 @@
-import { t as translate } from '@merkzeug/core/i18n'
+import { translate } from '../translate'
 import { useState, type RefObject } from 'react'
 import type { FileNode } from '../../../shared/types'
 import type { Pane as PaneState, Tab } from '../types'

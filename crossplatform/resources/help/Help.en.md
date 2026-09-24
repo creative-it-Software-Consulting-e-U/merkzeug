@@ -7,8 +7,7 @@ Merkzeug is a Notion-style editor for Markdown notes – this edition runs on
 visible Markdown syntax), but everything is always saved as clean, portable
 Markdown. All notes live as `.md` files in an ordinary folder – the **vault**.
 
-All shortcuts use **⌘** on the Mac; on Windows and Linux, ⌘ corresponds to the **Ctrl**
-key and ⌥ to the **Alt** key.
+Shortcuts below show Mac first, followed by Linux/Windows. The shortcut table lists each platform explicitly.
 
 **Contents:** [1. Getting started](#1.-getting-started) ·
 [2. Sidebar & file tree](#2.-sidebar-&-file-tree) ·
@@ -21,6 +20,7 @@ key and ⌥ to the **Alt** key.
 [9. PDF export](#9.-pdf-export) ·
 [10. Git integration](#10.-git-integration) ·
 [11. Keyboard shortcuts](#11.-keyboard-shortcuts) ·
+[Meeting notes and calendars](#meeting-notes-and-calendars) ·
 [Linux installation & differences](#linux-installation-and-platform-differences)
 
 ---
@@ -29,11 +29,11 @@ key and ⌥ to the **Alt** key.
 
 - On first launch you pick a **vault folder** (any folder containing Markdown
   files). Your choice is remembered.
-- Use **File → Open Vault…** (⌘O) to switch the vault of the current window.
+- Use **File → Open Vault…** (⌘O / Ctrl+O) to switch the vault of the current window.
 - **File → Recent Vaults** lists the last ten vaults for quick switching.
 - **Autosave:** changes are saved automatically one second after the last edit,
   as well as when closing tabs and when quitting the app.
-  Manually: **⌘S** (active note) or **⌥⌘S** (all open notes).
+  Manually: **⌘S / Ctrl+S** (active note) or **⌥⌘S / Ctrl+Alt+S** (all open notes).
 - The vault can also be preset via the `MERKZEUG_VAULT` environment variable.
 
 ## 2. Sidebar & file tree
@@ -58,24 +58,8 @@ The sidebar on the left shows the vault as a hierarchical tree.
   clicking notes and subfolders navigates onward.
 - **Sidebar footer:** buttons for a new note, a new meeting note and a new
   folder (left) plus a reload button for re-reading the vault; the eye icon
-  shows/hides **asset folders** (⇧⌘R).
-- **Meeting notes from the calendar:** **⌃⌘N** (menu "File → New Meeting Note…" or the calendar button in the footer) lists the running
-  and upcoming events of the next 14 days from your locally configured
-  calendars — on macOS all accounts of the Calendar app (iCloud,
-  Exchange/Microsoft 365, Google, …), on Windows all calendars of
-  **classic Outlook** (via its object model; the "new Outlook" has none),
-  with no cloud API involved. All-day
-  events (vacations, birthdays, …) are hidden by default and can be shown
-  via the checkbox above the list. **"Show earlier events"** reveals past events, **"Search"** searches titles, people and
-  locations within ±90 days. Clicking an event creates a ready-named note:
-  the event data (date, time, location, organizer, attendees, detected
-  Teams/Zoom/Meet/Webex link) goes into the frontmatter; the body contains
-  date and time below the heading, a **checkable attendee list** (who
-  actually showed up?) and the Agenda, Notes and Tasks sections. The first
-  time, macOS asks for permission to access the calendar. On Windows,
-  Outlook is started in the background if needed; if Outlook shows a
-  security prompt ("A program is trying to access …"), allow access for a
-  few minutes. On Linux and with new Outlook, use **Calendar sources** to import ICS files or subscribe to HTTPS/Webcal feeds.
+  shows/hides **asset folders** (⇧⌘R / Ctrl+Shift+R).
+- **Meeting notes:** see [Meeting notes and calendars](#meeting-notes-and-calendars).
 - **Automatic naming of new notes:** a new note is initially called
   "New note". If it starts with a **heading 1**, the file is automatically
   named after the title when saving: all lowercase, spaces and special
@@ -101,12 +85,12 @@ The sidebar on the left shows the vault as a hierarchical tree.
 
 ## 3. Tabs, sections & windows
 
-- Every note opens in its own **tab**; **⌘W** closes the active tab,
-  **⇧⌘W** closes the window.
-- **Two sections** side by side: **⌘\** splits the editor area. Drag tabs onto
-  the other tab bar or move them with **⇧⌘\**.
-- **Multiple windows:** **⌥⌘N** opens a new window (initially inheriting the
-  current window's vault; each window can show a different vault via ⌘O).
+- Every note opens in its own **tab**; **⌘W / Ctrl+W** closes the active tab,
+  **⇧⌘W / Ctrl+Shift+W** closes the window.
+- **Two sections** side by side: **⌘\ / Ctrl+\** splits the editor area. Drag tabs onto
+  the other tab bar or move them with **⇧⌘\ / Ctrl+Shift+\**.
+- **Multiple windows:** **⌥⌘N / Ctrl+Alt+N** opens a new window (initially inheriting the
+  current window's vault; each window can show a different vault via ⌘O / Ctrl+O).
 
 ## 4. Editor & formatting
 
@@ -123,23 +107,23 @@ The editor shows the note formatted; what is saved is Markdown.
   lists, quote, code block, table, image …).
 - **Selection toolbar:** selecting text shows a floating bar for bold, italic,
   strikethrough, inline code and links.
-- **Character formats:** bold (⌘B), italic (⌘I), inline code (⌘E),
-  strikethrough (⌥⌘X).
-- **Paragraph formats:** plain text (⌥⌘0), headings 1–6 (⌥⌘1–⌥⌘6),
-  quote (⇧⌘B), code block (⌥⌘C).
-- **Lists:** bullet list (⌥⌘8), numbered list (⌥⌘7) and task lists; nest with
+- **Character formats:** bold (⌘B / Ctrl+B), italic (⌘I / Ctrl+I), inline code (⌘E / Ctrl+E),
+  strikethrough (⌥⌘X / Ctrl+Alt+X).
+- **Paragraph formats:** plain text (⌥⌘0 / Ctrl+Alt+0), headings 1–6 (⌥⌘1 / Ctrl+Alt+1–⌥⌘6 / Ctrl+Alt+6),
+  quote (⇧⌘B / Ctrl+Shift+B), code block (⌥⌘C / Ctrl+Alt+C).
+- **Lists:** bullet list (⌥⌘8 / Ctrl+Alt+8), numbered list (⌥⌘7 / Ctrl+Alt+7) and task lists; nest with
   Tab/⇧Tab, automatic continuation on Enter and automatic renumbering.
 - **Auto-formatting while typing:** `# `, `## `, `- `, `1. `, `> ` at the start
   of a line and ` ``` ` immediately create the corresponding format; `->`
   becomes an arrow "→".
-- **Tables:** insert via ⌥⌘T, the slash menu or the Edit menu. Jump from cell to
+- **Tables:** insert via ⌥⌘T / Ctrl+Alt+T, the slash menu or the Edit menu. Jump from cell to
   cell with Tab; add and delete rows/columns via the table controls right at the
   table or the **Table** menu.
 - **Images:** paste from the clipboard, drag & drop, slash menu or
   **Edit → Insert Image…**.
-- **Undo/redo** as usual (⌘Z / ⇧⌘Z).
-- **Find & replace:** **⌘F** opens the search bar at the top right of the
-  editor, **⌥⌘F** additionally shows the replace row (also via
+- **Undo/redo** as usual (⌘Z / Ctrl+Z / ⇧⌘Z / Ctrl+Shift+Z).
+- **Find & replace:** **⌘F / Ctrl+F** opens the search bar at the top right of the
+  editor, **⌥⌘F / Ctrl+Alt+F** additionally shows the replace row (also via
   **Edit → Find…**). The search covers the current note and is
   case-insensitive; selected text is taken over as the search term. **↩**
   jumps to the next match, **⇧↩** to the previous one, **Esc** closes the
@@ -161,7 +145,7 @@ Selecting a whole table cell highlights the cell; click inside its text to place
 
 ## 5. Links
 
-- **⌘K** opens the link dialog for inserting a formatted link; edit existing
+- **⌘K / Ctrl+K** opens the link dialog for inserting a formatted link; edit existing
   links via the tooltip that appears when clicking a link.
 - Possible addresses: `https://…` URLs, paths **relative to the current file**,
   paths **relative to the vault root** (leading "/") and absolute paths.
@@ -178,13 +162,13 @@ Selecting a whole table cell highlights the cell; click inside its text to place
 ## 6. Navigation mode (reading & browsing)
 
 For browsing linked notes there is a per-tab **navigation mode** – toggled with
-**⌘R**, via **View → Navigation Mode** or the book icon in the toolbar.
+**⌘R / Ctrl+R**, via **View → Navigation Mode** or the book icon in the toolbar.
 
 - In navigation mode the note is **read-only**; clicking vault links loads the
   target **in the same tab** (instead of opening a new tab).
 - **Folder links** also stay in the same tab: the tab shows the folder overview,
   and clicks on its entries continue navigating in the same tab.
-- **Back/forward:** arrow buttons in the toolbar, **⌘[** / **⌘]**, the
+- **Back/forward:** arrow buttons in the toolbar, **⌘[ / Ctrl+[** / **⌘] / Ctrl+]**, the
   back/forward mouse buttons, or trackpad swipe gestures (horizontal
   two-finger swipe; on macOS also three fingers if "Swipe between pages"
   is configured accordingly).
@@ -210,7 +194,7 @@ For browsing linked notes there is a per-tab **navigation mode** – toggled wit
 - When **renaming** the note the folder is renamed too (including updating the
   image paths inside the note), when **moving** it moves along, when
   **deleting** it goes to the trash as well.
-- Asset folders are hidden in the file tree by default (⇧⌘R shows them).
+- Asset folders are hidden in the file tree by default (⇧⌘R / Ctrl+Shift+R shows them).
 
 ## 9. PDF export
 
@@ -289,7 +273,7 @@ For browsing linked notes there is a per-tab **navigation mode** – toggled wit
 Templates give the PDF a company layout: a logo and header on every page, a
 footer with page numbers, and an optional cover page.
 
-- Templates are managed under **Merkzeug → Settings…** (⌘,). That is where the
+- Templates are managed under **Merkzeug → Settings…** (⌘, / Ctrl+,). That is where the
   **templates folder** is chosen; each template is a subfolder inside it.
 - **"Create"** sets up a new template with example files and opens it
   in Finder/Explorer. A template consists of (all files optional):
@@ -353,30 +337,30 @@ the sidebar:
 
 ## 11. Keyboard shortcuts
 
-| Shortcut | Function |
-| --- | --- |
-| ⌘N | New note |
-| ⌃⌘N | New meeting note |
-| ⇧⌘N | New folder |
-| ⌥⌘N | New window |
-| ⌘O | Open vault |
-| ⌘W / ⇧⌘W | Close tab / Close window |
-| ⌘S / ⌥⌘S | Save / Save all |
-| ⌘P / Ctrl+P | Print |
-| ⌘, | Settings (PDF templates) |
-| ⌘B / ⌘I / ⌥⌘X / ⌘E | Bold / Italic / Strikethrough / Inline code |
-| ⌥⌘0 … ⌥⌘6 | Text / Heading 1–6 |
-| ⌥⌘8 / ⌥⌘7 | Bullet list / Numbered list |
-| ⇧⌘B / ⌥⌘C | Quote / Code block |
-| ⌘K | Insert link |
-| ⌥⌘T | Insert table |
-| ⌘F / ⌥⌘F | Find / Find and replace |
-| ⌘R | Toggle navigation mode |
-| ⌘[ / ⌘] | Back / Forward |
-| ⌘\ | Toggle second section |
-| ⇧⌘\ | Move tab to other section |
-| ⇧⌘R | Show/hide assets |
-| ⌘? | This help |
+| Function | Mac | Linux / Windows |
+| --- | --- | --- |
+| New note | ⌘N | Ctrl+N |
+| New meeting note | ⌃⌘N | Ctrl+Alt+Shift+N |
+| New folder | ⇧⌘N | Ctrl+Shift+N |
+| New window | ⌥⌘N | Ctrl+Alt+N |
+| Open vault | ⌘O | Ctrl+O |
+| Close tab / Close window | ⌘W / ⇧⌘W | Ctrl+W / Ctrl+Shift+W |
+| Save / Save all | ⌘S / ⌥⌘S | Ctrl+S / Ctrl+Alt+S |
+| Print | ⌘P | Ctrl+P |
+| Settings (PDF templates) | ⌘, | Ctrl+, |
+| Bold / Italic / Strikethrough / Inline code | ⌘B / ⌘I / ⌥⌘X / ⌘E | Ctrl+B / Ctrl+I / Ctrl+Alt+X / Ctrl+E |
+| Text / Heading 1–6 | ⌥⌘0 … ⌥⌘6 | Ctrl+Alt+0 … Ctrl+Alt+6 |
+| Bullet list / Numbered list | ⌥⌘8 / ⌥⌘7 | Ctrl+Alt+8 / Ctrl+Alt+7 |
+| Quote / Code block | ⇧⌘B / ⌥⌘C | Ctrl+Shift+B / Ctrl+Alt+C |
+| Insert link | ⌘K | Ctrl+K |
+| Insert table | ⌥⌘T | Ctrl+Alt+T |
+| Find / Find and replace | ⌘F / ⌥⌘F | Ctrl+F / Ctrl+Alt+F |
+| Toggle navigation mode | ⌘R | Ctrl+R |
+| Back / Forward | ⌘[ / ⌘] | Ctrl+[ / Ctrl+] |
+| Toggle second section | ⌘\ | Ctrl+\ |
+| Move tab to other section | ⇧⌘\ | Ctrl+Shift+\ |
+| Show/hide assets | ⇧⌘R | Ctrl+Shift+R |
+| This help | ⌘? | F1 |
 
 *(Windows/Linux: ⌘ = Ctrl, ⌥ = Alt, ⇧ = Shift)*
 
@@ -491,12 +475,38 @@ Open **Release Notes** in Help (IntelliJ: **…**) for the complete English or G
 
 Choose a separate package for your Linux architecture: **x86_64 (x64)** for Intel/AMD PCs, or **ARM64 (aarch64)** for ARM computers, including Linux on Apple Silicon in Parallels. Run `uname -m` if unsure. The packages contain only their selected architecture. In the commands below, replace `x64` with `arm64` for ARM64.
 
-- **DEB:** install with `sudo apt install ./Merkzeug-1.2.0-linux-x64.deb` on Ubuntu/Debian-compatible systems.
-- **RPM:** install with `sudo dnf install ./Merkzeug-1.2.0-linux-x64.rpm` on Fedora-compatible systems.
-- **AppImage:** make the file executable in its file properties, or run `chmod +x Merkzeug-1.2.0-linux-x64.AppImage`, then open it. FUSE 2 is required (`libfuse2t64` on Ubuntu 24.04). Use the DEB package if AppImage is unsuitable for your system. Do not disable the application sandbox to work around an installation problem.
+- **DEB:** install with `sudo apt install ./Merkzeug-1.2.1-linux-x64.deb` on Ubuntu/Debian-compatible systems.
+- **RPM:** install with `sudo dnf install ./Merkzeug-1.2.1-linux-x64.rpm` on Fedora-compatible systems.
+- **AppImage:** make the file executable in its file properties, or run `chmod +x Merkzeug-1.2.1-linux-x64.AppImage`, then open it. FUSE 2 is required (`libfuse2t64` on Ubuntu 24.04). Use the DEB package if AppImage is unsuitable for your system. Do not disable the application sandbox to work around an installation problem.
 
 Download updates manually from the Merkzeug website. Verify downloads against the published SHA-256 checksums. These checksums detect changed files; they are not publisher certificates. Your notes and configuration remain outside the application package.
 
 The shared desktop editor includes visual editing, Mermaid, reading/navigation mode, frontmatter, title-based filenames, companion image folders and link updates on move/rename, PDF templates, combined PDF export, printing and agent prompts. Install Git separately for the built-in Git operations; configure authentication through your normal Git tools.
 
 Linux meeting notes use ICS files or HTTPS/Webcal calendar subscriptions. There is no direct GNOME/KDE system-calendar connector. A system keyring is required for storing private subscription URLs; local ICS import works without one. Linux uses a local central templates folder by default, or a folder you select. Vault templates in `.merkzeug/` travel with a repository; mounted sync folders also work. Automatic Apple iCloud discovery is unavailable. Printing depends on the system's configured printers and drivers.
+
+## Meeting notes and calendars
+
+**Meeting notes from the calendar:** **⌃⌘N / Ctrl+Alt+Shift+N** (menu "File → New Meeting Note…" or the calendar button in the footer) lists the running
+  and upcoming events of the next 14 days from your locally configured
+  calendars — on macOS all accounts of the Calendar app (iCloud,
+  Exchange/Microsoft 365, Google, …), on Windows all calendars of
+  **classic Outlook** (via its object model; the "new Outlook" has none),
+  with no cloud API involved. All-day
+  events (vacations, birthdays, …) are hidden by default and can be shown
+  via the checkbox above the list. **"Show earlier events"** reveals past events, **"Search"** searches titles, people and
+  locations within ±90 days. Clicking an event creates a ready-named note:
+  the event data (date, time, location, organizer, attendees, detected
+  Teams/Zoom/Meet/Webex link) goes into the frontmatter; the body contains
+  date and time below the heading, a **checkable attendee list** (who
+  actually showed up?) and the Agenda, Notes and Tasks sections. The first
+  time, macOS asks for permission to access the calendar. On Windows,
+  Outlook is started in the background if needed; if Outlook shows a
+  security prompt ("A program is trying to access …"), allow access for a
+  few minutes. On Linux and with new Outlook, use **Calendar sources** to import ICS files or subscribe to HTTPS/Webcal feeds.
+
+Open **File → New Meeting Note…**, or use the calendar button below the file tree. On Mac, allow Calendar access when requested; configured Apple Calendar accounts supply events. On Linux, open **Calendar sources** to import an `.ics` file or add an HTTPS/Webcal subscription URL. Refresh to load current events; imported files are snapshots, subscriptions can be refreshed. Private subscription URLs are stored using the system keyring. Never commit private feed URLs to Git.
+
+Choose an event to create a Markdown meeting note in the selected folder. Edit the agenda, record minutes and mark attendees and tasks as the meeting progresses. The note follows its first heading when renamed automatically; manual filenames are preserved. Your calendar event is never modified.
+
+If the list is empty, check the date, all-day filter, calendar permissions on Mac and configured sources on Linux. Linux has no direct GNOME/KDE calendar connection. Windows/classic Outlook support belongs to the forthcoming Windows edition.

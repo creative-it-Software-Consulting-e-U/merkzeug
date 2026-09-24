@@ -36,7 +36,7 @@ export function buildMenu(hooks: MenuHooks): void {
         { type: 'separator' },
         {
           label: translate("Settings…"),
-          accelerator: 'Cmd+,',
+          accelerator: 'CmdOrCtrl+,',
           click: () => hooks.openSettings(BrowserWindow.getFocusedWindow() ?? undefined)
         },
         { type: 'separator' },
@@ -52,22 +52,22 @@ export function buildMenu(hooks: MenuHooks): void {
       submenu: [
         {
           label: translate("New Window"),
-          accelerator: 'Alt+Cmd+N',
+          accelerator: 'Alt+CmdOrCtrl+N',
           click: () => hooks.newWindow()
         },
-        item(translate("New note"), 'newNote', 'Cmd+N'),
-        item(translate("New Meeting Note…"), 'newMeetingNote', 'Ctrl+Cmd+N'),
-        item(translate("New folder"), 'newFolder', 'Shift+Cmd+N'),
+        item(translate("New note"), 'newNote', 'CmdOrCtrl+N'),
+        item(translate("New Meeting Note…"), 'newMeetingNote', process.platform === 'darwin' ? 'Ctrl+Cmd+N' : 'Ctrl+Alt+Shift+N'),
+        item(translate("New folder"), 'newFolder', 'Shift+CmdOrCtrl+N'),
         { type: 'separator' },
-        item(translate("Save"), 'saveNote', 'Cmd+S'),
-        item(translate("Save All"), 'saveAll', 'Alt+Cmd+S'),
+        item(translate("Save"), 'saveNote', 'CmdOrCtrl+S'),
+        item(translate("Save All"), 'saveAll', 'Alt+CmdOrCtrl+S'),
         { type: 'separator' },
         item(translate("Print…"), 'printNote', 'CmdOrCtrl+P'),
         item(translate("Export as PDF…"), 'exportPdf'),
         { type: 'separator' },
         {
           label: translate("Open Vault…"),
-          accelerator: 'Cmd+O',
+          accelerator: 'CmdOrCtrl+O',
           click: () => hooks.openVault(BrowserWindow.getFocusedWindow() ?? undefined)
         },
         {
@@ -82,27 +82,27 @@ export function buildMenu(hooks: MenuHooks): void {
                 }))
         },
         { type: 'separator' },
-        item(translate("Close Tab"), 'closeTab', 'Cmd+W'),
-        { role: 'close', label: translate("Close Window"), accelerator: 'Shift+Cmd+W' }
+        item(translate("Close Tab"), 'closeTab', 'CmdOrCtrl+W'),
+        { role: 'close', label: translate("Close Window"), accelerator: 'Shift+CmdOrCtrl+W' }
       ]
     },
     {
       label: translate("Edit"),
       submenu: [
-        item(translate("Undo"), 'undo', 'Cmd+Z'),
-        item(translate("Redo"), 'redo', 'Shift+Cmd+Z'),
+        item(translate("Undo"), 'undo', 'CmdOrCtrl+Z'),
+        item(translate("Redo"), 'redo', 'Shift+CmdOrCtrl+Z'),
         { type: 'separator' },
         { role: 'cut', label: translate("Cut") },
         { role: 'copy', label: translate("Copy") },
         { role: 'paste', label: translate("Paste") },
         { role: 'selectAll', label: translate("Select All") },
         { type: 'separator' },
-        item(translate("Find…"), 'find', 'Cmd+F'),
-        item(translate("Find and Replace…"), 'findReplace', 'Alt+Cmd+F'),
+        item(translate("Find…"), 'find', 'CmdOrCtrl+F'),
+        item(translate("Find and Replace…"), 'findReplace', 'Alt+CmdOrCtrl+F'),
         { type: 'separator' },
-        item(translate("Insert Link…"), 'insertLink', 'Cmd+K'),
+        item(translate("Insert Link…"), 'insertLink', 'CmdOrCtrl+K'),
         item(translate("Insert Image…"), 'insertImage'),
-        item(translate("Insert Table"), 'insertTable', 'Alt+Cmd+T')
+        item(translate("Insert Table"), 'insertTable', 'Alt+CmdOrCtrl+T')
       ]
     },
     {
@@ -120,19 +120,19 @@ export function buildMenu(hooks: MenuHooks): void {
     {
       label: translate("View"),
       submenu: [
-        item(translate("Navigation mode"), 'toggleNavMode', 'Cmd+R'),
-        item(translate("Back"), 'navBack', 'Cmd+['),
-        item(translate("Forward"), 'navForward', 'Cmd+]'),
+        item(translate("Navigation mode"), 'toggleNavMode', 'CmdOrCtrl+R'),
+        item(translate("Back"), 'navBack', 'CmdOrCtrl+['),
+        item(translate("Forward"), 'navForward', 'CmdOrCtrl+]'),
         { type: 'separator' },
-        item(translate("Two Panes"), 'toggleSplit', 'Cmd+\\'),
-        item(translate("Move Tab to Other Pane"), 'moveTabOtherPane', 'Shift+Cmd+\\'),
+        item(translate("Two Panes"), 'toggleSplit', 'CmdOrCtrl+\\'),
+        item(translate("Move Tab to Other Pane"), 'moveTabOtherPane', 'Shift+CmdOrCtrl+\\'),
         { type: 'separator' },
-        item(translate("Show/Hide Asset Folders"), 'toggleAssets', 'Shift+Cmd+R'),
+        item(translate("Show/Hide Asset Folders"), 'toggleAssets', 'Shift+CmdOrCtrl+R'),
         ...(isDev
           ? ([
               { type: 'separator' },
-              { role: 'reload', label: translate("Reload (Dev)"), accelerator: 'Alt+Cmd+R' },
-              { role: 'toggleDevTools', label: translate("Developer Tools"), accelerator: 'Alt+Cmd+I' }
+              { role: 'reload', label: translate("Reload (Dev)"), accelerator: 'Alt+CmdOrCtrl+R' },
+              { role: 'toggleDevTools', label: translate("Developer Tools"), accelerator: 'Alt+CmdOrCtrl+I' }
             ] as MenuItemConstructorOptions[])
           : [])
       ]
@@ -156,7 +156,7 @@ export function buildMenu(hooks: MenuHooks): void {
         { type: 'separator' },
         {
           label: translate("Merkzeug Help"),
-          accelerator: 'Cmd+?',
+          accelerator: process.platform === 'darwin' ? 'Cmd+?' : 'F1',
           click: () => hooks.openHelp()
         },
         {

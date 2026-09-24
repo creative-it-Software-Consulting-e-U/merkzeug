@@ -66,6 +66,21 @@ try {
  for(const file of ['LICENSE','THIRD_PARTY_NOTICES.txt','help/Help.en.md','help/Help.de.md']) assert.ok((await readFile(join(info.resources,file))).length>20,file);
  report.packageSHA256=createHash('sha256').update(await readFile(join(info.resources,'app.asar'))).digest('hex');
  passed('launchAndNotices');
+ if(platform()==='linux') {
+   const shortcuts=await app.evaluate(({Menu})=>{
+     const values=[];
+     const visit=menu=>{for(const item of menu.items){if(item.accelerator)values.push(item.accelerator);if(item.submenu)visit(item.submenu)}};
+     visit(Menu.getApplicationMenu());return values;
+   });
+   assert.ok(shortcuts.includes('CmdOrCtrl+N'));
+   assert.ok(shortcuts.includes('Ctrl+Alt+Shift+N'));
+   assert.ok(shortcuts.includes('F1'));
+   assert.ok(shortcuts.every(key=>!/(^|\+)Cmd\+/.test(key)), JSON.stringify(shortcuts));
+   const hints=await page.locator('[data-tip]').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('data-tip')).join(' '));
+   assert.ok(!hints.includes('⌘'),hints);
+   passed('linuxMenuShortcutsAndHints');
+ }
+
  const editor=page.locator('.ProseMirror');
  await editor.click(); await page.keyboard.press('ControlOrMeta+End'); await page.keyboard.press('Enter'); await page.keyboard.insertText('Saved acceptance marker');
  await eventually(async()=> (await readFile(note,'utf8')).includes('Saved acceptance marker'));
