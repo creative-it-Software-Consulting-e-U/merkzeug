@@ -53,3 +53,5 @@ The shared tests, desktop build, mobile web build and plugin build do not requir
 Native Apple signing, App Store uploads, iCloud entitlements and calendar permission tests are separate from the web build. Contributors must use their own development team, identifiers and provisioning for native device builds; production entitlements cannot be used as a public signing service. Do not put personal substitutions into shared release configuration.
 
 Before any public launch follow [the preparation checklist](public-release-preparation.md). Publishing source does not require starting paid OS builds or store uploads.
+
+Before the separately authorized public launch, follow the [public security policy](public-security-policy.md) and [audit checklist](public-release-preparation.md).
