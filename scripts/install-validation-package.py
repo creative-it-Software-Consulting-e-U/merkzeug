@@ -33,6 +33,11 @@ elif package.suffix=='.deb':
     files=subprocess.check_output(['dpkg','-L','merkzeug'],text=True).splitlines()
     executable=next(Path(f) for f in files if f.endswith('/merkzeug') and Path(f).is_file())
     method='Native APT/DEB installation with dependency resolution on disposable Ubuntu runner'
+elif package.suffix=='.rpm':
+    subprocess.run(['sudo','dnf','install','-y',str(package)],check=True)
+    files=subprocess.check_output(['rpm','-ql','merkzeug'],text=True).splitlines()
+    executable=next(Path(f) for f in files if f.endswith('/merkzeug') and Path(f).is_file())
+    method='Native DNF/RPM installation with dependency resolution in disposable Fedora userspace'
 elif package.suffix=='.AppImage':
     package.chmod(package.stat().st_mode|0o111)
     executable=package; method='Native AppImage execution through its FUSE launcher (no extraction fallback)'

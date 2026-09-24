@@ -1,0 +1,55 @@
+name: Validate Linux packages
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: linux-packages-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  linux:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm test && npm run typecheck && npm run check:version && npm run test:release
+      - name: Install Linux packaging and runtime dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rpm libarchive-tools xvfb libnss3 libatk-bridge2.0-0 libgtk-3-0 libgbm1 libasound2t64 libfuse2t64
+      - run: python3 scripts/package-desktop.py linux x64
+      - run: node scripts/inspect-desktop-package.mjs linux x64 release-artifacts/linux-validation
+      - name: Install and test DEB and AppImage in Ubuntu
+        run: |
+          version=$(cat VERSION)
+          xvfb-run -a python3 scripts/install-validation-package.py "crossplatform/dist/Merkzeug-$version-linux-x64.deb" release-artifacts/linux-validation/deb --arch x64
+          xvfb-run -a python3 scripts/install-validation-package.py "crossplatform/dist/Merkzeug-$version-linux-x64.AppImage" release-artifacts/linux-validation/appimage --arch x64
+      - name: Install and test RPM in Fedora userspace
+        run: |
+          docker run --rm --security-opt seccomp=unconfined -v "$PWD:/workspace" -w /workspace fedora:44 bash scripts/test-fedora-package.sh
+      - name: Checksums
+        run: |
+          cd crossplatform/dist
+          sha256sum *.AppImage *.deb *.rpm > SHA256SUMS.txt
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: linux-validation
+          path: release-artifacts/linux-validation
+          retention-days: 30
+      - uses: actions/upload-artifact@v7
+        with:
+          name: linux-packages
+          path: |
+            crossplatform/dist/*.AppImage
+            crossplatform/dist/*.deb
+            crossplatform/dist/*.rpm
+            crossplatform/dist/SHA256SUMS.txt
+          retention-days: 30
