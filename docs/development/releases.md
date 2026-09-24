@@ -194,3 +194,5 @@ Apple distribution currently uses the manual iOS and macOS App Store Xcode Cloud
 ## Linux 1.2 public downloads
 
 Linux 1.2 uses the manually dispatched `linux-packages.yml` workflow and the public binary-only `merkzeug-downloads` repository, independently of the older full-platform draft workflow above. Source stays private. See [Linux acceptance, parity and publication](linux-release.md) for exact build/test provenance, limitations and the immutable download hashes. No Apple or Windows build is required for Linux or website updates.
+
+Linux 1.2.1 and later use the focused manual `linux-packages.yml` workflow with native x64 and ARM64 runners. Select either architecture or both; all three package formats are separate per architecture. See [Linux distribution](linux-release.md) for the current acceptance and binary-only public publication path.
