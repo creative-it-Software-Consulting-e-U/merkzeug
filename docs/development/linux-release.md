@@ -46,3 +46,16 @@ For test-only changes, the optional `package_run` input reuses the previous arch
 This Linux-only publication adds native ARM64 packages and fixes desktop accelerators that were still hard-coded to macOS Command keys. Mac bindings are preserved; Linux/Windows use Control, with Ctrl+Alt+Shift+N for meeting notes and F1 for help. Tooltip labels and the shared offline/website manuals agree with these bindings. The shared source manifests advance to 1.2.1 for consistent artifact versioning; this does not publish new Apple or IntelliJ binaries.
 
 Artifacts are named `linux-packages-x64` and `linux-packages-arm64`; acceptance reports are `linux-validation-x64` and `linux-validation-arm64`. Supply `package_run` only with matching architecture artifacts to retest the exact unchanged binaries. Keep the 1.2.0 public artifacts immutable. Publish all six 1.2.1 packages and one combined SHA256SUMS.txt in the binary-only download repository before deploying website links.
+
+### Validated 1.2.1 artifacts
+
+Build and native acceptance run: **36000809472**, binary source **18c4fc4950a1545f991e25665f63d7700503fb72**. All twelve architecture/package/locale combinations passed all fifteen acceptance checks, including Linux menu accelerators and tooltip labels. Both native runners passed 54 shared tests, TypeScript/version checks and 21 release checks. Installed package hashes and uploaded release asset digests match. All four pages of representative ARM64/Fedora and x64/Ubuntu PDFs were visually reviewed (cover, TOC, Mermaid/table/image, linked note). The same limitations about physical printers, authenticated providers and full desktop environments still apply.
+
+```text
+2d8a2d88b997ac27a2717e2458a6aa07fc8a50023b59e3ec69fc8bee5f645005  Merkzeug-1.2.1-linux-x64.deb
+867111cbc4ae76574d03c253f84068e3b7e3fab55a090b82dbbc84c2d71cd73b  Merkzeug-1.2.1-linux-arm64.AppImage
+901775a8bb443e481d820056e6cacb0bd96f699b91639d7eeba7a218263bf604  Merkzeug-1.2.1-linux-arm64.rpm
+984ec04993938fcd19c0c08ecb1ba3659a3596ccbca1c4de83342622fc4ac8f7  Merkzeug-1.2.1-linux-x64.rpm
+cf826f78f415c1c3c21fde22ede77bbc15c5b1f6d172e21103b4dd32d2066db6  Merkzeug-1.2.1-linux-arm64.deb
+edf1f4a45fdecbfbe6423b83a746818f8eed92ffedb66fe014f7e85dc2435d83  Merkzeug-1.2.1-linux-x64.AppImage
+```
