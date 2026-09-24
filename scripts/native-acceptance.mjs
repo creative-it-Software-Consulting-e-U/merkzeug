@@ -44,7 +44,7 @@ function passed(check){report.checks[check]='passed';console.log(`PASS ${locale}
 async function start(){
  const env={...process.env,MERKZEUG_VAULT:vault,MERKZEUG_PDF_TARGET:join(dest,'acceptance.pdf'),MERKZEUG_TEMPLATES_ROOT:templates,MERKZEUG_PDF_TEMPLATE:'Acceptance'};
  delete env.ELECTRON_RUN_AS_NODE; delete env.MERKZEUG_SCREENSHOT;
- app=await _electron.launch({executablePath:resolve(executable),args:[`--user-data-dir=${profile}`,`--lang=${locale}`],env,timeout:60000});
+ app=await _electron.launch({executablePath:resolve(executable),chromiumSandbox:true,args:[`--user-data-dir=${profile}`,`--lang=${locale}`],env,timeout:60000});
  const page=await app.firstWindow(); page.setDefaultTimeout(30000);
  const releaseNotes = page.locator('[data-close-release]');
  await page.locator('.tree-label').first().or(releaseNotes).first().waitFor();
