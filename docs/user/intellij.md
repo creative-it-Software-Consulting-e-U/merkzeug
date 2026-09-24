@@ -128,3 +128,24 @@ With the Merkzeug editor active, **File → Print** uses Merkzeug's PDF renderin
 Native **Refactor → Rename/Move** also updates incoming Markdown links in project content, including notes without an `.assets/` folder. Move recalculates outgoing relative links and links to companion images. The Markdown editor plugin is optional: Merkzeug parses Markdown destinations itself and combines these changes with native refactoring, including open unsaved documents and Undo/Redo.
 
 Inline links, images and reference-style definitions are supported. URL encoding, link labels, titles and `#section` suffixes are preserved; heading-anchor renames are a separate operation. Code examples, frontmatter, external URLs and ordinary prose are left alone. HTML links and wiki links are not included. Only indexed project content is scanned, not excluded folders, symlinks or external files. Native language-specific directory/package refactorings remain owned by their language plugin. Refactoring a directory through the generic file operation updates Markdown paths too. Filesystem changes outside IntelliJ do not trigger this operation.
+
+
+## Sharing templates in a repository
+
+A template is an ordinary folder containing `vorlage.json`, `stil.css`, and its HTML fragments and assets. You can keep that folder in a Git repository so your team can review changes and use the same layout. Commit the complete folder, including logos and fonts that you are allowed to share.
+
+In the PDF controls, choose **Template inside this vault** and enter the template's relative folder. The assignment in `.merkzeug/settings.json` works across desktop, iPhone/iPad and IntelliJ. Commit and pull that file together with the template folder using your normal Git workflow.
+
+Alternatively, store central templates in **iCloud Drive → Merkzeug → Templates** and choose **Central template**. iCloud sharing between your own Apple devices requires the same account and completed synchronization.
+
+PDF-file export and combining directly linked documents are available on desktop, iPhone/iPad, and in IntelliJ. The selected template also applies when printing.
+
+## Choose a template location
+
+In the PDF controls above an open note (IntelliJ: **…**), choose **PDF template for this vault**. Select **Central template**, choose a name and press **Apply**, or select **Template inside this vault**, enter its relative folder (for example `.merkzeug/templates/Company`) and press **Apply**. The choice applies to every note in this vault, including editing styles, PDF export and printing. It does not move or copy template files. Choose **No template** and **Apply** to clear the assignment.
+
+The portable assignment is stored in `.merkzeug/settings.json`. A central template is referenced by name; a vault template uses `{"pdfTemplate":{"source":"vault","path":".merkzeug/templates/Company"}}`. Commit the settings and template folder to share them with a repository. Existing central assignments remain compatible. On Apple devices, the central collection uses Merkzeug's iCloud container when available; a locally selected template collection remains a device setting. IntelliJ also discovers installed desktop templates. Missing template folders are reported instead of silently substituting another template.
+
+## Release Notes
+
+Open **Release Notes** in Help (IntelliJ: **…**) for the complete English or German version history, available offline. On the first start of a new marketing version, its release notes open automatically. **Done** marks that version as read on this installation; the full history remains accessible. Website and apps use the same release-note source.

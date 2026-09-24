@@ -1,0 +1,13 @@
+.merkzeug-release-overlay { position: fixed; inset: 0; display: grid; place-items: center; background: #0008; z-index: 1000000; }
+.merkzeug-release-notes { box-sizing: border-box; width: min(720px, calc(100vw - 24px)); max-height: calc(100dvh - 48px); padding: 22px; border: 1px solid var(--border, #888); border-radius: 14px; background: var(--bg, Canvas); color: var(--text, CanvasText); font: 16px/1.5 system-ui, sans-serif; display: flex; flex-direction: column; overflow: hidden; }
+
+.merkzeug-release-notes header, .merkzeug-release-notes footer { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.merkzeug-release-notes header h2 { flex: 1; margin: 0; font-size: 21px; }
+.merkzeug-release-notes article { border-bottom: 1px solid var(--border, #888); padding: 12px 0; }
+.merkzeug-release-notes article p { font-size: 13px; opacity: .8; }
+.merkzeug-release-notes li { margin: 8px 0; }
+.merkzeug-release-notes footer { justify-content: flex-end; margin-top: 18px; }
+.merkzeug-release-notes button, .merkzeug-release-notes select { font: inherit; color: inherit; background: var(--bg, Canvas); border: 1px solid var(--border, #888); border-radius: 6px; padding: 7px 12px; }
+
+.merkzeug-release-notes .release-history { min-height: 0; overflow: auto; }
+.merkzeug-release-notes header, .merkzeug-release-notes footer { flex-shrink: 0; }

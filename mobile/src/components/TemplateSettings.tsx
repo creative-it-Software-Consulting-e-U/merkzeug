@@ -1,3 +1,4 @@
+import { TemplateLocation } from '@merkzeug/editor/TemplateLocation'
 import { useEffect, useState } from 'react'
 import type { PdfTemplate } from '@merkzeug/core/pdf'
 import { t } from '@merkzeug/core/i18n'
@@ -55,11 +56,7 @@ export function TemplateSettings({ vaultId, onChange }: { vaultId: string; onCha
       {!folder.cloud && <button disabled={busy} onClick={() => void run(useCloudTemplateFolder)}>{t('Use Merkzeug iCloud templates')}</button>}
       <button disabled={busy} onClick={() => void run(pickTemplateFolder)}>{t('Change…')}</button>
       <button disabled={busy} onClick={() => window.dispatchEvent(new Event('merkzeug-templates-change'))}>{t('Refresh')}</button>
-      <label>{t('Template for this vault')} <select disabled={busy} value={selected} onChange={event => void run(() => assignTemplate(event.target.value || null))}>
-        <option value="">{t('No template')}</option>
-        {folder.templates.map(name => <option key={name}>{name}</option>)}
-        {selected && !folder.templates.includes(selected) && <option value={selected}>{selected} ({t('missing')})</option>}
-      </select></label>
+      <TemplateLocation value={selected || null} templates={folder.templates} onChange={name => run(() => assignTemplate(name))} />
       <label><input type="checkbox" checked={enabled} onChange={event => { setEnabled(event.target.checked); localStorage.setItem(key, String(event.target.checked)) }} /> {t('Use PDF template while editing')}</label>
     </div>
     <TemplateStylingPrompt />

@@ -1,4 +1,35 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Visual Markdown for Mac, iPhone, iPad and IntelliJ IDEA. Explore linked notes, edit Mermaid diagrams and keep your own files."><title>Merkzeug Desktop Guide</title><link rel="stylesheet" href="style.css"><link rel="icon" href="assets/icon.png"><link rel="canonical" href="https://merkzeug.creative-it.com/help-en.html"><meta property="og:title" content="Your Markdown. Connected. · Merkzeug"><meta property="og:description" content="Visual Markdown for Mac, iPhone, iPad and IntelliJ IDEA. Explore linked notes, edit Mermaid diagrams and keep your own files."><meta property="og:type" content="website"><meta property="og:image" content="https://merkzeug.creative-it.com/assets/mac-en.png"></head><body><a class="skip" href="#content">Skip to content</a><header><a class="brand" href="index.html"><img src="assets/icon.png" alt="" width="36" height="36"><strong>Merkzeug</strong></a><nav aria-label="Main navigation"><a href="help-en.html">Help</a><a href="https://support.apps.creative-it.com/?app=merkzeug&amp;lang=en">Support</a><a href="help-de.html" lang="de">Deutsch</a></nav></header><main id="content" class="guide"><p class="notice">Choose your edition: Mac, iPhone & iPad, or IntelliJ IDEA.</p><p><a href="help-en.html">Desktop</a> · <a href="help-ios-en.html">iPhone &amp; iPad</a> · <a href="help-intellij-en.html">IntelliJ IDEA</a></p><h1 id="merkzeug-help">Merkzeug – Help</h1>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Explore Markdown, edit visually, and share documents with your layout. For Mac, iPhone, iPad and IntelliJ IDEA.">
+<title>Merkzeug Desktop Guide</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="assets/icon.png">
+<link rel="canonical" href="https://merkzeug.creative-it.com/help-en.html">
+<meta property="og:title" content="Markdown. Your way. · Merkzeug">
+<meta property="og:description" content="Explore Markdown, edit visually, and share documents with your layout. For Mac, iPhone, iPad and IntelliJ IDEA.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://merkzeug.creative-it.com/assets/mac-en.png">
+<link rel="stylesheet" href="landing.css">
+<script defer src="landing.js">
+</script>
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header>
+<a class="brand" href="index.html">
+<img src="assets/icon.png" alt="" width="36" height="36">
+<strong>Merkzeug</strong>
+</a>
+<nav aria-label="Main navigation">
+<a href="help-en.html">Help</a>
+<a href="https://support.apps.creative-it.com/?app=merkzeug&amp;lang=en">Support</a>
+<a href="help-de.html" lang="de">Deutsch</a>
+</nav>
+</header>
+<main id="content" class="guide"><p class="notice">Choose your edition: Mac, iPhone & iPad, or IntelliJ IDEA.</p><p><a href="help-en.html">Desktop</a> · <a href="help-ios-en.html">iPhone &amp; iPad</a> · <a href="help-intellij-en.html">IntelliJ IDEA</a></p><h1 id="merkzeug-help">Merkzeug – Help</h1>
 <p>The interface and this help use German on a German system and English otherwise. You can switch the help language independently.</p>
 <p>Merkzeug is a Notion-style editor for Markdown notes – this edition runs on
 <strong>macOS, Windows and Linux</strong>. You edit your notes <strong>WYSIWYG</strong> (formatted, without
@@ -468,7 +499,7 @@ message instead of hanging.</li>
 <p>In <strong>Settings</strong>, select the PDF template for this vault. Enable <strong>Use PDF template while editing</strong> in the bottom bar to preview its document typography and colors. Disable it to return to the editor theme. Only <code>.pdf-content</code> content rules are reused; cover pages, page furniture, print layout and application-wide CSS are excluded. This is a formatting preview, not a paginated PDF proof. PDF export keeps the complete original template and print colors. Linux needs a system keyring for private subscriptions; ICS files can be imported without one.</p>
 <p>Mermaid diagrams use the document background instead of a dark code-block panel and switch to the light PDF theme when PDF template editing styles are active, and return to the application theme when the preview is disabled.</p>
 <h3 id="template-styling-prompt">Template styling prompt</h3>
-<p>Desktop Settings provides <strong>Template styling prompt</strong> for each template; expand it to review and copy a complete agent brief with the template&#39;s folder path. IntelliJ offers the same action in <strong>Settings → Tools → Merkzeug</strong>, using the folder currently shown in the settings field. On iOS, open <strong>Help → Template styling prompt</strong> and substitute the folder path on the agent&#39;s computer; iOS supports PDF template styles while editing and printing through AirPrint, but does not offer a separate PDF-file export.</p>
+<p>Desktop Settings provides <strong>Template styling prompt</strong> for each template; expand it to review and copy a complete agent brief with the template&#39;s folder path. IntelliJ offers the same action in <strong>Settings → Tools → Merkzeug</strong>, using the folder currently shown in the settings field. On iOS, open <strong>Help → Template styling prompt</strong> and substitute the folder path on the agent&#39;s computer; iOS supports PDF template styles while editing, PDF export, and printing through AirPrint.</p>
 <p>Replace the new template name and your colors, fonts, logo and design wishes before sending it. The prompt is in English, includes the complete offline technical reference, and works with older templates that lack instruction files. Copying it does not read note contents or modify existing templates. If clipboard access is unavailable in the web view, select and copy the displayed text manually.</p>
 <p>New starter copies include <code>AGENTS.md</code> (format, CSS examples, placeholders, preview limitations and validation) and <code>STYLING-PROMPT.md</code> (reusable brief). Keep template-specific design choices in <code>README.md</code>. The brief instructs the agent to create a separate copy and preserve existing instructions. Existing desktop templates are not upgraded or overwritten. For manual use, concatenate STYLING-PROMPT.md and AGENTS.md and replace the template-path placeholder.</p>
 <h3 id="license">License</h3>
@@ -487,4 +518,26 @@ message instead of hanging.</li>
 <p>Inline links, images and reference-style link definitions are supported, including URL-encoded names and <code>#section</code> suffixes. Link labels and titles stay unchanged. Section suffixes are preserved, not recalculated when a heading changes. Code examples, frontmatter, external URLs and ordinary prose are not rewritten. HTML links and wiki-link syntax are not included.</p>
 <p>Only regular Markdown files inside the vault are considered; hidden/ignored folders and symbolic links are not followed. Renames outside Merkzeug are not detected as refactoring. Destination collisions or stale file contents stop the operation. Open documents reload when clean; unsaved conflicting edits are preserved for review rather than silently overwritten.</p>
 <p>When you quit Merkzeug, all open vault windows are restored on the next launch, including their size, position and fullscreen/maximized state. Windows closed individually before quitting stay closed. Missing vault folders are skipped; windows from disconnected displays are moved onto an available display.</p>
-</main><footer><span>© 2026 creative-it Software Consulting e.U.</span><nav aria-label="Footer"><a href="release-notes-en.html">Release Notes</a><a href="privacy-en.html">Privacy</a><a href="license-en.html">License</a><a href="legal-en.html">Legal notice</a><a href="https://apps.creative-it.com/">More apps</a><a href="https://www.creative-it.com/">creative-it</a></nav></footer></body></html>
+<h2 id="sharing-templates-in-a-repository">Sharing templates in a repository</h2>
+<p>A template is an ordinary folder containing <code>vorlage.json</code>, <code>stil.css</code>, and its HTML fragments and assets. You can keep that folder in a Git repository so your team can review changes and use the same layout. Commit the complete folder, including logos and fonts that you are allowed to share.</p>
+<p>In the PDF controls, choose <strong>Template inside this vault</strong> and enter the template&#39;s relative folder. The assignment in <code>.merkzeug/settings.json</code> works across desktop, iPhone/iPad and IntelliJ. Commit and pull that file together with the template folder using your normal Git workflow.</p>
+<p>Alternatively, store central templates in <strong>iCloud Drive → Merkzeug → Templates</strong> and choose <strong>Central template</strong>. iCloud sharing between your own Apple devices requires the same account and completed synchronization.</p>
+<p>PDF-file export and combining directly linked documents are available on desktop, iPhone/iPad, and in IntelliJ. The selected template also applies when printing.</p>
+<h2 id="choose-a-template-location">Choose a template location</h2>
+<p>In the PDF controls above an open note (IntelliJ: <strong>…</strong>), choose <strong>PDF template for this vault</strong>. Select <strong>Central template</strong>, choose a name and press <strong>Apply</strong>, or select <strong>Template inside this vault</strong>, enter its relative folder (for example <code>.merkzeug/templates/Company</code>) and press <strong>Apply</strong>. The choice applies to every note in this vault, including editing styles, PDF export and printing. It does not move or copy template files. Choose <strong>No template</strong> and <strong>Apply</strong> to clear the assignment.</p>
+<p>The portable assignment is stored in <code>.merkzeug/settings.json</code>. A central template is referenced by name; a vault template uses <code>{&quot;pdfTemplate&quot;:{&quot;source&quot;:&quot;vault&quot;,&quot;path&quot;:&quot;.merkzeug/templates/Company&quot;}}</code>. Commit the settings and template folder to share them with a repository. Existing central assignments remain compatible. On Apple devices, the central collection uses Merkzeug&#39;s iCloud container when available; a locally selected template collection remains a device setting. IntelliJ also discovers installed desktop templates. Missing template folders are reported instead of silently substituting another template.</p>
+<h2 id="release-notes">Release Notes</h2>
+<p>Open <strong>Release Notes</strong> in Help (IntelliJ: <strong>…</strong>) for the complete English or German version history, available offline. On the first start of a new marketing version, its release notes open automatically. <strong>Done</strong> marks that version as read on this installation; the full history remains accessible. Website and apps use the same release-note source.</p>
+</main><footer>
+<span>© 2026 creative-it Software Consulting e.U.</span>
+<nav aria-label="Footer">
+<a href="release-notes-en.html">Release Notes</a>
+<a href="privacy-en.html">Privacy</a>
+<a href="license-en.html">License</a>
+<a href="legal-en.html">Legal notice</a>
+<a href="https://apps.creative-it.com/">More apps</a>
+<a href="https://www.creative-it.com/">creative-it</a>
+</nav>
+</footer>
+</body>
+</html>

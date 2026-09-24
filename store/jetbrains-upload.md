@@ -1,6 +1,6 @@
 # Merkzeug Marketplace upload
 
-Updates are uploaded to the existing Marketplace listing (ID 34221), in the `beta` channel. Version 1.0.1 supersedes the approved 1.0.0 beta. No Marketplace submission is performed by the build scripts. Run `python3 scripts/prepare-jetbrains-upload.py` after validation to collect the ZIP, SVG icon, screenshots, copyable text and checksums in `release-artifacts/jetbrains-1.0.0/upload/`.
+Updates are uploaded to the existing Marketplace listing (ID 34221), in the `beta` channel. Version 1.2.0 supersedes the approved 1.0.1 beta. No Marketplace submission is performed by the build scripts. Run `python3 scripts/prepare-jetbrains-upload.py` after validation to collect the ZIP, SVG icon, screenshots, copyable text and checksums in `release-artifacts/jetbrains-1.0.0/upload/`.
 
 ## Form fields
 
@@ -17,7 +17,7 @@ Updates are uploaded to the existing Marketplace listing (ID 34221), in the `bet
 | Suggested channel | beta |
 | Suggested tags | Markdown, Editor, PDF (choose the corresponding available tags) |
 | Plugin ID | com.creativeit.merkzeug |
-| Version | 1.0.1 |
+| Version | 1.2.0 |
 | Supported IDE | IntelliJ IDEA 2026.2.2–2026.2.3, builds 262.10315.125–262.10968.63, with JCEF |
 | Source code URL | Leave empty. The source repository is private. |
 
@@ -27,7 +27,7 @@ Review the new license text before public distribution. This is a newly prepared
 
 ## Files
 
-- Build `python3 intellij/build.py --marketplace` and upload **`intellij/dist/merkzeug-1.0.1.zip`**. Upload the ZIP unchanged, not the inner JAR or the folder of supporting materials.
+- Build `python3 intellij/build.py --marketplace` and upload **`intellij/dist/merkzeug-1.2.0.zip`**. Upload the ZIP unchanged, not the inner JAR or the folder of supporting materials.
 - Plugin description and release notes are embedded in `plugin.xml`; copyable English/German listing text is in [the Marketplace description](jetbrains-marketplace.md).
 - The 40 × 40 SVG logo is embedded as `META-INF/pluginIcon.svg`.
 - Screenshots are captured from the real IntelliJ/JCEF editor using a synthetic notebook. No personal documents are used. See `intellij/capture-marketplace.py`.

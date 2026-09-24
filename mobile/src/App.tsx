@@ -1,3 +1,5 @@
+import { collectLinkedDocs } from '@merkzeug/core/exportPlan'
+import type { PdfDoc } from '@merkzeug/core/pdf'
 import { meetingIdentity, firstHeading, headingFileBase } from '@merkzeug/core/meetingFiles'
 import { assignedTemplate, loadTemplate } from './templates'
 import { TemplateSettings } from './components/TemplateSettings'
@@ -55,7 +57,7 @@ export default function App(): React.JSX.Element {
   const [searching, setSearching] = useState(false)
   const [showMeetings, setShowMeetings] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
-  const [printDoc, setPrintDoc] = useState<{ path: string; content: string } | null>(null)
+  const [printDoc, setPrintDoc] = useState<{ path: string; content: string; linkedDocs: PdfDoc[] } | null>(null)
   const [pdfTemplate, setPdfTemplate] = useState<PdfTemplate | null>(null)
   const [preparingPrint, setPreparingPrint] = useState(false)
   const printPending = useRef(false)
@@ -69,7 +71,12 @@ export default function App(): React.JSX.Element {
       const result = await vault.readFile(current)
       const templateName = await assignedTemplate()
       setPdfTemplate(templateName ? await loadTemplate(templateName) : null)
-      setPrintDoc({ path: current, content: result.content })
+      const paths = await collectLinkedDocs(current, result.content, '/', async path => {
+        const stat = await vault.stat(path)
+        return stat.exists && !stat.isDirectory
+      })
+      const linkedDocs = await Promise.all(paths.map(async path => ({ path, content: (await vault.readFile(path)).content })))
+      setPrintDoc({ path: current, content: result.content, linkedDocs })
     } catch (error) { alert(String(error)) }
     finally { printPending.current = false; setPreparingPrint(false) }
   }
@@ -483,7 +490,7 @@ export default function App(): React.JSX.Element {
       <GuidedTour edition="ios" />
       <WorkingCopy key={`git:${vaultInfo.id ?? vaultInfo.name}`} vaultId={vaultInfo.id ?? vaultInfo.name} />
       <VaultGuidance key={vaultInfo.id ?? vaultInfo.name} vaultId={vaultInfo.id ?? vaultInfo.name} host={guidanceHost} />
-      <div className="appearance-bar">{isNote && <button disabled={preparingPrint} onClick={() => void preparePrint()}>{translate("Print…")}</button>}<button onClick={() => setShowMeetings(true)}>{translate('New meeting note')}</button><ThemeSelect /></div>
+      <div className="appearance-bar">{isNote && <button disabled={preparingPrint} onClick={() => void preparePrint()}>{translate("PDF / Print…")}</button>}<button onClick={() => setShowMeetings(true)}>{translate('New meeting note')}</button><ThemeSelect /></div>
       {showMeetings && <MeetingNotes folder={isNote ? dirname(current) : current} onClose={() => setShowMeetings(false)} onOpen={path => { setShowMeetings(false); void reloadTree(); navigateTo(path) }} />}
       <TemplateSettings key={`templates:${vaultInfo.id ?? vaultInfo.name}`} vaultId={vaultInfo.id ?? vaultInfo.name} onChange={setPdfTemplate} />
       <main className="content" ref={contentRef}>

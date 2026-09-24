@@ -33,6 +33,7 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
         CAPPluginMethod(name: "pickTemplateFolder", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "templateFile", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "printDocument", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "exportDocument", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "restoreVault", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "pickVault", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "guidanceRead", returnType: CAPPluginReturnPromise),
@@ -60,10 +61,13 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
 
     private var printingDocument = false
 
-    @objc func printDocument(_ call: CAPPluginCall) {
+    @objc func printDocument(_ call: CAPPluginCall) { renderDocument(call, exportPDF: false) }
+    @objc func exportDocument(_ call: CAPPluginCall) { renderDocument(call, exportPDF: true) }
+
+    private func renderDocument(_ call: CAPPluginCall, exportPDF: Bool) {
         DispatchQueue.main.async {
             guard !self.printingDocument else { call.reject("A print dialog is already open"); return }
-            guard UIPrintInteractionController.isPrintingAvailable,
+            guard (exportPDF || UIPrintInteractionController.isPrintingAvailable),
                   let webView = self.bridge?.webView,
                   let presenter = self.bridge?.viewController else {
                 call.reject("Printing is not available"); return
@@ -105,8 +109,27 @@ public class VaultPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate 
                 try (data as Data).write(to: proof, options: .atomic)
             }
             #endif
-            guard data.length > 0, UIPrintInteractionController.canPrint(data as Data) else {
+            guard data.length > 0, exportPDF || UIPrintInteractionController.canPrint(data as Data) else {
                 self.printingDocument = false; call.reject("Could not prepare printable PDF"); return
+            }
+            if exportPDF {
+                let folder = FileManager.default.temporaryDirectory.appendingPathComponent("Merkzeug-PDF-" + UUID().uuidString, isDirectory: true)
+                try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+                let forbidden = CharacterSet(charactersIn: "/\\:<>\"|?*").union(.controlCharacters)
+                let title = (call.getString("title") ?? "Merkzeug").components(separatedBy: forbidden).joined(separator: "-").trimmingCharacters(in: .whitespacesAndNewlines)
+                let file = folder.appendingPathComponent(String((title.isEmpty ? "Merkzeug" : title).prefix(100)) + ".pdf")
+                do { try (data as Data).write(to: file, options: .atomic) }
+                catch { try? FileManager.default.removeItem(at: folder); throw error }
+                let share = UIActivityViewController(activityItems: [file], applicationActivities: nil)
+                share.popoverPresentationController?.sourceView = presenter.view
+                share.popoverPresentationController?.sourceRect = CGRect(x: presenter.view.bounds.midX, y: 40, width: 1, height: 1)
+                share.completionWithItemsHandler = { _, _, _, error in
+                    try? FileManager.default.removeItem(at: folder)
+                    self.printingDocument = false
+                    if let error { call.reject(error.localizedDescription) } else { call.resolve() }
+                }
+                presenter.present(share, animated: true)
+                return
             }
             let controller = UIPrintInteractionController.shared
             let info = UIPrintInfo(dictionary: nil)

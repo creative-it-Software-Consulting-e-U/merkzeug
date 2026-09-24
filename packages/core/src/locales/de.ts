@@ -1,5 +1,20 @@
 /** German translations; English message text is the stable source key. */
 export const de: Readonly<Record<string, string>> = {
+  'Close release notes': 'Release Notes schließen',
+  'What’s new': 'Was ist neu',
+  'Complete release history': 'Vollständige Versionsgeschichte',
+
+  "PDF template for this vault": "PDF-Vorlage für diesen Vault",
+  "Choose System, Light or Dark. Export and print notes with your PDF templates, including linked documents.": "Wähle System, Hell oder Dunkel. Exportiere und drucke Notizen mit deinen PDF-Vorlagen, einschließlich verlinkter Dokumente.",
+  "Apply": "Übernehmen",
+  "Location": "Speicherort",
+  "Central template": "Zentrale Vorlage",
+  "Template inside this vault": "Vorlage aus diesem Vault",
+  "Relative template folder": "Relativer Vorlagenordner",
+  "Template folder is missing.": "Der Vorlagenordner fehlt.",
+
+  "PDF / Print…": "PDF / Drucken…",
+  "Include linked documents": "Verlinkte Dokumente einschließen",
   "Path is outside the vault": "Pfad liegt außerhalb des Vaults",
   "Review symbolic links manually": "Symbolische Links bitte manuell prüfen",
   "File changed during refactoring": "Datei wurde während des Refactorings geändert",

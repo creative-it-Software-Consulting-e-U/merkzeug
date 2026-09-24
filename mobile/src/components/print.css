@@ -5,3 +5,5 @@
   .mobile-print-actions { display: none !important; }
   .mobile-print-preview { min-height: 0; overflow: visible; }
 }
+.mobile-print-actions { flex-wrap: wrap; align-items: center; }
+.mobile-print-actions label { display: flex; gap: 8px; align-items: center; }

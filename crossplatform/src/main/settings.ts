@@ -10,6 +10,7 @@ export interface SavedWindow {
 }
 
 interface Settings {
+  releaseNotesSeen?: string
   windows?: SavedWindow[]
   lastVault?: string
   recentVaults: string[]
@@ -76,5 +77,16 @@ export function getSavedWindows(): SavedWindow[] {
 
 export function saveWindows(windows: SavedWindow[]): void {
   loadSettings().windows = windows
+  saveSettings()
+}
+
+let releaseNotesClaimed = false
+export function claimReleaseNotes(version: string): boolean {
+  if (releaseNotesClaimed || loadSettings().releaseNotesSeen === version) return false
+  releaseNotesClaimed = true
+  return true
+}
+export function markReleaseNotesSeen(version: string): void {
+  loadSettings().releaseNotesSeen = version
   saveSettings()
 }

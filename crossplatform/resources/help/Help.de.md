@@ -413,7 +413,7 @@ Wähle **Hilfe → Support kontaktieren…**, um das Supportformular mit Merkzeu
 
 Merkzeug enthält die fertige PDF-Vorlage **Merkzeug**: ein Deckblatt in warmem Papierweiß, Serifenschrift für Überschriften, blaue Akzente, Kopfzeilen und nummerierte Fußzeilen. Wähle sie unter **Einstellungen → Vorlage für diesen Vault** aus. Bestehende Vaults behalten ihre Auswahl, auch **Keine Vorlage**. **Erstellen** legt eine bearbeitbare Kopie unter einem neuen Namen an; **Bearbeiten** öffnet ihren Ordner. App-Updates überschreiben deine Anpassungen nicht. Auch in einem neu gewählten Vorlagenordner wird die Standardvorlage bereitgestellt, sofern er beschreibbar ist.
 
-Entferne `deckblatt.html` oder benenne die Datei um, wenn du kein Deckblatt möchtest. Passe `stil.css` für Dokumentstile sowie `kopfzeile.html` / `fusszeile.html` für Inline-Stile der Kopf- und Fußzeilen an. Die Seitenränder stehen in `vorlage.json`. Die deutschen Dateinamen und Platzhalter `{{titel}}` / `{{datum}}` gehören zum gemeinsamen Dateiformat. Lege Logos im Vorlagenordner ab und verwende relative Bildpfade. Die Vorlage funktioniert auch in IntelliJ: **PDF-Vorlage…** öffnet zunächst den mitgelieferten Vorlagenordner, wenn keine andere Vorlage ausgewählt ist. iOS verwendet Vorlagen für Editor-Styles und AirPrint; PDF-Dateiexport ist eine Desktop- und IntelliJ-Funktion.
+Entferne `deckblatt.html` oder benenne die Datei um, wenn du kein Deckblatt möchtest. Passe `stil.css` für Dokumentstile sowie `kopfzeile.html` / `fusszeile.html` für Inline-Stile der Kopf- und Fußzeilen an. Die Seitenränder stehen in `vorlage.json`. Die deutschen Dateinamen und Platzhalter `{{titel}}` / `{{datum}}` gehören zum gemeinsamen Dateiformat. Lege Logos im Vorlagenordner ab und verwende relative Bildpfade. Die Vorlage funktioniert auch in IntelliJ: **PDF-Vorlage…** öffnet zunächst den mitgelieferten Vorlagenordner, wenn keine andere Vorlage ausgewählt ist. iOS verwendet Vorlagen für Editor-Styles, PDF-Export und AirPrint.
 
 ### Vorlage mit einem Agenten anpassen
 
@@ -439,7 +439,7 @@ Mermaid-Diagramme verwenden den Dokumenthintergrund statt einer dunklen Codebloc
 
 ### Vorlagen-Styling-Prompt
 
-In den Desktop-Einstellungen gibt es bei jeder Vorlage **Vorlagen-Styling-Prompt** zum Aufklappen, Prüfen und Kopieren, einschließlich des Vorlagenpfads. IntelliJ bietet dieselbe Aktion unter **Einstellungen → Tools → Merkzeug** mit dem aktuell im Einstellungsfeld angezeigten Ordner. Auf iOS findest du sie unter **Hilfe → Vorlagen-Styling-Prompt**; ergänze dort den Ordnerpfad auf dem Computer des Agenten. iOS unterstützt PDF-Vorlagen-Styles beim Bearbeiten und Drucken über AirPrint, aber keinen separaten PDF-Dateiexport.
+In den Desktop-Einstellungen gibt es bei jeder Vorlage **Vorlagen-Styling-Prompt** zum Aufklappen, Prüfen und Kopieren, einschließlich des Vorlagenpfads. IntelliJ bietet dieselbe Aktion unter **Einstellungen → Tools → Merkzeug** mit dem aktuell im Einstellungsfeld angezeigten Ordner. Auf iOS findest du sie unter **Hilfe → Vorlagen-Styling-Prompt**; ergänze dort den Ordnerpfad auf dem Computer des Agenten. iOS unterstützt PDF-Vorlagen-Styles beim Bearbeiten, PDF-Export und Drucken über AirPrint.
 
 Ersetze den neuen Vorlagennamen sowie Farben, Schriften, Logo und Gestaltungswünsche vor der Übergabe. Der Prompt ist auf Englisch und enthält die vollständige technische Anleitung offline, auch für ältere Vorlagen ohne Hinweisdateien. Beim Kopieren werden keine Notizinhalte gelesen oder bestehende Vorlagen verändert. Falls die Webansicht keinen Zugriff auf die Zwischenablage hat, markiere und kopiere den angezeigten Text manuell.
 
@@ -478,3 +478,24 @@ Unterstützt werden direkte Links, Bilder und Referenz-Linkdefinitionen, auch mi
 Berücksichtigt werden reguläre Markdown-Dateien im Vault; versteckte/ignorierte Ordner und symbolische Links werden nicht verfolgt. Umbenennungen außerhalb von Merkzeug werden nicht als Refactoring erkannt. Namenskollisionen oder zwischenzeitlich geänderte Inhalte stoppen den Vorgang. Offene Dokumente ohne eigene Änderungen werden neu geladen; ungespeicherte konkurrierende Änderungen bleiben zur Prüfung erhalten.
 
 Beim Beenden merkt sich Merkzeug alle offenen Vault-Fenster und stellt sie beim nächsten Start mit Größe, Position sowie Vollbild- bzw. maximiertem Zustand wieder her. Zuvor einzeln geschlossene Fenster bleiben geschlossen. Nicht mehr vorhandene Vault-Ordner werden übersprungen; Fenster von getrennten Bildschirmen werden auf einen verfügbaren Bildschirm verschoben.
+
+
+## Vorlagen im Repository teilen
+
+Eine Vorlage ist ein gewöhnlicher Ordner mit `vorlage.json`, `stil.css`, HTML-Fragmenten und zugehörigen Dateien. Du kannst ihn in einem Git-Repository ablegen, damit dein Team Änderungen prüfen und dasselbe Layout verwenden kann. Committe den vollständigen Ordner, einschließlich Logos und Schriften, die du teilen darfst.
+
+Wähle bei den PDF-Funktionen **Vorlage in diesem Vault** und gib den relativen Vorlagenordner an. Die Zuordnung in `.merkzeug/settings.json` funktioniert am Desktop, auf iPhone/iPad und in IntelliJ. Versioniere diese Einstellungen gemeinsam mit dem Vorlagenordner.
+
+Alternativ können zentrale Vorlagen über **iCloud Drive → Merkzeug → Templates** geteilt werden. Die Synchronisation zwischen eigenen Apple-Geräten setzt dasselbe Konto und abgeschlossene Übertragung voraus.
+
+PDF-Dateiexport und das Zusammenfassen direkt verlinkter Dokumente gibt es am Desktop, auf iPhone/iPad und in IntelliJ. Die ausgewählte Vorlage wird auch beim Drucken verwendet.
+
+## Vorlagen-Ort wählen
+
+In den PDF-Bedienelementen über einer geöffneten Notiz (IntelliJ: **…**) findest du **PDF-Vorlage für diesen Vault**. Wähle **Zentrale Vorlage**, einen Namen und **Übernehmen**, oder **Vorlage in diesem Vault**, den relativen Ordner (zum Beispiel `.merkzeug/templates/Firma`) und **Übernehmen**. Die Auswahl gilt für alle Notizen dieses Vaults, einschließlich Bearbeitungsansicht, PDF-Export und Drucken. Vorlagendateien werden dabei nicht verschoben oder kopiert. **Keine Vorlage** und **Übernehmen** entfernt die Zuordnung.
+
+Die portable Zuordnung liegt in `.merkzeug/settings.json`. Zentrale Vorlagen werden über ihren Namen referenziert, Vault-Vorlagen mit `{"pdfTemplate":{"source":"vault","path":".merkzeug/templates/Firma"}}`. Einstellungen und Vorlagenordner können gemeinsam im Repository versioniert werden. Bestehende zentrale Zuordnungen bleiben kompatibel. Auf Apple-Geräten liegt die zentrale Sammlung bei verfügbarem iCloud im Merkzeug-Container; ein lokal ausgewählter Vorlagenordner bleibt eine Geräteeinstellung. IntelliJ erkennt auch installierte Desktop-Vorlagen. Fehlende Vorlagenordner werden gemeldet, statt still eine andere Vorlage zu verwenden.
+
+## Release Notes
+
+Über **Release Notes** in der Hilfe (IntelliJ: **…**) ist die vollständige Versionsgeschichte auf Deutsch und Englisch auch offline lesbar. Beim ersten Start einer neuen Marketing-Version erscheinen deren Release Notes automatisch. **Fertig** merkt diese Version auf der aktuellen Installation als gelesen; die komplette Historie bleibt erreichbar. Website und Apps verwenden dieselbe Quelle für Release Notes.

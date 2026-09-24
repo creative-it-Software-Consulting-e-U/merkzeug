@@ -182,3 +182,11 @@ Superseded Checks, native candidate runs and screenshot candidate runs on the sa
 branch are cancelled. Release runs and uploads remain serialized without cancelling
 an active publication. Xcode Cloud/TestFlight configuration is independent of these
 GitHub Actions controls.
+
+## Version 1.2 release notes and delivery
+
+`website/release-notes.json` is the canonical bilingual release history. The shared editor component bundles that same file in desktop, iOS and IntelliJ; the website generator renders it into the public history pages. Add notes before changing `VERSION`, run `node scripts/build-website.mjs`, and build every edition from that commit. Keep an unpublished release in preparation until its store availability is confirmed.
+
+Desktop and IntelliJ persist the last acknowledged version in host settings; iOS uses app-local storage. A new version displays its notes once, and Help (or the IntelliJ extra-actions menu) always exposes the full history. The first-launch modal precedes onboarding.
+
+Apple distribution currently uses the manual iOS and macOS App Store Xcode Cloud workflows and the existing App Store Connect app. Create the 1.2 platform entries and localized notes, then start both workflows after pushing the release commit. The Marketplace beta receives `intellij/dist/merkzeug-1.2.0.zip`. Website deployment follows the main-branch push. No Git tag or unsigned native packaging run is needed for these three destinations. The older setup notes above describe the initial pipeline, not the current store delivery state.

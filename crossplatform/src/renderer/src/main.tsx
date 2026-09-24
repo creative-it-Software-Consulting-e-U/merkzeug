@@ -1,3 +1,4 @@
+import { ReleaseNotes } from '@merkzeug/editor/ReleaseNotes'
 import { initializeTheme } from '@merkzeug/editor/theme'
 import './locale'
 import React from 'react'
@@ -11,13 +12,15 @@ import './styles.css'
 
 initializeTheme()
 
+const releaseHost = { claim: window.merkzeug.claimReleaseNotes, seen: window.merkzeug.markReleaseNotesSeen }
+
 function Root(): React.JSX.Element {
   const hash = window.location.hash
   if (hash === '#help') return <HelpApp />
   if (hash === '#zoom') return <ZoomApp />
   if (hash === '#pdf') return <PdfApp />
   if (hash === '#settings') return <SettingsApp />
-  return <App />
+  return <ReleaseNotes host={releaseHost}><App /></ReleaseNotes>
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

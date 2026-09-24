@@ -129,7 +129,7 @@ async function exportPdf(win: BrowserWindow, notePath: string, print = false): P
     process.env.MERKZEUG_PDF_TEMPLATE ?? (vault ? getVaultTemplateName(vault) : null)
   let template: PdfTemplate | null = null
   if (templateName) {
-    template = loadTemplate(templateName)
+    template = loadTemplate(templateName, vault)
     if (!template && !debugTarget) {
       const { response } = await dialog.showMessageBox(win, {
         type: 'warning',
@@ -249,7 +249,7 @@ async function exportPdfMulti(win: BrowserWindow, notePaths: string[]): Promise<
     process.env.MERKZEUG_PDF_TEMPLATE ?? (vault ? getVaultTemplateName(vault) : null)
   let template: PdfTemplate | null = null
   if (templateName) {
-    template = loadTemplate(templateName)
+    template = loadTemplate(templateName, vault)
     if (!template && !debugTarget) {
       const { response } = await dialog.showMessageBox(win, {
         type: 'warning',

@@ -1,6 +1,6 @@
 {
   "name": "@merkzeug/export",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "type": "module",
   "exports": {
@@ -9,8 +9,8 @@
     "./*": "./src/*.ts"
   },
   "dependencies": {
-    "@merkzeug/core": "1.1.0",
-    "@merkzeug/editor": "1.1.0"
+    "@merkzeug/core": "1.2.0",
+    "@merkzeug/editor": "1.2.0"
   },
   "peerDependencies": {
     "@milkdown/crepe": "^7.22.1",

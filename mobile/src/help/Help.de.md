@@ -56,6 +56,13 @@ Bearbeitungsmodus:
 
 ## Synchronisieren mit Working Copy
 
+Working Copy ist eine separate Git-App für iPhone und iPad. Sie klont Repositories und kümmert sich um Versionsverwaltung und Synchronisation; Merkzeug liest und bearbeitet die Markdown-Dateien darin.
+
+Du kannst auch jede andere Git-App verwenden, die ihren Repository-Ordner über die Dateien-App zum Öffnen und Bearbeiten freigibt. Git-Aktionen führst du dann in dieser App aus. Für Working Copy bietet Merkzeug zusätzlich eine direkte Integration: Nach der Einrichtung kannst du Pull, Commit und Push aus Merkzeug anstoßen.
+
+[Working Copy im App Store](https://apps.apple.com/app/id896694807).
+
+
 - Nach einem **Pull** in Working Copy reicht der Wechsel zurück zu
   Merkzeug – die Ordnerliste und geöffnete (unveränderte) Notizen laden
   den neuen Stand automatisch. **↻** liest den Vault jederzeit manuell
@@ -88,7 +95,7 @@ Bei Auswahl einer ganzen Tabellenzelle wird die Zelle hervorgehoben. Klicke in d
 
 ## PDF-Vorlagen am Desktop
 
-Desktop-App und IntelliJ enthalten die PDF-Startvorlage Merkzeug mit Deckblatt, gestalteten Überschriften und Seitennummern. Eine Kopie lässt sich mit einem Agenten anpassen. Siehe die [Vorlagen-Anleitung](https://merkzeug.creative-it.com/help-de.html#pdf-startvorlage). iOS verwendet Vorlagen für Editor-Styles und AirPrint; PDF-Dateiexport ist eine Desktop- und IntelliJ-Funktion.
+Desktop-App und IntelliJ enthalten die PDF-Startvorlage Merkzeug mit Deckblatt, gestalteten Überschriften und Seitennummern. Eine Kopie lässt sich mit einem Agenten anpassen. Siehe die [Vorlagen-Anleitung](https://merkzeug.creative-it.com/help-de.html#pdf-startvorlage). iOS verwendet Vorlagen für Editor-Styles, PDF-Export und AirPrint.
 
 ## Darstellung, Tour und Agentenhinweise
 
@@ -108,7 +115,7 @@ Auf iPhone und iPad stehen auch die nativen iOS-Kalender zur Verfügung. Zugriff
 
 ### Vorlagen-Styling-Prompt
 
-In den Desktop-Einstellungen gibt es bei jeder Vorlage **Vorlagen-Styling-Prompt** zum Aufklappen, Prüfen und Kopieren, einschließlich des Vorlagenpfads. IntelliJ bietet dieselbe Aktion unter **Einstellungen → Tools → Merkzeug** mit dem aktuell im Einstellungsfeld angezeigten Ordner. Auf iOS findest du sie unter **Hilfe → Vorlagen-Styling-Prompt**; ergänze dort den Ordnerpfad auf dem Computer des Agenten. Derselbe Prompt ist auch unter **PDF-Vorlagen** verfügbar. iOS kann die Inhalts-Styles einer Vorlage beim Bearbeiten anzeigen; einen separaten PDF-Dateiexport gibt es nicht.
+In den Desktop-Einstellungen gibt es bei jeder Vorlage **Vorlagen-Styling-Prompt** zum Aufklappen, Prüfen und Kopieren, einschließlich des Vorlagenpfads. IntelliJ bietet dieselbe Aktion unter **Einstellungen → Tools → Merkzeug** mit dem aktuell im Einstellungsfeld angezeigten Ordner. Auf iOS findest du sie unter **Hilfe → Vorlagen-Styling-Prompt**; ergänze dort den Ordnerpfad auf dem Computer des Agenten. Derselbe Prompt ist auch unter **PDF-Vorlagen** verfügbar. iOS kann die Inhalts-Styles einer Vorlage beim Bearbeiten anzeigen und Dokumente mit der ausgewählten Vorlage exportieren oder drucken.
 
 Ersetze den neuen Vorlagennamen sowie Farben, Schriften, Logo und Gestaltungswünsche vor der Übergabe. Der Prompt ist auf Englisch und enthält die vollständige technische Anleitung offline, auch für ältere Vorlagen ohne Hinweisdateien. Beim Kopieren werden keine Notizinhalte gelesen oder bestehende Vorlagen verändert. Falls die Webansicht keinen Zugriff auf die Zwischenablage hat, markiere und kopiere den angezeigten Text manuell.
 
@@ -122,7 +129,7 @@ Merkzeug ist proprietäre Software für private und interne geschäftliche Nutzu
 
 ## Drucken
 
-Öffne eine Notiz und tippe auf **Drucken…**. Sobald die Vorschau fertig ist, öffnet **Drucken…** den AirPrint-Dialog mit Drucker, Seitenbereich und Kopien. Ausstehende Änderungen werden zuvor gespeichert. Gedruckt wird die aktuelle Notiz samt Mermaid-Diagrammen und Bildern. Eine ausgewählte Vorlage liefert Inhalts-Styles und Deckblatt. AirPrint berücksichtigt auch Seitenkopf, Seitenfuß, Seitennummern und eigene Seitenränder. Diese erscheinen in der nativen AirPrint-Vorschau; die vorherige Inhaltsvorschau ist nicht in Seiten aufgeteilt. Das Drucken verlinkter Dokumente wird auf iOS nicht unterstützt. Mit Abbrechen gelangst du zur Vorschau zurück; **Schließen** öffnet wieder deine Notiz.
+Öffne eine Notiz und tippe auf **PDF / Drucken…**. Sobald die Vorschau fertig ist, öffnet **Drucken…** den AirPrint-Dialog mit Drucker, Seitenbereich und Kopien. Ausstehende Änderungen werden zuvor gespeichert. Gedruckt wird die aktuelle Notiz samt Mermaid-Diagrammen und Bildern. Eine ausgewählte Vorlage liefert Inhalts-Styles und Deckblatt. AirPrint berücksichtigt auch Seitenkopf, Seitenfuß, Seitennummern und eigene Seitenränder. Diese erscheinen in der nativen AirPrint-Vorschau; die vorherige Inhaltsvorschau ist nicht in Seiten aufgeteilt. Aktiviere **Verlinkte Dokumente einschließen**, um das zusammengefasste Dokument zu drucken. Mit Abbrechen gelangst du zur Vorschau zurück; **Schließen** öffnet wieder deine Notiz.
 
 ## PDF-Vorlagen auf iOS
 
@@ -143,3 +150,35 @@ Beim Umbenennen einer Notiz oder eines Ordners durch Merkzeug werden lokale Mark
 Unterstützt werden direkte Links, Bilder und Referenz-Linkdefinitionen, auch mit URL-kodierten Namen und `#abschnitt`-Anhängen. Linktexte und Linktitel bleiben erhalten. Abschnittsanhänge werden beibehalten, bei Änderungen einer Überschrift aber nicht neu berechnet. Codebeispiele, Frontmatter, externe URLs und gewöhnlicher Text werden nicht verändert. HTML-Links und Wiki-Link-Syntax sind nicht enthalten.
 
 Berücksichtigt werden reguläre Markdown-Dateien im Vault; versteckte/ignorierte Ordner und symbolische Links werden nicht verfolgt. Umbenennungen außerhalb von Merkzeug werden nicht als Refactoring erkannt. Namenskollisionen oder zwischenzeitlich geänderte Inhalte stoppen den Vorgang. Offene Dokumente ohne eigene Änderungen werden neu geladen; ungespeicherte konkurrierende Änderungen bleiben zur Prüfung erhalten.
+
+
+## Vorlagen im Repository teilen
+
+Eine Vorlage ist ein gewöhnlicher Ordner mit `vorlage.json`, `stil.css`, HTML-Fragmenten und zugehörigen Dateien. Du kannst ihn in einem Git-Repository ablegen, damit dein Team Änderungen prüfen und dasselbe Layout verwenden kann. Committe den vollständigen Ordner, einschließlich Logos und Schriften, die du teilen darfst.
+
+Wähle bei den PDF-Funktionen **Vorlage in diesem Vault** und gib den relativen Vorlagenordner an. Die Zuordnung in `.merkzeug/settings.json` funktioniert am Desktop, auf iPhone/iPad und in IntelliJ. Versioniere diese Einstellungen gemeinsam mit dem Vorlagenordner.
+
+Alternativ können zentrale Vorlagen über **iCloud Drive → Merkzeug → Templates** geteilt werden. Die Synchronisation zwischen eigenen Apple-Geräten setzt dasselbe Konto und abgeschlossene Übertragung voraus.
+
+PDF-Dateiexport und das Zusammenfassen direkt verlinkter Dokumente gibt es am Desktop, auf iPhone/iPad und in IntelliJ. Die ausgewählte Vorlage wird auch beim Drucken verwendet.
+
+
+## PDF-Export und zusammengefasste Dokumente
+
+Öffne eine Notiz und wähle **PDF / Drucken…**. Ausstehende Änderungen werden vor der Vorschau gespeichert. **Als PDF exportieren…** öffnet den Teilen-Dialog: Wähle **In Dateien sichern** oder gib das PDF an eine andere App weiter. **Drucken…** verwendet dasselbe vorbereitete Dokument mit AirPrint. Abbrechen verändert deine Notiz nicht.
+
+Zunächst enthält die Vorschau nur die aktuelle Notiz. Gibt es geeignete Links, kannst du **Verlinkte Dokumente einschließen** aktivieren. Diese Notizen werden nach Pfad sortiert angehängt und beginnen jeweils auf einer neuen Seite. Berücksichtigt werden nur direkt verlinkte Markdown-Dateien im selben Ordner oder dessen Unterordnern, keine rekursiven Links oder entfernten Dokumente. Bilder werden relativ zur jeweiligen Quelldatei aufgelöst.
+
+Die erste Notiz steuert `title`, `pdf-linked-title` (zusammengefasste Ausgabe), `pdf-toc`, `pdf-exclude` und `language` nach denselben Regeln wie am Desktop. Die ausgewählte PDF-Vorlage liefert Inhalts-Styles, Deckblatt, Kopf- und Fußzeilen sowie Seitenränder. Prüfe die Vorschau vor dem Teilen.
+
+Standardmäßig liegen Vorlagen unter **iCloud Drive → Merkzeug → Templates**, sofern verfügbar; ein manuell gewählter Ordner hat Vorrang. Vault-Vorlagen können bei den PDF-Funktionen über ihren relativen Ordner portabel zugeordnet werden.
+
+## Vorlagen-Ort wählen
+
+In den PDF-Bedienelementen über einer geöffneten Notiz (IntelliJ: **…**) findest du **PDF-Vorlage für diesen Vault**. Wähle **Zentrale Vorlage**, einen Namen und **Übernehmen**, oder **Vorlage in diesem Vault**, den relativen Ordner (zum Beispiel `.merkzeug/templates/Firma`) und **Übernehmen**. Die Auswahl gilt für alle Notizen dieses Vaults, einschließlich Bearbeitungsansicht, PDF-Export und Drucken. Vorlagendateien werden dabei nicht verschoben oder kopiert. **Keine Vorlage** und **Übernehmen** entfernt die Zuordnung.
+
+Die portable Zuordnung liegt in `.merkzeug/settings.json`. Zentrale Vorlagen werden über ihren Namen referenziert, Vault-Vorlagen mit `{"pdfTemplate":{"source":"vault","path":".merkzeug/templates/Firma"}}`. Einstellungen und Vorlagenordner können gemeinsam im Repository versioniert werden. Bestehende zentrale Zuordnungen bleiben kompatibel. Auf Apple-Geräten liegt die zentrale Sammlung bei verfügbarem iCloud im Merkzeug-Container; ein lokal ausgewählter Vorlagenordner bleibt eine Geräteeinstellung. IntelliJ erkennt auch installierte Desktop-Vorlagen. Fehlende Vorlagenordner werden gemeldet, statt still eine andere Vorlage zu verwenden.
+
+## Release Notes
+
+Über **Release Notes** in der Hilfe (IntelliJ: **…**) ist die vollständige Versionsgeschichte auf Deutsch und Englisch auch offline lesbar. Beim ersten Start einer neuen Marketing-Version erscheinen deren Release Notes automatisch. **Fertig** merkt diese Version auf der aktuellen Installation als gelesen; die komplette Historie bleibt erreichbar. Website und Apps verwenden dieselbe Quelle für Release Notes.

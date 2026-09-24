@@ -18,7 +18,7 @@ const steps = {
     ['[data-tour="reading-mode"]', 'Read and navigate', "Existing notes open in read mode. Open a note to find the pencil button at the top: tap it to edit, and tap it again to return to reading. Follow links between notes and use Back and Forward to navigate. New notes start in edit mode."],
     ['.working-copy', 'Working Copy actions', 'Configure the exact repository and callback key for this vault. Pull, Commit and Push open Working Copy; the result is confirmed by its callback.'],
     ['.appearance-bar', 'Meeting notes', 'Create notes from your iOS calendars or ICS subscriptions. Calendar access is requested only when you open meeting notes.'],
-    ['.theme-select', 'Make it yours', 'Choose System, Light or Dark. PDF export is available in the desktop and IntelliJ editions.']
+    ['.theme-select', 'Make it yours', 'Choose System, Light or Dark. Export and print notes with your PDF templates, including linked documents.']
   ],
   intellij: [
     ['.editor-host', 'Markdown in your IDE', 'Write in the visual editor while IntelliJ owns the document, saving and undo history.'],
@@ -35,8 +35,13 @@ export function GuidedTour({ edition, seen, onSeen, showLauncher = true }: { edi
   function dismiss() { localStorage.setItem('merkzeug.tour.v1', 'seen'); onSeen?.(); setOpen(false); setIndex(-1) }
   useEffect(() => {
     const dialog = ref.current
-    if (open && dialog && !dialog.open) dialog.showModal()
+    const show = () => {
+      if (open && dialog && !dialog.open && !document.querySelector('.merkzeug-release-notes')) dialog.showModal()
+    }
+    show()
     if (!open && dialog?.open) dialog.close()
+    window.addEventListener('merkzeug:release-notes-closed', show)
+    return () => window.removeEventListener('merkzeug:release-notes-closed', show)
   }, [open])
   useEffect(() => {
     if (!open || index < 0) return

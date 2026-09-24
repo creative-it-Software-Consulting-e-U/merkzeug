@@ -55,6 +55,13 @@ Selecting a whole table cell highlights the cell; click inside its text to place
 
 ## Syncing with Working Copy
 
+Working Copy is a separate Git app for iPhone and iPad. It clones repositories and handles version control and synchronization; Merkzeug reads and edits the Markdown files inside them.
+
+You can also use any other Git app that makes its repository folder available for opening and editing through the Files app. Perform Git operations in that app. Working Copy additionally has a direct integration: once configured, you can start Pull, Commit, and Push from Merkzeug.
+
+[Working Copy on the App Store](https://apps.apple.com/app/id896694807).
+
+
 - After a **pull** in Working Copy, simply switch back to Merkzeug – the
   folder list and open (unmodified) notes load the new state
   automatically. **↻** re-reads the vault manually at any time.
@@ -84,7 +91,7 @@ Open **Help** and choose **Contact Support…** to open the support form with Me
 
 ## PDF templates on desktop
 
-The desktop app and IntelliJ include the Merkzeug PDF starter template, with a cover, styled headings and numbered pages. Create a copy to adapt it with an agent. See the [desktop template guide](https://merkzeug.creative-it.com/help-en.html#pdf-template-starter). PDF export is not available on iOS yet.
+The desktop app and IntelliJ include the Merkzeug PDF starter template, with a cover, styled headings and numbered pages. Create a copy to adapt it with an agent. See the [desktop template guide](https://merkzeug.creative-it.com/help-en.html#pdf-template-starter). On iPhone and iPad, the selected template is used for PDF export and AirPrint as well.
 
 ## Appearance, tours and agent guidance
 
@@ -102,7 +109,7 @@ Expand **Working Copy** and enter the exact repository name/remote URL and its c
 
 ### Template styling prompt
 
-Desktop Settings provides **Template styling prompt** for each template; expand it to review and copy a complete agent brief with the template's folder path. IntelliJ offers the same action in **Settings → Tools → Merkzeug**, using the folder currently shown in the settings field. On iOS, open **Help → Template styling prompt** and substitute the folder path on the agent's computer; The same prompt is available under **PDF templates**. iOS can preview template content styles; a separate PDF-file export is not provided.
+Desktop Settings provides **Template styling prompt** for each template; expand it to review and copy a complete agent brief with the template's folder path. IntelliJ offers the same action in **Settings → Tools → Merkzeug**, using the folder currently shown in the settings field. On iOS, open **Help → Template styling prompt** and substitute the folder path on the agent's computer; The same prompt is available under **PDF templates**. iOS can preview template content styles and export or print documents with the selected template.
 
 Replace the new template name and your colors, fonts, logo and design wishes before sending it. The prompt is in English, includes the complete offline technical reference, and works with older templates that lack instruction files. Copying it does not read note contents or modify existing templates. If clipboard access is unavailable in the web view, select and copy the displayed text manually.
 
@@ -116,7 +123,7 @@ Merkzeug is proprietary software for private and internal business use. The full
 
 ## Printing
 
-Open a note and tap **Print…**. After the preview has finished preparing, tap **Print…** to open AirPrint and choose a printer, page range and copies. Pending edits are saved first. The current note is printed with its Mermaid diagrams and images. A selected template supplies content styles and a cover. AirPrint also applies template headers, footers, page numbers and custom margins. These appear in the native AirPrint preview; the preceding content preview is not paginated. Linked-document printing is not supported on iOS. Cancel AirPrint to return to the preview; **Close** returns to your note.
+Open a note and tap **PDF / Print…**. After the preview has finished preparing, tap **Print…** to open AirPrint and choose a printer, page range and copies. Pending edits are saved first. The current note is printed with its Mermaid diagrams and images. A selected template supplies content styles and a cover. AirPrint also applies template headers, footers, page numbers and custom margins. These appear in the native AirPrint preview; the preceding content preview is not paginated. Enable **Include linked documents** to print the combined document. Cancel AirPrint to return to the preview; **Close** returns to your note.
 
 ## PDF templates on iOS
 
@@ -137,3 +144,35 @@ Renaming a note or folder through Merkzeug updates local Markdown links to it in
 Inline links, images and reference-style link definitions are supported, including URL-encoded names and `#section` suffixes. Link labels and titles stay unchanged. Section suffixes are preserved, not recalculated when a heading changes. Code examples, frontmatter, external URLs and ordinary prose are not rewritten. HTML links and wiki-link syntax are not included.
 
 Only regular Markdown files inside the vault are considered; hidden/ignored folders and symbolic links are not followed. Renames outside Merkzeug are not detected as refactoring. Destination collisions or stale file contents stop the operation. Open documents reload when clean; unsaved conflicting edits are preserved for review rather than silently overwritten.
+
+
+## Sharing templates in a repository
+
+A template is an ordinary folder containing `vorlage.json`, `stil.css`, and its HTML fragments and assets. You can keep that folder in a Git repository so your team can review changes and use the same layout. Commit the complete folder, including logos and fonts that you are allowed to share.
+
+In the PDF controls, choose **Template inside this vault** and enter the template's relative folder. The assignment in `.merkzeug/settings.json` works across desktop, iPhone/iPad and IntelliJ. Commit and pull that file together with the template folder using your normal Git workflow.
+
+Alternatively, store central templates in **iCloud Drive → Merkzeug → Templates** and choose **Central template**. iCloud sharing between your own Apple devices requires the same account and completed synchronization.
+
+PDF-file export and combining directly linked documents are available on desktop, iPhone/iPad, and in IntelliJ. The selected template also applies when printing.
+
+
+## PDF export and combined documents
+
+Open a note and choose **PDF / Print…**. Pending edits are saved before the preview opens. **Export as PDF…** opens the system share sheet: choose **Save to Files** or share the PDF with another app. **Print…** uses the same prepared document with AirPrint. Cancelling either dialog leaves your note unchanged.
+
+The preview starts with only the current note. If it contains eligible links, enable **Include linked documents** to append those notes in path order, each starting on a new page. Only directly linked Markdown files in the current note's folder or subfolders are included, not recursive links or remote documents. Images resolve relative to each source note.
+
+The first note controls `title`, `pdf-linked-title` (combined output), `pdf-toc`, `pdf-exclude`, and `language`, using the same rules as desktop. The selected PDF template supplies content styles, cover, headers, footers and margins. Review the preview before sharing.
+
+Templates default to **iCloud Drive → Merkzeug → Templates** when available; a manually selected folder takes precedence. Vault templates are selected with a portable relative path in the PDF controls.
+
+## Choose a template location
+
+In the PDF controls above an open note (IntelliJ: **…**), choose **PDF template for this vault**. Select **Central template**, choose a name and press **Apply**, or select **Template inside this vault**, enter its relative folder (for example `.merkzeug/templates/Company`) and press **Apply**. The choice applies to every note in this vault, including editing styles, PDF export and printing. It does not move or copy template files. Choose **No template** and **Apply** to clear the assignment.
+
+The portable assignment is stored in `.merkzeug/settings.json`. A central template is referenced by name; a vault template uses `{"pdfTemplate":{"source":"vault","path":".merkzeug/templates/Company"}}`. Commit the settings and template folder to share them with a repository. Existing central assignments remain compatible. On Apple devices, the central collection uses Merkzeug's iCloud container when available; a locally selected template collection remains a device setting. IntelliJ also discovers installed desktop templates. Missing template folders are reported instead of silently substituting another template.
+
+## Release Notes
+
+Open **Release Notes** in Help (IntelliJ: **…**) for the complete English or German version history, available offline. On the first start of a new marketing version, its release notes open automatically. **Done** marks that version as read on this installation; the full history remains accessible. Website and apps use the same release-note source.

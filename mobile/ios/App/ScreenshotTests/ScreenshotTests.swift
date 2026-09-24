@@ -6,6 +6,52 @@ final class ScreenshotTests: XCTestCase {
     func testEnglish() throws { try capture(locale: "en") }
     func testGerman() throws { try capture(locale: "de") }
 
+    func testPDFExport() throws { try verifyPDFExport(combined: true) }
+    func testSinglePDFExport() throws { try verifyPDFExport(combined: false) }
+
+    private func dismissReleaseNotes(in app: XCUIApplication) {
+        let close = app.buttons["Close release notes"]
+        guard close.waitForExistence(timeout: 30) else { return }
+        let proof = XCTAttachment(screenshot: app.screenshot())
+        proof.name = "First-launch release notes"; proof.lifetime = .keepAlways; add(proof)
+        // WKWebView's semantic tap can miss this button on iOS 27; use its visible center.
+        close.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        XCTAssertTrue(close.waitForNonExistence(timeout: 5))
+    }
+
+    private func verifyPDFExport(combined: Bool) throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+        let files = [
+            "Welcome.md": "---\ntitle: Single title\npdf-linked-title: Combined title\npdf-toc: true\nlanguage: en\npdf-exclude: [Hidden.md]\n---\n# Index note\n\n[Chapter](Chapter.md) [Excluded](Hidden.md)\n",
+            "Chapter.md": "# Included chapter\n\nCombined document body.\n",
+            "Hidden.md": "# Excluded secret\n"
+        ]
+        let templates = ["Acceptance/stil.css": ".pdf-content { color: #173c55; }", "Acceptance/deckblatt.html": "<h1>Cover {{titel}}</h1>", "Acceptance/kopfzeile.html": "<div>Header {{titel}}</div>"]
+        app.launchEnvironment = ["MERKZEUG_PRINT_PROOF": "1", "MERKZEUG_DEMO_MODE": "1", "MERKZEUG_DEMO_FILES": String(data: try JSONSerialization.data(withJSONObject: files), encoding: .utf8)!, "MERKZEUG_DEMO_TEMPLATES": String(data: try JSONSerialization.data(withJSONObject: templates), encoding: .utf8)!, "MERKZEUG_DEMO_NOTE": "/Welcome.md"]
+        app.launch()
+        dismissReleaseNotes(in: app)
+        if app.buttons["Start tour"].waitForExistence(timeout: 10) { app.buttons.matching(identifier: "Later").allElementsBoundByIndex.last?.tap() }
+        let open = app.buttons["PDF / Print…"]
+        XCTAssertTrue(open.waitForExistence(timeout: 60), app.debugDescription)
+        open.tap()
+        XCTAssertTrue(app.staticTexts["Cover Single title"].waitForExistence(timeout: 30), app.debugDescription)
+        if combined {
+            let linked = app.switches.matching(NSPredicate(format: "label CONTAINS %@", "Include linked documents")).firstMatch
+            XCTAssertTrue(linked.waitForExistence(timeout: 10), app.debugDescription)
+            linked.tap()
+            XCTAssertTrue(app.staticTexts["Cover Combined title"].waitForExistence(timeout: 30), app.debugDescription)
+        }
+        let export = app.buttons["Export as PDF…"]
+        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: export)
+        waitForExpectations(timeout: 60)
+        export.tap()
+        XCTAssertTrue(app.cells["Copy"].waitForExistence(timeout: 30), app.debugDescription)
+        let proof = XCTAttachment(screenshot: app.screenshot())
+        proof.name = "PDF export share sheet"; proof.lifetime = .keepAlways; add(proof)
+        app.terminate()
+    }
+
     func testTemplates() throws {
         let app = XCUIApplication()
         app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
@@ -13,6 +59,7 @@ final class ScreenshotTests: XCTestCase {
         let templates = ["Acceptance/stil.css": ".pdf-content { background: #fff8e8; color: #173c55; } .pdf-content .milkdown .ProseMirror h1 { font-family: Georgia; color: #173c55; }", "Acceptance/deckblatt.html": "<h1>Template cover acceptance</h1>"]
         app.launchEnvironment = ["MERKZEUG_DEMO_MODE": "1", "MERKZEUG_DEMO_FILES": String(data: try JSONSerialization.data(withJSONObject: files), encoding: .utf8)!, "MERKZEUG_DEMO_TEMPLATES": String(data: try JSONSerialization.data(withJSONObject: templates), encoding: .utf8)!, "MERKZEUG_DEMO_NOTE": "/Welcome.md"]
         app.launch()
+        dismissReleaseNotes(in: app)
         if app.buttons["Start tour"].waitForExistence(timeout: 10) { app.buttons.matching(identifier: "Later").allElementsBoundByIndex.last?.tap() }
         let settings = app.descendants(matching: .any).matching(identifier: "PDF templates").firstMatch
         XCTAssertTrue(settings.waitForExistence(timeout: 60), app.debugDescription)
@@ -24,7 +71,7 @@ final class ScreenshotTests: XCTestCase {
         let screenshot = XCTAttachment(screenshot: app.screenshot())
         screenshot.name = "iOS template styles"; screenshot.lifetime = .keepAlways; add(screenshot)
         settings.tap()
-        app.buttons["Print…"].tap()
+        app.buttons["PDF / Print…"].tap()
         XCTAssertTrue(app.staticTexts["Template cover acceptance"].waitForExistence(timeout: 30), app.debugDescription)
         let preview = XCTAttachment(screenshot: app.screenshot())
         preview.name = "iOS template print preview"; preview.lifetime = .keepAlways; add(preview)
@@ -38,9 +85,10 @@ final class ScreenshotTests: XCTestCase {
         let files = ["Welcome.md": "# Print acceptance\n\nSaved content for printing.\n\n```mermaid\nflowchart LR\n A --> B\n```\n"]
         app.launchEnvironment = ["MERKZEUG_DEMO_MODE": "1", "MERKZEUG_DEMO_FILES": String(data: try JSONSerialization.data(withJSONObject: files), encoding: .utf8)!, "MERKZEUG_DEMO_NOTE": "/Welcome.md"]
         app.launch()
+        dismissReleaseNotes(in: app)
         if app.buttons["Start tour"].waitForExistence(timeout: 10) { app.buttons.matching(identifier: "Later").allElementsBoundByIndex.last?.tap() }
-        XCTAssertTrue(app.buttons["Print…"].waitForExistence(timeout: 60))
-        app.buttons["Print…"].tap()
+        XCTAssertTrue(app.buttons["PDF / Print…"].waitForExistence(timeout: 60))
+        app.buttons["PDF / Print…"].tap()
         let printButton = app.buttons["Print…"]
         XCTAssertTrue(printButton.waitForExistence(timeout: 30))
         let ready = NSPredicate(format: "enabled == true")
@@ -66,9 +114,10 @@ final class ScreenshotTests: XCTestCase {
         let files = ["Welcome.md": "# Print acceptance\n\nSaved content for printing.\n\n```mermaid\nflowchart LR\n A --> B\n```\n" + paragraphs]
         app.launchEnvironment = ["MERKZEUG_PRINT_PROOF": "1", "MERKZEUG_DEMO_TEMPLATES": String(data: try JSONSerialization.data(withJSONObject: templates), encoding: .utf8)!, "MERKZEUG_DEMO_MODE": "1", "MERKZEUG_DEMO_FILES": String(data: try JSONSerialization.data(withJSONObject: files), encoding: .utf8)!, "MERKZEUG_DEMO_NOTE": "/Welcome.md"]
         app.launch()
+        dismissReleaseNotes(in: app)
         if app.buttons["Start tour"].waitForExistence(timeout: 10) { app.buttons.matching(identifier: "Later").allElementsBoundByIndex.last?.tap() }
-        XCTAssertTrue(app.buttons["Print…"].waitForExistence(timeout: 60))
-        app.buttons["Print…"].tap()
+        XCTAssertTrue(app.buttons["PDF / Print…"].waitForExistence(timeout: 60))
+        app.buttons["PDF / Print…"].tap()
         let printButton = app.buttons["Print…"]
         XCTAssertTrue(printButton.waitForExistence(timeout: 30))
         let ready = NSPredicate(format: "enabled == true")
@@ -92,6 +141,7 @@ final class ScreenshotTests: XCTestCase {
         let files = ["Welcome.md": "# Roadmap test\n\nA native simulator note.\n"]
         app.launchEnvironment = ["MERKZEUG_DEMO_MODE": "1", "MERKZEUG_DEMO_FILES": String(data: try JSONSerialization.data(withJSONObject: files), encoding: .utf8)!, "MERKZEUG_DEMO_NOTE": "/Welcome.md"]
         app.launch()
+        dismissReleaseNotes(in: app)
         let start = app.buttons["Start tour"]
         if start.waitForExistence(timeout: 20) {
             start.tap()
@@ -118,6 +168,7 @@ final class ScreenshotTests: XCTestCase {
         let files = ["Welcome.md": "# Welcome\n\nSearch test fixture.\n"]
         app.launchEnvironment = ["MERKZEUG_DEMO_MODE": "1", "MERKZEUG_DEMO_FILES": String(data: try JSONSerialization.data(withJSONObject: files), encoding: .utf8)!, "MERKZEUG_DEMO_NOTE": "/Welcome.md", "MERKZEUG_DEMO_LOCALE": "en"]
         app.launch()
+        dismissReleaseNotes(in: app)
         XCTAssertTrue(app.otherElements["merkzeug-screenshot-ready"].waitForExistence(timeout: 60))
         if app.buttons["Later"].exists { app.buttons["Later"].tap() }
         let search = app.buttons["🔍"]
@@ -153,6 +204,7 @@ final class ScreenshotTests: XCTestCase {
             app.launchEnvironment["MERKZEUG_DEMO_NOTE"] = ["diagram", "git"].contains(scene) ? (locale == "de" ? "/Projekte/Garten.md" : "/Projects/Garden.md") : (locale == "de" ? "/Willkommen.md" : "/Welcome.md")
             app.launchEnvironment["MERKZEUG_DEMO_SCENE"] = scene
             app.launch()
+        dismissReleaseNotes(in: app)
             if app.buttons["Later"].waitForExistence(timeout: 3) { app.buttons["Later"].tap() }
             else if app.buttons["Später"].exists { app.buttons["Später"].tap() }
             XCTAssertTrue(app.otherElements["merkzeug-screenshot-ready"].waitForExistence(timeout: 60), "Editor, fonts and diagram must finish rendering")

@@ -104,3 +104,24 @@ Merkzeug ist proprietäre Software für private und interne geschäftliche Nutzu
 **Refactor → Rename/Move** aktualisiert auch eingehende Markdown-Links im Projekt, einschließlich Notizen ohne `.assets/`-Ordner. Beim Verschieben werden ausgehende relative Links und Verweise auf Begleitbilder angepasst. Das Markdown-Editor-Plugin ist dafür optional: Merkzeug erkennt Markdown-Linkziele selbst und integriert die Änderungen in das native Refactoring, einschließlich offener ungespeicherter Dokumente und Rückgängig/Wiederherstellen.
 
 Unterstützt werden direkte Links, Bilder und Referenz-Linkdefinitionen. URL-Kodierung, Linktexte, Linktitel und `#abschnitt`-Anhänge bleiben erhalten; das Umbenennen von Überschriftenankern ist ein eigener Vorgang. Codebeispiele, Frontmatter, externe URLs und gewöhnlicher Text bleiben unverändert. HTML- und Wiki-Links sind nicht enthalten. Der Suchbereich umfasst Projektinhalte, keine ausgeschlossenen Ordner, symbolischen Links oder externen Dateien. Sprachspezifische Ordner-/Package-Refactorings bleiben beim jeweiligen Sprach-Plugin. Allgemeine Datei-Refactorings von Ordnern aktualisieren ebenfalls Markdown-Pfade. Änderungen außerhalb von IntelliJ lösen diesen Vorgang nicht aus.
+
+
+## Vorlagen im Repository teilen
+
+Eine Vorlage ist ein gewöhnlicher Ordner mit `vorlage.json`, `stil.css`, HTML-Fragmenten und zugehörigen Dateien. Du kannst ihn in einem Git-Repository ablegen, damit dein Team Änderungen prüfen und dasselbe Layout verwenden kann. Committe den vollständigen Ordner, einschließlich Logos und Schriften, die du teilen darfst.
+
+Wähle bei den PDF-Funktionen **Vorlage in diesem Vault** und gib den relativen Vorlagenordner an. Die Zuordnung in `.merkzeug/settings.json` funktioniert am Desktop, auf iPhone/iPad und in IntelliJ. Versioniere diese Einstellungen gemeinsam mit dem Vorlagenordner.
+
+Alternativ können zentrale Vorlagen über **iCloud Drive → Merkzeug → Templates** geteilt werden. Die Synchronisation zwischen eigenen Apple-Geräten setzt dasselbe Konto und abgeschlossene Übertragung voraus.
+
+PDF-Dateiexport und das Zusammenfassen direkt verlinkter Dokumente gibt es am Desktop, auf iPhone/iPad und in IntelliJ. Die ausgewählte Vorlage wird auch beim Drucken verwendet.
+
+## Vorlagen-Ort wählen
+
+In den PDF-Bedienelementen über einer geöffneten Notiz (IntelliJ: **…**) findest du **PDF-Vorlage für diesen Vault**. Wähle **Zentrale Vorlage**, einen Namen und **Übernehmen**, oder **Vorlage in diesem Vault**, den relativen Ordner (zum Beispiel `.merkzeug/templates/Firma`) und **Übernehmen**. Die Auswahl gilt für alle Notizen dieses Vaults, einschließlich Bearbeitungsansicht, PDF-Export und Drucken. Vorlagendateien werden dabei nicht verschoben oder kopiert. **Keine Vorlage** und **Übernehmen** entfernt die Zuordnung.
+
+Die portable Zuordnung liegt in `.merkzeug/settings.json`. Zentrale Vorlagen werden über ihren Namen referenziert, Vault-Vorlagen mit `{"pdfTemplate":{"source":"vault","path":".merkzeug/templates/Firma"}}`. Einstellungen und Vorlagenordner können gemeinsam im Repository versioniert werden. Bestehende zentrale Zuordnungen bleiben kompatibel. Auf Apple-Geräten liegt die zentrale Sammlung bei verfügbarem iCloud im Merkzeug-Container; ein lokal ausgewählter Vorlagenordner bleibt eine Geräteeinstellung. IntelliJ erkennt auch installierte Desktop-Vorlagen. Fehlende Vorlagenordner werden gemeldet, statt still eine andere Vorlage zu verwenden.
+
+## Release Notes
+
+Über **Release Notes** in der Hilfe (IntelliJ: **…**) ist die vollständige Versionsgeschichte auf Deutsch und Englisch auch offline lesbar. Beim ersten Start einer neuen Marketing-Version erscheinen deren Release Notes automatisch. **Fertig** merkt diese Version auf der aktuellen Installation als gelesen; die komplette Historie bleibt erreichbar. Website und Apps verwenden dieselbe Quelle für Release Notes.

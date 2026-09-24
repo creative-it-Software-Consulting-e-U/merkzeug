@@ -1,7 +1,8 @@
+import { templateSelection, storedTemplateSelection, validateTemplateSelection } from '@merkzeug/core/templateSelection'
 import { t as translate } from '@merkzeug/core/i18n'
 import { app } from 'electron'
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { dirname, extname, join } from 'node:path'
+import { existsSync, realpathSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { dirname, extname, join, sep } from 'node:path'
 import type { PdfTemplate, PdfTemplateMargins } from '../shared/types'
 import { installTemplate } from './templateFiles.mjs'
 import { getStoredTemplatesRoot } from './settings'
@@ -48,7 +49,7 @@ function dataUri(dir: string, ref: string): string | null {
     if (decoded.includes('..')) return null
     const file = join(dir, decoded)
     const mime = IMAGE_MIME[extname(file).toLowerCase()]
-    if (!mime || !existsSync(file)) return null
+    if (!mime || !existsSync(file) || !realpathSync(file).startsWith(realpathSync(dir) + sep)) return null
     return `data:${mime};base64,${readFileSync(file).toString('base64')}`
   } catch {
     return null
@@ -75,7 +76,9 @@ function inlineImages(content: string, dir: string): string {
 
 function readMargins(dir: string): PdfTemplateMargins | null {
   try {
-    const cfg = JSON.parse(readFileSync(join(dir, 'vorlage.json'), 'utf8'))
+    const file = realpathSync(join(dir, 'vorlage.json'))
+    if (!file.startsWith(realpathSync(dir) + sep)) return null
+    const cfg = JSON.parse(readFileSync(file, 'utf8'))
     const m = cfg?.margins
     if (!m || typeof m !== 'object') return null
     const margins = { ...DEFAULT_MARGINS }
@@ -89,12 +92,18 @@ function readMargins(dir: string): PdfTemplateMargins | null {
 }
 
 /** Lädt eine Vorlage; Bilder werden eingebettet. null, wenn es sie nicht gibt. */
-export function loadTemplate(name: string): PdfTemplate | null {
-  const dir = join(templatesRoot(), name)
+export function loadTemplate(name: string, vault?: string | null): PdfTemplate | null {
+  validateTemplateSelection(name)
+  if (name.startsWith('vault:') && !vault) throw new Error('No vault for template')
+  const root = realpathSync(name.startsWith('vault:') ? vault! : templatesRoot())
+  const dir = realpathSync(join(root, name.startsWith('vault:') ? name.slice(6) : name))
+  if (!dir.startsWith(root + sep)) throw new Error('Template is outside its folder')
   if (!existsSync(dir)) return null
   const part = (file: string): string | undefined => {
     const p = join(dir, file)
-    return existsSync(p) ? inlineImages(readFileSync(p, 'utf8'), dir) : undefined
+    if (!existsSync(p)) return undefined
+    if (!realpathSync(p).startsWith(dir + sep)) throw new Error('Template file is outside its folder')
+    return inlineImages(readFileSync(p, 'utf8'), dir)
   }
   const template: PdfTemplate = {
     name,
@@ -136,13 +145,17 @@ export function createTemplate(name: string): string {
 // ---- Zuweisung pro Vault (.merkzeug/settings.json im Vault, wandert per Git mit) ----
 
 function vaultSettingsPath(vault: string): string {
-  return join(vault, '.merkzeug', 'settings.json')
+  const root = realpathSync(vault)
+  const dir = join(root, '.merkzeug')
+  const file = join(dir, 'settings.json')
+  for (const path of [dir, file]) if (existsSync(path) && !realpathSync(path).startsWith(root + sep)) throw new Error('Vault settings are outside the vault')
+  return file
 }
 
 export function getVaultTemplateName(vault: string): string | null {
   try {
     const cfg = JSON.parse(readFileSync(vaultSettingsPath(vault), 'utf8'))
-    return typeof cfg.pdfTemplate === 'string' && cfg.pdfTemplate ? cfg.pdfTemplate : null
+    return templateSelection(cfg.pdfTemplate)
   } catch {
     return null
   }
@@ -151,13 +164,10 @@ export function getVaultTemplateName(vault: string): string | null {
 export function setVaultTemplateName(vault: string, name: string | null): void {
   const path = vaultSettingsPath(vault)
   let cfg: Record<string, unknown> = {}
-  try {
-    cfg = JSON.parse(readFileSync(path, 'utf8'))
-  } catch {
-    /* noch keine oder unlesbare Vault-Einstellungen */
-  }
-  if (name) cfg.pdfTemplate = name
-  else delete cfg.pdfTemplate
+  if (existsSync(path)) cfg = JSON.parse(readFileSync(path, 'utf8'))
+  if (!cfg || typeof cfg !== 'object' || Array.isArray(cfg)) throw new Error('Invalid vault settings')
+  if (name) cfg.pdfTemplate = storedTemplateSelection(name)
+  else cfg.pdfTemplate = null
   mkdirSync(dirname(path), { recursive: true })
   writeFileSync(path, `${JSON.stringify(cfg, null, 2)}\n`)
 }

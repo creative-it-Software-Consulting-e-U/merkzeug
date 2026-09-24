@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.0
+
+- Choose central or vault-relative PDF templates in the PDF controls across desktop, iOS and IntelliJ. Shared vault settings live in `.merkzeug/settings.json`.
+- iPhone and iPad export and print single or linked Markdown documents using PDF templates and frontmatter, including covers, headers, footers and a table of contents.
+- All editions offer the full English/German release history and show new-version notes on first launch. Apps and website use `website/release-notes.json` as the common source.
+- Bilingual website and guides explain vaults, platform availability, PDF workflows, assets, agents and Working Copy. Release notes replace roadmap status groups.
+
+## Earlier development history
+
 - Prepare the proprietary Marketplace preview: shared English/German EULA, plugin logo and metadata, public IntelliJ APIs, and a package without the unpublished tour.
 
 - Shared offline template styling kit with CSS examples, agent instructions and copyable prompts in desktop settings, IntelliJ settings and iOS help; existing templates remain intact.
@@ -56,6 +65,6 @@ User-visible changes are recorded here. Versions follow `VERSION`; version tags 
 
 ### Known limitations
 
-- IntelliJ cross-document heading navigation and integration with desktop vault template assignments are incomplete.
-- iOS PDF export and VS Code support are not implemented.
+- IntelliJ cross-document heading navigation remains limited.
+- VS Code support is not implemented.
 - Native iOS, Windows and Linux regression testing and the first hosted release workflow run are still required before a public release.

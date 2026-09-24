@@ -54,6 +54,15 @@ public final class SmokeStarter implements ApplicationStarter {
                 if (!DesktopTemplates.profiles("Windows 11", discoveryRoot, java.util.Map.of("APPDATA", customRoot.toString())).get(0).equals(customRoot.resolve("merkzeug"))) throw new AssertionError("Windows location failed");
                 if (!DesktopTemplates.profiles("Mac OS X", discoveryRoot, java.util.Map.of()).get(0).equals(discoveryRoot.resolve("Library/Application Support/merkzeug"))) throw new AssertionError("macOS location failed");
                 System.out.println("MERKZEUG_SMOKE desktop template discovery: default, custom, deduplication, missing, malformed and platform paths passed");
+                Path vaultTemplate = Files.createDirectories(test.resolve(".merkzeug/templates/Portable"));
+                Files.writeString(vaultTemplate.resolve("stil.css"), ".pdf-content { color: #123456; }");
+                VaultTemplates.assign(test, project, "vault:.merkzeug/templates/Portable");
+                if (!VaultTemplates.resolve(test, project, VaultTemplates.selection(test, project)).equals(vaultTemplate.toRealPath())) throw new AssertionError("Portable template assignment failed");
+                try { VaultTemplates.resolve(test, project, "vault:../outside"); throw new AssertionError("Escape accepted"); } catch (java.io.IOException expected) { }
+                VaultTemplates.assign(test, project, null);
+                if (VaultTemplates.selection(test, project) != null) throw new AssertionError("Clearing template failed");
+                Files.delete(test.resolve(".merkzeug/settings.json"));
+                System.out.println("MERKZEUG_SMOKE portable vault template assignment, clearing and traversal protection passed");
                 var settings = new MerkzeugSettings(project);
                 var settingsPanel = settings.createComponent();
                 if (settings.isModified()) throw new AssertionError("Fresh settings are modified");
@@ -141,7 +150,7 @@ public final class SmokeStarter implements ApplicationStarter {
                     }
                 });
                 javax.swing.Timer statusTimer = new javax.swing.Timer(500, event -> {
-                    browser.getCefBrowser().executeJavaScript("(() => { const status = document.querySelector('.status')?.textContent; if (document.querySelectorAll('.format-toolbar > button').length === 14 && document.querySelectorAll('.format-toolbar details').length === 2 && !document.querySelector('.theme-select, .meeting-notes') && document.querySelector('.ProseMirror') && ['Synced with IntelliJ', 'Mit IntelliJ synchronisiert'].includes(status)) { console.log('MERKZEUG_INITIAL_READY'); } })()", browser.getCefBrowser().getURL(), 0);
+                    browser.getCefBrowser().executeJavaScript("(() => { document.querySelector('.merkzeug-release-notes footer button:last-child')?.click(); const status = document.querySelector('.status')?.textContent; if (document.querySelectorAll('.format-toolbar > button').length === 14 && document.querySelectorAll('.format-toolbar details').length === 2 && !document.querySelector('.theme-select, .meeting-notes') && document.querySelector('.ProseMirror') && ['Synced with IntelliJ', 'Mit IntelliJ synchronisiert'].includes(status)) { console.log('MERKZEUG_INITIAL_READY'); } })()", browser.getCefBrowser().getURL(), 0);
                     if (statusReady.get()) ((javax.swing.Timer) event.getSource()).stop();
                 });
                 statusTimer.start();
@@ -228,7 +237,7 @@ public final class SmokeStarter implements ApplicationStarter {
                                     window.previewTestStage = 3; console.log('MERKZEUG_TEMPLATE_PREVIEW_PASSED');
                                   }
                                   const actions = [...document.querySelectorAll('.editor-extra-actions > button, .editor-extra-actions .tour-tools > button')];
-                                  if (actions.length !== (document.querySelector('.tour-tools') ? 3 : 1) || actions.some(b => Math.abs(b.getBoundingClientRect().top - actions[0].getBoundingClientRect().top) > 1 || getComputedStyle(b).fontSize !== getComputedStyle(actions[0]).fontSize)) throw new Error('Extra actions are not aligned or use different font sizes');
+                                  if (actions.length !== (document.querySelector('.tour-tools') ? 4 : 2) || actions.some(b => Math.abs(b.getBoundingClientRect().top - actions[0].getBoundingClientRect().top) > 1 || getComputedStyle(b).fontSize !== getComputedStyle(actions[0]).fontSize)) throw new Error('Extra actions are not aligned or use different font sizes');
                                   if (document.querySelector('.vault-guidance').getBoundingClientRect().top < actions[0].getBoundingClientRect().bottom) throw new Error('Guidance must occupy its own row');
                                   const dialog = document.querySelector('.guidance-dialog');
                                   if (!dialog) { document.querySelector('.vault-guidance > button')?.click(); return; }

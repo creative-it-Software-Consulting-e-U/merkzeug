@@ -1,0 +1,117 @@
+{
+  "note": "Reused real app captures with persistent synthetic demo vaults. PDF output images are device-independent.",
+  "images": [
+    {
+      "file": "mac-de.png",
+      "locale": "de",
+      "platform": "macos",
+      "scene": "writing",
+      "fixture": "store/demo/de",
+      "sha256": "d2ac183004dae9ff83f40439a98a0da8980607f8ed37f0ea52950559a30ecff5"
+    },
+    {
+      "file": "iphone-de.png",
+      "locale": "de",
+      "platform": "ios",
+      "scene": "writing",
+      "fixture": "store/demo/de",
+      "sha256": "40ce1411e7782e97b5a042f3b8111e13168e9b363bf6f15459cd1f16c8e5141a"
+    },
+    {
+      "file": "macos-de-diagram.png",
+      "locale": "de",
+      "platform": "macos",
+      "scene": "diagram",
+      "fixture": "store/demo/de",
+      "sha256": "b9f2250de0065e8feab244099b9fbe9187f24c86f0e8c5e0871598a55722b581"
+    },
+    {
+      "file": "iphone-de-diagram.png",
+      "locale": "de",
+      "platform": "ios",
+      "scene": "diagram",
+      "fixture": "store/demo/de",
+      "sha256": "7f207ea050824ab01ceecdabc91f6746945bf824f1b70b416bdce5169893ae8b"
+    },
+    {
+      "file": "macos-de-frontmatter.png",
+      "locale": "de",
+      "platform": "macos",
+      "scene": "frontmatter",
+      "fixture": "store/demo/de",
+      "sha256": "6563a729fcb07264ca473320c19003f9537f3dd0e455646bd903a10d36fb0c1e"
+    },
+    {
+      "file": "iphone-de-frontmatter.png",
+      "locale": "de",
+      "platform": "ios",
+      "scene": "frontmatter",
+      "fixture": "store/demo/de",
+      "sha256": "3f57e663fa795fc52f7722b60df837b9170d160579b90f21a297564af2022f41"
+    },
+    {
+      "file": "mac-en.png",
+      "locale": "en",
+      "platform": "macos",
+      "scene": "writing",
+      "fixture": "store/demo/en",
+      "sha256": "e865176634e8a75f245e5907bedbc73be0ee568f1a47ad17242c656c99152c43"
+    },
+    {
+      "file": "iphone-en.png",
+      "locale": "en",
+      "platform": "ios",
+      "scene": "writing",
+      "fixture": "store/demo/en",
+      "sha256": "54a0dc148a712bccea1c9dd072036fda6b8236539a3575f54dd0f54d3f25e40d"
+    },
+    {
+      "file": "macos-en-diagram.png",
+      "locale": "en",
+      "platform": "macos",
+      "scene": "diagram",
+      "fixture": "store/demo/en",
+      "sha256": "5c73af65590cd79728199c9932f62c84fa4cd48fb1903f4a43d5c586468a24e4"
+    },
+    {
+      "file": "iphone-en-diagram.png",
+      "locale": "en",
+      "platform": "ios",
+      "scene": "diagram",
+      "fixture": "store/demo/en",
+      "sha256": "6dfd541e11e33e6f045cb81c68e57207acc7fe991e1b5ead0e514594179de9a9"
+    },
+    {
+      "file": "macos-en-frontmatter.png",
+      "locale": "en",
+      "platform": "macos",
+      "scene": "frontmatter",
+      "fixture": "store/demo/en",
+      "sha256": "ef57befbce7fbb4f0efa1a52ecc295cfe468986a639d321e38af3ca1bfc7e20b"
+    },
+    {
+      "file": "iphone-en-frontmatter.png",
+      "locale": "en",
+      "platform": "ios",
+      "scene": "frontmatter",
+      "fixture": "store/demo/en",
+      "sha256": "37812473874faf4e719791b3dcddc419a98af5b44ec7d6f04a8536f7e158c9ae"
+    },
+    {
+      "file": "ipad-de-diagram.png",
+      "locale": "de",
+      "platform": "ipados",
+      "scene": "diagram",
+      "fixture": "store/demo/de",
+      "sha256": "dc4bcde8a0afd566b76b0f016f94e4a3f300cd4ab61baaf95eb1009c61968eef"
+    },
+    {
+      "file": "ipad-en-diagram.png",
+      "locale": "en",
+      "platform": "ipados",
+      "scene": "diagram",
+      "fixture": "store/demo/en",
+      "sha256": "7f3af474419893841c06ae81a9abe18ccb05d25ea9d1eb884301b08499925a03"
+    }
+  ]
+}

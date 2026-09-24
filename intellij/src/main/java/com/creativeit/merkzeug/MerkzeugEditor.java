@@ -157,6 +157,10 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
                     yield preferences.getBoolean("merkzeug.templatePreview", false);
                 }
                 case "template" -> loadTemplate();
+                case "releaseClaim" -> ReleaseNotes.claim(arg(m, "version"));
+                case "releaseSeen" -> { PropertiesComponent.getInstance().setValue("merkzeug.releaseNotesSeen", arg(m, "version")); yield true; }
+                case "templateState" -> VaultTemplates.state(root(), project);
+                case "templateAssign" -> { VaultTemplates.assign(root(), project, arg(m, "name")); yield VaultTemplates.state(root(), project); }
                 case "exportScope" -> chooseExportScope(m);
                 case "export" -> beginExport(m);
                 case "pdfPayload" -> pdfPayload;
@@ -268,10 +272,8 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
         return folder + "/" + name;
     }
     private Object loadTemplate() throws IOException {
-        PropertiesComponent settings = PropertiesComponent.getInstance(project);
-        String stored = settings.getValue("merkzeug.templateDirectory");
-        if (stored == null) return null;
-        templateDirectory = Paths.get(stored).toRealPath();
+        templateDirectory = VaultTemplates.resolve(root(), project, VaultTemplates.selection(root(), project));
+        if (templateDirectory == null) return null;
         Map<String, Object> result = new HashMap<>();
         result.put("name", templateDirectory.getFileName().toString());
         for (String[] part : new String[][]{{"header", "kopfzeile.html"}, {"footer", "fusszeile.html"}, {"cover", "deckblatt.html"}, {"css", "stil.css"}}) {
@@ -284,6 +286,7 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
         Map<String, Double> margins = new HashMap<>(Map.of("top",24.0,"bottom",18.0,"left",10.0,"right",10.0));
         Path config = templateDirectory.resolve("vorlage.json");
         if (Files.exists(config)) {
+            if (!config.toRealPath().startsWith(templateDirectory)) throw new IOException("Template configuration is outside the template folder");
             JsonObject obj = JsonParser.parseString(Files.readString(config)).getAsJsonObject();
             if (obj.has("margins")) for (String side : List.of("top","bottom","left","right")) {
                 JsonObject values = obj.getAsJsonObject("margins");

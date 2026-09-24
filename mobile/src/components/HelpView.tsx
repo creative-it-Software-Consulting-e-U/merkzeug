@@ -1,3 +1,4 @@
+import { ReleaseNotesButton } from '@merkzeug/editor/ReleaseNotes'
 import { licenseText } from '@merkzeug/editor/licenseText'
 import { TemplateStylingPrompt } from '@merkzeug/editor/TemplateStylingPrompt'
 import { supportUrl } from '@merkzeug/core/support'
@@ -66,7 +67,7 @@ export function HelpView({ onClose }: HelpViewProps): React.JSX.Element {
       <button className="link-btn" onClick={() => window.open(supportUrl(language, 'iOS/iPadOS', appPackage.version), '_blank')}>
         {translate("Contact Support…", language)}
       </button>
-      <TemplateStylingPrompt />
+      <ReleaseNotesButton /><TemplateStylingPrompt />
       <div className="editor-host" onClickCapture={handleClickCapture}>
         <div ref={rootRef} className="editor-root" />
       </div>

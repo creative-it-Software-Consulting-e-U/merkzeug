@@ -1,3 +1,4 @@
+import { claimReleaseNotes, markReleaseNotesSeen } from './settings'
 import { refreshTemplateCloud, templateCloudState, migrateTemplatesToCloud } from './templateCloud'
 import { writeFileSync as writeMeetingFile, readdirSync, readFileSync as readMeetingFile } from 'node:fs'
 import { ensureMeetingFile } from '@merkzeug/core/meetingFiles'
@@ -125,8 +126,7 @@ function rebuildMenu(): void {
 }
 
 /** Zustand für das Einstellungs-Fenster (nach jeder Aktion neu geliefert) */
-function templateState(): TemplateState {
-  const vault = getSettingsVault()
+function templateState(vault = getSettingsVault()): TemplateState {
   return {
     vault,
     ...templateCloudState(),
@@ -237,6 +237,8 @@ function registerIpc(): void {
       : join(app.getAppPath(), 'resources', 'help')
     return readFileSync(join(base, file), 'utf8')
   })
+  ipcMain.handle('release:claim', (_event, version: string) => claimReleaseNotes(version))
+  ipcMain.handle('release:seen', (_event, version: string) => markReleaseNotesSeen(version))
   ipcMain.handle('help:open', () => openHelpWindow())
 
   // Einstellungs-Fenster: PDF-Vorlagen verwalten und dem Vault zuweisen
@@ -244,12 +246,12 @@ function registerIpc(): void {
   ipcMain.handle('tpl:live', event => {
     const vault = getWindowVault(winFromEvent(event)?.id ?? -1)
     const name = vault ? getVaultTemplateName(vault) : null
-    return name ? loadTemplate(name) : null
+    return name ? loadTemplate(name, vault) : null
   })
   ipcMain.handle('calendar:sourcesLoad', () => loadCalendarSources())
   ipcMain.handle('calendar:sourcesSave', (_e, value: string) => saveCalendarSources(value))
   ipcMain.handle('calendar:fetch', (_e, url: string) => fetchCalendarSource(url))
-  ipcMain.handle('tpl:state', async () => { await refreshTemplateCloud(); return templateState() })
+  ipcMain.handle('tpl:state', async event => { await refreshTemplateCloud(); return templateState(getWindowVault(winFromEvent(event)?.id ?? -1) ?? getSettingsVault()) })
   ipcMain.handle('tpl:migrateCloud', async () => {
     await migrateTemplatesToCloud()
     for (const win of BrowserWindow.getAllWindows()) win.webContents.send('settings:refresh')
@@ -274,11 +276,12 @@ function registerIpc(): void {
     void shell.openPath(dir)
     return templateState()
   })
-  ipcMain.handle('tpl:assign', (_e, name: string | null) => {
-    const vault = getSettingsVault()
+  ipcMain.handle('tpl:assign', (event, name: string | null) => {
+    const vault = getWindowVault(winFromEvent(event)?.id ?? -1) ?? getSettingsVault()
+    if (name) loadTemplate(name, vault)
     if (vault) setVaultTemplateName(vault, name)
     for (const window of BrowserWindow.getAllWindows()) window.webContents.send('settings:refresh')
-    return templateState()
+    return templateState(vault)
   })
   ipcMain.handle('tpl:showRoot', () => {
     const root = templatesRoot()

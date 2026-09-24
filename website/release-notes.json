@@ -1,7 +1,30 @@
 [
   {
-    "version": "1.1",
+    "version": "1.2",
     "status": "preparation",
+    "date": null,
+    "platforms": [
+      "Mac",
+      "iPhone",
+      "iPad",
+      "IntelliJ"
+    ],
+    "highlights": {
+      "en": [
+        "Choose a central PDF template or a template inside your vault from the PDF controls in every edition. Vault-relative template settings travel with your repository.",
+        "iPhone and iPad: export and print single notes or linked document collections with templates, cover pages, headers, footers and frontmatter settings.",
+        "Read the complete release history in the app. New versions show their release notes automatically on first launch."
+      ],
+      "de": [
+        "In allen Versionen direkt bei den PDF-Funktionen zwischen zentraler Vorlage und einer Vorlage im Vault wählen. Relative Vorlagen-Zuordnungen reisen mit dem Repository mit.",
+        "iPhone und iPad: einzelne Notizen oder verlinkte Dokument-Sammlungen mit Vorlagen, Deckblatt, Kopf- und Fußzeilen sowie Frontmatter-Einstellungen als PDF exportieren und drucken.",
+        "Die vollständige Versionsgeschichte ist in der App verfügbar. Neue Versionen zeigen ihre Release Notes automatisch beim ersten Start."
+      ]
+    }
+  },
+  {
+    "version": "1.1",
+    "status": "released",
     "date": null,
     "platforms": [
       "macOS",
@@ -36,6 +59,28 @@
     }
   },
   {
+    "version": "1.0.1",
+    "status": "released",
+    "date": "2026-09-22",
+    "platforms": [
+      "IntelliJ"
+    ],
+    "highlights": {
+      "en": [
+        "Rename and Move update incoming Markdown links across project notes, including notes without image folders. Moving notes also recalculates outgoing relative links; native Undo/Redo is supported.",
+        "Print notes through File → Print or the editor toolbar using the PDF template.",
+        "Selected table text remains readable on light backgrounds and with PDF template styles.",
+        "Compatibility extended to IntelliJ IDEA 2026.2.3."
+      ],
+      "de": [
+        "Umbenennen und Verschieben aktualisiert eingehende Markdown-Links auch für Notizen ohne Bilderordner. Beim Verschieben werden ausgehende relative Links angepasst; natives Rückgängig/Wiederherstellen wird unterstützt.",
+        "Notizen über Datei → Drucken oder die Toolbar mit PDF-Vorlage drucken.",
+        "Markierter Tabellentext bleibt auf hellen Hintergründen und mit PDF-Vorlagen-Styles lesbar.",
+        "Kompatibilität auf IntelliJ IDEA 2026.2.3 erweitert."
+      ]
+    }
+  },
+  {
     "version": "1.0",
     "status": "released",
     "date": "2026-09-22",
@@ -58,6 +103,26 @@
         "Am Mac: Meeting-Notizen aus Kalenderterminen erstellen, Git verwenden und PDFs mit wiederverwendbaren Vorlagen exportieren.",
         "Auf iPhone und iPad: Ordner über Dateien öffnen, auch über kompatible Anbieter wie Working Copy.",
         "Deutsche und englische Oberfläche, integrierte Hilfe und Support-Kontakt."
+      ]
+    }
+  },
+  {
+    "version": "1.0.0",
+    "status": "released",
+    "date": "2026-09-11",
+    "platforms": [
+      "IntelliJ"
+    ],
+    "highlights": {
+      "en": [
+        "First IntelliJ Marketplace beta: a visual Markdown editor alongside other Markdown editors, with inline Mermaid editing and frontmatter.",
+        "PDF templates for editing and export, automatic discovery of desktop templates, and linked-document export.",
+        "Companion image folders follow IntelliJ Move/Rename refactorings. Optional instructions for AGENTS.md and CLAUDE.md help agents follow the same rules."
+      ],
+      "de": [
+        "Erste IntelliJ-Marketplace-Beta: visueller Markdown-Editor parallel zu anderen Markdown-Editoren, mit Inline-Mermaid-Bearbeitung und Frontmatter.",
+        "PDF-Vorlagen zum Bearbeiten und Exportieren, automatische Erkennung der Desktop-Vorlagen und Export verlinkter Dokumente.",
+        "Zugehörige Bilderordner folgen IntelliJ-Refactorings zum Verschieben und Umbenennen. Optionale Hinweise für AGENTS.md und CLAUDE.md vermitteln Agenten dieselben Regeln."
       ]
     }
   }

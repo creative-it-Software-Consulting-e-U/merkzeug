@@ -1,3 +1,5 @@
+import { ReleaseNotes, ReleaseNotesButton } from '@merkzeug/editor/ReleaseNotes'
+import { TemplateLocation } from '@merkzeug/editor/TemplateLocation'
 import { liveTemplateCss } from '@merkzeug/editor/templateStyle'
 import { IconHeading, IconBold, IconItalic, IconStrike, IconInlineCode, IconBulletList, IconOrderedList, IconQuote, IconCodeBlock, IconHr, IconLink, IconImage, IconTable } from '@merkzeug/editor/icons'
 import { GuidedTour } from '@merkzeug/editor/GuidedTour'
@@ -23,6 +25,7 @@ function imageUrl(path: string, url: string): string {
   const absolute = decoded.startsWith('/') ? decoded : resolvePath(path.slice(0, path.lastIndexOf('/')), decoded)
   return `${location.origin}/image?path=${encodeURIComponent(absolute)}`
 }
+const releaseHost = { claim: (version: string) => request<boolean>('releaseClaim', { version }), seen: (version: string) => request<void>('releaseSeen', { version }) }
 const guidanceHost: GuidanceHost = { suppressed: () => request('guidanceSuppressed'), suppress: never => request('guidanceSuppress', { never }), read: name => request('guidanceRead', { name }), append: (name, expected, addition) => request('guidanceAppend', { name, expected, addition }) }
 function App() {
   const [info, setInfo] = useState<{ path: string; vault: string; readonly: boolean; locale: string; tourSeen: boolean }>()
@@ -31,6 +34,8 @@ function App() {
   const [extras, setExtras] = useState(false)
   const [previewEnabled, setPreviewEnabled] = useState(false)
   const [previewCss, setPreviewCss] = useState('')
+  const [templateState, setTemplateState] = useState<{ assigned: string | null; templates: string[] }>({ assigned: null, templates: [] })
+  useEffect(() => { if (info) void request('templateState').then(setTemplateState).catch(e => setError(String(e))) }, [info, extras])
   const [busy, setBusy] = useState(false)
   const ref = useRef<EditorHandle>(null)
   const listeners = useRef(new Set<(vault: string, paths: string[]) => void>())
@@ -133,6 +138,7 @@ function App() {
     finally { setBusy(false) }
   }
   return <div className={`ide-app${previewEnabled && previewCss ? ' template-live' : ''}`}>
+    {info && <ReleaseNotes host={releaseHost} />}
     {previewEnabled && <style>{previewCss}</style>}
     <header className="format-toolbar" role="toolbar" aria-label={translate("Paragraph style")}>
       <details className="format-menu"><summary onMouseDown={e => e.preventDefault()} title={translate("Paragraph style")} aria-label={translate("Paragraph style")}><IconHeading /></summary><div>
@@ -151,7 +157,7 @@ function App() {
       <button disabled={busy} onClick={() => void exportPdf()}>{busy ? translate("Exporting …") : translate("Export PDF")}</button>
       <button title="Merkzeug" aria-label="Merkzeug" aria-expanded={extras} onClick={() => setExtras(!extras)}>⋯</button>
     </header>
-    {extras && <aside className="editor-extras"><div className="editor-extra-actions"><button onClick={() => void request('settings').then(refreshTemplatePreview).catch(e => setError(String(e)))}>{translate("PDF template …")}</button><label className="template-preview-toggle"><input type="checkbox" checked={previewEnabled} onChange={e => void toggleTemplatePreview(e.target.checked)} /> {translate('Use PDF template while editing')}</label>{info && import.meta.env.VITE_MERKZEUG_TOURS !== 'disabled' && <><GuidedTour edition="intellij" seen={true} onSeen={() => void request('tourSeen')} /></>}</div>{previewEnabled && !previewCss && <p>{translate('Assign a PDF template in Settings to preview its content styles.')}</p>}{info && <VaultGuidance vaultId={info.vault} host={guidanceHost} />}</aside>}
+    {extras && <aside className="editor-extras"><TemplateLocation value={templateState.assigned} templates={templateState.templates} onChange={async name => { setTemplateState(await request('templateAssign', { name: name ?? '' })); await refreshTemplatePreview() }} /><div className="editor-extra-actions"><ReleaseNotesButton /><button onClick={() => void request('settings').then(refreshTemplatePreview).catch(e => setError(String(e)))}>{translate("PDF template …")}</button><label className="template-preview-toggle"><input type="checkbox" checked={previewEnabled} onChange={e => void toggleTemplatePreview(e.target.checked)} /> {translate('Use PDF template while editing')}</label>{info && import.meta.env.VITE_MERKZEUG_TOURS !== 'disabled' && <><GuidedTour edition="intellij" seen={true} onSeen={() => void request('tourSeen')} /></>}</div>{previewEnabled && !previewCss && <p>{translate('Assign a PDF template in Settings to preview its content styles.')}</p>}{info && <VaultGuidance vaultId={info.vault} host={guidanceHost} />}</aside>}
     {error && <div role="alert" className="error">{error}</div>}
     {info && <Editor ref={ref} host={host} filePath={info.path} loadToken={0} readonly={info.readonly}
       onLinkClick={href => href.startsWith('#') ? ref.current?.jumpToHeading(decodeURIComponent(href.slice(1))) : void request('open', { href }).catch(e => setError(String(e)))}

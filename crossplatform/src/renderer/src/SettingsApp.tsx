@@ -1,3 +1,4 @@
+import { TemplateLocation } from '@merkzeug/editor/TemplateLocation'
 import { TemplateStylingPrompt } from '@merkzeug/editor/TemplateStylingPrompt'
 import { CalendarSources } from '@merkzeug/editor/CalendarSources'
 import { calendarSourceHost } from './util/calendarSources'
@@ -127,21 +128,7 @@ export function SettingsApp(): React.JSX.Element {
             <span className="settings-path" title={state.vault}>
               {vaultName}
             </span>
-            <select
-              className="settings-select"
-              value={state.assigned ?? ''}
-              onChange={(e) => run(() => window.merkzeug.assignTemplate(e.target.value || null))}
-            >
-              <option value="">{translate("No template")}</option>
-              {state.templates.map((name) => (
-                <option key={name} value={name}>
-                  {name}
-                </option>
-              ))}
-              {state.assigned && !state.templates.includes(state.assigned) && (
-                <option value={state.assigned}>{state.assigned} ({translate("missing")})</option>
-              )}
-            </select>
+            <TemplateLocation value={state.assigned} templates={state.templates} onChange={async value => { setState(await window.merkzeug.assignTemplate(value)) }} />
           </div>
           <p className="settings-hint">
             {translate("The selection is stored in the vault (")}<code>.merkzeug/settings.json</code>{translate(") and travels with Git to your other devices. Export as PDF (⌘P) uses it automatically.")}

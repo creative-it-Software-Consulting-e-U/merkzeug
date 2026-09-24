@@ -1,3 +1,4 @@
+import { ReleaseNotesButton } from '@merkzeug/editor/ReleaseNotes'
 import { licenseText } from '@merkzeug/editor/licenseText'
 import { t as translate, getLocale } from '@merkzeug/core/i18n'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -64,7 +65,7 @@ export function HelpApp(): React.JSX.Element {
     <div className="help-app">
       <div className="help-header">
         <span className="help-title">{translate("Merkzeug Help")}</span>
-        <div className="help-lang">
+        <div className="help-lang"><ReleaseNotesButton />
           <button className={lang === 'de' ? 'toggled' : ''} onClick={() => setLang('de')}>
             Deutsch
           </button>

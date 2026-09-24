@@ -12,6 +12,8 @@ import type {
   TemplateState, CalendarEvent } from '../shared/types'
 
 const api = {
+  claimReleaseNotes: (version: string): Promise<boolean> => ipcRenderer.invoke('release:claim', version),
+  markReleaseNotesSeen: (version: string): Promise<void> => ipcRenderer.invoke('release:seen', version),
   calendarSourcesLoad: (): Promise<string | null> => ipcRenderer.invoke('calendar:sourcesLoad'),
   calendarSourcesSave: (value: string): Promise<void> => ipcRenderer.invoke('calendar:sourcesSave', value),
   calendarFetch: (url: string): Promise<string> => ipcRenderer.invoke('calendar:fetch', url),

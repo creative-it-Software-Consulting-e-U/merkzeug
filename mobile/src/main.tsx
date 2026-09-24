@@ -1,3 +1,4 @@
+import { ReleaseNotes } from '@merkzeug/editor/ReleaseNotes'
 import { initializeTheme } from '@merkzeug/editor/theme'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
@@ -8,6 +9,6 @@ initializeTheme()
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <App />
+    <ReleaseNotes><App /></ReleaseNotes>
   </React.StrictMode>
 )

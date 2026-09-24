@@ -22,3 +22,9 @@ test('frontmatter survives untouched round trips', () => {
   const {frontmatter,body} = splitFrontmatter(source)
   assert.equal(frontmatter + body, source)
 })
+
+test('mobile vault root exports direct children, nested notes and frontmatter exclusions', async () => {
+  const md = '---\npdf-exclude: [Hidden.md]\n---\n# Index\n[chapter](Chapter.md) [nested](sub/Note.md) [hidden](Hidden.md) [missing](Missing.md)'
+  const files = new Set(['/Chapter.md', '/sub/Note.md', '/Hidden.md'])
+  assert.deepEqual(await collectLinkedDocs('/Index.md', md, '/', async path => files.has(path)), ['/Chapter.md', '/sub/Note.md'])
+})

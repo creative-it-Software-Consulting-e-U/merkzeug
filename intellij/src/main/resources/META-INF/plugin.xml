@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.creativeit.merkzeug</id>
   <name>Merkzeug</name>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
   <vendor email="guenther.wieser@creative-it.com" url="https://merkzeug.creative-it.com/">creative-it Software Consulting e.U.</vendor>
   <description><![CDATA[
     <p>Merkzeug is a visual Markdown editor for IntelliJ IDEA, with formatting tools, Mermaid diagrams,
@@ -33,7 +33,7 @@
       <li>IntelliJ owns document saving, version control and undo history.</li>
       <li>File → Print opens a printable PDF preview for the active Merkzeug editor.</li>
       <li>Appearance follows the IDE theme, with optional PDF content styles while editing.</li>
-      <li>Project-specific PDF templates, including automatic discovery of desktop Merkzeug templates.</li>
+      <li>Portable vault templates and central PDF templates, including automatic discovery of desktop Merkzeug templates.</li>
       <li>Copyable template styling prompts with an offline technical reference for coding agents.</li>
       <li>Optional attachment guidance for coding agents: preview existing AGENTS.md and CLAUDE.md
       contents and explicitly select which files receive the guidance.</li>
@@ -42,15 +42,7 @@
     <p>Proprietary software, free for private and internal business use under the Merkzeug End User License Agreement.</p>
     <p>Preview for IntelliJ IDEA 2026.2.2–2026.2.3 (builds 262.10315.125–262.10968.63), with JCEF enabled.</p>
   ]]></description>
-  <change-notes><![CDATA[
-    <p>Version 1.0.1 — editing and refactoring improvements.</p>
-    <ul>
-      <li>Rename and Move update incoming Markdown links across project notes, including notes without image folders. Moving notes also recalculates outgoing relative links; native Undo/Redo is supported.</li>
-      <li>Print notes through File → Print or the editor toolbar using the PDF template.</li>
-      <li>Selected table text remains readable on light backgrounds and PDF template styles.</li>
-      <li>Compatibility extended to IntelliJ IDEA 2026.2.3.</li>
-    </ul>
-  ]]></change-notes>
+  <change-notes><![CDATA[<p>Version 1.2 — portable templates and release history.</p><ul><li>Choose a central PDF template or a template inside your vault from the PDF controls in every edition. Vault-relative template settings travel with your repository.</li><li>Read the complete release history in the app. New versions show their release notes automatically on first launch.</li></ul>]]></change-notes>
   <idea-version since-build="262.10315.125" until-build="262.10968.63"/>
   <depends>com.intellij.modules.platform</depends>
   <depends>com.intellij.modules.jcef</depends>

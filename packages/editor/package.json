@@ -1,6 +1,6 @@
 {
   "name": "@merkzeug/editor",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "type": "module",
   "exports": {
@@ -13,10 +13,12 @@
     "./MeetingNotes": "./src/MeetingNotes.tsx",
     "./GuidedTour": "./src/GuidedTour.tsx",
     "./icons": "./src/icons.tsx",
-    "./TemplateStylingPrompt": "./src/TemplateStylingPrompt.tsx"
+    "./TemplateStylingPrompt": "./src/TemplateStylingPrompt.tsx",
+    "./TemplateLocation": "./src/TemplateLocation.tsx",
+    "./ReleaseNotes": "./src/ReleaseNotes.tsx"
   },
   "dependencies": {
-    "@merkzeug/core": "1.1.0"
+    "@merkzeug/core": "1.2.0"
   },
   "peerDependencies": {
     "@milkdown/crepe": "^7.22.1",

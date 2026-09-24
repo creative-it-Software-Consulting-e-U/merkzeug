@@ -1,6 +1,6 @@
 {
   "name": "merkzeug",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Merkzeug – WYSIWYG-Markdown-Editor (Cross-Platform)",
   "main": "out/main/index.js",
   "scripts": {
@@ -41,9 +41,9 @@
     "react-dom": "^19.3.0",
     "typescript": "^7.0.2",
     "vite": "^7.3.6",
-    "@merkzeug/core": "1.1.0",
-    "@merkzeug/editor": "1.1.0",
-    "@merkzeug/export": "1.1.0"
+    "@merkzeug/core": "1.2.0",
+    "@merkzeug/editor": "1.2.0",
+    "@merkzeug/export": "1.2.0"
   },
   "dependencies": {
     "@electron-toolkit/utils": "^4.0.0",
