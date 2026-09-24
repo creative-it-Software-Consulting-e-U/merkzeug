@@ -3,7 +3,7 @@
 The interface and this help use German on a German system and English otherwise. You can switch the help language independently.
 
 Merkzeug is a Notion-style editor for Markdown notes – this edition runs on
-**macOS, Windows and Linux**. You edit your notes **WYSIWYG** (formatted, without
+**macOS and Linux** (Windows is coming soon). You edit your notes **WYSIWYG** (formatted, without
 visible Markdown syntax), but everything is always saved as clean, portable
 Markdown. All notes live as `.md` files in an ordinary folder – the **vault**.
 

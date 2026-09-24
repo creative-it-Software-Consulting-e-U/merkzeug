@@ -10,6 +10,9 @@ for (const gallery of document.querySelectorAll('[data-gallery]')) {
     const view = chosen || (compact.matches ? 'mobile' : 'desktop');
     // The picture source is the no-JavaScript fallback; remove it for manual switching.
     picture.querySelector('source')?.remove();
+    // Reserve space before lazy images load, so fragment links keep their target.
+    image.width = Number(image.dataset[`${view}Width`]);
+    image.height = Number(image.dataset[`${view}Height`]);
     image.src = image.dataset[view];
     fullImage.href = image.src;
     gallery.dataset.view = view;

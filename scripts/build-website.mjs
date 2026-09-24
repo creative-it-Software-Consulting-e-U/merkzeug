@@ -29,12 +29,12 @@ for(const lang of ['en','de']) {
    return `href="#${id}"`;
   });
   const other=name.replace(`-${lang}`,lang==='en'?'-de':'-en');
-  const title=lang==='en'?`Merkzeug ${edition==='desktop'?'Desktop':edition==='ios'?'iPhone & iPad':'IntelliJ IDEA'} Guide`:`Merkzeug ${edition==='desktop'?'Desktop':edition==='ios'?'iPhone & iPad':'IntelliJ IDEA'} – Hilfe`;
+  const title=lang==='en'?`Merkzeug ${edition==='desktop'?'Mac &amp; Linux':edition==='ios'?'iPhone & iPad':'IntelliJ IDEA'} Guide`:`Merkzeug ${edition==='desktop'?'Mac &amp; Linux':edition==='ios'?'iPhone & iPad':'IntelliJ IDEA'} – Hilfe`;
   let head=base.slice(0,base.indexOf('<main'));
   head=head.replace(/<title>.*?<\/title>/,`<title>${title}</title>`).replace(/<link rel="canonical"[^>]+>/,`<link rel="canonical" href="https://merkzeug.creative-it.com/${name}">`);
   head=head.replace(new RegExp(`href="${lang==='en'?'de.html':'index.html'}" lang=`),`href="${other}" lang=`);
   const intro=lang==='en'?'Choose your edition: Mac & Linux, iPhone & iPad, or IntelliJ IDEA.':'Wähle deine Edition: Mac & Linux, iPhone & iPad oder IntelliJ IDEA.';
-  const links=`<p><a href="help-${lang}.html">Desktop</a> · <a href="help-ios-${lang}.html">iPhone &amp; iPad</a> · <a href="help-intellij-${lang}.html">IntelliJ IDEA</a></p>`;
+  const links=`<p><a href="help-${lang}.html">Mac &amp; Linux</a> · <a href="help-ios-${lang}.html">iPhone &amp; iPad</a> · <a href="help-intellij-${lang}.html">IntelliJ IDEA</a></p>`;
   const footer=base.slice(base.indexOf('<footer>'));
   await writeFile(new URL(`website/${name}`,root),head+`<main id="content" class="guide"><p class="notice">${intro}</p>${links}${body}</main>`+footer);
   pages.push(name);

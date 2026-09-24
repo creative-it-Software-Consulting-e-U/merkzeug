@@ -3,13 +3,12 @@
 Auf einem deutschen System erscheinen Oberfläche und Hilfe auf Deutsch, andernfalls auf Englisch. Die Sprache dieser Hilfe lässt sich unabhängig umschalten.
 
 Merkzeug ist ein Editor für Markdown-Notizen im Stil von Notion – diese Version
-läuft auf **macOS und Windows**. Du bearbeitest deine Notizen **WYSIWYG**
+läuft auf **macOS und Linux** (Windows folgt). Du bearbeitest deine Notizen **WYSIWYG**
 (formatiert, ohne sichtbare Markdown-Syntax), gespeichert wird aber immer
 sauberes, portables Markdown. Alle Notizen liegen als `.md`-Dateien in einem
 gewöhnlichen Ordner – dem **Vault**.
 
-Alle Kürzel gelten mit **⌘** auf dem Mac; unter Windows entspricht ⌘ der
-**Strg**-Taste und ⌥ der **Alt**-Taste.
+Die Kürzel zeigen zuerst Mac, danach Linux/Windows. Die Tabelle der Tastaturkürzel führt beide Plattformen ausdrücklich auf.
 
 **Inhalt:** [1. Erste Schritte](#1.-erste-schritte) ·
 [2. Sidebar & Dateibaum](#2.-sidebar-&-dateibaum) ·
