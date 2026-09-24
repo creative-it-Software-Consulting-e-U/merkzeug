@@ -499,3 +499,18 @@ Die portable Zuordnung liegt in `.merkzeug/settings.json`. Zentrale Vorlagen wer
 ## Release Notes
 
 Über **Release Notes** in der Hilfe (IntelliJ: **…**) ist die vollständige Versionsgeschichte auf Deutsch und Englisch auch offline lesbar. Beim ersten Start einer neuen Marketing-Version erscheinen deren Release Notes automatisch. **Fertig** merkt diese Version auf der aktuellen Installation als gelesen; die komplette Historie bleibt erreichbar. Website und Apps verwenden dieselbe Quelle für Release Notes.
+
+
+## Linux-Installation und Plattformunterschiede
+
+Die Linux-Downloads sind für Intel-/AMD-PCs mit 64 Bit (x86_64); ARM64 ist nicht enthalten.
+
+- **DEB:** auf Ubuntu-/Debian-kompatiblen Systemen mit `sudo apt install ./Merkzeug-1.2.0-linux-x64.deb` installieren.
+- **RPM:** auf Fedora-kompatiblen Systemen mit `sudo dnf install ./Merkzeug-1.2.0-linux-x64.rpm` installieren.
+- **AppImage:** in den Dateieigenschaften ausführbar machen oder `chmod +x Merkzeug-1.2.0-linux-x64.AppImage` ausführen und die Datei öffnen. FUSE 2 ist erforderlich (`libfuse2t64` unter Ubuntu 24.04). Nutze das DEB-Paket, wenn AppImage für dein System ungeeignet ist. Deaktiviere die Anwendungssandbox nicht, um Installationsprobleme zu umgehen.
+
+Updates werden manuell von der Merkzeug-Website geladen. Prüfe Downloads anhand der veröffentlichten SHA-256-Prüfsummen. Sie erkennen veränderte Dateien, ersetzen aber kein Herausgeber-Zertifikat. Notizen und Einstellungen liegen außerhalb des Anwendungspakets.
+
+Der gemeinsame Desktop-Editor bietet visuelles Bearbeiten, Mermaid, Lese-/Navigationsmodus, Frontmatter, Dateinamen aus Überschriften, Begleitordner für Bilder und Link-Anpassungen beim Verschieben/Umbenennen, PDF-Vorlagen, zusammengefassten PDF-Export, Drucken und Agent-Prompts. Für die integrierten Git-Aktionen muss Git separat installiert sein; richte die Authentifizierung über deine üblichen Git-Werkzeuge ein.
+
+Meeting-Notizen unter Linux nutzen ICS-Dateien oder HTTPS/Webcal-Kalenderabos. Eine direkte GNOME-/KDE-Systemkalender-Anbindung gibt es nicht. Zum Speichern privater Abo-URLs ist ein System-Schlüsselbund erforderlich; lokale ICS-Importe funktionieren auch ohne diesen. Standardmäßig verwendet Linux einen lokalen zentralen Vorlagenordner oder einen von dir gewählten Ordner. Vault-Vorlagen in `.merkzeug/` reisen mit dem Repository; eingebundene Sync-Ordner funktionieren ebenfalls. Eine automatische Apple-iCloud-Erkennung gibt es nicht. Drucken setzt eingerichtete Systemdrucker und Treiber voraus.

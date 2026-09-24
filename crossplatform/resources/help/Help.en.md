@@ -484,3 +484,18 @@ The portable assignment is stored in `.merkzeug/settings.json`. A central templa
 ## Release Notes
 
 Open **Release Notes** in Help (IntelliJ: **…**) for the complete English or German version history, available offline. On the first start of a new marketing version, its release notes open automatically. **Done** marks that version as read on this installation; the full history remains accessible. Website and apps use the same release-note source.
+
+
+## Linux installation and platform differences
+
+Linux downloads target Intel/AMD 64-bit PCs (x86_64); ARM64 is not included.
+
+- **DEB:** install with `sudo apt install ./Merkzeug-1.2.0-linux-x64.deb` on Ubuntu/Debian-compatible systems.
+- **RPM:** install with `sudo dnf install ./Merkzeug-1.2.0-linux-x64.rpm` on Fedora-compatible systems.
+- **AppImage:** make the file executable in its file properties, or run `chmod +x Merkzeug-1.2.0-linux-x64.AppImage`, then open it. FUSE 2 is required (`libfuse2t64` on Ubuntu 24.04). Use the DEB package if AppImage is unsuitable for your system. Do not disable the application sandbox to work around an installation problem.
+
+Download updates manually from the Merkzeug website. Verify downloads against the published SHA-256 checksums. These checksums detect changed files; they are not publisher certificates. Your notes and configuration remain outside the application package.
+
+The shared desktop editor includes visual editing, Mermaid, reading/navigation mode, frontmatter, title-based filenames, companion image folders and link updates on move/rename, PDF templates, combined PDF export, printing and agent prompts. Install Git separately for the built-in Git operations; configure authentication through your normal Git tools.
+
+Linux meeting notes use ICS files or HTTPS/Webcal calendar subscriptions. There is no direct GNOME/KDE system-calendar connector. A system keyring is required for storing private subscription URLs; local ICS import works without one. Linux uses a local central templates folder by default, or a folder you select. Vault templates in `.merkzeug/` travel with a repository; mounted sync folders also work. Automatic Apple iCloud discovery is unavailable. Printing depends on the system's configured printers and drivers.
