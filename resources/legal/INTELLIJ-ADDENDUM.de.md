@@ -1,5 +1,3 @@
-# Zusatz für das Merkzeug-IntelliJ-Plugin
+# Informationen zum IntelliJ-Plugin
 
-Dieser Zusatz gilt ausschließlich für das Merkzeug-IntelliJ-Plugin und ergänzt den vorstehenden Merkzeug-Endnutzerlizenzvertrag.
-
-Lizenzgeber des Plugins ist creative-it Software Consulting e.U. JetBrains ist weder Lizenzgeber noch Partei dieses Lizenzvertrags. Support und Ansprüche zu Merkzeug werden von creative-it über die oben genannten Kontaktdaten bearbeitet. Soweit gesetzlich zulässig, entstehen JetBrains aus diesem Vertrag keine Pflichten oder Haftung. Deine gesonderten Vereinbarungen mit JetBrains, einschließlich der Bedingungen deiner IDE und des JetBrains Marketplace, gelten daneben weiter. Zwingende Rechte bleiben unberührt.
+Merkzeug wird von creative-it Software Consulting e.U. bereitgestellt. JetBrains ist nicht Urheber oder Lizenzgeber von Merkzeug. Deine gesonderten Vereinbarungen für die IDE und den JetBrains Marketplace gelten weiterhin. Diese Information ändert oder beschränkt die vorstehende MIT-Lizenz nicht. Drittanbieter-Komponenten behalten ihre eigenen Lizenzen.

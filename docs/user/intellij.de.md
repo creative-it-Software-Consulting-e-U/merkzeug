@@ -95,7 +95,7 @@ Fehlende Dateien werden nur bei Auswahl angelegt. **Später** verschiebt den Hin
 
 Dateien und Bilder außerhalb des aktuellen Projektstamms sind nicht zugänglich. Links öffnen andere Dateien; die Navigation zu Überschriften in anderen Dokumenten ist noch unvollständig. Beim PDF-Export wird der Editor vorübergehend verlassen und anschließend neu geladen. Desktop-Vault-Einstellungen, native Kalender und Massenexport gehören nicht zum Plugin. Die Marketplace-Ausgabe enthält die noch unveröffentlichte Tour und das Video nicht.
 
-Merkzeug ist proprietäre Software für private und interne geschäftliche Nutzung gemäß der [Endbenutzer-Lizenzvereinbarung](../../resources/legal/EULA.de.md). Lizenz und Hinweise zu Drittanbietern liegen auch dem Plugin bei.
+Merkzeug steht unter der [MIT-Lizenz](../../resources/legal/EULA.de.md). Lizenz und Hinweise zu Drittanbietern liegen auch dem Plugin bei.
 
 Über **Help → Merkzeug: Contact Support…** öffnest du das Supportformular mit App, Sprache, Plattform und Plugin-Version. Notizinhalte und Repository-Pfade werden nicht übertragen. Nach einem Plugin-Update ist gegebenenfalls ein IntelliJ-Neustart notwendig.
 

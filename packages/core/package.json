@@ -10,5 +10,5 @@
     "ical.js": "2.2.1",
     "mdast-util-from-markdown": "2.0.3"
   },
-  "license": "UNLICENSED"
+  "license": "MIT"
 }

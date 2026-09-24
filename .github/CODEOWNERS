@@ -1,0 +1,9 @@
+# Enforce these reviews in the main-branch ruleset before opening the repository.
+/.github/ @guentherwieser
+/scripts/ @guentherwieser
+/resources/legal/ @guentherwieser
+/LICENSE @guentherwieser
+/BRANDING.md @guentherwieser
+/intellij/build.py @guentherwieser
+/crossplatform/electron-builder*.yml @guentherwieser
+/mobile/ios/ @guentherwieser

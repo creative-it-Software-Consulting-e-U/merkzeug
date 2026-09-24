@@ -1,6 +1,6 @@
 # Security reporting
 
-Merkzeug is currently in preview. No released version has a long-term security support commitment; use the newest maintained release and read its known issues.
+Use the newest maintained release for your edition. Older versions do not have a long-term security support commitment. Read the release notes and known issues.
 
 For a suspected vulnerability, contact **guenther.wieser@creative-it.com** privately. If the repository's Security tab offers “Report a vulnerability”, that is also suitable. Do not post exploit details, credentials or private document contents in a public issue.
 

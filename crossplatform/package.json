@@ -17,13 +17,14 @@
     "prepackage:mac": "npm run notices",
     "prepackage:mac:dmg": "npm run notices",
     "prepackage:win": "npm run notices",
-    "prepackage:linux": "npm run notices"
+    "prepackage:linux": "npm run notices",
+    "prebuild": "node ../scripts/build-licenses.mjs"
   },
   "keywords": [],
   "author": "Günther Wieser <guenther.wieser@creative-it.com>",
   "homepage": "https://www.creative-it.com",
   "desktopName": "merkzeug.desktop",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "type": "commonjs",
   "devDependencies": {
     "@milkdown/crepe": "^7.22.1",

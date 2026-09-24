@@ -12,12 +12,14 @@ The desktop app and IntelliJ plugin share their editor and PDF rendering code. T
 
 | Edition | Availability | PDF export | Get started |
 | --- | --- | --- | --- |
-| Desktop: macOS, Windows, Linux | Preview | Yes, including linked documents and templates | [Desktop guide](docs/user/desktop.md) |
-| IntelliJ IDEA | Preview; targets IDEA 2026.2.2 / build 262.10315+ within 262 | Yes, using JCEF | [IntelliJ guide](docs/user/intellij.md) |
-| iPhone and iPad | Development builds; no public TestFlight link yet | Not implemented | [iOS guide](docs/user/ios.md) |
-| VS Code | Planned; not implemented | Not implemented | [Architecture](docs/shared-architecture.md) |
+| Mac | App Store | Templates, linked documents and printing | [Desktop guide](docs/user/desktop.md) |
+| Linux (x86_64 and ARM64) | AppImage, DEB and RPM | Templates, linked documents and printing | [Desktop guide](docs/user/desktop.md) |
+| IntelliJ IDEA | JetBrains Marketplace | Templates, linked documents and printing via JCEF | [IntelliJ guide](docs/user/intellij.md) |
+| iPhone and iPad | App Store | Templates, linked documents and AirPrint | [iOS guide](docs/user/ios.md) |
+| Windows | Coming soon | Shared desktop implementation; release validation pending | [Desktop guide](docs/user/desktop.md) |
+| Android and VS Code | Planned | Not released | [Architecture](docs/shared-architecture.md) |
 
-Download binaries from [GitHub Releases](https://github.com/creative-it-Software-Consulting-e-U/merkzeug/releases) **when available**. This repository contains the release infrastructure; that does not mean a public release has already been published. Read each release's platform, signing and known-issues notes before installing.
+Find current [downloads on the website](https://merkzeug.creative-it.com/). Existing Linux downloads remain in the [binary distribution repository](https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases) so installed links stay valid. See `intellij/sdk.json` for the plugin's tested IDE versions; compatibility is verified per release.
 
 ## Documentation
 
@@ -62,8 +64,8 @@ See the [development guide](docs/development/README.md) for SDK setup and native
 | `SampleVault` | Example notes; includes existing German examples |
 | `legacy` | Archived native macOS implementation; outside the current release pipeline |
 
-Merkzeug is preparing for its first proprietary release. Preview builds and native platform support still require release-by-release testing; see the [release checklist](docs/development/releases.md).
+Native platform support requires release-by-release testing; see the [release checklist](docs/development/releases.md).
 
 ## License
 
-Merkzeug is proprietary software, available for private and internal business use under the [Merkzeug End User License Agreement](LICENSE). Dependencies retain their own licenses; distribution packages include third-party notices.
+Merkzeug is licensed under the [MIT License](LICENSE). Commercial use, modification and redistribution are permitted with the required notices. Dependencies retain their own licenses; distribution packages include third-party notices. See [BRANDING.md](BRANDING.md) for product-name and logo information. Historical releases retain their original license notices.

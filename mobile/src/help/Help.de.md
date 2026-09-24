@@ -124,7 +124,7 @@ Neue Startvorlagen enthalten `AGENTS.md` mit Dateiformat, CSS-Beispielen, Platzh
 
 ### Lizenz
 
-Merkzeug ist proprietäre Software für private und interne geschäftliche Nutzung. Die vollständige Endnutzerlizenz steht am Ende der In-App-Hilfe sowie auf der [Website](https://merkzeug.creative-it.com/license-de.html). Drittanbieter-Komponenten behalten ihre eigenen Lizenzen.
+Merkzeug steht unter der MIT-Lizenz. Der vollständige Lizenztext steht am Ende der In-App-Hilfe sowie auf der [Website](https://merkzeug.creative-it.com/license-de.html). Drittanbieter-Komponenten behalten ihre eigenen Lizenzen.
 
 
 ## Drucken

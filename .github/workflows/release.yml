@@ -36,7 +36,7 @@ jobs:
       intellij: ${{ steps.editions.outputs.intellij }}
       matrix: ${{ steps.editions.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
       - id: version
@@ -67,7 +67,9 @@ jobs:
       contents: read
       deployments: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
       - name: Require protected signing for stable signed desktop editions
         if: needs.plan.outputs.preview == 'false' && (contains(needs.plan.outputs.editions, 'mac-') || contains(needs.plan.outputs.editions, 'win-'))
         env:
@@ -83,14 +85,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version-file: .nvmrc
           cache: npm
-      - uses: actions/setup-python@v7
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: '3.12'
       - run: npm ci
@@ -133,7 +135,7 @@ jobs:
         if: always() && matrix.platform == 'mac'
         shell: bash
         run: rm -f "$RUNNER_TEMP/merkzeug-notarization.p8" "$RUNNER_TEMP/merkzeug-developer-id.provisionprofile"
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: desktop-${{ matrix.platform }}-${{ matrix.arch }}
           if-no-files-found: error
@@ -150,14 +152,14 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version-file: .nvmrc
           cache: npm
-      - uses: actions/setup-python@v7
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: '3.12'
       - run: npm ci
@@ -166,23 +168,24 @@ jobs:
       - name: Build plugin
         shell: bash
         run: IDEA_HOME="$RUNNER_TEMP/merkzeug-sdk" npm run build:intellij
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: intellij
           path: intellij/dist/*.zip
           if-no-files-found: error
           retention-days: 14
   draft:
+    environment: release-publishing
     needs: [checks, plan, protection, desktop, intellij]
     if: always() && needs.checks.result == 'success' && needs.plan.result == 'success' && needs.protection.result == 'success' && (needs.desktop.result == 'success' || needs.desktop.result == 'skipped') && (needs.intellij.result == 'success' || needs.intellij.result == 'skipped')
     runs-on: ubuntu-24.04
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
-      - uses: actions/download-artifact@v8
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           path: release-artifacts
           merge-multiple: true

@@ -12,11 +12,15 @@ for (const [location, entry] of Object.entries(lock.packages)) {
   const manifest = JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8'))
   const files = fs.readdirSync(dir).filter(name => /^(licen[sc]e|copying|notice)([.-]|$)/i.test(name))
     .filter(name => fs.statSync(path.join(dir, name)).isFile())
-  records.push({name: manifest.name, version: manifest.version, license: manifest.license ?? entry.license ?? 'SEE PACKAGE',
+  const upstream = manifest.name === 'ical.js'
+    ? `https://github.com/kewisch/ical.js/tree/v${manifest.version}`
+    : manifest.name === 'lightningcss' || manifest.name.startsWith('lightningcss-')
+      ? `https://github.com/parcel-bundler/lightningcss/tree/v${manifest.version}` : ''
+  records.push({source: upstream, archive: entry.resolved ?? '', name: manifest.name, version: manifest.version, license: manifest.license ?? entry.license ?? 'SEE PACKAGE',
     texts: files.map(name => `--- ${name} ---\n${fs.readFileSync(path.join(dir, name), 'utf8')}`)})
 }
 records.sort((a,b) => `${a.name}@${a.version}`.localeCompare(`${b.name}@${b.version}`, 'en'))
-const body = 'Merkzeug third-party notices\n\nical.js 2.2.1 (MPL-2.0) source is available at https://github.com/kewisch/ical.js/tree/v2.2.1 . Merkzeug does not modify these upstream source files.\n\nThis inventory includes installed build tools as well as runtime dependencies.\nUpstream components retain their own licenses. Electron and the host IDE also ship their own notices.\n\n' + records.map(r => `${r.name}@${r.version}\nLicense: ${JSON.stringify(r.license)}\n${r.texts.join('\n')}\n`).join('\n')
+const body = 'Merkzeug third-party notices\n\nMPL component source locations are listed alongside the corresponding package versions below. Merkzeug does not modify these upstream source files.\n\nThis inventory includes installed build tools as well as runtime dependencies.\nUpstream components retain their own licenses. Electron and the host IDE also ship their own notices.\n\n' + records.map(r => `${r.name}@${r.version}\nLicense: ${JSON.stringify(r.license)}\n${r.source ? `Upstream source: ${r.source}\n` : ''}${r.archive ? `Package archive: ${r.archive}\n` : ''}${r.texts.join('\n')}\n`).join('\n')
 const output = path.join(root, 'crossplatform/resources/THIRD_PARTY_NOTICES.txt')
 fs.writeFileSync(output, body)
 const mobilePublic = path.join(root, 'mobile/public')

@@ -95,6 +95,29 @@ class IndependentEditions(unittest.TestCase):
                 artifacts.assemble(directory, editions='linux-x64')
 
 class ReleaseProtection(unittest.TestCase):
+    def test_actions_are_pinned_and_contributor_checks_have_no_secrets(self):
+        import re
+        for file in (SCRIPTS.parent/'.github/workflows').glob('*.yml'):
+            text=file.read_text()
+            self.assertNotIn('pull_request_target:',text)
+            for action in re.findall(r'uses:\s+([^\s#]+)',text):
+                if action.startswith('./'): continue
+                self.assertRegex(action,r'^actions/[\w-]+@[0-9a-f]{40}$')
+        checks=(SCRIPTS.parent/'.github/workflows/ci.yml').read_text()
+        self.assertNotIn('secrets.',checks)
+        self.assertNotIn('contents: write',checks)
+
+    def test_public_environment_requires_expected_reviewer_and_exact_refs(self):
+        spec=importlib.util.spec_from_file_location('public_environments',SCRIPTS/'configure-public-environments.py')
+        public=importlib.util.module_from_spec(spec);spec.loader.exec_module(public)
+        environment={'protection_rules':[{'type':'required_reviewers','reviewers':[{'type':'User','reviewer':{'id':7}}]}],
+                     'deployment_branch_policy':{'custom_branch_policies':True}}
+        policies={'branch_policies':[{'type':'tag','name':'v*'}]}
+        public.validate(environment,policies,{('tag','v*')},7)
+        with self.assertRaises(ValueError): public.validate(environment,policies,{('tag','v*')},8)
+        with self.assertRaises(ValueError): public.validate(environment,{'branch_policies':[{'type':'branch','name':'*'}]},{('tag','v*')},7)
+        with self.assertRaises(ValueError): public.validate({},policies,{('tag','v*')},7)
+
     def test_missing_reviewers_or_branch_access_is_rejected(self):
         spec=importlib.util.spec_from_file_location('protection',SCRIPTS/'check-release-protection.py')
         protection=importlib.util.module_from_spec(spec);spec.loader.exec_module(protection)
