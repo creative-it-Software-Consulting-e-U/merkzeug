@@ -17,10 +17,17 @@ for(const lang of ['en','de']){
  const teaser=`<section id="release-notes" class="feature-section"><p class="eyebrow">Release Notes</p><h2>${en?'What’s new in Merkzeug.':'Was sich in Merkzeug tut.'}</h2><p>${teaserText}</p><a class="button secondary" href="${name}">${en?'Read the release notes':'Release Notes lesen'}</a></section>`;
  base=base.replace(/<!-- progress:start -->[\s\S]*?<!-- progress:end -->/,`<!-- progress:start -->${teaser}<!-- progress:end -->`);
  await writeFile(new URL(home,root),base);
- const entries=releases.map(r=>{
+ // Reuse the localized official store badges and widget fallback from the hero.
+ const heroDownloads=base.match(/<div class="actions">[\s\S]*?(?=<p class="availability">)/)?.[0];
+ if(!heroDownloads)throw Error(`Missing download controls in ${home}`);
+ const downloads=`<div class="landing release-downloads">${heroDownloads
+  .replace('id="marketplace-install"','id="marketplace-install-release"')
+  .replace('/34221-merkzeug/versions/beta','/34221-merkzeug')
+  .replace('Marketplace Beta','Marketplace')}</div>`;
+ const entries=releases.map((r,index)=>{
   if(!['preparation','approved','released'].includes(r.status))throw Error(`Invalid release state: ${r.status}`);
   const status=r.status==='released'?(en?'Released':'Veröffentlicht'):r.status==='approved'?(en?'Approved by Apple — awaiting App Store activation':'Von Apple freigegeben – App-Store-Freischaltung ausstehend'):(en?'In preparation — not yet available':'In Vorbereitung — noch nicht verfügbar');
-  return `<article class="release-entry"><p class="eyebrow">${escape(r.platforms.join(' · '))}</p><h2>Merkzeug ${escape(r.version)}</h2><p class="release-status">${status}${r.date?` · <time datetime="${escape(r.date)}">${escape(r.date)}</time>`:''}</p><ul>${r.highlights[lang].map(t=>`<li>${escape(t)}</li>`).join('')}</ul></article>`;
+  return `<article class="release-entry"><p class="eyebrow">${escape(r.platforms.join(' · '))}</p><h2>Merkzeug ${escape(r.version)}</h2><p class="release-status">${status}${r.date?` · <time datetime="${escape(r.date)}">${escape(r.date)}</time>`:''}</p><ul>${r.highlights[lang].map(t=>`<li>${escape(t)}</li>`).join('')}</ul>${index===0?downloads:''}</article>`;
  }).join('');
  const title=en?'Release notes':'Release Notes';
  const description=en?'Updates and release history for every edition of Merkzeug.':'Updates und Versionsgeschichte aller Merkzeug-Versionen.';
