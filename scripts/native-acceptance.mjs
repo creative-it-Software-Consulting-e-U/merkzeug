@@ -100,9 +100,9 @@ try {
  passed('localImageRendering');
  const readMode=page.locator('[data-tour="reading-mode"]');
  await readMode.click();
- assert.equal(await page.locator('.ProseMirror').getAttribute('contenteditable'),'false');
+ await eventually(async()=>await page.locator('.ProseMirror').getAttribute('contenteditable')==='false');
  await readMode.click();
- assert.equal(await page.locator('.ProseMirror').getAttribute('contenteditable'),'true');
+ await eventually(async()=>await page.locator('.ProseMirror').getAttribute('contenteditable')==='true');
  passed('readingMode');
  await page.screenshot({path:join(dest,'native-editor.png')});
  await bounded(page.evaluate(async path=>window.merkzeug.exportPdf(path),pdfNote),120000,'PDF export');
@@ -110,7 +110,7 @@ try {
  passed('pdfWithTemplateTocLinksDiagramTableImage');
  report.pdfSHA256=createHash('sha256').update(pdf).digest('hex');
  // Exercise platform adapters against a synthetic vault, never a real remote.
- const created=await page.evaluate(async vault=>window.merkzeug.createMeetingNote(vault,'Meeting fixture','# Meeting fixture\n\nMeeting content.\n'),vault);
+ const created=await page.evaluate(async vault=>window.merkzeug.createMeetingNote(vault,'Meeting fixture','---\ncalendar-event: release-fixture\ncalendar-start: 2026-09-24T10:00:00Z\n---\n\n# Meeting fixture\n\nMeeting content.\n'),vault);
  assert.match(await readFile(created,'utf8'),/Meeting fixture/);
  const asset=await page.evaluate(async path=>window.merkzeug.saveImage(path,btoa('<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"></svg>'),'svg'),created);
  await writeFile(created,`# Meeting fixture\n\n![Image](${asset})\n`);
