@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Explore Markdown, edit visually, and share documents with your layout. For Mac, iPhone, iPad and IntelliJ IDEA.">
+<meta name="description" content="Explore Markdown, edit visually, and share documents with your layout. For Mac, iPhone, iPad, Linux and IntelliJ IDEA.">
 <title>Merkzeug Desktop Guide</title>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="assets/icon.png">
 <link rel="canonical" href="https://merkzeug.creative-it.com/help-en.html">
 <meta property="og:title" content="Markdown. Your way. · Merkzeug">
-<meta property="og:description" content="Explore Markdown, edit visually, and share documents with your layout. For Mac, iPhone, iPad and IntelliJ IDEA.">
+<meta property="og:description" content="Explore Markdown, edit visually, and share documents with your layout. For Mac, iPhone, iPad, Linux and IntelliJ IDEA.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://merkzeug.creative-it.com/assets/mac-en.png">
 <link rel="stylesheet" href="landing.css?v=20260924-marketplace">
@@ -29,7 +29,7 @@
 <a href="help-de.html" lang="de">Deutsch</a>
 </nav>
 </header>
-<main id="content" class="guide"><p class="notice">Choose your edition: Mac, iPhone & iPad, or IntelliJ IDEA.</p><p><a href="help-en.html">Desktop</a> · <a href="help-ios-en.html">iPhone &amp; iPad</a> · <a href="help-intellij-en.html">IntelliJ IDEA</a></p><h1 id="merkzeug-help">Merkzeug – Help</h1>
+<main id="content" class="guide"><p class="notice">Choose your edition: Mac & Linux, iPhone & iPad, or IntelliJ IDEA.</p><p><a href="help-en.html">Desktop</a> · <a href="help-ios-en.html">iPhone &amp; iPad</a> · <a href="help-intellij-en.html">IntelliJ IDEA</a></p><h1 id="merkzeug-help">Merkzeug – Help</h1>
 <p>The interface and this help use German on a German system and English otherwise. You can switch the help language independently.</p>
 <p>Merkzeug is a Notion-style editor for Markdown notes – this edition runs on
 <strong>macOS, Windows and Linux</strong>. You edit your notes <strong>WYSIWYG</strong> (formatted, without
@@ -528,6 +528,16 @@ message instead of hanging.</li>
 <p>The portable assignment is stored in <code>.merkzeug/settings.json</code>. A central template is referenced by name; a vault template uses <code>{&quot;pdfTemplate&quot;:{&quot;source&quot;:&quot;vault&quot;,&quot;path&quot;:&quot;.merkzeug/templates/Company&quot;}}</code>. Commit the settings and template folder to share them with a repository. Existing central assignments remain compatible. On Apple devices, the central collection uses Merkzeug&#39;s iCloud container when available; a locally selected template collection remains a device setting. IntelliJ also discovers installed desktop templates. Missing template folders are reported instead of silently substituting another template.</p>
 <h2 id="release-notes">Release Notes</h2>
 <p>Open <strong>Release Notes</strong> in Help (IntelliJ: <strong>…</strong>) for the complete English or German version history, available offline. On the first start of a new marketing version, its release notes open automatically. <strong>Done</strong> marks that version as read on this installation; the full history remains accessible. Website and apps use the same release-note source.</p>
+<h2 id="linux-installation-and-platform-differences">Linux installation and platform differences</h2>
+<p>Linux downloads target Intel/AMD 64-bit PCs (x86_64); ARM64 is not included.</p>
+<ul>
+<li><strong>DEB:</strong> install with <code>sudo apt install ./Merkzeug-1.2.0-linux-x64.deb</code> on Ubuntu/Debian-compatible systems.</li>
+<li><strong>RPM:</strong> install with <code>sudo dnf install ./Merkzeug-1.2.0-linux-x64.rpm</code> on Fedora-compatible systems.</li>
+<li><strong>AppImage:</strong> make the file executable in its file properties, or run <code>chmod +x Merkzeug-1.2.0-linux-x64.AppImage</code>, then open it. FUSE 2 is required (<code>libfuse2t64</code> on Ubuntu 24.04). Use the DEB package if AppImage is unsuitable for your system. Do not disable the application sandbox to work around an installation problem.</li>
+</ul>
+<p>Download updates manually from the Merkzeug website. Verify downloads against the published SHA-256 checksums. These checksums detect changed files; they are not publisher certificates. Your notes and configuration remain outside the application package.</p>
+<p>The shared desktop editor includes visual editing, Mermaid, reading/navigation mode, frontmatter, title-based filenames, companion image folders and link updates on move/rename, PDF templates, combined PDF export, printing and agent prompts. Install Git separately for the built-in Git operations; configure authentication through your normal Git tools.</p>
+<p>Linux meeting notes use ICS files or HTTPS/Webcal calendar subscriptions. There is no direct GNOME/KDE system-calendar connector. A system keyring is required for storing private subscription URLs; local ICS import works without one. Linux uses a local central templates folder by default, or a folder you select. Vault templates in <code>.merkzeug/</code> travel with a repository; mounted sync folders also work. Automatic Apple iCloud discovery is unavailable. Printing depends on the system&#39;s configured printers and drivers.</p>
 </main><footer>
 <span>© 2026 creative-it Software Consulting e.U.</span>
 <nav aria-label="Footer">

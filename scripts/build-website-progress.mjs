@@ -23,6 +23,7 @@ for(const lang of ['en','de']){
  const downloads=`<div class="landing release-downloads">${heroDownloads
   .replace('id="marketplace-install"','id="marketplace-install-release"')
   .replace('/34221-merkzeug/versions/beta','/34221-merkzeug')
+  .replace('href="#linux-downloads"',`href="${home}#linux-downloads"`)
   .replace('Marketplace Beta','Marketplace')}</div>`;
  const entries=releases.map((r,index)=>{
   if(!['preparation','approved','released'].includes(r.status))throw Error(`Invalid release state: ${r.status}`);

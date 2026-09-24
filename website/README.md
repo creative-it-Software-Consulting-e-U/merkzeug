@@ -35,7 +35,7 @@ availability is confirmed. Keep edition-specific limitations in the copy.
 `build-website.mjs` renders this data into static pages/sections and includes the
 release history in the sitemap. No GitHub API requests run in visitors' browsers.
 
-Official localized App Store badge SVGs are sourced unchanged from Apple’s `tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us` and `/de-de` endpoints. Preserve their artwork and aspect ratio. The IntelliJ link targets plugin 34221, channel `beta`.
+Official localized App Store badge SVGs are sourced unchanged from Apple’s `tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us` and `/de-de` endpoints. Preserve their artwork and aspect ratio. The IntelliJ link targets plugin 34221, default Stable channel.
 
 ## Responsive landing galleries
 
@@ -48,7 +48,7 @@ disabled, `<picture>` still chooses a responsive image. PDF output is shown as a
 device-independent document sample, rather than pretending to be an iOS capture.
 
 The hero loads the official JetBrains Marketplace install widget for plugin 34221.
-It contacts plugins.jetbrains.com; the beta-channel fallback is visible until the iframe reports its plugin data.
+It contacts plugins.jetbrains.com; the direct Marketplace fallback is visible until the iframe reports its plugin data.
 The widget then replaces the fallback, so only one control is visible. If loading
 fails or scripts are blocked, the fallback remains usable. Other page scripts, styles and images are local.
 
@@ -57,3 +57,5 @@ in technical help and release history. The Mermaid gallery additionally offers
 reviewed iPad captures in both languages. Other galleries show only devices for
 which matching captures exist. The viewport default remains iPhone on narrow
 screens and Mac on wider screens; iPad is an explicit gallery choice.
+
+Linux download links target the public binary-only `creative-it-Software-Consulting-e-U/merkzeug-downloads` repository. Keep the app source repository private. Publish and verify release assets before enabling links; update both localized landing pages and their Linux feature column. Release-note download controls are reused from the hero.

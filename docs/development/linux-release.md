@@ -1,0 +1,42 @@
+# Linux 1.2 distribution
+
+Linux uses the shared Electron desktop application. Packages target x86_64; ARM64 is not part of this release. Source remains private. Only packaged application files, notices, checksums and download instructions belong in the public `creative-it-Software-Consulting-e-U/merkzeug-downloads` repository.
+
+## Acceptance and parity
+
+Run the manually dispatched `linux-packages.yml` workflow on a reviewed commit. It builds AppImage, DEB and RPM, inspects version/architecture/license notices, installs DEB and runs AppImage through FUSE on Ubuntu 24.04, and installs RPM through DNF in Fedora 44 userspace. Fedora runs in a disposable container on the Ubuntu runner's kernel; this is not a full GNOME/KDE/Wayland desktop acceptance test. The application runs as an ordinary user with Chromium sandboxing enabled.
+
+The native suite uses an isolated vault/profile in both English and German. It covers first-run release notes, editing/save/reopen, undo/redo, read-only file errors and retry, external-edit conflict handling, images, Mermaid, reading mode, template-based PDF generation, meeting-note creation, companion assets and incoming links on rename/move, vault/central template selection, agent guidance and Git status/commit. Reports include package and PDF hashes. Physical printer output and provider-specific Git/calendar authentication require a configured user environment.
+
+| Feature | Linux behavior |
+| --- | --- |
+| Visual editor, Mermaid, frontmatter, reading mode | Shared desktop editor |
+| Auto-naming, assets, incoming links on move/rename | Shared desktop file operations |
+| PDF templates, combined export, frontmatter controls | Shared Chromium PDF renderer |
+| Printing | System print dialog; printers/drivers must be configured |
+| Templates across devices | Vault-relative settings or mounted sync folders; no automatic iCloud discovery |
+| Git | Installed Git executable and user's configured authentication |
+| Meeting notes | ICS import and HTTPS/Webcal subscriptions; no native GNOME/KDE calendar integration |
+| Private calendar subscriptions | OS keyring required; no insecure plaintext fallback |
+| Agent prompts and instruction-file selection | Shared desktop features |
+| Updates | Manual download/install; no auto-updater |
+
+## Publication
+
+Download `linux-packages` only from a successful run; validate `SHA256SUMS.txt`, inspect the acceptance reports and review rendered PDF/screenshots. Upload the three unchanged packages and checksums to a draft release in the **binary-only** download repository. Publish after acceptance, then enable website links. Never upload the source archive, tests, fixtures, credentials or private validation artifacts to this public repository. GitHub's automatically generated source ZIP contains only that repository's public download instructions, not Merkzeug source.
+
+AppImage requires FUSE 2. DEB installation uses APT for dependencies; RPM uses DNF. Do not suggest `--no-sandbox`. Checksums are integrity checks, not certified publisher signatures. Do not replace published binaries under an existing version; use a new version for subsequent binary changes.
+
+For test-only changes, the optional `package_run` input reuses the previous `linux-packages` artifact and verifies its checksums before installation. Report both the binary build commit/run and the test commit/run when using this option.
+
+## Release evidence — 24 September 2026
+
+- Binary source: `6d26358a5bb83db6067ef84928eeb84ef307d4b0`, build run `35996484698`.
+- Final exact-binary acceptance: `5711318`, run `35997466508`, **success**. AppImage, DEB and RPM each passed all 14 checks in English and German (six runs). The prior RPM German run needed the test to scroll the diagram into view; no application change or binary rebuild was required.
+- Shared checks: 53 tests, 21 release checks, TypeScript and version consistency passed. Secret scan of history/current source passed.
+- Reviewed all four pages of Ubuntu and Fedora PDFs, including cover, TOC, Mermaid, table, image, linked document and page furniture. Native system print dialog and physical output remain unverified in the headless runner.
+- Local ZIP extraction and uploaded GitHub asset SHA-256 digests matched. Full private reports/PDFs/screenshots are retained as workflow artifacts; public downloads contain only the three packages and checksums.
+
+3831e37ac52d15464c4dedf5e59263d561abf32aa344bae9bccdaab38151e64b  Merkzeug-1.2.0-linux-x64.AppImage
+4c3dc72154f5f3284661861bcc497b7a18c03e33333def028e2b2130f5eac9cb  Merkzeug-1.2.0-linux-x64.deb
+5eae478261ece069eca968d2b750c08d5d48f996c831d44153b830fa222fc479  Merkzeug-1.2.0-linux-x64.rpm

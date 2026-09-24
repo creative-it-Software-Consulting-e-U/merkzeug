@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Markdown lesen, visuell bearbeiten und als Dokument im eigenen Layout teilen. Für Mac, iPhone, iPad und IntelliJ IDEA.">
+<meta name="description" content="Markdown lesen, visuell bearbeiten und als Dokument im eigenen Layout teilen. Für Mac, iPhone, iPad, Linux und IntelliJ IDEA.">
 <title>Merkzeug Desktop – Hilfe</title>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="assets/icon.png">
 <link rel="canonical" href="https://merkzeug.creative-it.com/help-de.html">
 <meta property="og:title" content="Markdown. Your way. · Merkzeug">
-<meta property="og:description" content="Markdown lesen, visuell bearbeiten und als Dokument im eigenen Layout teilen. Für Mac, iPhone, iPad und IntelliJ IDEA.">
+<meta property="og:description" content="Markdown lesen, visuell bearbeiten und als Dokument im eigenen Layout teilen. Für Mac, iPhone, iPad, Linux und IntelliJ IDEA.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://merkzeug.creative-it.com/assets/mac-de.png">
 <link rel="stylesheet" href="landing.css?v=20260924-marketplace">
@@ -29,7 +29,7 @@
 <a href="help-en.html" lang="en">English</a>
 </nav>
 </header>
-<main id="content" class="guide"><p class="notice">Wähle deine Edition: Mac, iPhone & iPad oder IntelliJ IDEA.</p><p><a href="help-de.html">Desktop</a> · <a href="help-ios-de.html">iPhone &amp; iPad</a> · <a href="help-intellij-de.html">IntelliJ IDEA</a></p><h1 id="merkzeug-hilfe">Merkzeug – Hilfe</h1>
+<main id="content" class="guide"><p class="notice">Wähle deine Edition: Mac & Linux, iPhone & iPad oder IntelliJ IDEA.</p><p><a href="help-de.html">Desktop</a> · <a href="help-ios-de.html">iPhone &amp; iPad</a> · <a href="help-intellij-de.html">IntelliJ IDEA</a></p><h1 id="merkzeug-hilfe">Merkzeug – Hilfe</h1>
 <p>Auf einem deutschen System erscheinen Oberfläche und Hilfe auf Deutsch, andernfalls auf Englisch. Die Sprache dieser Hilfe lässt sich unabhängig umschalten.</p>
 <p>Merkzeug ist ein Editor für Markdown-Notizen im Stil von Notion – diese Version
 läuft auf <strong>macOS und Windows</strong>. Du bearbeitest deine Notizen <strong>WYSIWYG</strong>
@@ -543,6 +543,16 @@ Fehlermeldung ab statt zu warten.</li>
 <p>Die portable Zuordnung liegt in <code>.merkzeug/settings.json</code>. Zentrale Vorlagen werden über ihren Namen referenziert, Vault-Vorlagen mit <code>{&quot;pdfTemplate&quot;:{&quot;source&quot;:&quot;vault&quot;,&quot;path&quot;:&quot;.merkzeug/templates/Firma&quot;}}</code>. Einstellungen und Vorlagenordner können gemeinsam im Repository versioniert werden. Bestehende zentrale Zuordnungen bleiben kompatibel. Auf Apple-Geräten liegt die zentrale Sammlung bei verfügbarem iCloud im Merkzeug-Container; ein lokal ausgewählter Vorlagenordner bleibt eine Geräteeinstellung. IntelliJ erkennt auch installierte Desktop-Vorlagen. Fehlende Vorlagenordner werden gemeldet, statt still eine andere Vorlage zu verwenden.</p>
 <h2 id="release-notes">Release Notes</h2>
 <p>Über <strong>Release Notes</strong> in der Hilfe (IntelliJ: <strong>…</strong>) ist die vollständige Versionsgeschichte auf Deutsch und Englisch auch offline lesbar. Beim ersten Start einer neuen Marketing-Version erscheinen deren Release Notes automatisch. <strong>Fertig</strong> merkt diese Version auf der aktuellen Installation als gelesen; die komplette Historie bleibt erreichbar. Website und Apps verwenden dieselbe Quelle für Release Notes.</p>
+<h2 id="linux-installation-und-plattformunterschiede">Linux-Installation und Plattformunterschiede</h2>
+<p>Die Linux-Downloads sind für Intel-/AMD-PCs mit 64 Bit (x86_64); ARM64 ist nicht enthalten.</p>
+<ul>
+<li><strong>DEB:</strong> auf Ubuntu-/Debian-kompatiblen Systemen mit <code>sudo apt install ./Merkzeug-1.2.0-linux-x64.deb</code> installieren.</li>
+<li><strong>RPM:</strong> auf Fedora-kompatiblen Systemen mit <code>sudo dnf install ./Merkzeug-1.2.0-linux-x64.rpm</code> installieren.</li>
+<li><strong>AppImage:</strong> in den Dateieigenschaften ausführbar machen oder <code>chmod +x Merkzeug-1.2.0-linux-x64.AppImage</code> ausführen und die Datei öffnen. FUSE 2 ist erforderlich (<code>libfuse2t64</code> unter Ubuntu 24.04). Nutze das DEB-Paket, wenn AppImage für dein System ungeeignet ist. Deaktiviere die Anwendungssandbox nicht, um Installationsprobleme zu umgehen.</li>
+</ul>
+<p>Updates werden manuell von der Merkzeug-Website geladen. Prüfe Downloads anhand der veröffentlichten SHA-256-Prüfsummen. Sie erkennen veränderte Dateien, ersetzen aber kein Herausgeber-Zertifikat. Notizen und Einstellungen liegen außerhalb des Anwendungspakets.</p>
+<p>Der gemeinsame Desktop-Editor bietet visuelles Bearbeiten, Mermaid, Lese-/Navigationsmodus, Frontmatter, Dateinamen aus Überschriften, Begleitordner für Bilder und Link-Anpassungen beim Verschieben/Umbenennen, PDF-Vorlagen, zusammengefassten PDF-Export, Drucken und Agent-Prompts. Für die integrierten Git-Aktionen muss Git separat installiert sein; richte die Authentifizierung über deine üblichen Git-Werkzeuge ein.</p>
+<p>Meeting-Notizen unter Linux nutzen ICS-Dateien oder HTTPS/Webcal-Kalenderabos. Eine direkte GNOME-/KDE-Systemkalender-Anbindung gibt es nicht. Zum Speichern privater Abo-URLs ist ein System-Schlüsselbund erforderlich; lokale ICS-Importe funktionieren auch ohne diesen. Standardmäßig verwendet Linux einen lokalen zentralen Vorlagenordner oder einen von dir gewählten Ordner. Vault-Vorlagen in <code>.merkzeug/</code> reisen mit dem Repository; eingebundene Sync-Ordner funktionieren ebenfalls. Eine automatische Apple-iCloud-Erkennung gibt es nicht. Drucken setzt eingerichtete Systemdrucker und Treiber voraus.</p>
 </main><footer>
 <span>© 2026 creative-it Software Consulting e.U.</span>
 <nav aria-label="Weitere Links">

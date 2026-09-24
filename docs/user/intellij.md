@@ -4,7 +4,7 @@
 
 Version 1.2 targets IntelliJ IDEA 2026.2.2 and later 2026.2.x releases, builds **262.10315.125–262.***, with the JCEF plugin enabled. Compatibility was verified against 2026.2.2 and 2026.2.3; 2026.3 EAP is not included. Other IDE products and build branches have not been verified.
 
-Version **1.2.0** was submitted to the default **Stable** channel on 24 September 2026 and is awaiting JetBrains approval. After approval, open **Settings → Plugins → Marketplace**, search for **Merkzeug**, and install it without adding a custom repository. The [Marketplace listing (ID 34221)](https://plugins.jetbrains.com/plugin/34221-merkzeug) also retains the beta channel; its approved 1.0.1 release remains available while review is pending.
+Version **1.2.0** is approved in the default **Stable** channel. Open **Settings → Plugins → Marketplace**, search for **Merkzeug**, and install it without adding a custom repository. The [Marketplace listing (ID 34221)](https://plugins.jetbrains.com/plugin/34221-merkzeug) also retains the beta channel; earlier beta releases remain available.
 
 To install the beta and receive its updates:
 

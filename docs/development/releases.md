@@ -190,3 +190,7 @@ GitHub Actions controls.
 Desktop and IntelliJ persist the last acknowledged version in host settings; iOS uses app-local storage. A new version displays its notes once, and Help (or the IntelliJ extra-actions menu) always exposes the full history. The first-launch modal precedes onboarding.
 
 Apple distribution currently uses the manual iOS and macOS App Store Xcode Cloud workflows and the existing App Store Connect app. Create the 1.2 platform entries and localized notes, then start both workflows after pushing the release commit. The Marketplace beta receives `intellij/dist/merkzeug-1.2.0.zip`. Website deployment follows the main-branch push. No Git tag or unsigned native packaging run is needed for these three destinations. The older setup notes above describe the initial pipeline, not the current store delivery state.
+
+## Linux 1.2 public downloads
+
+Linux 1.2 uses the manually dispatched `linux-packages.yml` workflow and the public binary-only `merkzeug-downloads` repository, independently of the older full-platform draft workflow above. Source stays private. See [Linux acceptance, parity and publication](linux-release.md) for exact build/test provenance, limitations and the immutable download hashes. No Apple or Windows build is required for Linux or website updates.
