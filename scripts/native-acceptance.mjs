@@ -100,9 +100,9 @@ try {
  passed('localImageRendering');
  const readMode=page.locator('[data-tour="reading-mode"]');
  await readMode.click();
- await eventually(async()=>await page.locator('.ProseMirror').getAttribute('contenteditable')==='false');
+ await eventually(async()=>await page.locator('.ProseMirror:visible').getAttribute('contenteditable')==='false');
  await readMode.click();
- await eventually(async()=>await page.locator('.ProseMirror').getAttribute('contenteditable')==='true');
+ await eventually(async()=>await page.locator('.ProseMirror:visible').getAttribute('contenteditable')==='true');
  passed('readingMode');
  await page.screenshot({path:join(dest,'native-editor.png')});
  await bounded(page.evaluate(async path=>window.merkzeug.exportPdf(path),pdfNote),120000,'PDF export');
