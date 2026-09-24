@@ -1,6 +1,6 @@
 # Merkzeug IntelliJ plugin
 
-Local preview of the shared editor and PDF renderer hosted in IntelliJ IDEA through JCEF. For installation and daily use, see the [IntelliJ user guide](../docs/user/intellij.md).
+The shared editor and PDF renderer hosted in IntelliJ IDEA through JCEF. For installation and daily use, see the [IntelliJ user guide](../docs/user/intellij.md).
 
 ## Plugin description
 
@@ -21,6 +21,8 @@ On macOS the build defaults to `/Applications/IntelliJ IDEA.app/Contents`. Other
 The output is `intellij/dist/merkzeug-VERSION.zip`. The build reads the shared release version and checks all active manifests. Test classes are never included in the distributable plugin. The plugin also includes generated third-party notices for bundled web dependencies.
 
 CI downloads the exact Linux archive in `sdk.json`, verifies its pinned SHA-256 checksum and checks product metadata before compiling. See [release management](../docs/development/releases.md).
+
+The installable compatibility range is 262.10315.125–262.*. See the [compatibility checks and maintenance policy](../docs/development/intellij-compatibility.md); the accepted build SDKs remain pinned separately.
 
 ## Isolated native integration test
 

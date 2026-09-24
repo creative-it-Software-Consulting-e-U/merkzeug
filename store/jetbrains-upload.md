@@ -1,6 +1,6 @@
 # Merkzeug Marketplace upload
 
-Updates are uploaded to the existing Marketplace listing (ID 34221), in the `beta` channel. Version 1.2.0 supersedes the approved 1.0.1 beta. No Marketplace submission is performed by the build scripts. Run `python3 scripts/prepare-jetbrains-upload.py` after validation to collect the ZIP, SVG icon, screenshots, copyable text and checksums in `release-artifacts/jetbrains-1.0.0/upload/`.
+Updates are uploaded to the existing Marketplace listing (ID 34221), in the default **Stable** channel for 1.2.0. Leave Channel empty; do not enter the literal word `stable`. Existing beta uploads remain available for beta subscribers. No Marketplace submission is performed by the build scripts. Run `python3 scripts/prepare-jetbrains-upload.py` after validation to collect the ZIP, SVG icon, screenshots, copyable text and checksums in `release-artifacts/jetbrains-1.0.0/upload/`.
 
 ## Form fields
 
@@ -14,11 +14,11 @@ Updates are uploaded to the existing Marketplace listing (ID 34221), in the `bet
 | Privacy | https://merkzeug.creative-it.com/privacy-en.html |
 | License | Custom / proprietary: Merkzeug End User License Agreement, version 1.0 |
 | Pricing | Free |
-| Suggested channel | beta |
+| Suggested channel | Stable (leave empty) |
 | Suggested tags | Markdown, Editor, PDF (choose the corresponding available tags) |
 | Plugin ID | com.creativeit.merkzeug |
 | Version | 1.2.0 |
-| Supported IDE | IntelliJ IDEA 2026.2.2–2026.2.3, builds 262.10315.125–262.10968.63, with JCEF |
+| Supported IDE | IntelliJ IDEA 2026.2.2 and newer 2026.2.x, builds 262.10315.125–262.*, with JCEF |
 | Source code URL | Leave empty. The source repository is private. |
 
 Paste `EULA.en.md` from the upload kit into the custom-license field. It combines the [shared English EULA](../resources/legal/EULA.en.md) with the [IntelliJ-only supplement](../resources/legal/INTELLIJ-ADDENDUM.en.md). The German file in the kit combines the corresponding German texts. The general website, desktop and mobile license has no IntelliJ-specific references. The published website addresses are https://merkzeug.creative-it.com/license-intellij-en.html and https://merkzeug.creative-it.com/license-intellij-de.html. Both were verified against the source text after deployment on 11 September 2026. For future uploads, verify that the hosted license still matches the packaged EULA.
@@ -58,7 +58,7 @@ MERKZEUG_SMOKE_NO_MARKDOWN=1 python3 intellij/smoke.py
 python3 intellij/capture-marketplace.py
 ```
 
-The current build range is deliberately limited to IntelliJ IDEA 2026.2.2–2026.2.3. Do not broaden it until additional IDE builds have been verified. Native runtime validation on macOS does not establish Windows/Linux acceptance.
+The current build range covers IntelliJ IDEA 2026.2 from patch 2026.2.2 onward. Check new patches as they become available. EAP checks are diagnostic and do not expand the declared range to 263.*. Native runtime validation on macOS does not establish Windows/Linux acceptance.
 
 [Upload instructions](https://plugins.jetbrains.com/docs/marketplace/uploading-a-new-plugin.html) · [Approval guidelines](https://plugins.jetbrains.com/docs/marketplace/jetbrains-marketplace-approval-guidelines.html) · [Custom EULA requirements](https://plugins.jetbrains.com/docs/marketplace/eula.html)
 

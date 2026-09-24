@@ -27,7 +27,7 @@ IntelliJ owns saving, Git integration and undo history. Merkzeug follows the IDE
 
 Merkzeug is proprietary software, free for private and internal business use under the Merkzeug End User License Agreement. It adds its own editor tab; the JetBrains Markdown plugin is optional.
 
-Preview target: IntelliJ IDEA 2026.2.2–2026.2.3, builds 262.10315.125–262.10968.63, with JCEF enabled.
+IntelliJ IDEA 2026.2.2 and later 2026.2.x releases, builds 262.10315.125–262.*, with JCEF enabled.
 
 ## Deutsch
 
@@ -54,7 +54,7 @@ Speichern, Git-Integration und Undo-Verlauf bleiben bei IntelliJ. Merkzeug folgt
 
 Merkzeug ist proprietäre Software, kostenlos für private und interne geschäftliche Nutzung gemäß der Merkzeug-Endnutzerlizenz. Es ergänzt einen eigenen Editor-Tab; das JetBrains-Markdown-Plugin ist optional.
 
-Vorschau für IntelliJ IDEA 2026.2.2–2026.2.3, Builds 262.10315.125–262.10968.63, mit aktiviertem JCEF.
+Für IntelliJ IDEA 2026.2.2 und neuere 2026.2.x-Versionen, Builds 262.10315.125–262.*, mit aktiviertem JCEF.
 
 ### Link refactoring
 
