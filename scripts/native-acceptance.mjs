@@ -45,6 +45,7 @@ async function start(){
  const env={...process.env,MERKZEUG_VAULT:vault,MERKZEUG_PDF_TARGET:join(dest,'acceptance.pdf'),MERKZEUG_TEMPLATES_ROOT:templates,MERKZEUG_PDF_TEMPLATE:'Acceptance'};
  delete env.ELECTRON_RUN_AS_NODE; delete env.MERKZEUG_SCREENSHOT;
  app=await _electron.launch({executablePath:resolve(executable),chromiumSandbox:true,args:[`--user-data-dir=${profile}`,`--lang=${locale}`],env,timeout:60000});
+ await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows()[0].setBounds({x:0,y:0,width:1280,height:900}));
  const page=await app.firstWindow(); page.setDefaultTimeout(30000);
  const releaseNotes = page.locator('[data-close-release]');
  await page.locator('.tree-label').first().or(releaseNotes).first().waitFor();
@@ -95,6 +96,7 @@ try {
  await eventually(async()=> (await page.locator('.ProseMirror').innerText()).includes('External acceptance marker'));
  passed('conflictReloadWithoutOverwrite');
  await page.locator('.tree-label').filter({hasText:/^PDF$/}).click();
+ await page.locator('.ProseMirror:visible .milkdown-code-block').scrollIntoViewIfNeeded();
  await page.locator('.mermaid-preview svg').waitFor();
  await eventually(()=>page.locator('.ProseMirror img').evaluateAll(images=>images.length>0 && images.every(img=>img.complete && img.naturalWidth>0)));
  passed('localImageRendering');
@@ -146,7 +148,7 @@ try {
   passed('nativeCalendarExplicitlyUnavailable');
  }
  report.status='passed';
-} catch(error){report.error=String(error.stack||error);if(app){try{await (await app.firstWindow()).screenshot({path:join(dest,'failure.png')});}catch{}}process.exitCode=1;
+} catch(error){report.error=String(error.stack||error);if(app){try{const failedPage=await app.firstWindow();await writeFile(join(dest,'failure.html'),await failedPage.content());await failedPage.screenshot({path:join(dest,'failure.png')});}catch{}}process.exitCode=1;
 } finally {
  if(app)try{await closeApp();}catch(error){report.status='failed';report.shutdownError=String(error);process.exitCode=1;}
  await writeFile(join(dest,'native-acceptance.json'),JSON.stringify(report,null,2)+'\n');
