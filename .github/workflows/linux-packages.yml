@@ -2,8 +2,13 @@ name: Validate Linux packages
 on:
   workflow_dispatch:
     inputs:
+      architecture:
+        description: Architectures to build and test natively
+        type: choice
+        options: [both, x64, arm64]
+        default: both
       package_run:
-        description: 'Optional previous run containing linux-packages (retest unchanged binaries)'
+        description: 'Optional previous run containing matching linux-packages-<architecture> (retest unchanged binaries)'
         type: string
         default: ''
 permissions:
@@ -14,7 +19,13 @@ concurrency:
   cancel-in-progress: true
 jobs:
   linux:
-    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: ${{ fromJSON(inputs.architecture == 'both' && '["x64","arm64"]' || format('["{0}"]', inputs.architecture)) }}
+    runs-on: ${{ matrix.arch == 'arm64' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
+    env:
+      PACKAGE_ARCH: ${{ matrix.arch }}
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v6
@@ -37,20 +48,20 @@ jobs:
           PACKAGE_RUN: ${{ inputs.package_run }}
         run: |
           [[ "$PACKAGE_RUN" =~ ^[0-9]+$ ]] || exit 1
-          gh run download "$PACKAGE_RUN" -n linux-packages -D crossplatform/dist
+          gh run download "$PACKAGE_RUN" -n "linux-packages-$PACKAGE_ARCH" -D crossplatform/dist
           cd crossplatform/dist
           sha256sum -c SHA256SUMS.txt
       - if: inputs.package_run == ''
-        run: python3 scripts/package-desktop.py linux x64
+        run: python3 scripts/package-desktop.py linux "$PACKAGE_ARCH"
       - if: inputs.package_run == ''
-        run: node scripts/inspect-desktop-package.mjs linux x64 release-artifacts/linux-validation
+        run: node scripts/inspect-desktop-package.mjs linux "$PACKAGE_ARCH" release-artifacts/linux-validation
       - name: Checksums
         run: |
           cd crossplatform/dist
           sha256sum *.AppImage *.deb *.rpm > SHA256SUMS.txt
       - uses: actions/upload-artifact@v7
         with:
-          name: linux-packages
+          name: linux-packages-${{ matrix.arch }}
           path: |
             crossplatform/dist/*.AppImage
             crossplatform/dist/*.deb
@@ -60,19 +71,19 @@ jobs:
       - name: Install and test DEB in Ubuntu
         run: |
           version=$(cat VERSION)
-          xvfb-run -a python3 scripts/install-validation-package.py "crossplatform/dist/Merkzeug-$version-linux-x64.deb" release-artifacts/linux-validation/deb --arch x64
+          xvfb-run -a python3 scripts/install-validation-package.py "crossplatform/dist/Merkzeug-$version-linux-$PACKAGE_ARCH.deb" release-artifacts/linux-validation/deb --arch "$PACKAGE_ARCH"
       - name: Test AppImage in Ubuntu
         if: ${{ !cancelled() && hashFiles('crossplatform/dist/*.AppImage') != '' }}
         run: |
           version=$(cat VERSION)
-          xvfb-run -a python3 scripts/install-validation-package.py "crossplatform/dist/Merkzeug-$version-linux-x64.AppImage" release-artifacts/linux-validation/appimage --arch x64
+          xvfb-run -a python3 scripts/install-validation-package.py "crossplatform/dist/Merkzeug-$version-linux-$PACKAGE_ARCH.AppImage" release-artifacts/linux-validation/appimage --arch "$PACKAGE_ARCH"
       - name: Install and test RPM in Fedora userspace
         if: ${{ !cancelled() && hashFiles('crossplatform/dist/*.rpm') != '' }}
         run: |
-          docker run --rm --security-opt seccomp=unconfined -v "$PWD:/workspace" -w /workspace fedora:44 bash scripts/test-fedora-package.sh
+          docker run --rm -e PACKAGE_ARCH --security-opt seccomp=unconfined -v "$PWD:/workspace" -w /workspace fedora:44 bash scripts/test-fedora-package.sh
       - uses: actions/upload-artifact@v7
         if: always()
         with:
-          name: linux-validation
+          name: linux-validation-${{ matrix.arch }}
           path: release-artifacts/linux-validation
           retention-days: 30

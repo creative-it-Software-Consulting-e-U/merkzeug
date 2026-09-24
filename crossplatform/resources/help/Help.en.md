@@ -1,4 +1,4 @@
-# Merkzeug – Help
+# Merkzeug – Mac & Linux Help
 
 The interface and this help use German on a German system and English otherwise. You can switch the help language independently.
 
@@ -7,7 +7,7 @@ Merkzeug is a Notion-style editor for Markdown notes – this edition runs on
 visible Markdown syntax), but everything is always saved as clean, portable
 Markdown. All notes live as `.md` files in an ordinary folder – the **vault**.
 
-All shortcuts use **⌘** on the Mac; on Windows, ⌘ corresponds to the **Ctrl**
+All shortcuts use **⌘** on the Mac; on Windows and Linux, ⌘ corresponds to the **Ctrl**
 key and ⌥ to the **Alt** key.
 
 **Contents:** [1. Getting started](#1.-getting-started) ·
@@ -20,7 +20,8 @@ key and ⌥ to the **Alt** key.
 [8. Image assets](#8.-image-assets) ·
 [9. PDF export](#9.-pdf-export) ·
 [10. Git integration](#10.-git-integration) ·
-[11. Keyboard shortcuts](#11.-keyboard-shortcuts)
+[11. Keyboard shortcuts](#11.-keyboard-shortcuts) ·
+[Linux installation & differences](#linux-installation-and-platform-differences)
 
 ---
 
@@ -377,7 +378,7 @@ the sidebar:
 | ⇧⌘R | Show/hide assets |
 | ⌘? | This help |
 
-*(Windows: ⌘ = Ctrl, ⌥ = Alt, ⇧ = Shift)*
+*(Windows/Linux: ⌘ = Ctrl, ⌥ = Alt, ⇧ = Shift)*
 
 ## Shared editor and save conflicts
 
@@ -398,7 +399,7 @@ Use **Help → Contact Support…** to open the support form with Merkzeug, your
 
 Merkzeug ships a ready-to-use **Merkzeug** PDF template: a warm paper cover, serif headings, blue accents, page headers and numbered footers. In **Settings → Template for this vault**, select **Merkzeug**. Existing vaults keep their current selection, including **No template**. **Create** makes an editable copy under a new name; **Edit** opens its folder. Your changes are never overwritten by an app update. Changing the templates root makes the starter available there too, if the folder is writable.
 
-Remove or rename `deckblatt.html` to omit the cover. Customize `stil.css` for document styles and `kopfzeile.html` / `fusszeile.html` for inline header/footer styles. Margins are in `vorlage.json`. Keep the German filenames and `{{titel}}` / `{{datum}}` placeholders; they are the shared template format. Put logo images in the template folder and reference them using relative paths. The template works in IntelliJ too: **PDF template…** opens the bundled starter folder initially when no other template is selected. iOS uses templates for editor styling and AirPrint; PDF-file export is a desktop and IntelliJ feature.
+Remove or rename `deckblatt.html` to omit the cover. Customize `stil.css` for document styles and `kopfzeile.html` / `fusszeile.html` for inline header/footer styles. Margins are in `vorlage.json`. Keep the German filenames and `{{titel}}` / `{{datum}}` placeholders; they are the shared template format. Put logo images in the template folder and reference them using relative paths. The template works in IntelliJ too: **PDF template…** opens the bundled starter folder initially when no other template is selected. iPhone and iPad also use templates for editor styling, PDF-file export and AirPrint.
 
 ### Adapt a template with an agent
 
@@ -488,7 +489,7 @@ Open **Release Notes** in Help (IntelliJ: **…**) for the complete English or G
 
 ## Linux installation and platform differences
 
-Linux downloads target Intel/AMD 64-bit PCs (x86_64); ARM64 is not included.
+Choose a separate package for your Linux architecture: **x86_64 (x64)** for Intel/AMD PCs, or **ARM64 (aarch64)** for ARM computers, including Linux on Apple Silicon in Parallels. Run `uname -m` if unsure. The packages contain only their selected architecture. In the commands below, replace `x64` with `arm64` for ARM64.
 
 - **DEB:** install with `sudo apt install ./Merkzeug-1.2.0-linux-x64.deb` on Ubuntu/Debian-compatible systems.
 - **RPM:** install with `sudo dnf install ./Merkzeug-1.2.0-linux-x64.rpm` on Fedora-compatible systems.

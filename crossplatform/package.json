@@ -12,7 +12,7 @@
     "package:mac": "npm run build:calhelper && electron-vite build && electron-builder --mac dir",
     "package:mac:dmg": "npm run build:calhelper && electron-vite build && electron-builder --mac dmg",
     "package:win": "electron-vite build && ELECTRON_BUILDER_7Z_FILTER=BCJ2 electron-builder --win --x64 --arm64",
-    "package:linux": "electron-vite build && electron-builder --linux --x64",
+    "package:linux": "electron-vite build && electron-builder --linux --x64 --arm64",
     "notices": "node ../scripts/third-party-notices.mjs",
     "prepackage:mac": "npm run notices",
     "prepackage:mac:dmg": "npm run notices",

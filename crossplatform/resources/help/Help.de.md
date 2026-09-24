@@ -1,4 +1,4 @@
-# Merkzeug – Hilfe
+# Merkzeug – Hilfe für Mac & Linux
 
 Auf einem deutschen System erscheinen Oberfläche und Hilfe auf Deutsch, andernfalls auf Englisch. Die Sprache dieser Hilfe lässt sich unabhängig umschalten.
 
@@ -21,7 +21,8 @@ Alle Kürzel gelten mit **⌘** auf dem Mac; unter Windows entspricht ⌘ der
 [8. Bild-Ressourcen](#8.-bild-ressourcen) ·
 [9. PDF-Export](#9.-pdf-export) ·
 [10. Git-Integration](#10.-git-integration) ·
-[11. Tastaturkürzel](#11.-tastaturkürzel)
+[11. Tastaturkürzel](#11.-tastaturkürzel) ·
+[Linux-Installation & Unterschiede](#linux-installation-und-plattformunterschiede)
 
 ---
 
@@ -392,7 +393,7 @@ Ist der Vault ein **Git-Repository**, erscheint unten in der Sidebar eine Status
 | ⇧⌘R | Ressourcen ein-/ausblenden |
 | ⌘? | Diese Hilfe |
 
-*(Windows: ⌘ = Strg, ⌥ = Alt, ⇧ = Umschalt)*
+*(Windows/Linux: ⌘ = Strg, ⌥ = Alt, ⇧ = Umschalt)*
 
 ## Gemeinsamer Editor und Speicherkonflikte
 
@@ -503,7 +504,7 @@ Die portable Zuordnung liegt in `.merkzeug/settings.json`. Zentrale Vorlagen wer
 
 ## Linux-Installation und Plattformunterschiede
 
-Die Linux-Downloads sind für Intel-/AMD-PCs mit 64 Bit (x86_64); ARM64 ist nicht enthalten.
+Wähle ein separates Paket für deine Linux-Architektur: **x86_64 (x64)** für Intel-/AMD-PCs oder **ARM64 (aarch64)** für ARM-Rechner, einschließlich Linux auf Apple Silicon in Parallels. `uname -m` zeigt deine Architektur. Jedes Paket enthält nur die gewählte Architektur. Ersetze in den folgenden Befehlen `x64` durch `arm64`, wenn du ARM64 nutzt.
 
 - **DEB:** auf Ubuntu-/Debian-kompatiblen Systemen mit `sudo apt install ./Merkzeug-1.2.0-linux-x64.deb` installieren.
 - **RPM:** auf Fedora-kompatiblen Systemen mit `sudo dnf install ./Merkzeug-1.2.0-linux-x64.rpm` installieren.
