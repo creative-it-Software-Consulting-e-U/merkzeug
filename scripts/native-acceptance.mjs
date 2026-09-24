@@ -46,10 +46,10 @@ async function start(){
  delete env.ELECTRON_RUN_AS_NODE; delete env.MERKZEUG_SCREENSHOT;
  app=await _electron.launch({executablePath:resolve(executable),args:[`--user-data-dir=${profile}`,`--lang=${locale}`],env,timeout:60000});
  const page=await app.firstWindow(); page.setDefaultTimeout(30000);
- await page.locator('.tree-label').first().waitFor();
  const releaseNotes = page.locator('[data-close-release]');
- await page.waitForTimeout(500);
+ await page.locator('.tree-label').first().or(releaseNotes).first().waitFor();
  if (await releaseNotes.isVisible()) await releaseNotes.click();
+ await page.locator('.tree-label').first().waitFor();
  const tour = page.locator('.tour-dialog[open]');
  if (await tour.count()) await tour.getByRole('button', {name: locale === 'de' ? 'Später' : 'Later', exact:true}).click();
  await page.locator('.tree-label').filter({hasText:/^Acceptance$/}).click();
