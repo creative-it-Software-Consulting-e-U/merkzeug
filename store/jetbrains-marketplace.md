@@ -25,7 +25,7 @@ Existing shared `assets/` folders remain supported and are not assigned to a sin
 
 IntelliJ owns saving, Git integration and undo history. Merkzeug follows the IDE theme and offers optional PDF content styles while editing, portable vault templates, central templates and automatic discovery of desktop Merkzeug templates. An offline styling prompt explains template files, CSS and preview limitations for your agent. Optional coding-agent guidance can be added to explicitly selected `AGENTS.md` or `CLAUDE.md` files after reviewing their contents.
 
-Merkzeug is proprietary software, free for private and internal business use under the Merkzeug End User License Agreement. It adds its own editor tab; the JetBrains Markdown plugin is optional.
+Merkzeug is licensed under the MIT License, which permits commercial use, modification and redistribution with the required license and copyright notices. It adds its own editor tab; the JetBrains Markdown plugin is optional.
 
 IntelliJ IDEA 2026.2.2 and later 2026.2.x releases, builds 262.10315.125–262.*, with JCEF enabled.
 
@@ -52,7 +52,7 @@ Bestehende gemeinsame `assets/`-Ordner bleiben unterstützt und werden keiner ei
 
 Speichern, Git-Integration und Undo-Verlauf bleiben bei IntelliJ. Merkzeug folgt dem IDE-Theme und bietet optional PDF-Inhaltsstile beim Bearbeiten, portable Vault-Vorlagen, zentrale Vorlagen und die automatische Erkennung von Vorlagen der Desktop-App. Ein offline verfügbarer Styling-Prompt erklärt einem Agenten Vorlagendateien, CSS und Grenzen der Vorschau. Hinweise für Coding-Agenten lassen sich nach Prüfung der vorhandenen Inhalte gezielt in ausgewählte `AGENTS.md`- oder `CLAUDE.md`-Dateien einfügen.
 
-Merkzeug ist proprietäre Software, kostenlos für private und interne geschäftliche Nutzung gemäß der Merkzeug-Endnutzerlizenz. Es ergänzt einen eigenen Editor-Tab; das JetBrains-Markdown-Plugin ist optional.
+Merkzeug steht unter der MIT-Lizenz. Sie erlaubt kommerzielle Nutzung, Änderungen und Weitergabe unter Beibehaltung der erforderlichen Lizenz- und Urheberrechtshinweise. Es ergänzt einen eigenen Editor-Tab; das JetBrains-Markdown-Plugin ist optional.
 
 Für IntelliJ IDEA 2026.2.2 und neuere 2026.2.x-Versionen, Builds 262.10315.125–262.*, mit aktiviertem JCEF.
 

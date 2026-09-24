@@ -418,7 +418,7 @@ New starter copies include `AGENTS.md` (format, CSS examples, placeholders, prev
 
 ### License
 
-Merkzeug is proprietary software for private and internal business use. The full End User License Agreement is included at the end of the in-app help and is also available on the [website](https://merkzeug.creative-it.com/license-en.html). Third-party components retain their own licenses.
+Merkzeug is licensed under the MIT License. The full license text is included at the end of the in-app help and is also available on the [website](https://merkzeug.creative-it.com/license-en.html). Third-party components retain their own licenses.
 
 
 ## Printing

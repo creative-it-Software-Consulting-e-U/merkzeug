@@ -112,7 +112,7 @@ New starter copies include `AGENTS.md` (format, CSS examples, placeholders, prev
 
 ## License and Marketplace edition
 
-Merkzeug is proprietary software for private and internal business use under the [shared End User License Agreement](../../resources/legal/EULA.en.md), also supplied in German. The plugin archive includes this license and third-party notices. The Marketplace build omits the unpublished guided tour and video. It is currently limited to IntelliJ IDEA builds 262.10315.125–262.10968.63; the Markdown plugin is optional. Move uses a theme-aware destination dialog built with public IntelliJ APIs; the native refactoring transaction still includes both the note and its attachments.
+Merkzeug is licensed under the [MIT License](../../resources/legal/EULA.en.md), also supplied in German. The plugin archive includes this license and third-party notices. The Marketplace build omits the unpublished guided tour and video. It is currently limited to IntelliJ IDEA builds 262.10315.125–262.10968.63; the Markdown plugin is optional. Move uses a theme-aware destination dialog built with public IntelliJ APIs; the native refactoring transaction still includes both the note and its attachments.
 
 
 ## Alongside other Markdown editors

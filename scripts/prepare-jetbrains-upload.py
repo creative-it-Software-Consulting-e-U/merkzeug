@@ -5,6 +5,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 version = (ROOT/'VERSION').read_text().strip()
+subprocess.run(['node', str(ROOT / 'scripts/build-licenses.mjs')], cwd=ROOT, check=True)
 archive = ROOT/f'intellij/dist/merkzeug-{version}.zip'
 out = ROOT/f'release-artifacts/jetbrains-{version}/upload'
 out.mkdir(parents=True, exist_ok=True)
@@ -40,18 +41,18 @@ Upload **merkzeug-{version}.zip** unchanged. The other files are supporting mate
 - Name: Merkzeug
 - Vendor: creative-it Software Consulting e.U.
 - Price: Free
-- License: Custom / proprietary — paste EULA.en.md, after reviewing the new terms.
-- Suggested channel: beta (or keep the first upload hidden until ready).
-- Source code URL: leave empty; the repository stays private.
+- License: MIT — the upload kit includes the exact license text.
+- Channel: default (stable), after validation and approval.
+- Source code URL: https://github.com/creative-it-Software-Consulting-e-U/merkzeug (set only after the repository is public).
 - Website: https://merkzeug.creative-it.com/
 - Support: https://support.apps.creative-it.com/?app=merkzeug&lang=en
 - Compatibility: IntelliJ IDEA 2026.2.2, build 262.10315.125, JCEF enabled.
 
-The ZIP includes the description, change notes, SVG logo, proprietary license and third-party notices. Two screenshots are included here for the listing. Full English/German copy is in listing-en-de.md.
+The ZIP includes the description, change notes, SVG logo, MIT license and third-party notices. Two screenshots are included here for the listing. Full English/German copy is in listing-en-de.md.
 
-Marketplace license URLs: https://merkzeug.creative-it.com/license-intellij-en.html and https://merkzeug.creative-it.com/license-intellij-de.html. Both are published. Before uploading a future version, verify that the hosted license matches the included EULA text; you can also paste the included text into the Marketplace form.
+Marketplace license URLs: https://merkzeug.creative-it.com/license-intellij-en.html and https://merkzeug.creative-it.com/license-intellij-de.html. These URLs already exist, but retain the previous license until the coordinated website deployment. Before uploading a future version, verify that the hosted license matches the included EULA text; you can also paste the included text into the Marketplace form.
 
-This kit has not been uploaded or published. Do not use older MIT-labeled preview ZIPs for this release. Review the new contract text before public distribution.
+This kit has not been uploaded or published. Coordinate the first MIT release with the website and store license updates; do not upload as part of public-release preparation.
 ''')
 manifest = {'version':version,'pluginId':'com.creativeit.merkzeug','sourceCommit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'sourceDirty':bool(subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip()),'files':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(out.iterdir()) if p.is_file() and p.name!='manifest.json'}}
 (out/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')

@@ -19,6 +19,7 @@ BUILD = ROOT / 'intellij/build'
 sys.path.insert(0, str(ROOT / 'scripts'))
 from version import check
 version = check()
+subprocess.run(['node', str(ROOT / 'scripts/build-licenses.mjs')], cwd=ROOT, check=True)
 pin = json.loads((ROOT / 'intellij/sdk.json').read_text())
 info_path = IDE / 'product-info.json'
 if not info_path.exists(): info_path = IDE / 'Resources/product-info.json'

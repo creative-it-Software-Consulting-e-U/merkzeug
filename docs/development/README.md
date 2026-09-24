@@ -18,6 +18,7 @@ npm test
 npm run typecheck
 npm run check:version
 npm run check:docs
+npm run check:licenses
 npm run test:release
 ```
 
@@ -44,3 +45,11 @@ For IntelliJ, see the [plugin README](../../intellij/README.md). For iOS, see th
 Version changes go through `scripts/version.py`; never hand-edit only one edition. Build scripts do not commit, tag, push or publish. GitHub Actions assembles a draft after a valid version tag is pushed. Publication remains a separate maintainer action.
 
 For Xcode Cloud setup, local iOS archives and the experimental Mac App Store target, see [Apple builds](apple-builds.md). For listing drafts and reproducible demo captures, see [store preparation](../../store/README.md).
+
+## Building without publisher credentials
+
+The shared tests, desktop build, mobile web build and plugin build do not require creative-it credentials. The mobile browser demo uses synthetic data. For a fresh IntelliJ SDK, run `python3 scripts/fetch-intellij-sdk.py /path/to/sdk`, then set `IDEA_HOME=/path/to/sdk` when building; do not redistribute the IDE itself.
+
+Native Apple signing, App Store uploads, iCloud entitlements and calendar permission tests are separate from the web build. Contributors must use their own development team, identifiers and provisioning for native device builds; production entitlements cannot be used as a public signing service. Do not put personal substitutions into shared release configuration.
+
+Before any public launch follow [the preparation checklist](public-release-preparation.md). Publishing source does not require starting paid OS builds or store uploads.

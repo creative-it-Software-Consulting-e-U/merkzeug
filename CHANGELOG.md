@@ -35,6 +35,8 @@ User-visible changes are recorded here. Versions follow `VERSION`; version tags 
 
 ## Unreleased
 
+- Prepare MIT licensing across source, bundled applications, plugin metadata and website; public repository launch remains a separate step.
+
 ### Fixed
 
 - iOS search/help toolbars no longer inherit the editor search popup layout, keeping Done reachable.

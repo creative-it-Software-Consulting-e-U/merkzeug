@@ -16,5 +16,5 @@
     "@milkdown/crepe": "^7.22.1",
     "react": "^19.3.0"
   },
-  "license": "UNLICENSED"
+  "license": "MIT"
 }

@@ -39,7 +39,7 @@
       contents and explicitly select which files receive the guidance.</li>
     </ul>
     <p>Available as an additional editor tab for local .md files. The JetBrains Markdown plugin is optional.</p>
-    <p>Proprietary software, free for private and internal business use under the Merkzeug End User License Agreement.</p>
+    <p>Licensed under the MIT License. Commercial use, modification and redistribution are permitted with the required license and copyright notices.</p>
     <p>For IntelliJ IDEA 2026.2.2 and later 2026.2.x releases (builds 262.10315.125–262.*), with JCEF enabled.</p>
   ]]></description>
   <change-notes><![CDATA[<p>Version 1.2 — portable templates and release history.</p><ul><li>Choose a central PDF template or a template inside your vault from the PDF controls in every edition. Vault-relative template settings travel with your repository.</li><li>Read the complete release history in the app. New versions show their release notes automatically on first launch.</li></ul>]]></change-notes>

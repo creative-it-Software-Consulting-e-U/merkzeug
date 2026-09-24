@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc -p tsconfig.json && vite build"
+    "build": "tsc -p tsconfig.json && vite build",
+    "prebuild": "node ../../scripts/build-licenses.mjs"
   },
   "dependencies": {
     "@merkzeug/core": "1.2.1",
@@ -17,5 +18,5 @@
     "vite": "^8.3.0",
     "@vitejs/plugin-react": "^6.1.1"
   },
-  "license": "UNLICENSED"
+  "license": "MIT"
 }

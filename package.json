@@ -16,7 +16,8 @@
     "check:version": "python3 scripts/version.py check",
     "test:release": "python3 -m unittest discover -s scripts/tests -v",
     "check:docs": "python3 scripts/check-docs.py",
-    "check:secrets": "python3 scripts/check-secrets.py"
+    "check:secrets": "python3 scripts/check-secrets.py",
+    "check:licenses": "node scripts/check-licenses.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.5.0",
@@ -29,5 +30,5 @@
   "engines": {
     "node": ">=24 <25"
   },
-  "license": "UNLICENSED"
+  "license": "MIT"
 }

@@ -8,10 +8,11 @@
     "dev": "vite",
     "build": "node ../scripts/third-party-notices.mjs && tsc --noEmit && vite build",
     "sync": "npm run build && cap sync ios && python3 ../scripts/prepare-ios-runtime.py",
-    "open": "cap open ios"
+    "open": "cap open ios",
+    "prebuild": "node ../scripts/build-licenses.mjs"
   },
   "author": "Günther Wieser <guenther.wieser@creative-it.com>",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "dependencies": {
     "@capacitor/core": "^8.5.1",
     "@milkdown/crepe": "^7.22.1",

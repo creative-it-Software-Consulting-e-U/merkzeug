@@ -12,7 +12,7 @@ Updates are uploaded to the existing Marketplace listing (ID 34221), in the defa
 | Website | https://merkzeug.creative-it.com/ |
 | Support | https://support.apps.creative-it.com/?app=merkzeug&lang=en |
 | Privacy | https://merkzeug.creative-it.com/privacy-en.html |
-| License | Custom / proprietary: Merkzeug End User License Agreement, version 1.0 |
+| License | MIT (see the bundled license text) |
 | Pricing | Free |
 | Suggested channel | Stable (leave empty) |
 | Suggested tags | Markdown, Editor, PDF (choose the corresponding available tags) |
@@ -21,9 +21,9 @@ Updates are uploaded to the existing Marketplace listing (ID 34221), in the defa
 | Supported IDE | IntelliJ IDEA 2026.2.2 and newer 2026.2.x, builds 262.10315.125–262.*, with JCEF |
 | Source code URL | Leave empty. The source repository is private. |
 
-Paste `EULA.en.md` from the upload kit into the custom-license field. It combines the [shared English EULA](../resources/legal/EULA.en.md) with the [IntelliJ-only supplement](../resources/legal/INTELLIJ-ADDENDUM.en.md). The German file in the kit combines the corresponding German texts. The general website, desktop and mobile license has no IntelliJ-specific references. The published website addresses are https://merkzeug.creative-it.com/license-intellij-en.html and https://merkzeug.creative-it.com/license-intellij-de.html. Both were verified against the source text after deployment on 11 September 2026. For future uploads, verify that the hosted license still matches the packaged EULA.
+The root `LICENSE` is the canonical MIT License. The upload kit retains the filenames `EULA.en.md` and `EULA.de.md` for compatibility; these now contain the MIT text plus a non-restrictive IntelliJ affiliation note. The stable license URLs remain https://merkzeug.creative-it.com/license-intellij-en.html and https://merkzeug.creative-it.com/license-intellij-de.html.
 
-Review the new license text before public distribution. This is a newly prepared contractual text, not a legal opinion. The common EULA is bundled across editions; Apple-specific custom-EULA requirements must be reviewed before changing the license in App Store Connect. Existing third-party license notices remain mandatory. Previously validly granted MIT rights are not revoked by the new license.
+Before the first MIT upload, publish the matching license pages as part of the separately approved public launch. Do not claim the repository is public until its visibility has actually changed. Keep the source-code URL unset until then. Do not overwrite historical proprietary packages. Existing valid rights and third-party notices remain unaffected. App Store Connect license settings need separate review; changing this repository does not update store agreements.
 
 ## Files
 
@@ -31,7 +31,7 @@ Review the new license text before public distribution. This is a newly prepared
 - Plugin description and release notes are embedded in `plugin.xml`; copyable English/German listing text is in [the Marketplace description](jetbrains-marketplace.md).
 - The 40 × 40 SVG logo is embedded as `META-INF/pluginIcon.svg`.
 - Screenshots are captured from the real IntelliJ/JCEF editor using a synthetic notebook. No personal documents are used. See `intellij/capture-marketplace.py`.
-- The build embeds the proprietary EULA, German translation and third-party notices. Do not upload old MIT-labeled draft builds.
+- The build embeds the MIT license, localized introduction and third-party notices. Upload only the newly validated candidate.
 - The Marketplace build omits the unpublished guided tour and video; ordinary development builds retain them.
 
 ## Getting started text
