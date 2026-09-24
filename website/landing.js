@@ -25,8 +25,8 @@ for (const gallery of document.querySelectorAll('[data-gallery]')) {
 
 // Replace the fallback only after the iframe reports its plugin data. A script
 // or iframe load event alone also fires for incomplete/failed widget loads.
-const marketplace = document.querySelector('#marketplace-install');
-if (marketplace) {
+const marketplaces = document.querySelectorAll('[data-marketplace-widget]');
+for (const marketplace of marketplaces) {
   const fallback = marketplace.parentElement.querySelector('.button');
   const onReady = (event) => {
     const frame = marketplace.querySelector('iframe');
@@ -38,11 +38,15 @@ if (marketplace) {
     window.removeEventListener('message', onReady);
   };
   window.addEventListener('message', onReady);
+}
+if (marketplaces.length) {
   const script = document.createElement('script');
   script.src = 'https://plugins.jetbrains.com/assets/scripts/mp-widget.js';
   script.async = true;
   script.addEventListener('load', () => {
-    window.MarketplaceWidget?.setupMarketplaceWidget('install', 34221, '#marketplace-install');
+    for (const marketplace of marketplaces) {
+      window.MarketplaceWidget?.setupMarketplaceWidget('install', 34221, '#' + marketplace.id);
+    }
   });
   document.head.append(script);
 }
