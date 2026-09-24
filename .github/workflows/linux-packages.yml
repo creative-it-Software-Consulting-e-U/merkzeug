@@ -1,8 +1,14 @@
 name: Validate Linux packages
 on:
   workflow_dispatch:
+    inputs:
+      package_run:
+        description: 'Optional previous run containing linux-packages (retest unchanged binaries)'
+        type: string
+        default: ''
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: linux-packages-${{ github.ref }}
   cancel-in-progress: true
@@ -24,26 +30,24 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y rpm libarchive-tools xvfb libnss3 libatk-bridge2.0-0 libgtk-3-0 libgbm1 libasound2t64 libfuse2t64
-      - run: python3 scripts/package-desktop.py linux x64
-      - run: node scripts/inspect-desktop-package.mjs linux x64 release-artifacts/linux-validation
-      - name: Install and test DEB and AppImage in Ubuntu
+      - name: Download existing candidates for retesting
+        if: inputs.package_run != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PACKAGE_RUN: ${{ inputs.package_run }}
         run: |
-          version=$(cat VERSION)
-          xvfb-run -a python3 scripts/install-validation-package.py "crossplatform/dist/Merkzeug-$version-linux-x64.deb" release-artifacts/linux-validation/deb --arch x64
-          xvfb-run -a python3 scripts/install-validation-package.py "crossplatform/dist/Merkzeug-$version-linux-x64.AppImage" release-artifacts/linux-validation/appimage --arch x64
-      - name: Install and test RPM in Fedora userspace
-        run: |
-          docker run --rm --security-opt seccomp=unconfined -v "$PWD:/workspace" -w /workspace fedora:44 bash scripts/test-fedora-package.sh
+          [[ "$PACKAGE_RUN" =~ ^[0-9]+$ ]] || exit 1
+          gh run download "$PACKAGE_RUN" -n linux-packages -D crossplatform/dist
+          cd crossplatform/dist
+          sha256sum -c SHA256SUMS.txt
+      - if: inputs.package_run == ''
+        run: python3 scripts/package-desktop.py linux x64
+      - if: inputs.package_run == ''
+        run: node scripts/inspect-desktop-package.mjs linux x64 release-artifacts/linux-validation
       - name: Checksums
         run: |
           cd crossplatform/dist
           sha256sum *.AppImage *.deb *.rpm > SHA256SUMS.txt
-      - uses: actions/upload-artifact@v7
-        if: always()
-        with:
-          name: linux-validation
-          path: release-artifacts/linux-validation
-          retention-days: 30
       - uses: actions/upload-artifact@v7
         with:
           name: linux-packages
@@ -52,4 +56,18 @@ jobs:
             crossplatform/dist/*.deb
             crossplatform/dist/*.rpm
             crossplatform/dist/SHA256SUMS.txt
+          retention-days: 30
+      - name: Install and test DEB and AppImage in Ubuntu
+        run: |
+          version=$(cat VERSION)
+          xvfb-run -a python3 scripts/install-validation-package.py "crossplatform/dist/Merkzeug-$version-linux-x64.deb" release-artifacts/linux-validation/deb --arch x64
+          xvfb-run -a python3 scripts/install-validation-package.py "crossplatform/dist/Merkzeug-$version-linux-x64.AppImage" release-artifacts/linux-validation/appimage --arch x64
+      - name: Install and test RPM in Fedora userspace
+        run: |
+          docker run --rm --security-opt seccomp=unconfined -v "$PWD:/workspace" -w /workspace fedora:44 bash scripts/test-fedora-package.sh
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: linux-validation
+          path: release-artifacts/linux-validation
           retention-days: 30
