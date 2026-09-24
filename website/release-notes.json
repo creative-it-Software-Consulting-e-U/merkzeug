@@ -1,5 +1,25 @@
 [
   {
+    "version": "1.2.1",
+    "status": "released",
+    "date": "2026-09-24",
+    "platforms": [
+      "Linux"
+    ],
+    "highlights": {
+      "en": [
+        "Native Linux packages for ARM64 and Intel/AMD x86_64, each as AppImage, DEB and RPM.",
+        "Linux and Windows desktop shortcuts use Ctrl instead of Mac-only Command bindings; shortcut hints and help show the matching keys.",
+        "Expanded Mac and Linux help with discoverable calendar/meeting-note instructions and architecture-specific installation guidance."
+      ],
+      "de": [
+        "Native Linux-Pakete für ARM64 und Intel/AMD x86_64, jeweils als AppImage, DEB und RPM.",
+        "Desktop-Tastenkürzel unter Linux und Windows verwenden Strg statt Mac-spezifischer Command-Belegungen; Hinweise und Hilfe zeigen die passenden Tasten.",
+        "Erweiterte Mac- und Linux-Hilfe mit auffindbarer Kalender-/Meeting-Notiz-Anleitung und Installation nach Architektur."
+      ]
+    }
+  },
+  {
     "version": "1.2",
     "status": "released",
     "date": null,

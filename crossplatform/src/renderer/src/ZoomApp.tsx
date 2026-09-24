@@ -1,4 +1,4 @@
-import { t as translate } from '@merkzeug/core/i18n'
+import { translate } from './translate'
 import { useEffect, useRef, useState } from 'react'
 
 /** Zoom-Fenster für Mermaid-Diagramme: +/−/0-Tasten, Pinch/Scroll, Esc schließt. */

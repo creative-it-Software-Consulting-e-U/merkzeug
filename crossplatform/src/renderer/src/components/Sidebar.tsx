@@ -1,4 +1,4 @@
-import { t as translate } from '@merkzeug/core/i18n'
+import { translate } from '../translate'
 import type { FileNode, GitStatus } from '../../../shared/types'
 import { basename } from '../util/paths'
 import { FileTree } from './FileTree'

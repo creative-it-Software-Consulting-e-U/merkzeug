@@ -1,15 +1,14 @@
-# Merkzeug – Hilfe
+# Merkzeug – Hilfe für Mac & Linux
 
 Auf einem deutschen System erscheinen Oberfläche und Hilfe auf Deutsch, andernfalls auf Englisch. Die Sprache dieser Hilfe lässt sich unabhängig umschalten.
 
 Merkzeug ist ein Editor für Markdown-Notizen im Stil von Notion – diese Version
-läuft auf **macOS und Windows**. Du bearbeitest deine Notizen **WYSIWYG**
+läuft auf **macOS und Linux** (Windows folgt). Du bearbeitest deine Notizen **WYSIWYG**
 (formatiert, ohne sichtbare Markdown-Syntax), gespeichert wird aber immer
 sauberes, portables Markdown. Alle Notizen liegen als `.md`-Dateien in einem
 gewöhnlichen Ordner – dem **Vault**.
 
-Alle Kürzel gelten mit **⌘** auf dem Mac; unter Windows entspricht ⌘ der
-**Strg**-Taste und ⌥ der **Alt**-Taste.
+Die Kürzel zeigen zuerst Mac, danach Linux/Windows. Die Tabelle der Tastaturkürzel führt beide Plattformen ausdrücklich auf.
 
 **Inhalt:** [1. Erste Schritte](#1.-erste-schritte) ·
 [2. Sidebar & Dateibaum](#2.-sidebar-&-dateibaum) ·
@@ -21,7 +20,9 @@ Alle Kürzel gelten mit **⌘** auf dem Mac; unter Windows entspricht ⌘ der
 [8. Bild-Ressourcen](#8.-bild-ressourcen) ·
 [9. PDF-Export](#9.-pdf-export) ·
 [10. Git-Integration](#10.-git-integration) ·
-[11. Tastaturkürzel](#11.-tastaturkürzel)
+[11. Tastaturkürzel](#11.-tastaturkürzel) ·
+[Meeting-Notizen und Kalender](#meeting-notizen-und-kalender) ·
+[Linux-Installation & Unterschiede](#linux-installation-und-plattformunterschiede)
 
 ---
 
@@ -29,12 +30,12 @@ Alle Kürzel gelten mit **⌘** auf dem Mac; unter Windows entspricht ⌘ der
 
 - Beim ersten Start wählst du einen **Vault-Ordner** (einen beliebigen Ordner mit
   Markdown-Dateien). Die Auswahl wird gemerkt.
-- Über **Ablage → Vault öffnen…** (⌘O) wechselst du den Vault des aktuellen Fensters.
+- Über **Ablage → Vault öffnen…** (⌘O / Strg+O) wechselst du den Vault des aktuellen Fensters.
 - **Ablage → Zuletzt geöffnete Vaults** listet die letzten zehn Vaults zum schnellen
   Wechsel.
 - **Autosave:** Änderungen werden eine Sekunde nach der letzten Eingabe automatisch
   gespeichert, außerdem beim Schließen von Tabs und beim Beenden der App.
-  Manuell: **⌘S** (aktive Notiz) bzw. **⌥⌘S** (alle offenen Notizen).
+  Manuell: **⌘S / Strg+S** (aktive Notiz) bzw. **⌥⌘S / Strg+Alt+S** (alle offenen Notizen).
 - Der Vault kann auch per Umgebungsvariable `MERKZEUG_VAULT` vorgegeben werden.
 
 ## 2. Sidebar & Dateibaum
@@ -59,27 +60,8 @@ Links zeigt die Sidebar den Vault als hierarchischen Baum.
   Tab; Klicks auf Notizen und Unterordner navigieren weiter.
 - **Fußleiste der Sidebar:** Buttons für neue Notiz, neue Meeting-Notiz und
   neuen Ordner (links) sowie zum Neu-Einlesen des Vaults; das Augen-Symbol
-  blendet die **Ressourcen-Ordner** ein/aus (⇧⌘R).
-- **Meeting-Notizen aus dem Kalender:** **⌃⌘N** (Menü „Ablage → Neue
-  Meeting-Notiz…“ oder der Kalender-Button in der Fußleiste) zeigt laufende
-  und kommende Termine der nächsten 14 Tage aus den lokal eingebundenen
-  Kalendern — unter macOS alle Konten der Kalender-App (iCloud,
-  Exchange/Microsoft 365, Google, …), unter Windows alle Kalender des
-  **klassischen Outlook** (über dessen Objektmodell; das „neue Outlook“
-  bietet keines), ganz ohne Cloud-API. Ganztägige
-  Termine (Urlaube, Geburtstage, …) sind standardmäßig ausgeblendet und
-  lassen sich über die Checkbox über der Liste einblenden. **„Frühere
-  anzeigen“** blendet vergangene Termine ein, **„Suchen“** durchsucht Titel,
-  Personen und Orte im Zeitraum ±90 Tage. Ein Klick auf einen Termin erzeugt
-  eine fertig benannte Notiz: Die Termin-Daten (Datum, Uhrzeit, Ort,
-  Organisator, Teilnehmer, erkannter Teams/Zoom/Meet/Webex-Link) landen im
-  Frontmatter; im Text stehen Datum/Uhrzeit unter der Überschrift, eine
-  **abhakbare Teilnehmerliste** (wer war wirklich dabei?) sowie die
-  Abschnitte Agenda, Notizen und Aufgaben. Beim
-  ersten Mal fragt macOS nach der Erlaubnis für den Kalender-Zugriff. Unter
-  Windows startet Outlook bei Bedarf im Hintergrund; zeigt Outlook eine
-  Sicherheitsabfrage („Ein Programm versucht, auf … zuzugreifen“), erlaube
-  den Zugriff für ein paar Minuten. Unter Linux und mit neuem Outlook importierst du unter **Kalenderquellen** ICS-Dateien oder abonnierst HTTPS/Webcal-Feeds.
+  blendet die **Ressourcen-Ordner** ein/aus (⇧⌘R / Strg+Shift+R).
+- **Meeting-Notizen:** siehe [Meeting-Notizen und Kalender](#meeting-notizen-und-kalender).
 - **Automatische Benennung neuer Notizen:** Eine neue Notiz heißt zunächst
   „Neue Notiz“. Beginnt sie mit einer **Überschrift 1**, wird die Datei beim
   Speichern automatisch nach dem Titel benannt: alles klein, Leerzeichen und
@@ -107,12 +89,12 @@ Links zeigt die Sidebar den Vault als hierarchischen Baum.
 
 ## 3. Tabs, Sektionen & Fenster
 
-- Jede Notiz öffnet in einem eigenen **Tab**; **⌘W** schließt den aktiven Tab,
-  **⇧⌘W** das Fenster.
-- **Zwei Sektionen** nebeneinander: **⌘\** teilt den Editor-Bereich. Tabs lassen sich
-  per Drag & Drop auf die andere Tab-Leiste ziehen oder mit **⇧⌘\** verschieben.
-- **Mehrere Fenster:** **⌥⌘N** öffnet ein neues Fenster (übernimmt zunächst den Vault
-  des aktuellen Fensters; per ⌘O kann jedes Fenster einen anderen Vault anzeigen).
+- Jede Notiz öffnet in einem eigenen **Tab**; **⌘W / Strg+W** schließt den aktiven Tab,
+  **⇧⌘W / Strg+Shift+W** das Fenster.
+- **Zwei Sektionen** nebeneinander: **⌘\ / Strg+\** teilt den Editor-Bereich. Tabs lassen sich
+  per Drag & Drop auf die andere Tab-Leiste ziehen oder mit **⇧⌘\ / Strg+Shift+\** verschieben.
+- **Mehrere Fenster:** **⌥⌘N / Strg+Alt+N** öffnet ein neues Fenster (übernimmt zunächst den Vault
+  des aktuellen Fensters; per ⌘O / Strg+O kann jedes Fenster einen anderen Vault anzeigen).
 
 ## 4. Editor & Formatierung
 
@@ -130,24 +112,24 @@ Der Editor zeigt die Notiz formatiert an; gespeichert wird Markdown.
   (Überschriften, Listen, Zitat, Codeblock, Tabelle, Bild …).
 - **Auswahl-Toolbar:** Text markieren zeigt eine schwebende Leiste für fett,
   kursiv, durchgestrichen, Inline-Code und Links.
-- **Zeichenformate:** fett (⌘B), kursiv (⌘I), Inline-Code (⌘E),
-  durchgestrichen (⌥⌘X).
-- **Absatzformate:** normaler Text (⌥⌘0), Überschriften 1–6 (⌥⌘1–⌥⌘6),
-  Zitat (⇧⌘B), Codeblock (⌥⌘C).
-- **Listen:** Aufzählung (⌥⌘8), nummerierte Liste (⌥⌘7) und Aufgabenlisten;
+- **Zeichenformate:** fett (⌘B / Strg+B), kursiv (⌘I / Strg+I), Inline-Code (⌘E / Strg+E),
+  durchgestrichen (⌥⌘X / Strg+Alt+X).
+- **Absatzformate:** normaler Text (⌥⌘0 / Strg+Alt+0), Überschriften 1–6 (⌥⌘1 / Strg+Alt+1–⌥⌘6 / Strg+Alt+6),
+  Zitat (⇧⌘B / Strg+Shift+B), Codeblock (⌥⌘C / Strg+Alt+C).
+- **Listen:** Aufzählung (⌥⌘8 / Strg+Alt+8), nummerierte Liste (⌥⌘7 / Strg+Alt+7) und Aufgabenlisten;
   verschachteln mit Tab/⇧Tab, automatische Fortführung beim Enter und
   automatische Neunummerierung.
 - **Auto-Formatierung beim Tippen:** `# `, `## `, `- `, `1. `, `> ` am Zeilenanfang
   sowie ` ``` ` erzeugen das jeweilige Format sofort; `->` wird zu einem
   Pfeil „→“.
-- **Tabellen:** Einfügen über ⌥⌘T, das Slash-Menü oder Menü „Bearbeiten“. Mit Tab
+- **Tabellen:** Einfügen über ⌥⌘T / Strg+Alt+T, das Slash-Menü oder Menü „Bearbeiten“. Mit Tab
   von Zelle zu Zelle springen; Zeilen/Spalten über die Tabellen-Steuerung direkt
   an der Tabelle oder das Menü **Tabelle** einfügen und löschen.
 - **Bilder:** per Einfügen aus der Zwischenablage, Drag & Drop, Slash-Menü oder
   Menü „Bearbeiten → Bild einfügen…“.
-- **Undo/Redo** wie gewohnt (⌘Z / ⇧⌘Z).
-- **Suchen & Ersetzen:** **⌘F** öffnet die Suchleiste rechts oben im Editor,
-  **⌥⌘F** zusätzlich die Ersetzen-Zeile (auch über **Bearbeiten → Suchen…**).
+- **Undo/Redo** wie gewohnt (⌘Z / Strg+Z / ⇧⌘Z / Strg+Shift+Z).
+- **Suchen & Ersetzen:** **⌘F / Strg+F** öffnet die Suchleiste rechts oben im Editor,
+  **⌥⌘F / Strg+Alt+F** zusätzlich die Ersetzen-Zeile (auch über **Bearbeiten → Suchen…**).
   Gesucht wird in der aktuellen Notiz ohne Beachtung der Groß-/Kleinschreibung;
   eine markierte Textstelle wird als Suchbegriff übernommen. **↩** springt zum
   nächsten, **⇧↩** zum vorherigen Treffer, **Esc** schließt die Leiste.
@@ -170,7 +152,7 @@ Bei Auswahl einer ganzen Tabellenzelle wird die Zelle hervorgehoben. Klicke in d
 
 ## 5. Links
 
-- **⌘K** öffnet den Link-Dialog zum Einfügen eines formatierten Links; bestehende
+- **⌘K / Strg+K** öffnet den Link-Dialog zum Einfügen eines formatierten Links; bestehende
   Links bearbeitest du über den Tooltip, der beim Klick auf den Link erscheint.
 - Als Adresse sind möglich: `https://…`-Adressen, Pfade **relativ zur aktuellen
   Datei**, Pfade **relativ zur Vault-Wurzel** (führender „/“) und absolute Pfade.
@@ -188,14 +170,14 @@ Bei Auswahl einer ganzen Tabellenzelle wird die Zelle hervorgehoben. Klicke in d
 ## 6. Navigationsmodus (Lesen & Blättern)
 
 Zum Stöbern in verlinkten Notizen gibt es pro Tab einen **Navigationsmodus** –
-umschaltbar mit **⌘R**, über **Ansicht → Navigationsmodus** oder das Buch-Symbol
+umschaltbar mit **⌘R / Strg+R**, über **Ansicht → Navigationsmodus** oder das Buch-Symbol
 in der Toolbar.
 
 - Im Navigationsmodus ist die Notiz **schreibgeschützt**; Klicks auf Vault-Links
   laden das Ziel **im selben Tab** (statt einen neuen Tab zu öffnen).
 - Auch **Ordner-Links** bleiben im selben Tab: Der Tab zeigt die Ordnerübersicht,
   und Klicks auf deren Einträge navigieren im selben Tab weiter.
-- **Zurück/Vorwärts:** Pfeil-Buttons in der Toolbar, **⌘[** / **⌘]**, die
+- **Zurück/Vorwärts:** Pfeil-Buttons in der Toolbar, **⌘[ / Strg+[** / **⌘] / Strg+]**, die
   Zurück-/Vorwärts-Tasten der Maus oder Wischgesten auf dem Trackpad
   (horizontales Wischen mit zwei Fingern, unter macOS auch mit drei Fingern,
   wenn „Zwischen Seiten blättern" entsprechend eingestellt ist).
@@ -223,7 +205,7 @@ in der Toolbar.
 - Beim **Umbenennen** der Notiz wird der Ordner mit umbenannt (inkl. Anpassung der
   Bildpfade in der Notiz), beim **Verschieben** wandert er mit, beim **Löschen**
   landet er mit im Papierkorb.
-- Ressourcen-Ordner sind im Dateibaum standardmäßig ausgeblendet (⇧⌘R zeigt sie).
+- Ressourcen-Ordner sind im Dateibaum standardmäßig ausgeblendet (⇧⌘R / Strg+Shift+R zeigt sie).
 
 ## 9. PDF-Export
 
@@ -304,7 +286,7 @@ in der Toolbar.
 Mit Vorlagen bekommt das PDF ein Firmen-Layout: Logo und Kopfzeile auf jeder
 Seite, Fußzeile mit Seitenzahlen sowie optional ein Deckblatt.
 
-- Verwaltet werden Vorlagen unter **Merkzeug → Einstellungen…** (⌘,). Dort wird
+- Verwaltet werden Vorlagen unter **Merkzeug → Einstellungen…** (⌘, / Strg+,). Dort wird
   der **Vorlagen-Ordner** festgelegt; jede Vorlage ist ein Unterordner darin.
 - **„Anlegen“** erzeugt eine neue Vorlage mit Beispieldateien und öffnet sie im
   Finder/Explorer. Eine Vorlage besteht aus (alle Dateien optional):
@@ -367,32 +349,32 @@ Ist der Vault ein **Git-Repository**, erscheint unten in der Sidebar eine Status
 
 ## 11. Tastaturkürzel
 
-| Kürzel | Funktion |
-| --- | --- |
-| ⌘N | Neue Notiz |
-| ⌃⌘N | Neue Meeting-Notiz |
-| ⇧⌘N | Neuer Ordner |
-| ⌥⌘N | Neues Fenster |
-| ⌘O | Vault öffnen |
-| ⌘W / ⇧⌘W | Tab schließen / Fenster schließen |
-| ⌘S / ⌥⌘S | Sichern / Alle sichern |
-| ⌘P / Ctrl+P | Drucken |
-| ⌘, | Einstellungen (PDF-Vorlagen) |
-| ⌘B / ⌘I / ⌥⌘X / ⌘E | Fett / Kursiv / Durchgestrichen / Inline-Code |
-| ⌥⌘0 … ⌥⌘6 | Text / Überschrift 1–6 |
-| ⌥⌘8 / ⌥⌘7 | Aufzählung / Nummerierte Liste |
-| ⇧⌘B / ⌥⌘C | Zitat / Codeblock |
-| ⌘K | Link einfügen |
-| ⌥⌘T | Tabelle einfügen |
-| ⌘F / ⌥⌘F | Suchen / Suchen und Ersetzen |
-| ⌘R | Navigationsmodus ein/aus |
-| ⌘[ / ⌘] | Zurück / Vorwärts |
-| ⌘\ | Zweite Sektion ein-/ausblenden |
-| ⇧⌘\ | Tab in andere Sektion verschieben |
-| ⇧⌘R | Ressourcen ein-/ausblenden |
-| ⌘? | Diese Hilfe |
+| Funktion | Mac | Linux / Windows |
+| --- | --- | --- |
+| Neue Notiz | ⌘N | Strg+N |
+| Neue Meeting-Notiz | ⌃⌘N | Strg+Alt+Shift+N |
+| Neuer Ordner | ⇧⌘N | Strg+Shift+N |
+| Neues Fenster | ⌥⌘N | Strg+Alt+N |
+| Vault öffnen | ⌘O | Strg+O |
+| Tab schließen / Fenster schließen | ⌘W / ⇧⌘W | Strg+W / Strg+Shift+W |
+| Sichern / Alle sichern | ⌘S / ⌥⌘S | Strg+S / Strg+Alt+S |
+| Drucken | ⌘P | Strg+P |
+| Einstellungen (PDF-Vorlagen) | ⌘, | Strg+, |
+| Fett / Kursiv / Durchgestrichen / Inline-Code | ⌘B / ⌘I / ⌥⌘X / ⌘E | Strg+B / Strg+I / Strg+Alt+X / Strg+E |
+| Text / Überschrift 1–6 | ⌥⌘0 … ⌥⌘6 | Strg+Alt+0 … Strg+Alt+6 |
+| Aufzählung / Nummerierte Liste | ⌥⌘8 / ⌥⌘7 | Strg+Alt+8 / Strg+Alt+7 |
+| Zitat / Codeblock | ⇧⌘B / ⌥⌘C | Strg+Shift+B / Strg+Alt+C |
+| Link einfügen | ⌘K | Strg+K |
+| Tabelle einfügen | ⌥⌘T | Strg+Alt+T |
+| Suchen / Suchen und Ersetzen | ⌘F / ⌥⌘F | Strg+F / Strg+Alt+F |
+| Navigationsmodus ein/aus | ⌘R | Strg+R |
+| Zurück / Vorwärts | ⌘[ / ⌘] | Strg+[ / Strg+] |
+| Zweite Sektion ein-/ausblenden | ⌘\ | Strg+\ |
+| Tab in andere Sektion verschieben | ⇧⌘\ | Strg+Shift+\ |
+| Ressourcen ein-/ausblenden | ⇧⌘R | Strg+Shift+R |
+| Diese Hilfe | ⌘? | F1 |
 
-*(Windows: ⌘ = Strg, ⌥ = Alt, ⇧ = Umschalt)*
+*(Windows/Linux: ⌘ = Strg, ⌥ = Alt, ⇧ = Umschalt)*
 
 ## Gemeinsamer Editor und Speicherkonflikte
 
@@ -503,14 +485,43 @@ Die portable Zuordnung liegt in `.merkzeug/settings.json`. Zentrale Vorlagen wer
 
 ## Linux-Installation und Plattformunterschiede
 
-Die Linux-Downloads sind für Intel-/AMD-PCs mit 64 Bit (x86_64); ARM64 ist nicht enthalten.
+Wähle ein separates Paket für deine Linux-Architektur: **x86_64 (x64)** für Intel-/AMD-PCs oder **ARM64 (aarch64)** für ARM-Rechner, einschließlich Linux auf Apple Silicon in Parallels. `uname -m` zeigt deine Architektur. Jedes Paket enthält nur die gewählte Architektur. Ersetze in den folgenden Befehlen `x64` durch `arm64`, wenn du ARM64 nutzt.
 
-- **DEB:** auf Ubuntu-/Debian-kompatiblen Systemen mit `sudo apt install ./Merkzeug-1.2.0-linux-x64.deb` installieren.
-- **RPM:** auf Fedora-kompatiblen Systemen mit `sudo dnf install ./Merkzeug-1.2.0-linux-x64.rpm` installieren.
-- **AppImage:** in den Dateieigenschaften ausführbar machen oder `chmod +x Merkzeug-1.2.0-linux-x64.AppImage` ausführen und die Datei öffnen. FUSE 2 ist erforderlich (`libfuse2t64` unter Ubuntu 24.04). Nutze das DEB-Paket, wenn AppImage für dein System ungeeignet ist. Deaktiviere die Anwendungssandbox nicht, um Installationsprobleme zu umgehen.
+- **DEB:** auf Ubuntu-/Debian-kompatiblen Systemen mit `sudo apt install ./Merkzeug-1.2.1-linux-x64.deb` installieren.
+- **RPM:** auf Fedora-kompatiblen Systemen mit `sudo dnf install ./Merkzeug-1.2.1-linux-x64.rpm` installieren.
+- **AppImage:** in den Dateieigenschaften ausführbar machen oder `chmod +x Merkzeug-1.2.1-linux-x64.AppImage` ausführen und die Datei öffnen. FUSE 2 ist erforderlich (`libfuse2t64` unter Ubuntu 24.04). Nutze das DEB-Paket, wenn AppImage für dein System ungeeignet ist. Deaktiviere die Anwendungssandbox nicht, um Installationsprobleme zu umgehen.
 
 Updates werden manuell von der Merkzeug-Website geladen. Prüfe Downloads anhand der veröffentlichten SHA-256-Prüfsummen. Sie erkennen veränderte Dateien, ersetzen aber kein Herausgeber-Zertifikat. Notizen und Einstellungen liegen außerhalb des Anwendungspakets.
 
 Der gemeinsame Desktop-Editor bietet visuelles Bearbeiten, Mermaid, Lese-/Navigationsmodus, Frontmatter, Dateinamen aus Überschriften, Begleitordner für Bilder und Link-Anpassungen beim Verschieben/Umbenennen, PDF-Vorlagen, zusammengefassten PDF-Export, Drucken und Agent-Prompts. Für die integrierten Git-Aktionen muss Git separat installiert sein; richte die Authentifizierung über deine üblichen Git-Werkzeuge ein.
 
 Meeting-Notizen unter Linux nutzen ICS-Dateien oder HTTPS/Webcal-Kalenderabos. Eine direkte GNOME-/KDE-Systemkalender-Anbindung gibt es nicht. Zum Speichern privater Abo-URLs ist ein System-Schlüsselbund erforderlich; lokale ICS-Importe funktionieren auch ohne diesen. Standardmäßig verwendet Linux einen lokalen zentralen Vorlagenordner oder einen von dir gewählten Ordner. Vault-Vorlagen in `.merkzeug/` reisen mit dem Repository; eingebundene Sync-Ordner funktionieren ebenfalls. Eine automatische Apple-iCloud-Erkennung gibt es nicht. Drucken setzt eingerichtete Systemdrucker und Treiber voraus.
+
+## Meeting-Notizen und Kalender
+
+**Meeting-Notizen aus dem Kalender:** **⌃⌘N / Strg+Alt+Shift+N** (Menü „Ablage → Neue
+  Meeting-Notiz…“ oder der Kalender-Button in der Fußleiste) zeigt laufende
+  und kommende Termine der nächsten 14 Tage aus den lokal eingebundenen
+  Kalendern — unter macOS alle Konten der Kalender-App (iCloud,
+  Exchange/Microsoft 365, Google, …), unter Windows alle Kalender des
+  **klassischen Outlook** (über dessen Objektmodell; das „neue Outlook“
+  bietet keines), ganz ohne Cloud-API. Ganztägige
+  Termine (Urlaube, Geburtstage, …) sind standardmäßig ausgeblendet und
+  lassen sich über die Checkbox über der Liste einblenden. **„Frühere
+  anzeigen“** blendet vergangene Termine ein, **„Suchen“** durchsucht Titel,
+  Personen und Orte im Zeitraum ±90 Tage. Ein Klick auf einen Termin erzeugt
+  eine fertig benannte Notiz: Die Termin-Daten (Datum, Uhrzeit, Ort,
+  Organisator, Teilnehmer, erkannter Teams/Zoom/Meet/Webex-Link) landen im
+  Frontmatter; im Text stehen Datum/Uhrzeit unter der Überschrift, eine
+  **abhakbare Teilnehmerliste** (wer war wirklich dabei?) sowie die
+  Abschnitte Agenda, Notizen und Aufgaben. Beim
+  ersten Mal fragt macOS nach der Erlaubnis für den Kalender-Zugriff. Unter
+  Windows startet Outlook bei Bedarf im Hintergrund; zeigt Outlook eine
+  Sicherheitsabfrage („Ein Programm versucht, auf … zuzugreifen“), erlaube
+  den Zugriff für ein paar Minuten. Unter Linux und mit neuem Outlook importierst du unter **Kalenderquellen** ICS-Dateien oder abonnierst HTTPS/Webcal-Feeds.
+
+Öffne **Ablage → Neue Meeting-Notiz…** oder nutze den Kalender-Button unter dem Dateibaum. Erlaube am Mac den Kalenderzugriff; die eingerichteten Konten der Apple-Kalender-App liefern die Termine. Unter Linux öffnest du **Kalenderquellen**, importierst eine `.ics`-Datei oder fügst eine HTTPS/Webcal-Abo-URL hinzu. Lade die Termine neu: importierte Dateien sind Momentaufnahmen, Abos lassen sich aktualisieren. Private Abo-URLs werden im System-Schlüsselbund gespeichert und gehören nicht ins Git-Repository.
+
+Wähle einen Termin, um im gewählten Ordner eine Markdown-Meeting-Notiz anzulegen. Bearbeite die Agenda, protokolliere Ergebnisse und hake Teilnehmer und Aufgaben ab. Bei automatischer Benennung folgt der Dateiname der ersten Überschrift; manuell vergebene Namen bleiben erhalten. Der Kalendertermin wird nicht verändert.
+
+Wenn die Liste leer bleibt, prüfe Datum, Ganztagsfilter, Kalenderberechtigung am Mac und die Kalenderquellen unter Linux. Linux hat keine direkte GNOME-/KDE-Kalenderanbindung. Die beschriebene Windows-/Outlook-Anbindung gehört zur kommenden Windows-Version.

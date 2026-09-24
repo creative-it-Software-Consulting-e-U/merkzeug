@@ -1,6 +1,6 @@
 {
   "name": "merkzeug",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Merkzeug – WYSIWYG-Markdown-Editor (Cross-Platform)",
   "main": "out/main/index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "package:mac": "npm run build:calhelper && electron-vite build && electron-builder --mac dir",
     "package:mac:dmg": "npm run build:calhelper && electron-vite build && electron-builder --mac dmg",
     "package:win": "electron-vite build && ELECTRON_BUILDER_7Z_FILTER=BCJ2 electron-builder --win --x64 --arm64",
-    "package:linux": "electron-vite build && electron-builder --linux --x64",
+    "package:linux": "electron-vite build && electron-builder --linux --x64 --arm64",
     "notices": "node ../scripts/third-party-notices.mjs",
     "prepackage:mac": "npm run notices",
     "prepackage:mac:dmg": "npm run notices",
@@ -41,9 +41,9 @@
     "react-dom": "^19.3.0",
     "typescript": "^7.0.2",
     "vite": "^7.3.6",
-    "@merkzeug/core": "1.2.0",
-    "@merkzeug/editor": "1.2.0",
-    "@merkzeug/export": "1.2.0"
+    "@merkzeug/core": "1.2.1",
+    "@merkzeug/editor": "1.2.1",
+    "@merkzeug/export": "1.2.1"
   },
   "dependencies": {
     "@electron-toolkit/utils": "^4.0.0",

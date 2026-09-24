@@ -11,7 +11,7 @@ for(const lang of ['en','de']){
  const latest=releases[0];
  const latestVersion=escape(latest.version);
  const teaserText=latest.status==='released'
-  ? (en?`Merkzeug ${latestVersion} is available. Read what changed in this release and earlier updates.`:`Merkzeug ${latestVersion} ist verfügbar. Lies, was diese Version und frühere Updates mitbringen.`)
+  ? (en?`Merkzeug ${latestVersion}${latest.platforms.length === 1 ? ` for ${escape(latest.platforms[0])}` : ''} is available. Read what changed in this release and earlier updates.`:`Merkzeug ${latestVersion}${latest.platforms.length === 1 ? ` für ${escape(latest.platforms[0])}` : ''} ist verfügbar. Lies, was diese Version und frühere Updates mitbringen.`)
   : latest.status==='approved' ? (en?`Version ${latestVersion} is approved by Apple. Explore the features of the first release.`:`Version ${latestVersion} ist von Apple freigegeben. Entdecke die Funktionen der ersten Version.`)
   : (en?`Version ${latestVersion} is being prepared. Read what is included; published updates will appear here as they become available.`:`Version ${latestVersion} wird vorbereitet. Hier findest du die vorgesehenen Inhalte; veröffentlichte Updates kommen hinzu, sobald sie verfügbar sind.`);
  const teaser=`<section id="release-notes" class="feature-section"><p class="eyebrow">Release Notes</p><h2>${en?'What’s new in Merkzeug.':'Was sich in Merkzeug tut.'}</h2><p>${teaserText}</p><a class="button secondary" href="${name}">${en?'Read the release notes':'Release Notes lesen'}</a></section>`;

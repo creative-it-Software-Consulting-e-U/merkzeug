@@ -14,7 +14,6 @@ parser.add_argument('arch', choices=['x64', 'arm64'])
 parser.add_argument('--signed', action='store_true')
 args = parser.parse_args()
 version = check()
-if args.platform == 'linux' and args.arch != 'x64': parser.error('Only Linux x64 is in the current release matrix')
 env = dict(os.environ)
 env['ELECTRON_BUILDER_7Z_FILTER'] = 'BCJ2'
 env['CSC_IDENTITY_AUTO_DISCOVERY'] = 'false'
