@@ -182,3 +182,7 @@ Die portable Zuordnung liegt in `.merkzeug/settings.json`. Zentrale Vorlagen wer
 ## Release Notes
 
 Über **Release Notes** in der Hilfe (IntelliJ: **…**) ist die vollständige Versionsgeschichte auf Deutsch und Englisch auch offline lesbar. Beim ersten Start einer neuen Marketing-Version erscheinen deren Release Notes automatisch. **Fertig** merkt diese Version auf der aktuellen Installation als gelesen; die komplette Historie bleibt erreichbar. Website und Apps verwenden dieselbe Quelle für Release Notes.
+
+## Über Merkzeug
+
+Merkzeug ist Open Source unter der MIT-Lizenz. Über Merkzeug zeigt Version, Herausgeber und Produktwebsite. Am Desktop im Merkzeug-Menü, auf iPhone/iPad in der Hilfe und in IntelliJ im **…**-Menü des Editors erreichbar.

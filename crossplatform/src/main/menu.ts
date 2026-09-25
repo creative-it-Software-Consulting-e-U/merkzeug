@@ -1,6 +1,6 @@
 import { supportUrl } from '@merkzeug/core/support'
 import { t as translate } from '@merkzeug/core/i18n'
-import { app, shell, BrowserWindow, Menu, type MenuItemConstructorOptions } from 'electron'
+import { app, dialog, shell, BrowserWindow, Menu, type MenuItemConstructorOptions } from 'electron'
 import type { MenuAction } from '../shared/types'
 import { getRecentVaults } from './settings'
 
@@ -25,6 +25,13 @@ function item(
 }
 
 export function buildMenu(hooks: MenuHooks): void {
+  app.setAboutPanelOptions({
+    applicationName: 'Merkzeug',
+    applicationVersion: app.getVersion(),
+    copyright: '© 2026 creative-it Software & Consulting e.U.',
+    credits: translate('Open source under the MIT License.') + '\nhttps://merkzeug.creative-it.com/',
+    website: 'https://merkzeug.creative-it.com/'
+  })
   const isDev = !app.isPackaged
   const recents = getRecentVaults()
 
@@ -32,7 +39,16 @@ export function buildMenu(hooks: MenuHooks): void {
     {
       label: 'Merkzeug',
       submenu: [
-        { role: 'about', label: translate("About Merkzeug") },
+        { label: translate("About Merkzeug"), click: async () => {
+          const result = await dialog.showMessageBox({
+            type: 'info', title: translate('About Merkzeug'), message: `Merkzeug ${app.getVersion()}`,
+            detail: '© 2026 creative-it Software & Consulting e.U.\n\n' + translate('Open source under the MIT License.'),
+            buttons: [translate('Done'), 'Website', 'MIT License'], defaultId: 0, cancelId: 0,
+            noLink: true
+          })
+          if (result.response === 1) await shell.openExternal('https://merkzeug.creative-it.com/')
+          if (result.response === 2) await shell.openExternal(`https://merkzeug.creative-it.com/license-${app.getLocale().startsWith('de') ? 'de' : 'en'}.html`)
+        } },
         { type: 'separator' },
         {
           label: translate("Settings…"),

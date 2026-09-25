@@ -510,3 +510,7 @@ Open **File → New Meeting Note…**, or use the calendar button below the file
 Choose an event to create a Markdown meeting note in the selected folder. Edit the agenda, record minutes and mark attendees and tasks as the meeting progresses. The note follows its first heading when renamed automatically; manual filenames are preserved. Your calendar event is never modified.
 
 If the list is empty, check the date, all-day filter, calendar permissions on Mac and configured sources on Linux. Linux has no direct GNOME/KDE calendar connection. Windows/classic Outlook support belongs to the forthcoming Windows edition.
+
+## About Merkzeug
+
+Merkzeug is open source under the MIT License. The About Merkzeug view shows the version, publisher and product website. On desktop, use the Merkzeug menu; on iPhone/iPad, open Help; in IntelliJ, open the editor’s **…** menu.

@@ -1,5 +1,6 @@
 appId: com.creative-it.merkzeug
 productName: Merkzeug
+copyright: Copyright © 2026 creative-it Software & Consulting e.U.
 directories:
   buildResources: build
   output: dist

@@ -525,3 +525,7 @@ Meeting-Notizen unter Linux nutzen ICS-Dateien oder HTTPS/Webcal-Kalenderabos. E
 Wähle einen Termin, um im gewählten Ordner eine Markdown-Meeting-Notiz anzulegen. Bearbeite die Agenda, protokolliere Ergebnisse und hake Teilnehmer und Aufgaben ab. Bei automatischer Benennung folgt der Dateiname der ersten Überschrift; manuell vergebene Namen bleiben erhalten. Der Kalendertermin wird nicht verändert.
 
 Wenn die Liste leer bleibt, prüfe Datum, Ganztagsfilter, Kalenderberechtigung am Mac und die Kalenderquellen unter Linux. Linux hat keine direkte GNOME-/KDE-Kalenderanbindung. Die beschriebene Windows-/Outlook-Anbindung gehört zur kommenden Windows-Version.
+
+## Über Merkzeug
+
+Merkzeug ist Open Source unter der MIT-Lizenz. Über Merkzeug zeigt Version, Herausgeber und Produktwebsite. Am Desktop im Merkzeug-Menü, auf iPhone/iPad in der Hilfe und in IntelliJ im **…**-Menü des Editors erreichbar.

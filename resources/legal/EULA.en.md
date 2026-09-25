@@ -5,7 +5,7 @@ Merkzeug is licensed under the MIT License below. Third-party components retain 
 ```text
 MIT License
 
-Copyright (c) 2026 creative-it Software Consulting e.U.
+Copyright (c) 2026 creative-it Software & Consulting e.U.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -11,7 +11,7 @@
   "price": "free",
   "in_app_purchases": false,
   "release_mode": "manual",
-  "copyright": "2026 creative-it Software Consulting e.U.",
+  "copyright": "2026 creative-it Software & Consulting e.U.",
   "promotional_text_macos": "Merkzeug is available for macOS, iPhone and iPad, and as a plugin for IntelliJ IDEA (beta).",
   "promotional_text_ios": "Merkzeug is available for macOS, iPhone and iPad, and as a plugin for IntelliJ IDEA (beta).",
   "keywords_ios": "markdown,git,repository,notes,diagrams,frontmatter,documentation,editor",

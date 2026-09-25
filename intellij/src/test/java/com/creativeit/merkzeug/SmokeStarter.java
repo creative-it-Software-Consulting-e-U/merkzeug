@@ -237,8 +237,17 @@ public final class SmokeStarter implements ApplicationStarter {
                                     window.previewTestStage = 3; console.log('MERKZEUG_TEMPLATE_PREVIEW_PASSED');
                                   }
                                   const actions = [...document.querySelectorAll('.editor-extra-actions > button, .editor-extra-actions .tour-tools > button')];
-                                  if (actions.length !== (document.querySelector('.tour-tools') ? 4 : 2) || actions.some(b => Math.abs(b.getBoundingClientRect().top - actions[0].getBoundingClientRect().top) > 1 || getComputedStyle(b).fontSize !== getComputedStyle(actions[0]).fontSize)) throw new Error('Extra actions are not aligned or use different font sizes');
+                                  if (actions.length !== (document.querySelector('.tour-tools') ? 5 : 3) || actions.some(b => Math.abs(b.getBoundingClientRect().top - actions[0].getBoundingClientRect().top) > 1 || getComputedStyle(b).fontSize !== getComputedStyle(actions[0]).fontSize)) throw new Error('Extra actions are not aligned or use different font sizes');
                                   if (document.querySelector('.vault-guidance').getBoundingClientRect().top < actions[0].getBoundingClientRect().bottom) throw new Error('Guidance must occupy its own row');
+                                  if (!window.aboutChecked) {
+                                    const about = document.querySelector('[aria-labelledby="merkzeug-about-title"]');
+                                    if (!about) { actions.find(b => ['About Merkzeug', 'Über Merkzeug'].includes(b.textContent)).click(); return; }
+                                    if (!about.textContent.includes('MIT') || !about.textContent.includes('creative-it Software & Consulting e.U.')) throw new Error('About metadata missing');
+                                    const links = [...about.querySelectorAll('button')];
+                                    if (!links.some(b => b.textContent === 'Website')) throw new Error('About website link missing');
+                                    links.find(b => ['Done', 'Fertig'].includes(b.textContent)).click();
+                                    window.aboutChecked = true; console.log('MERKZEUG_ABOUT_PASSED'); return;
+                                  }
                                   const dialog = document.querySelector('.guidance-dialog');
                                   if (!dialog) { document.querySelector('.vault-guidance > button')?.click(); return; }
                                   const boxes = dialog.querySelectorAll('input[type=checkbox]');

@@ -39,7 +39,7 @@ for name in ['01-editor.png','02-template-preview.png']:
 Upload **merkzeug-{version}.zip** unchanged. The other files are supporting material.
 
 - Name: Merkzeug
-- Vendor: creative-it Software Consulting e.U.
+- Vendor: creative-it Software & Consulting e.U.
 - Price: Free
 - License: MIT — the upload kit includes the exact license text.
 - Channel: default (stable), after validation and approval.
