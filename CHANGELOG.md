@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.0
+
+- Merkzeug is now open source under the MIT License.
+- About views show the license, website and creative-it Software & Consulting e.U. copyright across editions.
+
 ## 1.2.0
 
 - Choose central or vault-relative PDF templates in the PDF controls across desktop, iOS and IntelliJ. Shared vault settings live in `.merkzeug/settings.json`.

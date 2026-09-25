@@ -1,8 +1,8 @@
 <idea-plugin>
   <id>com.creativeit.merkzeug</id>
   <name>Merkzeug</name>
-  <version>1.2.1</version>
-  <vendor email="guenther.wieser@creative-it.com" url="https://merkzeug.creative-it.com/">creative-it Software Consulting e.U.</vendor>
+  <version>1.3.0</version>
+  <vendor email="guenther.wieser@creative-it.com" url="https://merkzeug.creative-it.com/">creative-it Software &amp; Consulting e.U.</vendor>
   <description><![CDATA[
     <p>Merkzeug is a visual Markdown editor for IntelliJ IDEA, with formatting tools, Mermaid diagrams,
     frontmatter, PDF export and printing. Your notes stay ordinary Markdown files in your project.</p>
@@ -42,7 +42,7 @@
     <p>Licensed under the MIT License. Commercial use, modification and redistribution are permitted with the required license and copyright notices.</p>
     <p>For IntelliJ IDEA 2026.2.2 and later 2026.2.x releases (builds 262.10315.125–262.*), with JCEF enabled.</p>
   ]]></description>
-  <change-notes><![CDATA[<p>Version 1.2 — portable templates and release history.</p><ul><li>Choose a central PDF template or a template inside your vault from the PDF controls in every edition. Vault-relative template settings travel with your repository.</li><li>Read the complete release history in the app. New versions show their release notes automatically on first launch.</li></ul>]]></change-notes>
+  <change-notes><![CDATA[<p>Version 1.3 — Merkzeug is now open source under the MIT License.</p><p>Explore the source and contribute on GitHub. About Merkzeug includes the license, product website and publisher information.</p>]]></change-notes>
   <idea-version since-build="262.10315.125" until-build="262.*"/>
   <depends>com.intellij.modules.platform</depends>
   <depends>com.intellij.modules.jcef</depends>

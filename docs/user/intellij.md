@@ -149,3 +149,7 @@ The portable assignment is stored in `.merkzeug/settings.json`. A central templa
 ## Release Notes
 
 Open **Release Notes** in Help (IntelliJ: **…**) for the complete English or German version history, available offline. On the first start of a new marketing version, its release notes open automatically. **Done** marks that version as read on this installation; the full history remains accessible. Website and apps use the same release-note source.
+
+## About Merkzeug
+
+Merkzeug is open source under the MIT License. The About Merkzeug view shows the version, publisher and product website. On desktop, use the Merkzeug menu; on iPhone/iPad, open Help; in IntelliJ, open the editor’s **…** menu.

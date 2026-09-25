@@ -196,3 +196,18 @@ Apple distribution currently uses the manual iOS and macOS App Store Xcode Cloud
 Linux 1.2 uses the manually dispatched `linux-packages.yml` workflow and the public binary-only `merkzeug-downloads` repository, independently of the older full-platform draft workflow above. Source stays private. See [Linux acceptance, parity and publication](linux-release.md) for exact build/test provenance, limitations and the immutable download hashes. No Apple or Windows build is required for Linux or website updates.
 
 Linux 1.2.1 and later use the focused manual `linux-packages.yml` workflow with native x64 and ARM64 runners. Select either architecture or both; all three package formats are separate per architecture. See [Linux distribution](linux-release.md) for the current acceptance and binary-only public publication path.
+
+## Version 1.3 — MIT release
+
+Version 1.3 is the first release that bundles the MIT license. The canonical
+bilingual notes remain `website/release-notes.json`; the metadata uploader now
+uses those same highlights for App Store `whatsNew`. Keep the website entry in
+preparation until distribution is confirmed. Publisher/copyright attribution is
+`creative-it Software & Consulting e.U.`; third-party attribution is unchanged.
+
+Use the manual iOS and macOS App Store Cloud workflows for 1.3, the focused Linux
+workflow for both architectures, and `intellij/build.py --marketplace` for 1.3.0.
+Windows production distribution remains deferred pending signing credentials.
+The public repository's protected environments now require explicit release
+approval. Creating candidates or App Store drafts does not submit to App Review
+or publish a Marketplace update.

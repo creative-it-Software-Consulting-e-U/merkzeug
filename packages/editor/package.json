@@ -1,6 +1,6 @@
 {
   "name": "@merkzeug/editor",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "private": true,
   "type": "module",
   "exports": {
@@ -15,10 +15,11 @@
     "./icons": "./src/icons.tsx",
     "./TemplateStylingPrompt": "./src/TemplateStylingPrompt.tsx",
     "./TemplateLocation": "./src/TemplateLocation.tsx",
-    "./ReleaseNotes": "./src/ReleaseNotes.tsx"
+    "./ReleaseNotes": "./src/ReleaseNotes.tsx",
+    "./About": "./src/About.tsx"
   },
   "dependencies": {
-    "@merkzeug/core": "1.2.1"
+    "@merkzeug/core": "1.3.0"
   },
   "peerDependencies": {
     "@milkdown/crepe": "^7.22.1",

@@ -7,7 +7,7 @@ Updates are uploaded to the existing Marketplace listing (ID 34221), in the defa
 | Field | Value |
 | --- | --- |
 | Name | Merkzeug |
-| Vendor | creative-it Software Consulting e.U. |
+| Vendor | creative-it Software & Consulting e.U. |
 | Contact | guenther.wieser@creative-it.com |
 | Website | https://merkzeug.creative-it.com/ |
 | Support | https://support.apps.creative-it.com/?app=merkzeug&lang=en |

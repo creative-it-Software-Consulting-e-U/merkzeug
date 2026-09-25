@@ -408,6 +408,7 @@ export const de: Readonly<Record<string, string>> = {
   "Could not save changes:": "Änderungen konnten nicht gespeichert werden:",
   "Syncing changes …": "Änderungen werden übernommen …",
   "About Merkzeug": "Über Merkzeug",
+  "Open source under the MIT License.": "Open Source unter der MIT-Lizenz.",
   "Overwrite": "Überschreiben",
   "Heading 1": "Überschrift 1",
   "Heading 2": "Überschrift 2",

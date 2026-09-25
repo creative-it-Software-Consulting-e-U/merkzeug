@@ -9,13 +9,16 @@ const report={version:args.version,status:'failed',applied:args.apply,groups:[]}
 try {
   const listings=await Promise.all(['en-US','de-DE'].map(async locale=>({locale,listing:JSON.parse(await readFile(`store/metadata/${locale}/listing.json`,'utf8'))})));
   const desired=[];
+  const releases=JSON.parse(await readFile('website/release-notes.json','utf8'));
+  const release=releases.find(r=>r.version===args.version);
+  if(args.version && !release) throw Error('Missing canonical release notes for requested version');
   for(const {locale,listing} of listings){
     if(typeof listing.subtitle!=='string'||!listing.subtitle.length||[...listing.subtitle].length>30) throw Error(`Invalid ${locale}/subtitle`);
   }
   for(const platform of ['IOS','MAC_OS']) for(const {locale,listing} of listings){
     const suffix=platform==='IOS'?'ios':'macos';
-    const attributes={description:listing[`description_${suffix}`],promotionalText:listing[`promotional_text_${suffix}`],keywords:listing[`keywords_${suffix}`]};
-    for(const [key,max] of Object.entries({description:4000,promotionalText:170,keywords:100})){
+    const attributes={description:listing[`description_${suffix}`],promotionalText:listing[`promotional_text_${suffix}`],keywords:listing[`keywords_${suffix}`], ...(release ? {whatsNew:release.highlights[locale.startsWith('de')?'de':'en'].map(s=>'• '+s).join('\n\n')} : {})};
+    for(const [key,max] of Object.entries({description:4000,promotionalText:170,keywords:100,...(release?{whatsNew:4000}:{})})){
       if(typeof attributes[key]!=='string'||!attributes[key].length||[...attributes[key]].length>max) throw Error(`Invalid ${platform}/${locale}/${key}`);
     }
     desired.push({platform,locale,attributes});
