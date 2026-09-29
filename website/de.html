@@ -12,8 +12,10 @@
 <meta property="og:description" content="Markdown lesen, visuell bearbeiten und als Dokument im eigenen Layout teilen. Für Mac, iPhone, iPad, Linux und IntelliJ IDEA.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://merkzeug.creative-it.com/assets/mac-de.png">
-<link rel="stylesheet" href="landing.css?v=20260924-image-layout">
+<link rel="stylesheet" href="sheets.css?v=20260929-sheets">
 <script defer src="landing.js?v=20260924-image-layout">
+</script>
+<script defer src="thread.js?v=20260929-sheets">
 </script>
 </head>
 <body>
@@ -30,14 +32,15 @@
 <a href="index.html" lang="en">English</a>
 </nav>
 </header>
-<main id="content" class="landing">
-<section class="hero">
+<main id="content" class="landing sheets">
+<svg class="thread" aria-hidden="true" focusable="false"><path class="thread-track"/><path class="thread-line"/></svg>
+<section class="hero sheet">
+<div class="sheet-text">
 <p class="eyebrow">Mac · iPhone · iPad · Linux · IntelliJ IDEA</p>
 <h1>Markdown.<br>
 <em>Your way.</em>
 </h1>
 <p class="lead">Entdecke und bearbeite Markdown-Sammlungen und mache daraus Dokumente in deinem Layout – vom persönlichen Notizbuch bis zur Dokumentation deiner Agenten.</p>
-<p class="table-note"><a href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug">Open Source unter der MIT-Lizenz. Entdecke den Quellcode und entwickle Merkzeug auf GitHub mit.</a></p>
 <div class="actions">
 <div class="store-download">
 <a class="app-store-badge" href="https://apps.apple.com/app/merkzeug/id6799114334">
@@ -53,21 +56,14 @@
 </div>
 <div class="store-download"><a class="button secondary" href="#linux-downloads">Linux ↓</a><span class="store-caption">AppImage · DEB · RPM</span></div>
 </div>
-<p class="availability">Jetzt verfügbar. Windows folgt. Android &amp; VS Code sind geplant.</p>
-</section>
-<nav class="story-nav" aria-label="Themen">
-<a href="#vaults">Deine Dateien</a>
-<a href="#editor">Lesen & Bearbeiten</a>
-<a href="#templates">Dein Layout</a>
-<a href="#assets">Assets & Agenten</a>
-<a href="#platforms">Versionen</a>
-</nav>
+<p class="availability">Jetzt verfügbar. Windows folgt. Android &amp; VS Code sind geplant. <a href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug">Open Source unter der MIT-Lizenz ↗</a></p>
+</div>
 <figure class="device-gallery" data-gallery>
 <div class="shot-stage">
 <a data-full-image href="assets/mac-de.png">
 <picture>
 <source media="(max-width: 700px)" srcset="assets/iphone-de.png" width="1320" height="2868">
-<img width="2560" height="1600" loading="lazy" src="assets/mac-de.png" data-desktop="assets/mac-de.png" data-mobile="assets/iphone-de.png" alt="Ein echtes Markdown-Notizbuch. Beispieldaten, keine privaten Notizen." class="product-shot" data-desktop-width="2560" data-desktop-height="1600" data-mobile-width="1320" data-mobile-height="2868">
+<img width="2560" height="1600" src="assets/mac-de.png" data-desktop="assets/mac-de.png" data-mobile="assets/iphone-de.png" alt="Ein echtes Markdown-Notizbuch. Beispieldaten, keine privaten Notizen." class="product-shot" data-desktop-width="2560" data-desktop-height="1600" data-mobile-width="1320" data-mobile-height="2868">
 </picture>
 </a>
 </div>
@@ -77,31 +73,46 @@
 <button type="button" data-view="mobile">iPhone</button>
 </div>
 </figure>
-<section id="vaults" class="story">
-<p class="eyebrow">01 / Dein Ausgangspunkt</p>
+</section>
+<nav class="story-nav" aria-label="Themen">
+<a href="#vaults"><span>01</span>Deine Dateien</a>
+<a href="#editor"><span>02</span>Lesen &amp; Bearbeiten</a>
+<a href="#templates"><span>03</span>Dein Layout</a>
+<a href="#assets"><span>04</span>Assets &amp; Agenten</a>
+<a href="#compare"><span>05</span>vs Obsidian</a>
+<a href="#platforms"><span>06</span>Versionen</a>
+</nav>
+
+<section id="vaults" class="story sheet">
+<div class="sheet-text">
+<p class="sheet-tag"><span class="node" data-node></span><b>01/06</b><span>deine-dateien.md</span><span>Dein Ausgangspunkt</span></p>
 <h2>Ein Ordner. Deine ganze Sammlung.</h2>
 <p class="lead">Ein Vault ist einfach ein Ordner mit Markdown-Dateien. Dein Notizbuch, dein Cloud-Ordner oder die Dokumentation neben deinem Code.</p>
-<div class="story-cards">
-<article>
-<h3>Lokal & in der Cloud</h3>
-<p>Öffne vorhandene Dateien, ohne sie in eine neue Datenbank zu importieren. Dein gewählter Cloud-Dienst übernimmt die Synchronisation.</p>
-</article>
-<article>
-<h3>Git, auf deine Art</h3>
-<p>Nutze Repository-Ordner am Mac und unter Linux oder direkt in IntelliJ. Auf iPhone und iPad öffnest du den Repository-Ordner deiner Git-App über die Dateien-App.</p>
-</article>
-<article>
-<h3>Offene Dateien</h3>
-<p>Markdown bleibt Markdown. Du kannst dieselben Dateien mit anderen Editoren, Git-Werkzeugen und Agenten bearbeiten.</p>
-</article>
+<dl class="points">
+<div><dt>Lokal &amp; in der Cloud</dt><dd>Öffne vorhandene Dateien, ohne sie in eine neue Datenbank zu importieren. Dein gewählter Cloud-Dienst übernimmt die Synchronisation.</dd></div>
+<div><dt>Git, auf deine Art</dt><dd>Nutze Repository-Ordner am Mac und unter Linux oder direkt in IntelliJ. Auf iPhone und iPad öffnest du den Repository-Ordner deiner Git-App über die Dateien-App.</dd></div>
+<div><dt>Offene Dateien</dt><dd>Markdown bleibt Markdown. Du kannst dieselben Dateien mit anderen Editoren, Git-Werkzeugen und Agenten bearbeiten.</dd></div>
+</dl>
+<details class="git-explainer"><summary>Git auf iPhone und iPad: freie Wahl, direkte Integration</summary><p>Working Copy ist eine separate Git-App für iPhone und iPad. Sie klont Repositories und kümmert sich um Versionsverwaltung und Synchronisation; Merkzeug liest und bearbeitet die Markdown-Dateien darin.</p><p>Du kannst auch jede andere Git-App verwenden, die ihren Repository-Ordner über die Dateien-App zum Öffnen und Bearbeiten freigibt. Git-Aktionen führst du dann in dieser App aus. Für Working Copy bietet Merkzeug zusätzlich eine direkte Integration: Nach der Einrichtung kannst du Pull, Commit und Push aus Merkzeug anstoßen.</p><a href="https://apps.apple.com/app/id896694807">Working Copy im App Store ↗</a> · <a href="help-ios-de.html#synchronisieren-mit-working-copy">Working Copy auf iPhone und iPad →</a></details>
 </div>
-<aside class="git-explainer"><h3>Git auf iPhone und iPad: freie Wahl, direkte Integration</h3><p>Working Copy ist eine separate Git-App für iPhone und iPad. Sie klont Repositories und kümmert sich um Versionsverwaltung und Synchronisation; Merkzeug liest und bearbeitet die Markdown-Dateien darin.</p><p>Du kannst auch jede andere Git-App verwenden, die ihren Repository-Ordner über die Dateien-App zum Öffnen und Bearbeiten freigibt. Git-Aktionen führst du dann in dieser App aus. Für Working Copy bietet Merkzeug zusätzlich eine direkte Integration: Nach der Einrichtung kannst du Pull, Commit und Push aus Merkzeug anstoßen.</p><a href="https://apps.apple.com/app/id896694807">Working Copy im App Store ↗</a></aside>
-<a class="learn" href="help-ios-de.html#synchronisieren-mit-working-copy">Working Copy auf iPhone und iPad →</a>
+<figure class="plain-shot">
+<div class="shot-stage">
+<a href="assets/macos-de-git.png"><img width="2560" height="1600" loading="lazy" src="assets/macos-de-git.png" alt="Ein Vault-Ordner mit dem integrierten Git-Bereich am Mac: Branch, geänderte Datei, Commit, Push und Pull." class="product-shot"></a>
+</div>
+<figcaption>Ein einfacher Ordner, mit Git direkt daneben. Mac-Version.</figcaption>
+</figure>
 </section>
-<section id="editor" class="story">
-<p class="eyebrow">02 / Verstehen & weiterdenken</p>
+
+<section id="editor" class="story sheet flip">
+<div class="sheet-text">
+<p class="sheet-tag"><span class="node" data-node></span><b>02/06</b><span>lesen-und-bearbeiten.md</span><span>Verstehen &amp; weiterdenken</span></p>
 <h2>Weniger Syntax. Mehr Überblick.</h2>
 <p class="lead">Bearbeite Überschriften, Tabellen und Aufgaben visuell. Mermaid-Diagramme leben direkt im Dokument: Code bearbeiten, Ergebnis sehen, weiterlesen.</p>
+<dl class="points">
+<div><dt>Lesen &amp; navigieren</dt><dd>Auf Mac, Linux, iPhone und iPad folgst du im Lesemodus Links, ohne versehentlich Text zu ändern. Zum Bearbeiten wechselst du zurück in den Editor. <a href="help-de.html#6-navigationsmodus-lesen-amp-blättern">Lesemodus →</a></dd></div>
+<div><dt>In deiner IDE</dt><dd>Merkzeug ergänzt andere Markdown-Editoren in IntelliJ. Wechsle über die Editor-Tabs zwischen visueller Bearbeitung und Quelltext; verlinkte Dateien öffnet die IDE. <a href="help-intellij-de.html#gemeinsam-mit-anderen-markdown-editoren">IntelliJ &amp; Markdown →</a></dd></div>
+</dl>
+</div>
 <figure class="device-gallery" data-gallery>
 <div class="shot-stage">
 <a data-full-image href="assets/macos-de-diagram.png">
@@ -118,55 +129,38 @@
 <button type="button" data-view="tablet">iPad</button>
 </div>
 </figure>
-<div class="story-cards">
-<article>
-<h3>Lesen & navigieren</h3>
-<p>Auf Mac, Linux, iPhone und iPad folgst du im Lesemodus Links, ohne versehentlich Text zu ändern. Zum Bearbeiten wechselst du zurück in den Editor.</p>
-</article>
-<article>
-<h3>In deiner IDE</h3>
-<p>Merkzeug ergänzt andere Markdown-Editoren in IntelliJ. Wechsle über die Editor-Tabs zwischen visueller Bearbeitung und Quelltext; verlinkte Dateien öffnet die IDE.</p>
-</article>
-</div>
-<a class="learn" href="help-de.html#6-navigationsmodus-lesen-amp-blättern">Lesemodus kennenlernen →</a> <a class="learn" href="help-intellij-de.html#gemeinsam-mit-anderen-markdown-editoren">IntelliJ & Markdown →</a>
 </section>
-<section id="templates" class="story template-story">
-<p class="eyebrow">03 / Vom Entwurf zur Übergabe</p>
-<h2>Dein Markdown.<br>Dein fertiges Dokument.</h2>
+
+<section id="templates" class="story sheet">
+<div class="sheet-text">
+<p class="sheet-tag"><span class="node" data-node></span><b>03/06</b><span>dein-layout.md</span><span>Vom Entwurf zur Übergabe</span></p>
+<h2>Dein Markdown. Dein fertiges Dokument.</h2>
 <p class="lead">Eine Sammlung von Notizen wird zum Dokument für Kunden, Teams oder die nächste Besprechung. Mit deinem Briefkopf, deinen Schriften und deinem Layout.</p>
-<div class="story-cards">
-<article>
-<h3>Ein Layout, mehrfach genutzt</h3>
-<p>Nutze HTML/CSS-Vorlagen für die Darstellung beim Bearbeiten und beim Drucken. Mac, Linux, iPhone, iPad und IntelliJ exportieren damit auch PDF-Dateien.</p>
-</article>
-<article>
-<h3>Mehrere Notizen, ein PDF</h3>
-<p>Auf Mac, Linux, iPhone, iPad und in IntelliJ kann ein Übersichts-Dokument seine direkt verlinkten Markdown-Dateien aus demselben Ordner und dessen Unterordnern in den Export aufnehmen.</p>
-</article>
-<article>
-<h3>Vorlagen teilen</h3>
-<p>Synchronisiere Vorlagen zwischen Apple-Geräten über iCloud oder lege sie direkt im Vault ab. Wähle den Ort bei den PDF-Funktionen; die gemeinsame Zuordnung reist mit deinem Git-Repository mit.</p>
-</article>
+<dl class="points">
+<div><dt>Ein Layout, mehrfach genutzt</dt><dd>Nutze HTML/CSS-Vorlagen für die Darstellung beim Bearbeiten und beim Drucken. Mac, Linux, iPhone, iPad und IntelliJ exportieren damit auch PDF-Dateien.</dd></div>
+<div><dt>Mehrere Notizen, ein PDF</dt><dd>Auf Mac, Linux, iPhone, iPad und in IntelliJ kann ein Übersichts-Dokument seine direkt verlinkten Markdown-Dateien aus demselben Ordner und dessen Unterordnern in den Export aufnehmen.</dd></div>
+<div><dt>Vorlagen teilen</dt><dd>Synchronisiere Vorlagen zwischen Apple-Geräten über iCloud oder lege sie direkt im Vault ab. Wähle den Ort bei den PDF-Funktionen; die gemeinsame Zuordnung reist mit deinem Git-Repository mit. <a href="help-de.html#vorlagen-im-repository-teilen">Vorlagen gemeinsam nutzen →</a></dd></div>
+</dl>
 </div>
-<figure class="pdf-output">
-<a href="assets/macos-de-pdf.png">
-<img width="2880" height="1800" loading="lazy" src="assets/macos-de-pdf.png" alt="Beispiel eines exportierten PDFs. Dokumentansicht, unabhängig vom Gerät.">
-</a>
-<figcaption>Beispiel eines exportierten PDFs. Dokumentansicht, unabhängig vom Gerät.</figcaption>
+<figure class="plain-shot pdf-output">
+<div class="shot-stage">
+<a href="assets/macos-de-pdf.png"><img width="2880" height="1800" loading="lazy" src="assets/macos-de-pdf.png" alt="Beispiel eines exportierten PDFs. Dokumentansicht, unabhängig vom Gerät." class="product-shot"></a>
+</div>
+<figcaption>Beispiel eines exportierten PDFs, unabhängig vom Gerät. <a href="assets/macos-de-pdf.png">Beispielausgabe ansehen ↗</a> · <a href="help-de.html#9-pdf-export">PDF &amp; Vorlagen im Detail →</a></figcaption>
 </figure>
-<div class="document-link">
-<span>PDF</span>
-<div>
-<h3>So wird aus Markdown ein Dokument</h3>
-<p>Eine echte PDF-Ausgabe mit Beispieldaten, Titelblatt und formatiertem Inhalt.</p>
-<a href="assets/macos-de-pdf.png">Beispielausgabe ansehen ↗</a>
-</div>
-</div>
-<a class="learn" href="help-de.html#9-pdf-export">PDF & Vorlagen im Detail →</a> <a class="learn" href="help-de.html#vorlagen-im-repository-teilen">Vorlagen gemeinsam nutzen →</a>
 </section>
-<section id="frontmatter" class="story">
+
+<section id="frontmatter" class="story sheet flip sub">
+<div class="sheet-text">
 <h2>Die Details bestimmen das Ergebnis.</h2>
 <p class="lead">Steuere den Export mit Frontmatter: Titel, Sprache, Inhaltsverzeichnis und Ausschluss einzelner Notizen. Dein Markdown bleibt die Quelle.</p>
+<pre class="frontmatter-sample" aria-label="Beispiel-Frontmatter"><code>---
+title: Gartenprojekt
+lang: de
+toc: true
+---</code></pre>
+<a class="learn" href="help-de.html#9-pdf-export">Export-Einstellungen →</a>
+</div>
 <figure class="device-gallery" data-gallery>
 <div class="shot-stage">
 <a data-full-image href="assets/macos-de-frontmatter.png">
@@ -182,57 +176,88 @@
 <button type="button" data-view="mobile">iPhone</button>
 </div>
 </figure>
-<a class="learn" href="help-de.html#9-pdf-export">Export-Einstellungen →</a>
 </section>
-<section id="assets" class="story">
-<p class="eyebrow">04 / Zusammen bleibt zusammen</p>
-<h2>Notizen verändern sich.<br>Ihre Verbindungen bleiben.</h2>
+
+<section id="assets" class="story sheet columns">
+<p class="sheet-tag"><span class="node" data-node></span><b>04/06</b><span>assets-und-agenten.md</span><span>Zusammen bleibt zusammen</span></p>
+<div class="sheet-text">
+<h2>Notizen verändern sich. Ihre Verbindungen bleiben.</h2>
 <div class="file-pair" aria-label="Datei und zugehörige Bilder">
 <code>Project.md</code>
 <span>↔</span>
 <code>Project.assets/</code>
 </div>
-<div class="story-cards">
-<article>
-<h3>Bilder neben der Notiz</h3>
-<p>Eingefügte Bilder landen im zugehörigen .assets-Ordner. Beim Verschieben oder Umbenennen mit Merkzeug wird er mitgenommen; Verweise werden angepasst.</p>
-</article>
-<article>
-<h3>Ein Titel, ein Dateiname</h3>
-<p>Am Mac und unter Linux kann der Dateiname der ersten Hauptüberschrift folgen. Meeting-Notizen auf Mac, Linux, iPhone und iPad folgen ihrer Überschrift auch bei Änderungen. In IntelliJ bleibt die IDE für Dateinamen zuständig.</p>
-</article>
-<article>
-<h3>Refactoring inklusive</h3>
-<p>Merkzeug aktualisiert lokale Markdown-Links beim Umbenennen und Verschieben. Das IntelliJ-Plugin ergänzt dafür auch die Move/Rename-Aktionen der IDE um die Asset-Regeln.</p>
-</article>
+<dl class="points">
+<div><dt>Bilder neben der Notiz</dt><dd>Eingefügte Bilder landen im zugehörigen .assets-Ordner. Beim Verschieben oder Umbenennen mit Merkzeug wird er mitgenommen; Verweise werden angepasst.</dd></div>
+<div><dt>Ein Titel, ein Dateiname</dt><dd>Am Mac und unter Linux kann der Dateiname der ersten Hauptüberschrift folgen. Meeting-Notizen auf Mac, Linux, iPhone und iPad folgen ihrer Überschrift auch bei Änderungen. In IntelliJ bleibt die IDE für Dateinamen zuständig.</dd></div>
+<div><dt>Refactoring inklusive</dt><dd>Merkzeug aktualisiert lokale Markdown-Links beim Umbenennen und Verschieben. Das IntelliJ-Plugin ergänzt dafür auch die Move/Rename-Aktionen der IDE um die Asset-Regeln. <a href="help-intellij-de.html#bilder-und-zugehörige-ordner">Bilder &amp; Refactoring →</a></dd></div>
+</dl>
 </div>
-<a class="learn" href="help-intellij-de.html#bilder-und-zugehörige-ordner">Bilder & Refactoring →</a>
-</section>
-<section id="agents" class="story">
-<h2>Agenten schreiben mit.<br>Du behältst den Überblick.</h2>
+<div id="agents" class="sheet-text">
+<h2>Agenten schreiben mit. Du behältst den Überblick.</h2>
 <p class="lead">Aus vielen generierten Markdown-Dateien wird eine lesbare Sammlung. Merkzeug hilft dir beim Prüfen, Bearbeiten und Weitergeben.</p>
-<div class="story-cards">
-<article>
-<h3>Ein Prompt für dein Layout</h3>
-<p>Gib deinem Agenten den Vorlagen-Prompt mit Dateistruktur, verfügbaren Feldern und Styling-Regeln. So kann er eine Vorlage an dein Corporate Design anpassen.</p>
-</article>
-<article>
-<h3>Die Regeln mitgeben</h3>
-<p>Prüfe die Asset-Hinweise und vorhandenen AGENTS.md-/CLAUDE.md-Dateien. Du wählst, in welche Dateien die Hinweise eingefügt werden. Merkzeug führt selbst keine Agenten aus.</p>
-</article>
+<dl class="points">
+<div><dt>Ein Prompt für dein Layout</dt><dd>Gib deinem Agenten den Vorlagen-Prompt mit Dateistruktur, verfügbaren Feldern und Styling-Regeln. So kann er eine Vorlage an dein Corporate Design anpassen.</dd></div>
+<div><dt>Die Regeln mitgeben</dt><dd>Prüfe die Asset-Hinweise und vorhandenen AGENTS.md-/CLAUDE.md-Dateien. Du wählst, in welche Dateien die Hinweise eingefügt werden. Merkzeug führt selbst keine Agenten aus. <a href="help-de.html#vorlagen-styling-prompt">Vorlagen-Prompt &amp; Agenten-Hinweise →</a></dd></div>
+</dl>
 </div>
-<a class="learn" href="help-de.html#vorlagen-styling-prompt">Vorlagen-Prompt & Agenten-Hinweise →</a>
 </section>
-<section id="calendar" class="story calendar-story">
+
+<section id="calendar" class="story sheet sub">
+<div class="sheet-text">
 <p class="eyebrow">Auch für deinen Alltag</p>
 <h2>Vom Termin zur Meeting-Notiz.</h2>
 <p>Wähle auf Mac, iPhone oder iPad einen Termin und starte mit Titel, Zeit und Teilnehmern statt einer leeren Seite. Unter Linux nutzt du ICS-Dateien oder HTTPS/Webcal-Abos. Der Kalender bleibt unverändert. Für Ideen und persönliche Notizen brauchst du weder Git noch einen Agenten.</p>
-<a class="learn" href="help-de.html#meeting-notizen-und-kalender">Kalenderquellen & Meeting-Notizen →</a>
+<a class="learn" href="help-de.html#meeting-notizen-und-kalender">Kalenderquellen &amp; Meeting-Notizen →</a>
+</div>
+<figure class="plain-shot">
+<div class="shot-stage">
+<a href="assets/macos-de-calendar.png"><img width="2560" height="1600" loading="lazy" src="assets/macos-de-calendar.png" alt="Eine Meeting-Notiz aus einem Kalendertermin am Mac erstellen." class="product-shot"></a>
+</div>
+<figcaption>Termin wählen; die Notiz beginnt mit Titel, Zeit und Teilnehmern.</figcaption>
+</figure>
 </section>
-<section id="platforms" class="story">
-<p class="eyebrow">05 / Everywhere</p>
+
+<section id="compare" class="story sheet single">
+<p class="sheet-tag"><span class="node" data-node></span><b>05/06</b><span>merkzeug-vs-obsidian.md</span><span>Warum Merkzeug</span></p>
+<h2>Merkzeug vs Obsidian</h2>
+<p class="lead">Ein fester Markdown-Workflow – ohne Plugin-Labyrinth.</p>
+<svg class="mark-defs" aria-hidden="true" focusable="false" width="0" height="0">
+<symbol id="mark-yes" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12"/><path d="M6.8 12.4l3.4 3.4 7-7.4" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="mark-partial" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12"/><path d="M6.5 14c1.6-4 3.6-4 5.5-1.5s3.9 2.5 5.5-1.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></symbol>
+<symbol id="mark-no" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12"/><path d="M8 8l8 8M16 8l-8 8" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></symbol>
+</svg>
+<ul class="legend" aria-label="Legende">
+<li><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg>Ja</li>
+<li><svg class="mark partial" aria-hidden="true"><use href="#mark-partial"/></svg>Teilweise</li>
+<li><svg class="mark no" aria-hidden="true"><use href="#mark-no"/></svg>Nein</li>
+</ul>
+<div class="versus-wrap" tabindex="0" role="region" aria-label="Merkzeug im Vergleich mit Obsidian">
+<table class="versus">
+<thead>
+<tr><th scope="col">Funktion</th><th scope="col">Merkzeug</th><th scope="col">Obsidian</th></tr>
+</thead>
+<tbody>
+<!-- comparison:start -->
+<tr><th scope="row">Mermaid und Bilder direkt im Dokument</th><td><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg><span class="sr">Ja</span></td><td><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg><span class="sr">Ja</span></td></tr>
+<tr><th scope="row">Verlinkte Dokumente verwalten</th><td><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg><span class="sr">Ja</span></td><td><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg><span class="sr">Ja</span></td></tr>
+<tr><th scope="row">Bilder verwalten (verschieben, umbenennen)</th><td><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg><span class="sr">Ja</span></td><td><svg class="mark partial" aria-hidden="true"><use href="#mark-partial"/></svg><span class="sr">Teilweise</span></td></tr>
+<tr><th scope="row">Alle Funktionen auf Desktop und Mobil</th><td><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg><span class="sr">Ja</span></td><td><svg class="mark partial" aria-hidden="true"><use href="#mark-partial"/></svg><span class="sr">Teilweise</span></td></tr>
+<tr><th scope="row">Läuft in IDEs (IntelliJ, Visual Studio Code)</th><td><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg><span class="sr">Ja</span><small>IntelliJ · VS Code geplant</small></td><td><svg class="mark no" aria-hidden="true"><use href="#mark-no"/></svg><span class="sr">Nein</span></td></tr>
+<tr><th scope="row">Integration mit Git-Apps auf iOS</th><td><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg><span class="sr">Ja</span></td><td><svg class="mark partial" aria-hidden="true"><use href="#mark-partial"/></svg><span class="sr">Teilweise</span></td></tr>
+<tr><th scope="row">Schnell, schlank, fester Funktionsumfang</th><td><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg><span class="sr">Ja</span></td><td><svg class="mark no" aria-hidden="true"><use href="#mark-no"/></svg><span class="sr">Nein</span></td></tr>
+<tr><th scope="row">Plugin-System</th><td><svg class="mark no" aria-hidden="true"><use href="#mark-no"/></svg><span class="sr">Nein</span></td><td><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg><span class="sr">Ja</span></td></tr>
+<!-- comparison:end -->
+</tbody>
+</table>
+</div>
+<p class="table-note">Unsere Einschätzung der Kern-Apps ohne Community-Plugins, Stand <span data-comparison-date>September 2026</span>. Quelle: <a href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug/blob/main/COMPARISON.md">COMPARISON.md</a>. Obsidian ist eine Marke des jeweiligen Inhabers; Merkzeug steht in keiner Verbindung zu Obsidian.</p>
+</section>
+
+<section id="platforms" class="story sheet single">
+<p class="sheet-tag"><span class="node" data-node></span><b>06/06</b><span>versionen.md</span><span>Everywhere</span></p>
 <h2>Dein Workflow. Dein Gerät.</h2>
-<p>Verfügbar für Mac, iPhone, iPad, Linux und IntelliJ IDEA. Die Versionen teilen das Dateiformat und den visuellen Editor; ihre Integration passt zum jeweiligen Gerät.</p>
+<p>Verfügbar für Mac, iPhone, iPad, Linux und IntelliJ IDEA. Die Versionen teilen das Dateiformat und den visuellen Editor; ihre Integration passt zum jeweiligen Gerät. <strong>Windows</strong> folgt als nächste Desktop-Version; <strong>Android &amp; VS Code</strong> sind geplant, ohne zugesagten Veröffentlichungstermin.</p>
 <div class="comparison-wrap" tabindex="0" role="region" aria-label="Versionsvergleich">
 <table class="comparison">
 <caption>Funktionen nach Version</caption>
@@ -246,87 +271,23 @@
 </tr>
 </thead>
 <tbody>
-<tr>
-<th scope="row">Visuell bearbeiten & Mermaid</th>
-<td>Ja</td>
-<td>Ja</td>
-<td>Ja</td>
-<td>Ja</td>
-</tr>
-<tr>
-<th scope="row">Lesemodus</th>
-<td>Ja</td>
-<td>Ja</td>
-<td>Geplant</td>
-<td>Ja</td>
-</tr>
-<tr>
-<th scope="row">Vorlagen beim Bearbeiten</th>
-<td>Ja</td>
-<td>Ja</td>
-<td>Ja</td>
-<td>Ja</td>
-</tr>
-<tr>
-<th scope="row">PDF-Datei exportieren</th>
-<td>Ja</td>
-<td>Ja</td>
-<td>Ja</td>
-<td>Ja</td>
-</tr>
-<tr>
-<th scope="row">Drucken mit Vorlage</th>
-<td>Ja</td>
-<td>AirPrint</td>
-<td>PDF-Vorschau</td>
-<td>System-Druckdialog</td>
-</tr>
-<tr>
-<th scope="row">Verlinkte Notizen im PDF</th>
-<td>Ja</td>
-<td>Ja</td>
-<td>Ja</td>
-<td>Ja</td>
-</tr>
-<tr>
-<th scope="row">Kalender & Meeting-Notizen</th>
-<td>Ja</td>
-<td>Ja</td>
-<td>—</td>
-<td>ICS / Webcal</td>
-</tr>
-<tr>
-<th scope="row">Git-Workflow</th>
-<td>Integriert</td>
-<td>Externe Git-App; Working Copy integriert</td>
-<td>IntelliJ</td>
-<td>Installierter Git-Client</td>
-</tr>
-<tr>
-<th scope="row">Bilder & Links bei Move/Rename</th>
-<td>Ja</td>
-<td>Ja</td>
-<td>IDE-Refactoring</td>
-<td>Ja</td>
-</tr>
+<tr><th scope="row">Visuell bearbeiten &amp; Mermaid</th><td>Ja</td><td>Ja</td><td>Ja</td><td>Ja</td></tr>
+<tr><th scope="row">Lesemodus</th><td>Ja</td><td>Ja</td><td>Geplant</td><td>Ja</td></tr>
+<tr><th scope="row">Vorlagen beim Bearbeiten</th><td>Ja</td><td>Ja</td><td>Ja</td><td>Ja</td></tr>
+<tr><th scope="row">PDF-Datei exportieren</th><td>Ja</td><td>Ja</td><td>Ja</td><td>Ja</td></tr>
+<tr><th scope="row">Drucken mit Vorlage</th><td>Ja</td><td>AirPrint</td><td>PDF-Vorschau</td><td>System-Druckdialog</td></tr>
+<tr><th scope="row">Verlinkte Notizen im PDF</th><td>Ja</td><td>Ja</td><td>Ja</td><td>Ja</td></tr>
+<tr><th scope="row">Kalender &amp; Meeting-Notizen</th><td>Ja</td><td>Ja</td><td>—</td><td>ICS / Webcal</td></tr>
+<tr><th scope="row">Git-Workflow</th><td>Integriert</td><td>Externe Git-App; Working Copy integriert</td><td>IntelliJ</td><td>Installierter Git-Client</td></tr>
+<tr><th scope="row">Bilder &amp; Links bei Move/Rename</th><td>Ja</td><td>Ja</td><td>IDE-Refactoring</td><td>Ja</td></tr>
 </tbody>
 </table>
 </div>
 <p class="table-note">Die Hilfe beschreibt Voraussetzungen und Unterschiede im Detail. Working Copy ist eine separate App. Das IntelliJ-Plugin ist im Stable-Kanal verfügbar. Linux nutzt ICS-Importe oder HTTPS/Webcal-Abos für Kalender; private Abos benötigen einen System-Schlüsselbund. Für Git muss ein Git-Client installiert sein.</p>
 <div class="edition-guides">
-<a href="help-de.html">Mac &amp; Linux →</a>
-<a href="help-ios-de.html">iPhone & iPad →</a>
-<a href="help-intellij-de.html">IntelliJ IDEA →</a>
-</div>
-<div class="story-cards">
-<article>
-<h3>Windows</h3>
-<p>Coming soon — die nächste Desktop-Version.</p>
-</article>
-<article>
-<h3>Android & VS Code</h3>
-<p>Geplant — ohne zugesagten Veröffentlichungstermin.</p>
-</article>
+<a href="help-de.html">Hilfe Mac &amp; Linux →</a>
+<a href="help-ios-de.html">Hilfe iPhone &amp; iPad →</a>
+<a href="help-intellij-de.html">Hilfe IntelliJ IDEA →</a>
 </div>
 <div class="actions">
 <div class="store-download">
@@ -340,11 +301,19 @@
 <a class="button secondary" href="https://plugins.jetbrains.com/plugin/34221-merkzeug">IntelliJ IDEA · Marketplace ↗</a>
 <span class="store-caption">Plugin für IntelliJ</span>
 </div>
-<div class="store-download"><a class="button secondary" href="#linux-downloads">Linux ↓</a><span class="store-caption">AppImage · DEB · RPM</span></div>
+</div>
+<div id="linux-downloads" class="linux-downloads">
+<p class="eyebrow">Linux · 1.2.1</p>
+<h3>Deine Notizen auf Linux.</h3>
+<p>Wähle zuerst deine Prozessorarchitektur, dann das Paket für deine Distribution. Jeder Download enthält nur eine Architektur. Updates werden manuell installiert. Bei Unsicherheit zeigt <code>uname -m</code> die Architektur: <code>x86_64</code> steht für Intel/AMD, <code>aarch64</code> für ARM64.</p>
+<div class="arch-grid">
+<div><h4>Intel / AMD · x86_64</h4><div class="actions"><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-x64.AppImage">AppImage</a><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-x64.deb">DEB · Ubuntu / Debian</a><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-x64.rpm">RPM · Fedora</a></div></div>
+<div><h4>ARM64 · aarch64</h4><div class="actions"><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-arm64.AppImage">AppImage</a><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-arm64.deb">DEB · Ubuntu / Debian</a><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-arm64.rpm">RPM · Fedora</a></div><p class="table-note">Für ARM-Linux, etwa Linux in Parallels auf Macs mit Apple Silicon.</p></div>
+</div>
+<p class="table-note">AppImage benötigt FUSE 2 und vom System erlaubte unprivilegierte User-Namespaces. Nutze bei entsprechenden Systembeschränkungen DEB oder RPM. DEB und RPM werden über die Paketverwaltung installiert. Nutze lokale Ordner, Git-Repositories oder eingebundene Sync-Ordner; automatische iCloud-Erkennung gibt es unter Linux nicht. <a href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/SHA256SUMS.txt">SHA-256</a> · <a href="help-de.html#linux-installation-und-plattformunterschiede">Installation und Hilfe</a></p>
 </div>
 </section>
-<section id="linux-downloads" class="story"><p class="eyebrow">Linux · 1.2.1</p><h2>Deine Notizen auf Linux.</h2><p>Wähle zuerst deine Prozessorarchitektur, dann das Paket für deine Distribution. Jeder Download enthält nur eine Architektur. Updates werden manuell installiert. Bei Unsicherheit zeigt <code>uname -m</code> die Architektur: <code>x86_64</code> steht für Intel/AMD, <code>aarch64</code> für ARM64.</p><h3>Intel / AMD · x86_64</h3><div class="actions"><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-x64.AppImage">AppImage</a><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-x64.deb">DEB · Ubuntu / Debian</a><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-x64.rpm">RPM · Fedora</a></div><h3>ARM64 · aarch64</h3><p>Für ARM-Linux, etwa Linux in Parallels auf Macs mit Apple Silicon.</p><div class="actions"><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-arm64.AppImage">AppImage</a><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-arm64.deb">DEB · Ubuntu / Debian</a><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-arm64.rpm">RPM · Fedora</a></div><p>AppImage benötigt FUSE 2 und vom System erlaubte unprivilegierte User-Namespaces. Nutze bei entsprechenden Systembeschränkungen DEB oder RPM. DEB und RPM werden über die Paketverwaltung installiert. Nutze lokale Ordner, Git-Repositories oder eingebundene Sync-Ordner; automatische iCloud-Erkennung gibt es unter Linux nicht.</p><p><a href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/SHA256SUMS.txt">SHA-256</a> · <a href="help-de.html#linux-installation-und-plattformunterschiede">Installation und Hilfe</a></p></section>
-<!-- progress:start --><section id="release-notes" class="feature-section"><p class="eyebrow">Release Notes</p><h2>Was sich in Merkzeug tut.</h2><p>Version 1.3 wird vorbereitet. Hier findest du die vorgesehenen Inhalte; veröffentlichte Updates kommen hinzu, sobald sie verfügbar sind.</p><a class="button secondary" href="release-notes-de.html">Release Notes lesen</a></section><!-- progress:end -->
+<!-- progress:start --><section id="release-notes" class="feature-section"><p class="eyebrow">Release Notes</p><h2>Was sich in Merkzeug tut.</h2><p>Merkzeug 1.3 ist verfügbar. Lies, was diese Version und frühere Updates mitbringen.</p><a class="button secondary" href="release-notes-de.html">Release Notes lesen</a></section><!-- progress:end -->
 </main>
 <footer>
 <span>© 2026 creative-it Software &amp; Consulting e.U.</span>
