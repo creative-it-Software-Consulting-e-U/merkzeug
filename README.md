@@ -6,7 +6,7 @@
 
 Merkzeug is a WYSIWYG editor for Markdown notes stored in a regular folder, called a *vault*. It supports tables, images, Mermaid diagrams and YAML frontmatter. Your notes stay portable `.md` files.
 
-The desktop app and IntelliJ plugin share their editor and PDF rendering code. The iOS app uses the same editor with a native file-provider adapter.
+The desktop app, the IntelliJ plugin and the VS Code extension share their editor and PDF rendering code. The iOS app uses the same editor with a native file-provider adapter.
 
 ## Choose your edition
 
@@ -15,6 +15,7 @@ The desktop app and IntelliJ plugin share their editor and PDF rendering code. T
 | Mac | App Store | Templates, linked documents and printing | [Desktop guide](docs/user/desktop.md) |
 | Linux (x86_64 and ARM64) | AppImage, DEB and RPM | Templates, linked documents and printing | [Desktop guide](docs/user/desktop.md) |
 | IntelliJ IDEA | JetBrains Marketplace | Templates, linked documents and printing via JCEF | [IntelliJ guide](docs/user/intellij.md) |
+| Visual Studio Code | VSIX (Marketplace planned) | Same features as IntelliJ; PDF via installed Chromium browser | [VS Code guide](docs/user/vscode.md) |
 | iPhone and iPad | App Store | Templates, linked documents and AirPrint | [iOS guide](docs/user/ios.md) |
 | Windows | Coming soon | Shared desktop implementation; release validation pending | [Desktop guide](docs/user/desktop.md) |
 | Android and VS Code | Planned | Not released | [Architecture](docs/shared-architecture.md) |
@@ -60,6 +61,7 @@ See the [development guide](docs/development/README.md) for SDK setup and native
 | `packages/export` | Shared PDF content and print styles |
 | `crossplatform` | Electron desktop application |
 | `intellij` | IntelliJ document adapter and JCEF host |
+| `vscode` | VS Code custom text editor, settings, refactoring and PDF adapter |
 | `mobile` | Capacitor iOS application and native vault adapter |
 | `SampleVault` | Example notes; includes existing German examples |
 | `legacy` | Archived native macOS implementation; outside the current release pipeline |

@@ -1,10 +1,10 @@
 # PDF export and templates
 
-PDF export is available in the desktop app and IntelliJ plugin. It runs locally using the host's Chromium engine. It is not currently implemented on iOS.
+PDF export is available in the desktop app, the IntelliJ plugin and the VS Code extension. It runs locally using the host's Chromium engine (VS Code: an installed Chromium-based browser). It is not currently implemented on iOS.
 
 ## Export a note or a document set
 
-On desktop, choose **File → Export as PDF…**. In IntelliJ, click **Export PDF**. Choose a destination and confirm replacement if that file exists.
+On desktop, choose **File → Export as PDF…**. In IntelliJ and VS Code, click **Export PDF**. Choose a destination and confirm replacement if that file exists.
 
 When the current note links to eligible documents, you can export it with those documents appended. Selection includes directly linked Markdown files within the index note's folder hierarchy, sorted alphabetically by path. It does not recursively crawl links from every appended document. Links to included documents become PDF destinations.
 
@@ -12,7 +12,7 @@ Set `pdf-exclude` in the index note to exclude individual linked notes. Set `pdf
 
 The output is A4. Tables wider than the portrait content area trigger landscape output. Mermaid diagrams are rendered before printing and scaled to fit. Missing images or rendering failures can stop the export; see [troubleshooting](troubleshooting.md).
 
-Desktop additionally supports selecting multiple notes in one folder and exporting each as a separate PDF through the context menu. IntelliJ currently exports one note or linked set at a time.
+Desktop additionally supports selecting multiple notes in one folder and exporting each as a separate PDF through the context menu. IntelliJ and VS Code currently export one note or linked set at a time.
 
 ## Select a template
 
@@ -21,6 +21,8 @@ Desktop additionally supports selecting multiple notes in one folder and exporti
 **iOS:** Open **PDF templates → Change…**, select the folder containing template subfolders in Files, then choose **Template for this vault**. The assignment uses the same `.merkzeug/settings.json` field as desktop. **Use PDF template while editing** previews content styles, including Mermaid diagrams. **Refresh** reloads files from the selected provider. The default folder is **iCloud Drive → Merkzeug → Templates**. A manually selected Files folder remains available as an alternative.
 
 **IntelliJ:** **PDF template …** selects one template folder and remembers it per project. It does not import the desktop vault assignment automatically.
+
+**VS Code:** **Merkzeug: PDF Template Settings…** (or **PDF template …** in the editor's **⋯** menu) stores the folder in the `merkzeug.pdf.templateFolder` workspace setting.
 
 Each template is a folder. These filenames are retained for compatibility, even though the UI and documentation are English:
 
@@ -68,7 +70,7 @@ Template sources and full agent prompt: [Merkzeug starter](../../resources/pdf-t
 
 ### Template styling prompt
 
-Desktop Settings provides **Template styling prompt** for each template; expand it to review and copy a complete agent brief with the template's folder path. IntelliJ offers the same action in **Settings → Tools → Merkzeug**, using the folder currently shown in the settings field. On iOS, open **Help → Template styling prompt** and substitute the folder path on the agent's computer; iOS also offers the prompt under **PDF templates** and can preview template content styles; saving a PDF file is not yet available.
+Desktop Settings provides **Template styling prompt** for each template; expand it to review and copy a complete agent brief with the template's folder path. IntelliJ offers the same action in **Settings → Tools → Merkzeug**, using the folder currently shown in the settings field; VS Code offers it as **Merkzeug: Template Styling Prompt** for the configured template folder. On iOS, open **Help → Template styling prompt** and substitute the folder path on the agent's computer; iOS also offers the prompt under **PDF templates** and can preview template content styles; saving a PDF file is not yet available.
 
 Replace the new template name and your colors, fonts, logo and design wishes before sending it. The prompt is in English, includes the complete offline technical reference, and works with older templates that lack instruction files. Copying it does not read note contents or modify existing templates. If clipboard access is unavailable in the web view, select and copy the displayed text manually.
 
@@ -79,5 +81,7 @@ New starter copies include `AGENTS.md` (format, CSS examples, placeholders, prev
 Desktop **File → Print…** (⌘P / Ctrl+P) uses the same generated PDF, including templates and optional linked documents, and opens the system print dialog. Its PDF preview stays open until closed; closing it removes the temporary PDF. Exporting to a file remains separate.
 
 In IntelliJ, activate the Merkzeug editor and choose **File → Print**, or click **Print…**. Merkzeug prepares a PDF preview; use its **Print…** button to open the native print dialog. Other editor tabs retain their own printing behavior.
+
+In VS Code, click **Print…** or choose **Merkzeug: Print…**. Merkzeug renders the PDF with an installed Chromium-based browser and opens it in the system PDF viewer for printing.
 
 On iOS, open a note, tap **Print…**, wait for the print preview, then tap **Print…** to open AirPrint. Pending edits are saved before preparing the current note. Diagrams and local images are included. iOS prints one note at a time and uses the selected template’s content styles and cover. AirPrint applies template headers, footers, page numbers and custom margins. These appear in the native AirPrint preview; the preceding content preview is not paginated. Linked-document printing is not supported on iOS. Cancel AirPrint to return to the preview, or close the preview to return to editing.

@@ -8,6 +8,7 @@
     "prebuild": "node ../../scripts/build-licenses.mjs"
   },
   "dependencies": {
+    "@merkzeug/ide": "1.3.0",
     "@merkzeug/core": "1.3.0",
     "@merkzeug/editor": "1.3.0",
     "@merkzeug/export": "1.3.0",

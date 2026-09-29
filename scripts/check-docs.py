@@ -6,7 +6,7 @@ from pathlib import Path
 from urllib.parse import unquote
 
 ROOT=Path(__file__).resolve().parents[1]
-files=list((ROOT/'docs').rglob('*.md'))+list((ROOT/'store').rglob('*.md'))+[ROOT/name for name in ['README.md','CONTRIBUTING.md','SECURITY.md','CHANGELOG.md','crossplatform/README.md','mobile/README.md','intellij/README.md','legacy/README.md']]
+files=list((ROOT/'docs').rglob('*.md'))+list((ROOT/'store').rglob('*.md'))+[ROOT/name for name in ['README.md','CONTRIBUTING.md','SECURITY.md','CHANGELOG.md','crossplatform/README.md','mobile/README.md','intellij/README.md','vscode/README.md','legacy/README.md']]
 errors=[]
 for file in files:
     text=re.sub(r'```[\s\S]*?```','',file.read_text())
