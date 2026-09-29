@@ -1,0 +1,19 @@
+{
+  "displayName": "Merkzeug",
+  "description": "Visual Markdown editor with Mermaid diagrams, frontmatter, PDF export and printing. Notes stay ordinary Markdown files in your workspace.",
+  "untrusted": "In Restricted Mode, the PDF template folder from workspace settings is ignored.",
+  "command.openEditor": "Open in Merkzeug",
+  "command.openSource": "Show Markdown Source",
+  "command.exportPdf": "Export PDF",
+  "command.print": "Print…",
+  "command.pdfTemplateSettings": "PDF Template Settings…",
+  "command.chooseTemplateFolder": "Choose PDF Template Folder…",
+  "command.useBundledTemplate": "Use Bundled PDF Template",
+  "command.chooseDesktopTemplate": "Choose Desktop Template…",
+  "command.templateStylingPrompt": "Template Styling Prompt",
+  "command.contactSupport": "Contact Support…",
+  "config.templateFolder": "PDF template folder (containing `stil.css`, `vorlage.json`, …). Leave empty to export without a template. A vault assignment in `.merkzeug/settings.json` takes precedence. Use the **Merkzeug: PDF Template Settings…** command to pick a folder, the bundled starter or a desktop template.",
+  "config.pdfTemplatePreview": "Apply the content styles of the assigned PDF template while editing. Toolbar, dialogs and VS Code controls keep the VS Code theme.",
+  "config.browserPath": "Chromium-based browser used for PDF export and printing (Google Chrome, Microsoft Edge, Chromium or Brave). Leave empty to detect an installed browser automatically.",
+  "config.companionFolders": "When a Markdown note is renamed or moved in VS Code, also move its `Note.assets/` companion folder and update Markdown links in the workspace."
+}

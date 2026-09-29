@@ -82,7 +82,7 @@ Du kannst auch jede andere Git-App verwenden, die ihren Repository-Ordner über 
 
 ## Gemeinsamer Editor und Speicherkonflikte
 
-Desktop, iOS und IntelliJ verwenden denselben Merkzeug-Editor. Frontmatter bleibt beim Bearbeiten erhalten und kann im Editor geöffnet werden. Scheitert das Speichern, bleibt die Änderung als ungespeichert markiert. Bei gleichzeitigen externen Änderungen kannst du die externe Fassung neu laden oder ausdrücklich deine eigene Version behalten.
+Desktop, iOS, IntelliJ und VS Code verwenden denselben Merkzeug-Editor. Frontmatter bleibt beim Bearbeiten erhalten und kann im Editor geöffnet werden. Scheitert das Speichern, bleibt die Änderung als ungespeichert markiert. Bei gleichzeitigen externen Änderungen kannst du die externe Fassung neu laden oder ausdrücklich deine eigene Version behalten.
 
 Bei Auswahl einer ganzen Tabellenzelle wird die Zelle hervorgehoben. Klicke in den Text, um den Cursor zu setzen und zu bearbeiten. Text und Links behalten bei der Zellauswahl ihre Farben, auch mit PDF-Vorlagenstilen.
 
@@ -95,11 +95,11 @@ Bei Auswahl einer ganzen Tabellenzelle wird die Zelle hervorgehoben. Klicke in d
 
 ## PDF-Vorlagen am Desktop
 
-Desktop-App und IntelliJ enthalten die PDF-Startvorlage Merkzeug mit Deckblatt, gestalteten Überschriften und Seitennummern. Eine Kopie lässt sich mit einem Agenten anpassen. Siehe die [Vorlagen-Anleitung](https://merkzeug.creative-it.com/help-de.html#pdf-startvorlage). iOS verwendet Vorlagen für Editor-Styles, PDF-Export und AirPrint.
+Desktop-App, IntelliJ und VS Code enthalten die PDF-Startvorlage Merkzeug mit Deckblatt, gestalteten Überschriften und Seitennummern. Eine Kopie lässt sich mit einem Agenten anpassen. Siehe die [Vorlagen-Anleitung](https://merkzeug.creative-it.com/help-de.html#pdf-startvorlage). iOS verwendet Vorlagen für Editor-Styles, PDF-Export und AirPrint.
 
 ## Darstellung, Tour und Agentenhinweise
 
-Wähle **System**, **Hell** oder **Dunkel** für die Darstellung. System folgt dem Betriebssystem (in IntelliJ der IDE); deine Auswahl wird gespeichert. Die **Geführte Tour** startet erst nach deiner Zustimmung zur Einladung beim ersten Start und lässt sich jederzeit wieder öffnen. Der Tour-Schritt **Lesen und navigieren** erklärt den Wechsel zwischen Lesen und Bearbeiten sowie die Link-Navigation. Öffne vor dem Tourstart eine Notiz, damit der Modus-Schalter hervorgehoben werden kann.
+Wähle **System**, **Hell** oder **Dunkel** für die Darstellung. System folgt dem Betriebssystem (in IntelliJ und VS Code der IDE); deine Auswahl wird gespeichert. Die **Geführte Tour** startet erst nach deiner Zustimmung zur Einladung beim ersten Start und lässt sich jederzeit wieder öffnen. Der Tour-Schritt **Lesen und navigieren** erklärt den Wechsel zwischen Lesen und Bearbeiten sowie die Link-Navigation. Öffne vor dem Tourstart eine Notiz, damit der Modus-Schalter hervorgehoben werden kann.
 
 Beim Öffnen eines Vaults kann Merkzeug Hinweise in den Stammdateien `AGENTS.md` / `CLAUDE.md` für `Notiz.md` und `Notiz.assets/` vorschlagen. Prüfe den einmal angezeigten Ergänzungstext und die vollständigen Inhalte beider Hinweisdateien. Wähle vor **Hinzufügen** ausdrücklich die Zieldateien aus; keine ist vorausgewählt. Verweist `CLAUDE.md` nur auf `AGENTS.md`, kannst du sie unverändert lassen. Fehlende Dateien werden nur bei Auswahl angelegt. **Später** verschiebt den Hinweis für diese Sitzung; **Für diesen Vault nicht mehr vorschlagen** unterdrückt weitere Hinweise für diesen Vault. Widersprüchliche oder unklare Bilderordner-Regeln müssen manuell geprüft werden. Gleichzeitige externe Änderungen bleiben erhalten und erfordern eine neue Vorschau. Bestehende gemeinsame `assets/`-Verweise bleiben lesbar.
 
@@ -115,7 +115,7 @@ Auf iPhone und iPad stehen auch die nativen iOS-Kalender zur Verfügung. Zugriff
 
 ### Vorlagen-Styling-Prompt
 
-In den Desktop-Einstellungen gibt es bei jeder Vorlage **Vorlagen-Styling-Prompt** zum Aufklappen, Prüfen und Kopieren, einschließlich des Vorlagenpfads. IntelliJ bietet dieselbe Aktion unter **Einstellungen → Tools → Merkzeug** mit dem aktuell im Einstellungsfeld angezeigten Ordner. Auf iOS findest du sie unter **Hilfe → Vorlagen-Styling-Prompt**; ergänze dort den Ordnerpfad auf dem Computer des Agenten. Derselbe Prompt ist auch unter **PDF-Vorlagen** verfügbar. iOS kann die Inhalts-Styles einer Vorlage beim Bearbeiten anzeigen und Dokumente mit der ausgewählten Vorlage exportieren oder drucken.
+In den Desktop-Einstellungen gibt es bei jeder Vorlage **Vorlagen-Styling-Prompt** zum Aufklappen, Prüfen und Kopieren, einschließlich des Vorlagenpfads. IntelliJ bietet dieselbe Aktion unter **Einstellungen → Tools → Merkzeug** mit dem aktuell im Einstellungsfeld angezeigten Ordner; VS Code bietet sie als **Merkzeug: Vorlagen-Styling-Prompt** für den eingestellten Vorlagenordner. Auf iOS findest du sie unter **Hilfe → Vorlagen-Styling-Prompt**; ergänze dort den Ordnerpfad auf dem Computer des Agenten. Derselbe Prompt ist auch unter **PDF-Vorlagen** verfügbar. iOS kann die Inhalts-Styles einer Vorlage beim Bearbeiten anzeigen und Dokumente mit der ausgewählten Vorlage exportieren oder drucken.
 
 Ersetze den neuen Vorlagennamen sowie Farben, Schriften, Logo und Gestaltungswünsche vor der Übergabe. Der Prompt ist auf Englisch und enthält die vollständige technische Anleitung offline, auch für ältere Vorlagen ohne Hinweisdateien. Beim Kopieren werden keine Notizinhalte gelesen oder bestehende Vorlagen verändert. Falls die Webansicht keinen Zugriff auf die Zwischenablage hat, markiere und kopiere den angezeigten Text manuell.
 
@@ -156,11 +156,11 @@ Berücksichtigt werden reguläre Markdown-Dateien im Vault; versteckte/ignoriert
 
 Eine Vorlage ist ein gewöhnlicher Ordner mit `vorlage.json`, `stil.css`, HTML-Fragmenten und zugehörigen Dateien. Du kannst ihn in einem Git-Repository ablegen, damit dein Team Änderungen prüfen und dasselbe Layout verwenden kann. Committe den vollständigen Ordner, einschließlich Logos und Schriften, die du teilen darfst.
 
-Wähle bei den PDF-Funktionen **Vorlage in diesem Vault** und gib den relativen Vorlagenordner an. Die Zuordnung in `.merkzeug/settings.json` funktioniert am Desktop, auf iPhone/iPad und in IntelliJ. Versioniere diese Einstellungen gemeinsam mit dem Vorlagenordner.
+Wähle bei den PDF-Funktionen **Vorlage in diesem Vault** und gib den relativen Vorlagenordner an. Die Zuordnung in `.merkzeug/settings.json` funktioniert am Desktop, auf iPhone/iPad, in IntelliJ und in VS Code. Versioniere diese Einstellungen gemeinsam mit dem Vorlagenordner.
 
 Alternativ können zentrale Vorlagen über **iCloud Drive → Merkzeug → Templates** geteilt werden. Die Synchronisation zwischen eigenen Apple-Geräten setzt dasselbe Konto und abgeschlossene Übertragung voraus.
 
-PDF-Dateiexport und das Zusammenfassen direkt verlinkter Dokumente gibt es am Desktop, auf iPhone/iPad und in IntelliJ. Die ausgewählte Vorlage wird auch beim Drucken verwendet.
+PDF-Dateiexport und das Zusammenfassen direkt verlinkter Dokumente gibt es am Desktop, auf iPhone/iPad, in IntelliJ und in VS Code. Die ausgewählte Vorlage wird auch beim Drucken verwendet.
 
 
 ## PDF-Export und zusammengefasste Dokumente
@@ -175,14 +175,14 @@ Standardmäßig liegen Vorlagen unter **iCloud Drive → Merkzeug → Templates*
 
 ## Vorlagen-Ort wählen
 
-In den PDF-Bedienelementen über einer geöffneten Notiz (IntelliJ: **…**) findest du **PDF-Vorlage für diesen Vault**. Wähle **Zentrale Vorlage**, einen Namen und **Übernehmen**, oder **Vorlage in diesem Vault**, den relativen Ordner (zum Beispiel `.merkzeug/templates/Firma`) und **Übernehmen**. Die Auswahl gilt für alle Notizen dieses Vaults, einschließlich Bearbeitungsansicht, PDF-Export und Drucken. Vorlagendateien werden dabei nicht verschoben oder kopiert. **Keine Vorlage** und **Übernehmen** entfernt die Zuordnung.
+In den PDF-Bedienelementen über einer geöffneten Notiz (IntelliJ, VS Code: **…**) findest du **PDF-Vorlage für diesen Vault**. Wähle **Zentrale Vorlage**, einen Namen und **Übernehmen**, oder **Vorlage in diesem Vault**, den relativen Ordner (zum Beispiel `.merkzeug/templates/Firma`) und **Übernehmen**. Die Auswahl gilt für alle Notizen dieses Vaults, einschließlich Bearbeitungsansicht, PDF-Export und Drucken. Vorlagendateien werden dabei nicht verschoben oder kopiert. **Keine Vorlage** und **Übernehmen** entfernt die Zuordnung.
 
 Die portable Zuordnung liegt in `.merkzeug/settings.json`. Zentrale Vorlagen werden über ihren Namen referenziert, Vault-Vorlagen mit `{"pdfTemplate":{"source":"vault","path":".merkzeug/templates/Firma"}}`. Einstellungen und Vorlagenordner können gemeinsam im Repository versioniert werden. Bestehende zentrale Zuordnungen bleiben kompatibel. Auf Apple-Geräten liegt die zentrale Sammlung bei verfügbarem iCloud im Merkzeug-Container; ein lokal ausgewählter Vorlagenordner bleibt eine Geräteeinstellung. IntelliJ erkennt auch installierte Desktop-Vorlagen. Fehlende Vorlagenordner werden gemeldet, statt still eine andere Vorlage zu verwenden.
 
 ## Release Notes
 
-Über **Release Notes** in der Hilfe (IntelliJ: **…**) ist die vollständige Versionsgeschichte auf Deutsch und Englisch auch offline lesbar. Beim ersten Start einer neuen Marketing-Version erscheinen deren Release Notes automatisch. **Fertig** merkt diese Version auf der aktuellen Installation als gelesen; die komplette Historie bleibt erreichbar. Website und Apps verwenden dieselbe Quelle für Release Notes.
+Über **Release Notes** in der Hilfe (IntelliJ, VS Code: **…**) ist die vollständige Versionsgeschichte auf Deutsch und Englisch auch offline lesbar. Beim ersten Start einer neuen Marketing-Version erscheinen deren Release Notes automatisch. **Fertig** merkt diese Version auf der aktuellen Installation als gelesen; die komplette Historie bleibt erreichbar. Website und Apps verwenden dieselbe Quelle für Release Notes.
 
 ## Über Merkzeug
 
-Merkzeug ist Open Source unter der MIT-Lizenz. Über Merkzeug zeigt Version, Herausgeber und Produktwebsite. Am Desktop im Merkzeug-Menü, auf iPhone/iPad in der Hilfe und in IntelliJ im **…**-Menü des Editors erreichbar.
+Merkzeug ist Open Source unter der MIT-Lizenz. Über Merkzeug zeigt Version, Herausgeber und Produktwebsite. Am Desktop im Merkzeug-Menü, auf iPhone/iPad in der Hilfe und in IntelliJ und VS Code im **…**-Menü des Editors erreichbar.

@@ -1,0 +1,207 @@
+{
+  "name": "merkzeug-vscode",
+  "displayName": "%displayName%",
+  "description": "%description%",
+  "version": "1.3.0",
+  "private": true,
+  "publisher": "creative-it",
+  "author": "creative-it Software & Consulting e.U.",
+  "homepage": "https://merkzeug.creative-it.com/",
+  "icon": "resources/icon.png",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "markdown",
+    "wysiwyg",
+    "mermaid",
+    "pdf",
+    "notes"
+  ],
+  "main": "./extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "extensionKind": [
+    "workspace"
+  ],
+  "capabilities": {
+    "virtualWorkspaces": false,
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "%untrusted%",
+      "restrictedConfigurations": [
+        "merkzeug.pdf.templateFolder"
+      ]
+    }
+  },
+  "contributes": {
+    "customEditors": [
+      {
+        "viewType": "merkzeug.editor",
+        "displayName": "Merkzeug",
+        "selector": [
+          {
+            "filenamePattern": "*.md"
+          }
+        ],
+        "priority": "option"
+      }
+    ],
+    "commands": [
+      {
+        "command": "merkzeug.openEditor",
+        "title": "%command.openEditor%",
+        "category": "Merkzeug",
+        "icon": "$(preview)"
+      },
+      {
+        "command": "merkzeug.openSource",
+        "title": "%command.openSource%",
+        "category": "Merkzeug",
+        "icon": "$(go-to-file)"
+      },
+      {
+        "command": "merkzeug.exportPdf",
+        "title": "%command.exportPdf%",
+        "category": "Merkzeug"
+      },
+      {
+        "command": "merkzeug.print",
+        "title": "%command.print%",
+        "category": "Merkzeug"
+      },
+      {
+        "command": "merkzeug.pdfTemplateSettings",
+        "title": "%command.pdfTemplateSettings%",
+        "category": "Merkzeug"
+      },
+      {
+        "command": "merkzeug.chooseTemplateFolder",
+        "title": "%command.chooseTemplateFolder%",
+        "category": "Merkzeug"
+      },
+      {
+        "command": "merkzeug.useBundledTemplate",
+        "title": "%command.useBundledTemplate%",
+        "category": "Merkzeug"
+      },
+      {
+        "command": "merkzeug.chooseDesktopTemplate",
+        "title": "%command.chooseDesktopTemplate%",
+        "category": "Merkzeug"
+      },
+      {
+        "command": "merkzeug.templateStylingPrompt",
+        "title": "%command.templateStylingPrompt%",
+        "category": "Merkzeug"
+      },
+      {
+        "command": "merkzeug.contactSupport",
+        "title": "%command.contactSupport%",
+        "category": "Merkzeug"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "merkzeug.openEditor",
+          "when": "resourceExtname == .md && activeEditor == workbench.editors.files.textFileEditor",
+          "group": "navigation"
+        },
+        {
+          "command": "merkzeug.openSource",
+          "when": "activeCustomEditorId == merkzeug.editor",
+          "group": "navigation"
+        },
+        {
+          "command": "merkzeug.exportPdf",
+          "when": "activeCustomEditorId == merkzeug.editor",
+          "group": "1_merkzeug@1"
+        },
+        {
+          "command": "merkzeug.print",
+          "when": "activeCustomEditorId == merkzeug.editor",
+          "group": "1_merkzeug@2"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "merkzeug.openEditor",
+          "when": "resourceExtname == .md && !explorerResourceIsFolder",
+          "group": "navigation@9"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "merkzeug.openEditor",
+          "when": "resourceExtname == .md"
+        },
+        {
+          "command": "merkzeug.openSource",
+          "when": "activeCustomEditorId == merkzeug.editor"
+        },
+        {
+          "command": "merkzeug.exportPdf",
+          "when": "activeCustomEditorId == merkzeug.editor"
+        },
+        {
+          "command": "merkzeug.print",
+          "when": "activeCustomEditorId == merkzeug.editor"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Merkzeug",
+      "properties": {
+        "merkzeug.pdf.templateFolder": {
+          "type": "string",
+          "default": "",
+          "scope": "resource",
+          "markdownDescription": "%config.templateFolder%"
+        },
+        "merkzeug.editor.pdfTemplatePreview": {
+          "type": "boolean",
+          "default": false,
+          "scope": "resource",
+          "markdownDescription": "%config.pdfTemplatePreview%"
+        },
+        "merkzeug.pdf.browserPath": {
+          "type": "string",
+          "default": "",
+          "scope": "machine",
+          "markdownDescription": "%config.browserPath%"
+        },
+        "merkzeug.refactoring.companionFolders": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "markdownDescription": "%config.companionFolders%"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "prebuild": "node ../scripts/build-licenses.mjs",
+    "build": "npm run build:web && npm run build:extension",
+    "build:web": "tsc -p web/tsconfig.json && vite build -c web/vite.config.ts",
+    "build:extension": "tsc -p tsconfig.json && vite build -c vite.extension.config.ts"
+  },
+  "dependencies": {
+    "@merkzeug/core": "1.3.0",
+    "@merkzeug/editor": "1.3.0",
+    "@merkzeug/export": "1.3.0",
+    "@merkzeug/ide": "1.3.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@types/vscode": "~1.100.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "vite": "^8.3.0"
+  }
+}

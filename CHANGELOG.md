@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Visual Studio Code extension with the same features as the IntelliJ plugin: visual editing of the VS Code document with native saving and undo, `.assets` companion folders and link updates on rename/move, PDF export and printing with templates via an installed Chromium browser, vault and central templates, template styling prompts, agent guidance, release notes and support. Settings use VS Code's Settings editor (`merkzeug.*`).
+- IntelliJ and VS Code share one IDE web shell (`@merkzeug/ide`); a parity test keeps their bridge requests identical.
+
 ## 1.3.0
 
 - Merkzeug is now open source under the MIT License.

@@ -8,14 +8,15 @@ const slug = text => text.replace(/<[^>]+>/g,'').toLowerCase().replace(/[^\p{L}\
 const pages=[];
 for(const lang of ['en','de']) {
  const base=await read(`website/${lang==='en'?'index.html':'de.html'}`);
- for(const edition of ['desktop','ios','intellij']) {
+ for(const edition of ['desktop','ios','intellij','vscode']) {
   const name=edition==='desktop'?`help-${lang}.html`:`help-${edition}-${lang}.html`;
-  const source=edition==='desktop'?`crossplatform/resources/help/Help.${lang}.md`:edition==='ios'?`mobile/src/help/Help.${lang}.md`:`docs/user/intellij${lang==='de'?'.de':''}.md`;
+  const source=edition==='desktop'?`crossplatform/resources/help/Help.${lang}.md`:edition==='ios'?`mobile/src/help/Help.${lang}.md`:`docs/user/${edition}${lang==='de'?'.de':''}.md`;
   let body=await marked.parse(await read(source));
-  if(edition==='intellij') {
+  if(edition==='intellij'||edition==='vscode') {
    body=body.replace(/href="(?:pdf\.md(?:#[^"]*)?|troubleshooting\.md)"/g, `href="help-${lang}.html"`)
-    .replace(/href="\.\.\/\.\.\/resources\/legal\/EULA\.(en|de)\.md"/g, `href="license-intellij-${lang}.html"`)
-    .replace(/<p>For failures,[\s\S]*?<\/p>/, '');
+    .replace(/href="\.\.\/\.\.\/resources\/legal\/EULA\.(en|de)\.md"/g, `href="license${edition==='intellij'?'-intellij':''}-${lang}.html"`)
+    .replace(/href="(intellij|vscode)(?:\.de)?\.md"/g, (_,target)=>`href="help-${target}-${lang}.html"`)
+    .replace(/<p>(?:For failures,|Bei Problemen hilft)[\s\S]*?<\/p>/, '');
   }
   const ids=[];
   body=body.replace(/<h([1-6])>(.*?)<\/h\1>/g,(_,n,text)=>{
@@ -29,12 +30,13 @@ for(const lang of ['en','de']) {
    return `href="#${id}"`;
   });
   const other=name.replace(`-${lang}`,lang==='en'?'-de':'-en');
-  const title=lang==='en'?`Merkzeug ${edition==='desktop'?'Mac &amp; Linux':edition==='ios'?'iPhone & iPad':'IntelliJ IDEA'} Guide`:`Merkzeug ${edition==='desktop'?'Mac &amp; Linux':edition==='ios'?'iPhone & iPad':'IntelliJ IDEA'} – Hilfe`;
+  const product={desktop:'Mac &amp; Linux',ios:'iPhone & iPad',intellij:'IntelliJ IDEA',vscode:'Visual Studio Code'}[edition];
+  const title=lang==='en'?`Merkzeug ${product} Guide`:`Merkzeug ${product} – Hilfe`;
   let head=base.slice(0,base.indexOf('<main'));
   head=head.replace(/<title>.*?<\/title>/,`<title>${title}</title>`).replace(/<link rel="canonical"[^>]+>/,`<link rel="canonical" href="https://merkzeug.creative-it.com/${name}">`);
   head=head.replace(new RegExp(`href="${lang==='en'?'de.html':'index.html'}" lang=`),`href="${other}" lang=`);
-  const intro=lang==='en'?'Choose your edition: Mac & Linux, iPhone & iPad, or IntelliJ IDEA.':'Wähle deine Edition: Mac & Linux, iPhone & iPad oder IntelliJ IDEA.';
-  const links=`<p><a href="help-${lang}.html">Mac &amp; Linux</a> · <a href="help-ios-${lang}.html">iPhone &amp; iPad</a> · <a href="help-intellij-${lang}.html">IntelliJ IDEA</a></p>`;
+  const intro=lang==='en'?'Choose your edition: Mac & Linux, iPhone & iPad, IntelliJ IDEA or Visual Studio Code.':'Wähle deine Edition: Mac & Linux, iPhone & iPad, IntelliJ IDEA oder Visual Studio Code.';
+  const links=`<p><a href="help-${lang}.html">Mac &amp; Linux</a> · <a href="help-ios-${lang}.html">iPhone &amp; iPad</a> · <a href="help-intellij-${lang}.html">IntelliJ IDEA</a> · <a href="help-vscode-${lang}.html">Visual Studio Code</a></p>`;
   const footer=base.slice(base.indexOf('<footer>'));
   await writeFile(new URL(`website/${name}`,root),head+`<main id="content" class="guide"><p class="notice">${intro}</p>${links}${body}</main>`+footer);
   pages.push(name);
@@ -43,6 +45,6 @@ for(const lang of ['en','de']) {
 const files=['','de.html','release-notes-en.html','release-notes-de.html','privacy-en.html','privacy-de.html','legal-en.html','legal-de.html','license-en.html','license-de.html','license-intellij-en.html','license-intellij-de.html',...pages];
 await writeFile(new URL('website/sitemap.xml',root),'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+files.map(p=>`<url><loc>https://merkzeug.creative-it.com/${p}</loc></url>`).join('')+'</urlset>\n');
 await writeFile(new URL('website/robots.txt',root),'User-agent: *\nAllow: /\nSitemap: https://merkzeug.creative-it.com/sitemap.xml\n');
-console.log('Built six localized manuals and sitemap.');
+console.log('Built eight localized manuals and sitemap.');
 
 await import('./build-licenses.mjs');

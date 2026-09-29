@@ -1,5 +1,7 @@
 # IntelliJ IDEA guide
 
+The same features are available in Visual Studio Code; see the [VS Code guide](vscode.md).
+
 ## Requirements and installation
 
 Version 1.2 targets IntelliJ IDEA 2026.2.2 and later 2026.2.x releases, builds **262.10315.125–262.***, with the JCEF plugin enabled. Compatibility was verified against 2026.2.2 and 2026.2.3; 2026.3 EAP is not included. Other IDE products and build branches have not been verified.

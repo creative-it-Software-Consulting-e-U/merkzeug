@@ -366,7 +366,7 @@ the sidebar:
 
 ## Shared editor and save conflicts
 
-Desktop, iOS and IntelliJ use the same Merkzeug editor. Frontmatter is preserved and can be opened in the editor. Failed saves leave changes marked as unsaved. When external changes conflict with your edits, reload the external version or explicitly keep your own version.
+Desktop, iOS, IntelliJ and VS Code use the same Merkzeug editor. Frontmatter is preserved and can be opened in the editor. Failed saves leave changes marked as unsaved. When external changes conflict with your edits, reload the external version or explicitly keep your own version.
 
 ## Mac App Store folder access
 
@@ -395,7 +395,7 @@ The template README includes the full file-format reference and a reusable promp
 
 ## Appearance, tours and agent guidance
 
-Choose **System**, **Light** or **Dark** for appearance. System follows the operating system (the IDE in IntelliJ); your choice is saved. The **Guided tour** starts only after you accept the first-use invitation and can be reopened at any time. Its **Read and navigate** step explains the read/edit switch and link navigation. Open a note before starting the tour to see its mode button highlighted.
+Choose **System**, **Light** or **Dark** for appearance. System follows the operating system (the IDE in IntelliJ and VS Code); your choice is saved. The **Guided tour** starts only after you accept the first-use invitation and can be reopened at any time. Its **Read and navigate** step explains the read/edit switch and link navigation. Open a note before starting the tour to see its mode button highlighted.
 
 When opening a vault, Merkzeug can suggest root `AGENTS.md` / `CLAUDE.md` instructions for `Note.md` and `Note.assets/`. Review the single proposed text and the full contents of both instruction files. Select the destination files explicitly before choosing **Add**; none is preselected. For example, leave `CLAUDE.md` unchanged when it only redirects to `AGENTS.md`. Missing files are created only when selected. **Later** postpones it for the current session; **Do not suggest again for this vault** suppresses future prompts for that vault. Contradictory or unclear attachment rules require manual review. Concurrent external changes are preserved and require a refreshed preview. Existing shared `assets/` references remain readable.
 
@@ -409,7 +409,7 @@ Mermaid diagrams use the document background instead of a dark code-block panel 
 
 ### Template styling prompt
 
-Desktop Settings provides **Template styling prompt** for each template; expand it to review and copy a complete agent brief with the template's folder path. IntelliJ offers the same action in **Settings → Tools → Merkzeug**, using the folder currently shown in the settings field. On iOS, open **Help → Template styling prompt** and substitute the folder path on the agent's computer; iOS supports PDF template styles while editing, PDF export, and printing through AirPrint.
+Desktop Settings provides **Template styling prompt** for each template; expand it to review and copy a complete agent brief with the template's folder path. IntelliJ offers the same action in **Settings → Tools → Merkzeug**, using the folder currently shown in the settings field; VS Code offers it as **Merkzeug: Template Styling Prompt** for the configured template folder. On iOS, open **Help → Template styling prompt** and substitute the folder path on the agent's computer; iOS supports PDF template styles while editing, PDF export, and printing through AirPrint.
 
 Replace the new template name and your colors, fonts, logo and design wishes before sending it. The prompt is in English, includes the complete offline technical reference, and works with older templates that lack instruction files. Copying it does not read note contents or modify existing templates. If clipboard access is unavailable in the web view, select and copy the displayed text manually.
 
@@ -454,21 +454,21 @@ When you quit Merkzeug, all open vault windows are restored on the next launch, 
 
 A template is an ordinary folder containing `vorlage.json`, `stil.css`, and its HTML fragments and assets. You can keep that folder in a Git repository so your team can review changes and use the same layout. Commit the complete folder, including logos and fonts that you are allowed to share.
 
-In the PDF controls, choose **Template inside this vault** and enter the template's relative folder. The assignment in `.merkzeug/settings.json` works across desktop, iPhone/iPad and IntelliJ. Commit and pull that file together with the template folder using your normal Git workflow.
+In the PDF controls, choose **Template inside this vault** and enter the template's relative folder. The assignment in `.merkzeug/settings.json` works across desktop, iPhone/iPad, IntelliJ and VS Code. Commit and pull that file together with the template folder using your normal Git workflow.
 
 Alternatively, store central templates in **iCloud Drive → Merkzeug → Templates** and choose **Central template**. iCloud sharing between your own Apple devices requires the same account and completed synchronization.
 
-PDF-file export and combining directly linked documents are available on desktop, iPhone/iPad, and in IntelliJ. The selected template also applies when printing.
+PDF-file export and combining directly linked documents are available on desktop, iPhone/iPad, and in IntelliJ and VS Code. The selected template also applies when printing.
 
 ## Choose a template location
 
-In the PDF controls above an open note (IntelliJ: **…**), choose **PDF template for this vault**. Select **Central template**, choose a name and press **Apply**, or select **Template inside this vault**, enter its relative folder (for example `.merkzeug/templates/Company`) and press **Apply**. The choice applies to every note in this vault, including editing styles, PDF export and printing. It does not move or copy template files. Choose **No template** and **Apply** to clear the assignment.
+In the PDF controls above an open note (IntelliJ, VS Code: **…**), choose **PDF template for this vault**. Select **Central template**, choose a name and press **Apply**, or select **Template inside this vault**, enter its relative folder (for example `.merkzeug/templates/Company`) and press **Apply**. The choice applies to every note in this vault, including editing styles, PDF export and printing. It does not move or copy template files. Choose **No template** and **Apply** to clear the assignment.
 
 The portable assignment is stored in `.merkzeug/settings.json`. A central template is referenced by name; a vault template uses `{"pdfTemplate":{"source":"vault","path":".merkzeug/templates/Company"}}`. Commit the settings and template folder to share them with a repository. Existing central assignments remain compatible. On Apple devices, the central collection uses Merkzeug's iCloud container when available; a locally selected template collection remains a device setting. IntelliJ also discovers installed desktop templates. Missing template folders are reported instead of silently substituting another template.
 
 ## Release Notes
 
-Open **Release Notes** in Help (IntelliJ: **…**) for the complete English or German version history, available offline. On the first start of a new marketing version, its release notes open automatically. **Done** marks that version as read on this installation; the full history remains accessible. Website and apps use the same release-note source.
+Open **Release Notes** in Help (IntelliJ, VS Code: **…**) for the complete English or German version history, available offline. On the first start of a new marketing version, its release notes open automatically. **Done** marks that version as read on this installation; the full history remains accessible. Website and apps use the same release-note source.
 
 
 ## Linux installation and platform differences
@@ -513,4 +513,4 @@ If the list is empty, check the date, all-day filter, calendar permissions on Ma
 
 ## About Merkzeug
 
-Merkzeug is open source under the MIT License. The About Merkzeug view shows the version, publisher and product website. On desktop, use the Merkzeug menu; on iPhone/iPad, open Help; in IntelliJ, open the editor’s **…** menu.
+Merkzeug is open source under the MIT License. The About Merkzeug view shows the version, publisher and product website. On desktop, use the Merkzeug menu; on iPhone/iPad, open Help; in IntelliJ and VS Code, open the editor’s **…** menu.
