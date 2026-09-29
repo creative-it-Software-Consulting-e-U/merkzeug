@@ -37,9 +37,11 @@ release history in the sitemap. No GitHub API requests run in visitors' browsers
 
 Official localized App Store badge SVGs are sourced unchanged from Apple’s `tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us` and `/de-de` endpoints. Preserve their artwork and aspect ratio. The IntelliJ link targets plugin 34221, default Stable channel.
 
-## Responsive landing galleries
+## Landing layout and galleries
 
-`landing.css` and `landing.js` apply only to the landing pages. Each app screenshot
+The landing pages use a "sheet" layout (`sheets.css`): grid paper, a file-style title block per section and a link thread in the left margin (`thread.js`) that draws with scroll progress. Sections never pin or hold the scroll position; keep it that way. The Merkzeug vs Obsidian table is generated from the root `COMPARISON.md` with `npm run build:comparison` (run manually after editing it, then commit the updated landing pages).
+
+`landing.js` handles the galleries. Each app screenshot
 has a localized macOS/iOS pair, listed in `assets/screenshots.json`; reusable vaults
 live in `store/demo/en` and `store/demo/de`. Below 701 CSS pixels, galleries default
 to iOS; otherwise macOS. Each gallery has its own keyboard-accessible switch, and

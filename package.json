@@ -17,7 +17,8 @@
     "test:release": "python3 -m unittest discover -s scripts/tests -v",
     "check:docs": "python3 scripts/check-docs.py",
     "check:secrets": "python3 scripts/check-secrets.py",
-    "check:licenses": "node scripts/check-licenses.mjs"
+    "check:licenses": "node scripts/check-licenses.mjs",
+    "build:comparison": "node scripts/build-comparison.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.5.0",
