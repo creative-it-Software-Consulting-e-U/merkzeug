@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- PDF export no longer fails with “The source image cannot be decoded” when a document contains inline HTML such as `<details>`; a broken image no longer aborts the whole export.
+
 ## 1.3.0
 
 - Merkzeug is now open source under the MIT License.
