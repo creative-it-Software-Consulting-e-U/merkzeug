@@ -1,6 +1,6 @@
 {
   "name": "@merkzeug/editor",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "private": true,
   "type": "module",
   "exports": {
@@ -19,7 +19,7 @@
     "./About": "./src/About.tsx"
   },
   "dependencies": {
-    "@merkzeug/core": "1.3.0"
+    "@merkzeug/core": "1.3.1"
   },
   "peerDependencies": {
     "@milkdown/crepe": "^7.22.1",
