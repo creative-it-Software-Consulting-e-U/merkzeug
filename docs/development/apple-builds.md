@@ -134,6 +134,33 @@ python3 crossplatform/macos/verify-archive.py /tmp/Merkzeug-Cloud.xcarchive 2
 
 This local ad-hoc archive is only a packaging/signature-structure test; it is not a distribution-signed build or evidence of Cloud export success.
 
+## macOS staging edition (TestFlight)
+
+Like GeoHook and AInvoiceMate, Merkzeug has a separate staging app for internal TestFlight testing. It never shares an identity with production:
+
+| | Production | Staging |
+|---|---|---|
+| Bundle ID | `com.creative-it.merkzeug` | `com.creative-it.merkzeug.staging` |
+| App | Merkzeug (`6799114334`) | Merkzeug.staging |
+| App bundle | `Merkzeug.app` | `Merkzeug Staging.app` |
+| iCloud container | `iCloud.com.creative-it.merkzeug` | `iCloud.com.creative-it.merkzeug.staging` |
+| Electron app group | `3BNJ4M9R56.com.creative-it.merkzeug` | `3BNJ4M9R56.com.creative-it.merkzeug.staging` |
+| Xcode target / scheme | `Merkzeug` / `Merkzeug-macOS` | `Merkzeug Staging` / `Merkzeug-macOS-Staging` |
+| Branch | `main` | `stage` |
+
+`crossplatform/macos/variants.py` defines both editions. `ci_pre_xcodebuild.sh` selects the edition from `CI_XCODE_SCHEME` and runs `scripts/package-mas.py --variant staging`. Staging is packaged unsigned only: the script replaces the production iCloud declaration in `Info.plist`, and Xcode signs afterwards. The archive verifier derives the expected identity, app group and container from the archived bundle ID. The iCloud bridge reads the first container from the app's entitlements, so production, staging and Developer ID builds each use their own container.
+
+The staging app needs its own Xcode Cloud product. A staging workflow attached to the production product fails at upload with ITMS-90055 (AInvoiceMate builds 37/40). The Cloud product cannot be created through the App Store Connect API; create it in Xcode for target **Merkzeug Staging** and commit the generated `xcshareddata/xcodecloud/manifest.json`. The staging build counter starts at 1, independent of production.
+
+Local reproduction of the Cloud packaging:
+
+```sh
+CI_XCODE_SCHEME=Merkzeug-macOS-Staging CI_BUILD_NUMBER=1 \
+  bash crossplatform/macos/ci_scripts/ci_pre_xcodebuild.sh
+```
+
+An ad-hoc local archive cannot carry the iCloud entitlement; archive with development signing or in Xcode Cloud.
+
 ## Cloud validation, 10 September 2026
 
 - macOS Cloud build **26** (`a5610ae1-a592-4ba1-8262-87cd43680567`, source `fba795f`) passed archive, universal payload verification and managed App Store export. The first run exposed Python 3.9 compatibility in the hash check; the verifier now hashes in chunks. The TestFlight post-action was added after build 26 started, so that run alone is not upload evidence.

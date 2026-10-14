@@ -5,16 +5,18 @@ from pathlib import Path
 import plistlib
 import shutil
 import subprocess
+from variants import by_bundle_id
 
 root = Path(__file__).resolve().parents[2]
-source = root / 'crossplatform/dist-mas/mas-dev-universal/Merkzeug.app'
+edition = by_bundle_id(os.environ['PRODUCT_BUNDLE_IDENTIFIER'])
+source = root / 'crossplatform/dist-mas/mas-dev-universal' / edition.app
 target = Path(os.environ['TARGET_BUILD_DIR']) / os.environ['FULL_PRODUCT_NAME']
-if target.name != 'Merkzeug.app' or target.resolve() == source.resolve():
+if target.name != edition.app or target.resolve() == source.resolve():
     raise SystemExit('Unexpected Xcode product destination')
 info = plistlib.loads((source / 'Contents/Info.plist').read_bytes())
-if info['CFBundleIdentifier'] != 'com.creative-it.merkzeug':
-    raise SystemExit('Prepared bundle is not Merkzeug')
-for binary in ['Contents/MacOS/Merkzeug', 'Contents/Resources/calendar/merkzeug-calendar', 'Contents/Resources/icloud/merkzeug-icloud.node']:
+if info['CFBundleIdentifier'] != edition.bundle_id:
+    raise SystemExit(f'Prepared bundle is not {edition.product}')
+for binary in [f'Contents/MacOS/{edition.product}', 'Contents/Resources/calendar/merkzeug-calendar', 'Contents/Resources/icloud/merkzeug-icloud.node']:
     architectures = subprocess.check_output(['xcrun', 'lipo', '-archs', str(source / binary)], text=True).split()
     if set(architectures) != {'arm64', 'x86_64'}:
         raise SystemExit(f'Expected universal executable: {binary}')
