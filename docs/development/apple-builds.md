@@ -14,7 +14,7 @@ The basic vault persistence test passed on 9 September 2026: the owner selected 
 
 ## iOS / Xcode Cloud
 
-The **iOS App Store** workflow (`709665a7-0f88-4322-bbb8-67f4ff59e2a2`) uses `mobile/ios/App/App.xcodeproj`, shared scheme **Merkzeug**, and a Release Archive action. It is pinned to public Xcode 26.6 (17F113) on macOS Tahoe 26.6.2. The original **Default** workflow remains a separate build-only contributor check.
+The **iOS App Store** workflow (`709665a7-0f88-4322-bbb8-67f4ff59e2a2`) uses `mobile/ios/App/App.xcodeproj`, shared scheme **Merkzeug**, and a Release Archive action. It runs on public Xcode 27 (27A266a) on macOS Golden Gate 27 since 14 October 2026 (previously Xcode 26.6 on macOS Tahoe 26.6.2). The original **Default** workflow remains a separate build-only contributor check.
 
 To reproduce the distribution configuration:
 
@@ -37,7 +37,7 @@ xcodebuild -project mobile/ios/App/App.xcodeproj -scheme Merkzeug \
   CODE_SIGNING_ALLOWED=NO archive
 ```
 
-Local development uses Xcode 27 Developer Beta on macOS 27 beta. The owner reports that stable Xcode cannot launch on this host and already uses Developer Beta with Xcode Cloud for GeoHook. An attempted Xcode 26.6 command returned a license error, but that does not establish why the application cannot launch or make license acceptance a prerequisite. Both unsigned and development-signed local archives succeeded with Xcode 27 beta; continue with that toolchain.
+Local development now uses the released Xcode 27 (`/Applications/Xcode.app`). Earlier, the owner reported that stable Xcode could not launch on this host and already uses Developer Beta with Xcode Cloud for GeoHook. An attempted Xcode 26.6 command returned a license error, but that does not establish why the application cannot launch or make license acceptance a prerequisite. Both unsigned and development-signed local archives succeeded with Xcode 27 beta; continue with that toolchain.
 
 Configure the cloud build environment independently. Before TestFlight distribution or App Store submission, verify that Apple accepts the selected cloud Xcode/SDK combination for that destination. This is a distribution check, not a blocker for local beta development or cloud setup. See [Apple upload requirements](https://developer.apple.com/help/app-store-connect/manage-builds/upload-builds/).
 
@@ -109,7 +109,7 @@ The uploader requires the expected team's Mac App Store installer signature. API
 
 ## macOS Xcode Cloud archive workflow
 
-The **macOS App Store** workflow (`9eea4c72-17b1-45d8-b8b7-5f7dc4269090`) uses `crossplatform/macos/Merkzeug.xcodeproj` and shared scheme `Merkzeug-macOS`. It is pinned to Xcode 26.6 / macOS Tahoe 26.6.2. This packaging target installs the actual Electron MAS bundle as the Xcode app product; it does not ship a native placeholder or change the application's runtime.
+The **macOS App Store** workflow (`9eea4c72-17b1-45d8-b8b7-5f7dc4269090`) uses `crossplatform/macos/Merkzeug.xcodeproj` and shared scheme `Merkzeug-macOS`. It runs on Xcode 27 (27A266a) / macOS Golden Gate 27 since 14 October 2026; **Store Screenshots** uses the same toolchain. This packaging target installs the actual Electron MAS bundle as the Xcode app product; it does not ship a native placeholder or change the application's runtime.
 
 - Post-clone installs the pinned Node major, dependencies and runs version/tests checks.
 - Pre-build prepares unsigned universal Electron and calendar-helper binaries, using the Cloud build number (at least 2; local Store build 1 already exists).
@@ -149,6 +149,8 @@ Like GeoHook and AInvoiceMate, Merkzeug has a separate staging app for internal 
 | Branch | `main` | `stage` |
 
 `crossplatform/macos/variants.py` defines both editions. `ci_pre_xcodebuild.sh` selects the edition from `CI_XCODE_SCHEME` and runs `scripts/package-mas.py --variant staging`. Staging is packaged unsigned only: the script replaces the production iCloud declaration in `Info.plist`, and Xcode signs afterwards. The archive verifier derives the expected identity, app group and container from the archived bundle ID. The iCloud bridge reads the first container from the app's entitlements, so production, staging and Developer ID builds each use their own container.
+
+Apple setup (14 October 2026): App Store Connect app **Merkzeug.staging** (`6822655379`, macOS, SKU `com.creative-it.merkzeug.staging`), App ID `X9K2RAVTVW` with the staging iCloud container, Xcode Cloud product **Merkzeug Staging** (`135ebdb3-2799-4bdb-b9ad-e6a09af608c0`) and workflow **macOS Staging** (`795C91E2-353C-4198-8BC3-E009FB5244A1`). The workflow archives scheme `Merkzeug-macOS-Staging` for App Store distribution on every push to `stage` (exact match, newer pushes cancel running builds) with Xcode 27 on macOS Golden Gate 27. The internal TestFlight group **Staging intern** (`6c4e56f8-ff85-4ad6-a15f-ebdf51b83861`) has access to all builds, so each processed build reaches it automatically.
 
 The staging app needs its own Xcode Cloud product. A staging workflow attached to the production product fails at upload with ITMS-90055 (AInvoiceMate builds 37/40). The Cloud product cannot be created through the App Store Connect API; create it in Xcode for target **Merkzeug Staging** and commit the generated `xcshareddata/xcodecloud/manifest.json`. The staging build counter starts at 1, independent of production.
 
