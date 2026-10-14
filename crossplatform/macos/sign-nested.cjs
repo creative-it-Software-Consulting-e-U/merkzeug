@@ -22,10 +22,10 @@ async function walk(dir) {
   }
 }
 ;(async () => {
-  if (!app || path.basename(app) !== 'Merkzeug.app') throw Error('Expected Merkzeug.app')
+  if (!app || !['Merkzeug.app', 'Merkzeug Staging.app'].includes(path.basename(app))) throw Error('Expected a Merkzeug edition app')
   await walk(path.join(app, 'Contents'))
   for (const file of [...binaries, ...bundles]) {
-    if (file === path.join(app, 'Contents/MacOS/Merkzeug')) continue
+    if (file === path.join(app, 'Contents/MacOS', path.basename(app, '.app'))) continue
     execFileSync('/usr/bin/codesign', ['--force', '--sign', '-', '--timestamp=none', '--entitlements', entitlements, file], { stdio: 'inherit' })
   }
 })().catch(error => { console.error(error.message); process.exitCode = 1 })

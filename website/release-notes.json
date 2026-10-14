@@ -1,6 +1,6 @@
 [
   {
-    "version": "1.3",
+    "version": "1.3.1",
     "status": "preparation",
     "date": null,
     "platforms": [
@@ -9,6 +9,25 @@
       "iPad",
       "IntelliJ",
       "Linux"
+    ],
+    "highlights": {
+      "en": [
+        "PDF export no longer stops with “The source image cannot be decoded” when a note contains inline HTML such as collapsible <details> sections. A single broken image no longer aborts the whole export."
+      ],
+      "de": [
+        "Der PDF-Export bricht nicht mehr mit „The source image cannot be decoded“ ab, wenn eine Notiz Inline-HTML wie aufklappbare <details>-Abschnitte enthält. Ein einzelnes defektes Bild bricht nicht mehr den ganzen Export ab."
+      ]
+    }
+  },
+  {
+    "version": "1.3",
+    "status": "released",
+    "date": "2026-10-14",
+    "platforms": [
+      "Mac",
+      "iPhone",
+      "iPad",
+      "IntelliJ"
     ],
     "highlights": {
       "en": [

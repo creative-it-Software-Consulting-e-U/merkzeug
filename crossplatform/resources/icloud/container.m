@@ -10,7 +10,8 @@ static void discover(napi_env env, void *data) {
     Request *request = data;
     @autoreleasepool {
         if (NSFileManager.defaultManager.ubiquityIdentityToken == nil) return;
-        NSURL *url = [NSFileManager.defaultManager URLForUbiquityContainerIdentifier:@"iCloud.com.creative-it.merkzeug"];
+        // nil: the edition's own container from its entitlements (production or staging).
+        NSURL *url = [NSFileManager.defaultManager URLForUbiquityContainerIdentifier:nil];
         if (url) request->path = strdup(url.fileSystemRepresentation);
     }
 }

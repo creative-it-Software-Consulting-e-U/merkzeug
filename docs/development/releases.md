@@ -211,3 +211,18 @@ Windows production distribution remains deferred pending signing credentials.
 The public repository's protected environments now require explicit release
 approval. Creating candidates or App Store drafts does not submit to App Review
 or publish a Marketplace update.
+
+## Version 1.3.1 — PDF image fix and Xcode 27
+
+Patch release for all distributed editions: iOS/iPadOS and macOS App Store,
+IntelliJ Marketplace and Linux (x64 and ARM64). Windows production distribution
+remains deferred pending signing credentials. The shared PDF renderer fix reaches
+desktop, iOS and IntelliJ through `@merkzeug/export`.
+
+Apple Cloud workflows now build with Xcode 27 on macOS 27 (see
+[Apple build setup](apple-builds.md)); their Node installation needs the
+sequential Homebrew download in `ci_post_clone.sh`, so build only from a commit
+that contains it. Run the macOS staging workflow (branch `stage`) before the
+production workflows. Store versions are `1.3.1`; Cloud assigns new build numbers.
+Decide on the approved macOS 1.3 version (pending developer release) before
+creating the macOS 1.3.1 version in App Store Connect.
