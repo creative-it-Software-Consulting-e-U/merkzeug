@@ -12,10 +12,10 @@
     ],
     "highlights": {
       "en": [
-        "PDF export no longer stops with “The source image cannot be decoded” when a note contains inline HTML such as collapsible <details> sections. A single broken image no longer aborts the whole export."
+        "PDF export no longer stops with “The source image cannot be decoded” when a note contains inline HTML such as collapsible details sections. A single broken image no longer aborts the whole export."
       ],
       "de": [
-        "Der PDF-Export bricht nicht mehr mit „The source image cannot be decoded“ ab, wenn eine Notiz Inline-HTML wie aufklappbare <details>-Abschnitte enthält. Ein einzelnes defektes Bild bricht nicht mehr den ganzen Export ab."
+        "Der PDF-Export bricht nicht mehr mit „The source image cannot be decoded“ ab, wenn eine Notiz Inline-HTML wie aufklappbare Details-Abschnitte enthält. Ein einzelnes defektes Bild bricht nicht mehr den ganzen Export ab."
       ]
     }
   },

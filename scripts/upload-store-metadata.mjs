@@ -20,6 +20,7 @@ try {
     const attributes={description:listing[`description_${suffix}`],promotionalText:listing[`promotional_text_${suffix}`],keywords:listing[`keywords_${suffix}`], ...(release ? {whatsNew:release.highlights[locale.startsWith('de')?'de':'en'].map(s=>'• '+s).join('\n\n')} : {})};
     for(const [key,max] of Object.entries({description:4000,promotionalText:170,keywords:100,...(release?{whatsNew:4000}:{})})){
       if(typeof attributes[key]!=='string'||!attributes[key].length||[...attributes[key]].length>max) throw Error(`Invalid ${platform}/${locale}/${key}`);
+      if(/[<>]/.test(attributes[key])) throw Error(`App Store Connect rejects markup in ${platform}/${locale}/${key}`);
     }
     desired.push({platform,locale,attributes});
   }
