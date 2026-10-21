@@ -20,7 +20,7 @@ just as well as a Working Copy repository.
 
 ## Navigating
 
-- The folder view lists subfolders and notes; tap an entry to open it. Press and hold for **Rename** or **Delete**. File names and action-menu labels are not selectable; note text remains selectable.
+- The folder view lists subfolders and notes; tap an entry to open it. Press and hold for **Copy path**, **Rename** or **Delete**; folders also offer **New meeting note…**. File names and action-menu labels are not selectable; note text remains selectable.
 - Links inside notes take you straight to the linked note or folder.
 - **Back and forward**: with the ‹ › buttons at the top left – or by
   swiping from the left or right edge of the screen.
@@ -42,6 +42,14 @@ accidental changes. The pencil **✎** switches to edit mode:
 - Images from your photo library are stored automatically in the
   `NoteName.assets/` folder next to `NoteName.md` when inserted.
 - Mermaid code blocks show a diagram preview.
+- HTML image tags such as `<img src="Note.assets/image.png" width="450">`
+  are shown as images with their size; the HTML stays unchanged. Other HTML
+  is shown as source text.
+- Callouts as in Obsidian and GitHub: a quote starting with `[!type]`
+  (e.g. `> [!warning] Title`) becomes a colored box. `[!type]-` starts
+  collapsed, `[!type]+` expanded; tap the arrow to fold it in the view only.
+  Tap into the title line to edit the marker. The insert menu offers
+  **Callout**.
 
 Selecting a whole table cell highlights the cell; click inside its text to place the caret and edit. Text and links retain their colors while the cell is selected, including when using PDF-template styles.
 
@@ -49,8 +57,10 @@ Selecting a whole table cell highlights the cell; click inside its text to place
 
 - **＋** in the folder view creates a new note or folder. New notes open
   directly in edit mode.
-- **Press and hold an entry** to open the menu with *Rename* and
-  *Delete*. Deleting a folder removes its entire contents – in Working
+- **Press and hold an entry** to open the menu with *Copy path*
+  (relative to the vault, e.g. `Projects/Plan.md`), *Rename* and
+  *Delete*. On folders, *New meeting note…* creates the meeting note in
+  that folder. Deleting a folder removes its entire contents – in Working
   Copy this can be undone until the next commit.
 
 ## Syncing with Working Copy
@@ -139,7 +149,7 @@ A meeting note uses its first heading as the filename. Case, spaces and accents 
 
 ## Links when renaming or moving notes
 
-Renaming a note or folder through Merkzeug updates local Markdown links to it in other Markdown files in the same vault. This also applies when a saved heading automatically changes a note's filename. Companion `.assets/` folders and links to their images follow the note. Moving a note also recalculates its outgoing relative links; shared image folders stay in place.
+Renaming a note or folder through Merkzeug updates local Markdown links to it in other Markdown files in the same vault. This also applies when a saved heading automatically changes a note's filename. Companion `.assets/` folders and links to their images follow the note, including `src` paths in HTML `<img>` tags. Moving a note also recalculates its outgoing relative links; shared image folders stay in place.
 
 Inline links, images and reference-style link definitions are supported, including URL-encoded names and `#section` suffixes. Link labels and titles stay unchanged. Section suffixes are preserved, not recalculated when a heading changes. Code examples, frontmatter, external URLs and ordinary prose are not rewritten. HTML links and wiki-link syntax are not included.
 

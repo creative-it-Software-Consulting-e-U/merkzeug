@@ -12,7 +12,7 @@ Merkzeug remembers the selected folder permission. Use the home button to choose
 
 ## Read and edit
 
-Notes open read-only. Tap the pencil to enable editing. Use back/forward buttons or edge swipes to navigate. Search finds notes by filename and content. Close it with **Done** in the search bar or on the keyboard, even with an empty query; Escape also works on an external keyboard. Press and hold an item to rename or delete it without selecting the filename or menu text; use **＋** to create a note or folder.
+Notes open read-only. Tap the pencil to enable editing. Use back/forward buttons or edge swipes to navigate. Search finds notes by filename and content. Close it with **Done** in the search bar or on the keyboard, even with an empty query; Escape also works on an external keyboard. Press and hold an item to copy its vault-relative path, rename or delete it, or—on folders—create a meeting note there, without selecting the filename or menu text; use **＋** to create a note or folder.
 
 Edits save automatically. After a pull in Working Copy, return to Merkzeug or tap refresh. If local edits conflict with external changes, resolve the conflict before proceeding. Commit, push and pull in Working Copy; the Merkzeug mobile app does not perform Git operations.
 
@@ -40,7 +40,7 @@ Meeting notes use their first heading as the filename and follow saved heading c
 
 ## Links when renaming or moving notes
 
-Renaming a note or folder through Merkzeug updates local Markdown links to it in other Markdown files in the same vault. This also applies when a saved heading automatically changes a note's filename. Companion `.assets/` folders and links to their images follow the note. Moving a note also recalculates its outgoing relative links; shared image folders stay in place.
+Renaming a note or folder through Merkzeug updates local Markdown links to it in other Markdown files in the same vault. This also applies when a saved heading automatically changes a note's filename. Companion `.assets/` folders and links to their images follow the note, including `src` paths in HTML `<img>` tags. Moving a note also recalculates its outgoing relative links; shared image folders stay in place.
 
 Inline links, images and reference-style link definitions are supported, including URL-encoded names and `#section` suffixes. Link labels and titles stay unchanged. Section suffixes are preserved, not recalculated when a heading changes. Code examples, frontmatter, external URLs and ordinary prose are not rewritten. HTML links and wiki-link syntax are not included.
 

@@ -28,11 +28,19 @@ The built-in Markdown editor remains available. Marketplace installations receiv
 
 ## Editing
 
-Use the shared visual editor, slash menu, formatting tools, frontmatter panel and Mermaid diagrams. The compact toolbar provides paragraph styles, bold, italic, strikethrough, inline code, lists, quotes, code blocks, links, images, tables and dividers. Search (⌘F / Ctrl+F), undo and redo remain available through keyboard shortcuts without duplicate toolbar buttons. Changes update IntelliJ's document; IntelliJ owns disk saving, Git integration and undo history. **⌘S / Ctrl+S** explicitly saves.
+Use the shared visual editor, slash menu, formatting tools, frontmatter panel, Mermaid diagrams and Obsidian-compatible callouts (`> [!type] Title`, including GitHub alerts such as `> [!NOTE]`). HTML `<img>` tags are shown as images with their `width`/`height`; the HTML stays unchanged. The compact toolbar provides paragraph styles, bold, italic, strikethrough, inline code, lists, quotes, code blocks, links, images, tables and dividers. Search (⌘F / Ctrl+F), undo and redo remain available through keyboard shortcuts without duplicate toolbar buttons. Changes update IntelliJ's document; IntelliJ owns disk saving, Git integration and undo history. **⌘S / Ctrl+S** explicitly saves. On macOS, the usual text navigation shortcuts work as in other Mac apps: ⌘← / ⌘→ move to the start or end of the visual line, ⌘↑ / ⌘↓ to the start or end of the document, ⌥← / ⌥→ by word, with ⇧ to select; ⌘⌫ and ⌥⌫ delete to the line start or the previous word.
 
 Selecting a whole table cell highlights the cell; click inside its text to place the caret and edit. Text and links retain their colors while the cell is selected, including when using PDF-template styles.
 
 If another editor changes the document, Merkzeug reloads it when there are no local edits. Otherwise a conflict banner lets you reload the other version or deliberately keep your own version.
+
+## Meeting notes
+
+Right-click a folder in the project view and choose **New → Merkzeug Meeting Note…**; **File → New** offers the same entry for the selected folder or file. Choose an event from the next 14 days: Merkzeug creates the note in that folder and opens it in the Merkzeug tab. Choosing the same event again reopens its existing note instead of creating a duplicate.
+
+Events come from **Calendar sources** in the dialog: import ICS files or subscribe to private HTTPS/Webcal feeds, for example from iCloud, Google or Outlook. IntelliJ keeps these sources in its password safe, separately from the desktop app. On Windows, events from classic Outlook appear as well, as in the desktop app; Outlook may ask for permission the first time. The macOS Calendar app cannot be read from IntelliJ; subscribe to the calendar's feed instead.
+
+To copy the path of a note or folder, use IntelliJ's **Copy Path/Reference…** in the project view: **Absolute Path**, or **Path From Content Root**, which matches the vault-relative path when the project root is your vault.
 
 ## Reading and navigation modes (planned)
 
@@ -73,7 +81,7 @@ The PDF uses the current IntelliJ document content, including edits already acce
 - Files and images outside the current project root are not accessible through the plugin.
 - Cross-document links open the target file; cross-document heading navigation is incomplete.
 - PDF export temporarily switches away from the editor, then reloads the document.
-- Desktop vault settings, native OS calendars and bulk PDF export are not part of the plugin.
+- Desktop vault settings, the macOS Calendar app and bulk PDF export are not part of the plugin.
 
 For failures, see [troubleshooting](troubleshooting.md). Contributors can use the [plugin development guide](../../intellij/README.md).
 
@@ -91,7 +99,7 @@ The editor automatically follows IntelliJ’s active theme, including live chang
 
 In the **⋯** menu, Merkzeug can suggest root `AGENTS.md` / `CLAUDE.md` instructions for `Note.md` and `Note.assets/`. Review the single proposed text and the full contents of both instruction files. Select the destination files explicitly before choosing **Add**; none is preselected. For example, leave `CLAUDE.md` unchanged when it only redirects to `AGENTS.md`. Missing files are created only when selected. **Later** postpones it for the current session; **Do not suggest again for this vault** suppresses future prompts for that vault. Contradictory or unclear attachment rules require manual review. Concurrent external changes are preserved and require a refreshed preview. Existing shared `assets/` references remain readable.
 
-Calendar and meeting-note creation are available in the standalone apps. Create new files using IntelliJ’s project tools.
+Create new files using IntelliJ’s project tools; meeting notes are described in [Meeting notes](#meeting-notes).
 
 After installing a plugin update while IntelliJ is running, restart the IDE to load it. Synchronization status remains available to assistive technology and as a tooltip in the toolbar.
 

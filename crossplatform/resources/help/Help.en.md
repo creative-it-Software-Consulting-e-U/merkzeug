@@ -46,8 +46,10 @@ The sidebar on the left shows the vault as a hierarchical tree.
   area with the mouse; double-clicking it restores the default width. If there
   is not enough room for long names or deep hierarchies, the tree can be
   scrolled horizontally and vertically.
-- **Context menu** (right-click): new note, new folder, export as PDF, rename,
-  move to trash, show in Finder/Explorer.
+- **Context menu** (right-click): new note, new folder, new meeting note
+  (in the clicked folder), export as PDF, rename, show in Finder/Explorer,
+  **Copy path** (relative to the vault root with `/` separators, or absolute),
+  move to trash.
 - **Multi-selection:** ⌘-click (Windows/Linux: Ctrl-click) adds further notes
   to the selection or removes them again, ⇧-click selects the range up to the
   clicked note — both only among notes of the **same folder**. Right-clicking
@@ -116,11 +118,24 @@ The editor shows the note formatted; what is saved is Markdown.
 - **Auto-formatting while typing:** `# `, `## `, `- `, `1. `, `> ` at the start
   of a line and ` ``` ` immediately create the corresponding format; `->`
   becomes an arrow "→".
+- **Callouts (info boxes):** a quote whose first line starts with `[!type]`
+  becomes a colored box — compatible with Obsidian callouts and GitHub alerts,
+  e.g. `> [!info] Optional title` followed by `> ` lines with the content.
+  Types: note, abstract, info, todo, tip, success, question, warning, failure,
+  danger, bug, example and quote, plus aliases such as `important`, `caution`
+  or `faq`; unknown types look like note. Without a title the type is shown.
+  `[!faq]-` starts collapsed and `[!faq]+` expanded; the arrow next to the
+  title folds the box in the view only, without changing the file. Click into
+  the title line to edit the marker. Insert via the slash menu (**Callout**).
+  PDF exports always print callouts expanded.
 - **Tables:** insert via ⌥⌘T / Ctrl+Alt+T, the slash menu or the Edit menu. Jump from cell to
   cell with Tab; add and delete rows/columns via the table controls right at the
   table or the **Table** menu.
 - **Images:** paste from the clipboard, drag & drop, slash menu or
-  **Edit → Insert Image…**.
+  **Edit → Insert Image…**. HTML image tags such as
+  `<img src="Note.assets/image.png" alt="…" width="450">` are shown as images
+  with their size, also when wrapped in `<p align="center">` or a link; the
+  HTML itself stays unchanged in the file. Other HTML is shown as source text.
 - **Undo/redo** as usual (⌘Z / Ctrl+Z / ⇧⌘Z / Ctrl+Shift+Z).
 - **Find & replace:** **⌘F / Ctrl+F** opens the search bar at the top right of the
   editor, **⌥⌘F / Ctrl+Alt+F** additionally shows the replace row (also via
@@ -360,6 +375,7 @@ the sidebar:
 | Toggle second section | ⌘\ | Ctrl+\ |
 | Move tab to other section | ⇧⌘\ | Ctrl+Shift+\ |
 | Show/hide assets | ⇧⌘R | Ctrl+Shift+R |
+| Show/hide AI assistant | ⇧⌘A | Ctrl+Shift+A |
 | This help | ⌘? | F1 |
 
 *(Windows/Linux: ⌘ = Ctrl, ⌥ = Alt, ⇧ = Shift)*
@@ -392,6 +408,37 @@ Create a copy first, then give the agent that folder and this prompt:
 > Read README.md and all five template files in this folder. Adapt this copy to my visual style: [COLORS], [FONTS] and [LOCAL LOGO PATH]. Preserve the filenames, title/date placeholders and Chromium page-number spans. Keep header/footer CSS inline and document CSS scoped to PDF selectors. Use local assets, no scripts or network dependencies. Support A4 portrait and landscape without clipping. Update README.md to explain the changes. Validate by exporting notes with a long title, headings, links, code, a table and a diagram; inspect every page of the resulting PDFs.
 
 The template README includes the full file-format reference and a reusable prompt. Export through Merkzeug to check the result: browser previews alone do not verify page breaks. The settings link **Template guide and agent prompt** opens this section of the online manual; the same instructions are also included in the app's offline help.
+
+## AI assistant
+
+**⇧⌘A / Ctrl+Shift+A** (menu "View → AI Assistant" or the sparkle button in the
+editor toolbar) opens an assistant panel on the right. Ask it for a
+**Mermaid diagram** of the note's content, a summary, a rewrite of the
+selection or a table. The answer appears in the chat; code blocks get the
+buttons **Insert**, **Replace selection** (when text is selected in the
+editor) and **Copy**, whole answers **Insert answer**. Mermaid blocks are
+validated before they are offered and rendered as a preview; a diagram that
+does not parse is sent back with the error message for correction
+automatically (at most twice). Content is inserted between paragraphs at the
+cursor, or at the end of a freshly opened note without a cursor.
+
+Choose the **provider** in the settings (⌘,) under **AI assistant** or in the
+panel header:
+
+- **Anthropic API (Claude)** and **OpenAI API** with your own API key
+  (pay-as-you-go). Keys are stored encrypted in the system keyring, never in
+  the vault or in `settings.json`. **Load models** lists the available models;
+  leave the field empty for the default model.
+- **Claude Code (local login)** uses the Claude Code CLI installed on this
+  computer together with its login (subscription or API key).
+- **Codex / ChatGPT (local login)** uses the Codex CLI – installed separately
+  or bundled with the ChatGPT desktop app – with its ChatGPT login. Codex runs
+  read-only in an empty folder and never sees the vault.
+
+**Privacy:** Merkzeug sends your question, the selection in the editor and – as
+long as **Send note as context** is checked – the open note. Nothing is
+transmitted until you ask; the hint above the input names the provider. The
+conversation lives only in the window and is not saved.
 
 ## Appearance, tours and agent guidance
 
@@ -441,7 +488,7 @@ A meeting note uses its first heading as the filename. Case, spaces and accents 
 
 ## Links when renaming or moving notes
 
-Renaming a note or folder through Merkzeug updates local Markdown links to it in other Markdown files in the same vault. This also applies when a saved heading automatically changes a note's filename. Companion `.assets/` folders and links to their images follow the note. Moving a note also recalculates its outgoing relative links; shared image folders stay in place.
+Renaming a note or folder through Merkzeug updates local Markdown links to it in other Markdown files in the same vault. This also applies when a saved heading automatically changes a note's filename. Companion `.assets/` folders and links to their images follow the note, including `src` paths in HTML `<img>` tags. Moving a note also recalculates its outgoing relative links; shared image folders stay in place.
 
 Inline links, images and reference-style link definitions are supported, including URL-encoded names and `#section` suffixes. Link labels and titles stay unchanged. Section suffixes are preserved, not recalculated when a heading changes. Code examples, frontmatter, external URLs and ordinary prose are not rewritten. HTML links and wiki-link syntax are not included.
 
@@ -495,7 +542,7 @@ Linux meeting notes use ICS files or HTTPS/Webcal calendar subscriptions. There 
   with no cloud API involved. All-day
   events (vacations, birthdays, …) are hidden by default and can be shown
   via the checkbox above the list. **"Show earlier events"** reveals past events, **"Search"** searches titles, people and
-  locations within ±90 days. Clicking an event creates a ready-named note:
+  locations within ±90 days. Clicking an event creates a ready-named note in the folder of the current selection, or in the folder you right-clicked when you chose **New meeting note…** from the file tree context menu:
   the event data (date, time, location, organizer, attendees, detected
   Teams/Zoom/Meet/Webex link) goes into the frontmatter; the body contains
   date and time below the heading, a **checkable attendee list** (who

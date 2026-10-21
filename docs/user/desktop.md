@@ -24,7 +24,7 @@ For an update, quit Merkzeug and install the newer version. Notes live in your v
 4. Changes are saved automatically after a short delay. **⌘S / Ctrl+S** saves explicitly.
 5. Use **File → Export as PDF…** to create a PDF.
 
-Use **File → Open Vault…** to switch folders, or **Recent Vaults** to reopen one. Notes can be organized in subfolders. Right-click an item to rename it, create items or move it to the trash.
+Use **File → Open Vault…** to switch folders, or **Recent Vaults** to reopen one. Notes can be organized in subfolders. Right-click an item to rename it, create notes, folders or meeting notes in a folder, copy its path (relative to the vault or absolute) or move it to the trash.
 
 ## Restoring windows
 
@@ -56,6 +56,10 @@ Choose **System**, **Light** or **Dark** for appearance. System follows the oper
 
 When opening a vault, Merkzeug can suggest root `AGENTS.md` / `CLAUDE.md` instructions for `Note.md` and `Note.assets/`. Review the single proposed text and the full contents of both instruction files. Select the destination files explicitly before choosing **Add**; none is preselected. For example, leave `CLAUDE.md` unchanged when it only redirects to `AGENTS.md`. Missing files are created only when selected. **Later** postpones it for the current session; **Do not suggest again for this vault** suppresses future prompts for that vault. Contradictory or unclear attachment rules require manual review. Concurrent external changes are preserved and require a refreshed preview. Existing shared `assets/` references remain readable.
 
+## AI assistant
+
+**View → AI Assistant** (⇧⌘A / Ctrl+Shift+A) opens a panel beside the editor for Mermaid diagrams, summaries, rewrites and tables; answers are inserted into the note with one click and Mermaid blocks are validated first. Providers are the Anthropic and OpenAI APIs with your own key (stored in the system keyring) or the locally installed Claude Code and Codex CLIs with their own login, so no credentials pass through Merkzeug. The open note is only sent while **Send note as context** is checked. Details are in the bundled help under **AI assistant**.
+
 ## Calendar sources
 
 **New meeting note** offers calendar selection. Expand **Calendar sources** to import an `.ics` file or add a named private HTTPS/Webcal subscription. Subscriptions are saved on this device, never in the vault. **Refresh calendars** downloads changes; an error retains the previous snapshot and shows its saved time. Reimporting the same named ICS file updates its source without duplicating notes. Choose an event to create or reopen its meeting note; existing note text is never replaced. CalDAV and calendar write-back are not supported.
@@ -68,7 +72,7 @@ Meeting notes follow their first heading when created and saved, preserving case
 
 ## Links when renaming or moving notes
 
-Renaming a note or folder through Merkzeug updates local Markdown links to it in other Markdown files in the same vault. This also applies when a saved heading automatically changes a note's filename. Companion `.assets/` folders and links to their images follow the note. Moving a note also recalculates its outgoing relative links; shared image folders stay in place.
+Renaming a note or folder through Merkzeug updates local Markdown links to it in other Markdown files in the same vault. This also applies when a saved heading automatically changes a note's filename. Companion `.assets/` folders and links to their images follow the note, including `src` paths in HTML `<img>` tags. Moving a note also recalculates its outgoing relative links; shared image folders stay in place.
 
 Inline links, images and reference-style link definitions are supported, including URL-encoded names and `#section` suffixes. Link labels and titles stay unchanged. Section suffixes are preserved, not recalculated when a heading changes. Code examples, frontmatter, external URLs and ordinary prose are not rewritten. HTML links and wiki-link syntax are not included.
 

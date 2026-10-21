@@ -247,3 +247,37 @@ export function IconMeetingNote(): React.JSX.Element {
     </svg>
   )
 }
+
+export function IconSparkle({ filled = false }: { filled?: boolean }): React.JSX.Element {
+  return (
+    <svg {...base} fill={filled ? 'currentColor' : 'none'}>
+      <path d="M8 2.2 9.5 6.5 13.8 8 9.5 9.5 8 13.8 6.5 9.5 2.2 8 6.5 6.5Z" />
+      <path d="M12.8 1.8v2.4M11.6 3h2.4" />
+    </svg>
+  )
+}
+
+export function IconClose(): React.JSX.Element {
+  return (
+    <svg {...base}>
+      <path d="M4 4l8 8M12 4l-8 8" />
+    </svg>
+  )
+}
+
+export function IconSend(): React.JSX.Element {
+  return (
+    <svg {...base}>
+      <path d="M2.5 8 13.5 2.8 10.6 13.2 7.6 9.1Z" />
+      <path d="M7.6 9.1 13.5 2.8" />
+    </svg>
+  )
+}
+
+export function IconStop(): React.JSX.Element {
+  return (
+    <svg {...base} fill="currentColor">
+      <rect x="4" y="4" width="8" height="8" rx="1.5" />
+    </svg>
+  )
+}

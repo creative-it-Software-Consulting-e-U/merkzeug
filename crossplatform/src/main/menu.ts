@@ -144,6 +144,8 @@ export function buildMenu(hooks: MenuHooks): void {
         item(translate("Move Tab to Other Pane"), 'moveTabOtherPane', 'Shift+CmdOrCtrl+\\'),
         { type: 'separator' },
         item(translate("Show/Hide Asset Folders"), 'toggleAssets', 'Shift+CmdOrCtrl+R'),
+        { type: 'separator' },
+        item(translate("AI Assistant"), 'toggleAssistant', 'Shift+CmdOrCtrl+A'),
         ...(isDev
           ? ([
               { type: 'separator' },

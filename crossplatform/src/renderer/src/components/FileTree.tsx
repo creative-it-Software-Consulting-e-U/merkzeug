@@ -1,6 +1,7 @@
 import { t as translate } from '@merkzeug/core/i18n'
 import { useCallback, useState } from 'react'
 import type { FileNode } from '../../../shared/types'
+import { relativePath } from '../util/paths'
 import { ContextMenu, type MenuEntry } from './ContextMenu'
 
 interface FileTreeProps {
@@ -15,6 +16,7 @@ interface FileTreeProps {
   onSelect: (path: string, mode?: 'toggle' | 'range') => void
   onCreateNote: (dir: string) => void
   onCreateFolder: (dir: string) => void
+  onCreateMeetingNote: (dir: string) => void
   onRename: (path: string, newName: string) => void
   onTrash: (path: string) => void
   onShowInFolder: (path: string) => void
@@ -27,6 +29,10 @@ interface MenuState {
   x: number
   y: number
   node: FileNode
+}
+
+function copyText(text: string): void {
+  void navigator.clipboard.writeText(text)
 }
 
 function isAssetsDir(node: FileNode): boolean {
@@ -72,6 +78,7 @@ export function FileTree(props: FileTreeProps): React.JSX.Element {
       entries.push(
         { label: translate("New note"), onClick: () => props.onCreateNote(node.path) },
         { label: translate("New folder"), onClick: () => props.onCreateFolder(node.path) },
+        { label: translate("New meeting note…"), onClick: () => props.onCreateMeetingNote(node.path) },
         { separator: true, label: '' }
       )
     }
@@ -84,6 +91,14 @@ export function FileTree(props: FileTreeProps): React.JSX.Element {
     entries.push(
       { label: translate("Rename"), onClick: () => startRename(node) },
       { label: translate("Show in file manager"), onClick: () => props.onShowInFolder(node.path) },
+      {
+        label: translate("Copy path"),
+        submenu: [
+          // vault-relativ immer mit „/“, passend zu Markdown-Links und Git
+          { label: translate("Relative to vault root"), onClick: () => copyText(relativePath(props.root.path, node.path) || '.') },
+          { label: translate("Absolute"), onClick: () => copyText(node.path) }
+        ]
+      },
       { separator: true, label: '' },
       { label: translate("Move to Trash"), danger: true, onClick: () => props.onTrash(node.path) }
     )

@@ -10,7 +10,7 @@ When the current note links to eligible documents, you can export it with those 
 
 Set `pdf-exclude` in the index note to exclude individual linked notes. Set `pdf-linked-title` for the combined export's title. Set `pdf-toc: true` to add a clickable table of contents after the optional cover, before the document content. Its heading follows the system language (German or English) unless the note specifies `language`. Use `language: en` to explicitly request an English heading.
 
-The output is A4. Tables wider than the portrait content area trigger landscape output. Mermaid diagrams are rendered before printing and scaled to fit. Missing images or rendering failures can stop the export; see [troubleshooting](troubleshooting.md).
+The output is A4. Tables wider than the portrait content area trigger landscape output. Mermaid diagrams are rendered before printing and scaled to fit. [Callouts](editing.md#callouts) are always printed expanded, including those that start collapsed. Missing images or rendering failures can stop the export; see [troubleshooting](troubleshooting.md).
 
 Desktop additionally supports selecting multiple notes in one folder and exporting each as a separate PDF through the context menu. IntelliJ and VS Code currently export one note or linked set at a time.
 

@@ -1,5 +1,6 @@
 import { fromMarkdown } from 'mdast-util-from-markdown'
 import type { Nodes } from 'mdast'
+import { htmlImageSources } from './htmlImages.ts'
 
 export interface PathMove { from: string; to: string }
 export interface LinkEdit { path: string; target: string; before: string; after: string }
@@ -76,6 +77,14 @@ export function rewriteMarkdownLinks(text: string, source: string, moves: PathMo
         const offset = node.position.start.offset!, raw = text.slice(offset, node.position.end.offset!)
         const span = destinationSpan(raw, node.type === 'definition')
         if (span) edits.push({ start: offset + span[0], end: offset + span[1], value })
+      }
+    }
+    // <img src="…"> in rohem HTML: Quelltext statt node.value, damit Offsets auch in Zitaten/Listen stimmen
+    if (node.type === 'html' && node.position) {
+      const offset = node.position.start.offset!, raw = text.slice(offset, node.position.end.offset!)
+      for (const image of htmlImageSources(raw)) {
+        const value = rewriteLinkDestination(image.src, source, moves, root)
+        if (value !== image.src) edits.push({ start: offset + image.start, end: offset + image.end, value: value.replace(/&/g, '&amp;') })
       }
     }
     if ('children' in node) node.children.forEach(visit)

@@ -22,6 +22,8 @@ The desktop app, the IntelliJ plugin and the VS Code extension share their edito
 
 Find current [downloads on the website](https://merkzeug.creative-it.com/). Existing Linux downloads remain in the [binary distribution repository](https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases) so installed links stay valid. See `intellij/sdk.json` for the plugin's tested IDE versions; compatibility is verified per release.
 
+How does Merkzeug compare with Obsidian? See [Merkzeug vs Obsidian](COMPARISON.md).
+
 ## Documentation
 
 - [User documentation](docs/user/README.md): installation, editing, PDF export and troubleshooting.

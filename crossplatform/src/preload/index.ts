@@ -1,6 +1,11 @@
 import type { InstructionName } from '@merkzeug/core/vaultGuidance'
 import { contextBridge, ipcRenderer } from 'electron'
 import type {
+  AiChatEvent,
+  AiChatRequest,
+  AiProviderId,
+  AiSettings,
+  AiStatus,
   CalendarResult,
   FileNode,
   GitResult,
@@ -95,6 +100,26 @@ const api = {
     const listener = (): void => handler()
     ipcRenderer.on('settings:refresh', listener)
     return () => ipcRenderer.removeListener('settings:refresh', listener)
+  },
+
+  // KI-Assistent (Seitenleiste rechts)
+  aiStatus: (): Promise<AiStatus> => ipcRenderer.invoke('ai:status'),
+  aiSaveSettings: (settings: AiSettings): Promise<AiStatus> => ipcRenderer.invoke('ai:saveSettings', settings),
+  aiSaveKey: (provider: 'anthropic' | 'openai', key: string): Promise<AiStatus> =>
+    ipcRenderer.invoke('ai:saveKey', provider, key),
+  aiListModels: (provider: AiProviderId): Promise<string[]> => ipcRenderer.invoke('ai:listModels', provider),
+  /** startet eine Anfrage; Fortschritt kommt über onAiEvent */
+  aiChat: (request: AiChatRequest): Promise<void> => ipcRenderer.invoke('ai:chat', request),
+  aiCancel: (id: string): Promise<void> => ipcRenderer.invoke('ai:cancel', id),
+  onAiEvent: (handler: (event: AiChatEvent) => void): (() => void) => {
+    const listener = (_e: unknown, event: AiChatEvent): void => handler(event)
+    ipcRenderer.on('ai:event', listener)
+    return () => ipcRenderer.removeListener('ai:event', listener)
+  },
+  onAiSettingsChanged: (handler: () => void): (() => void) => {
+    const listener = (): void => handler()
+    ipcRenderer.on('ai:settingsChanged', listener)
+    return () => ipcRenderer.removeListener('ai:settingsChanged', listener)
   },
 
   onMenuAction: (handler: (action: MenuAction) => void): (() => void) => {

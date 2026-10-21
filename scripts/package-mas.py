@@ -4,9 +4,14 @@ import argparse
 import json
 import os
 from pathlib import Path
+import plistlib
 import subprocess
+import sys
 import tempfile
 from version import ROOT, check
+
+sys.path.insert(0, str(ROOT / 'crossplatform/macos'))
+from variants import VARIANTS  # noqa: E402
 
 
 def main():
@@ -16,8 +21,12 @@ def main():
     parser.add_argument('--unsigned', action='store_true', help='Packaging check only; cannot validate sandbox execution or upload')
     parser.add_argument('--build-number', type=int, help='Unused positive App Store build number')
     parser.add_argument('--store-version', help='Equivalent Store spelling of VERSION, for example 1.0 for 1.0.0')
+    parser.add_argument('--variant', choices=sorted(VARIANTS), default='production', help='App Store edition; staging is the separate TestFlight app')
     args = parser.parse_args()
     if args.unsigned and args.distribution: parser.error('Distribution requires signing')
+    edition = VARIANTS[args.variant]
+    # Staging rewrites Info.plist after packaging; only Xcode may sign it afterwards.
+    if edition.name != 'production' and not args.unsigned: parser.error('Staging is packaged unsigned for Xcode Cloud signing')
     version = check()
     if args.distribution and (not args.build_number or args.build_number < 1): parser.error('Distribution requires a positive --build-number')
     if args.store_version:
@@ -35,9 +44,10 @@ def main():
                       # Cloud packages unsigned and lets Xcode sign, so osx-sign's
                       # automatic ElectronTeamID/app-group setup never runs there.
                       'extendInfo': {'ElectronTeamID': '3BNJ4M9R56'},
-                      'entitlements': 'build/entitlements.mas.plist',
+                      'entitlements': edition.entitlements,
                       'entitlementsInherit': 'build/entitlements.mas.inherit.plist',
                       'binaries': ['Resources/calendar/merkzeug-calendar']}}
+    if edition.name != 'production': config.update(appId=edition.bundle_id, productName=edition.product)
     if args.build_number: config['mas']['bundleVersion'] = str(args.build_number)
     if args.store_version: config['mas']['bundleShortVersion'] = args.store_version
     variant = 'mas' if args.distribution else 'masDev'
@@ -74,6 +84,18 @@ def main():
         subprocess.run(['npx', 'electron-builder', '--config', str(path), '--mac',
                         'mas' if args.distribution else 'mas-dev', '--' + args.arch, '--publish', 'never'],
                        cwd=ROOT / 'crossplatform', env=env, check=True)
+    if edition.name != 'production': use_own_container(edition, args.arch)
     print('MAS packaging complete. Nothing uploaded. ' + ('Unsigned output is NOT an installable sandbox test.' if args.unsigned else 'Native sandbox testing and App Store validation are still required.'))
+
+
+def use_own_container(edition, arch):
+    """electron-builder merges mac.extendInfo, so replace the production container here."""
+    info_path = ROOT / f'crossplatform/dist-mas/mas-dev-{arch}' / edition.app / 'Contents/Info.plist'
+    info = plistlib.loads(info_path.read_bytes())
+    if info.get('CFBundleIdentifier') != edition.bundle_id: raise SystemExit(f'Unexpected bundle in {info_path}')
+    folder = dict(next(iter(info['NSUbiquitousContainers'].values())), NSUbiquitousContainerName=edition.product)
+    info['NSUbiquitousContainers'] = {edition.container: folder}
+    info_path.write_bytes(plistlib.dumps(info))
+
 
 if __name__ == '__main__': main()

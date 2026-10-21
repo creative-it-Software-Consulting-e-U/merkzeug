@@ -31,11 +31,19 @@ Merkzeug ergänzt einen eigenen Editor-Tab. Der mitgelieferte Markdown-Editor ka
 
 ## Bearbeiten und Speichern
 
-Die Werkzeugleiste bietet Absatzformate, Fett, Kursiv, Durchstreichen, Inline-Code, Listen, Zitate, Codeblöcke, Links, Bilder, Tabellen und Trennlinien. Außerdem stehen Slash-Menü, Frontmatter und Mermaid-Diagramme zur Verfügung. Mermaid-Code lässt sich direkt am Diagramm bearbeiten.
+Die Werkzeugleiste bietet Absatzformate, Fett, Kursiv, Durchstreichen, Inline-Code, Listen, Zitate, Codeblöcke, Links, Bilder, Tabellen und Trennlinien. Außerdem stehen Slash-Menü, Frontmatter, Mermaid-Diagramme und Obsidian-kompatible Callouts (`> [!typ] Titel`, inklusive GitHub-Alerts wie `> [!NOTE]`) zur Verfügung. HTML-`<img>`-Tags erscheinen als Bild mit ihrer `width`/`height`; das HTML bleibt unverändert. Mermaid-Code lässt sich direkt am Diagramm bearbeiten.
 
-Suchen (**⌘F / Ctrl+F**), Rückgängig und Wiederherstellen bleiben über Tastenkürzel erreichbar. IntelliJ verwaltet Dokument, Speichern, Git und Rückgängig-Verlauf. **⌘S / Ctrl+S** speichert ausdrücklich. Neue Dateien erzeugst du über IntelliJs Projektwerkzeuge; Kalender und Meeting-Notizen gehören zu den eigenständigen Apps.
+Suchen (**⌘F / Ctrl+F**), Rückgängig und Wiederherstellen bleiben über Tastenkürzel erreichbar. IntelliJ verwaltet Dokument, Speichern, Git und Rückgängig-Verlauf. **⌘S / Ctrl+S** speichert ausdrücklich. Unter macOS funktionieren die gewohnten Textnavigations-Kürzel wie in anderen Mac-Apps: ⌘← / ⌘→ springen an Anfang oder Ende der sichtbaren Zeile, ⌘↑ / ⌘↓ an Anfang oder Ende des Dokuments, ⌥← / ⌥→ wortweise, mit ⇧ wird markiert; ⌘⌫ und ⌥⌫ löschen bis zum Zeilenanfang bzw. das vorherige Wort. Neue Dateien erzeugst du über IntelliJs Projektwerkzeuge, Meeting-Notizen wie unter [Meeting-Notizen](#meeting-notizen) beschrieben.
 
 Ändert ein anderer Editor das Dokument, lädt Merkzeug es neu, sofern keine lokalen Änderungen vorliegen. Andernfalls kannst du im Konflikthinweis die andere Version laden oder bewusst deine eigenen Änderungen behalten.
+
+## Meeting-Notizen
+
+Klicke im Projektbaum mit der rechten Maustaste auf einen Ordner und wähle **Neu → Merkzeug-Meeting-Notiz…**; **Datei → Neu** bietet denselben Eintrag für den ausgewählten Ordner bzw. die ausgewählte Datei. Wähle einen Termin der nächsten 14 Tage: Merkzeug legt die Notiz in diesem Ordner an und öffnet sie im Merkzeug-Tab. Wählst du denselben Termin erneut, öffnet sich die vorhandene Notiz statt eines Duplikats.
+
+Die Termine stammen aus den **Kalenderquellen** im Dialog: ICS-Dateien importieren oder private HTTPS-/Webcal-Feeds abonnieren, etwa aus iCloud, Google oder Outlook. IntelliJ speichert diese Quellen im eigenen Passwortspeicher, getrennt von der Desktop-App. Unter Windows erscheinen wie in der Desktop-App zusätzlich die Termine aus dem klassischen Outlook; beim ersten Mal fragt Outlook eventuell nach der Erlaubnis. Die macOS-Kalender-App kann IntelliJ nicht lesen – abonniere stattdessen den Feed des Kalenders.
+
+Den Pfad einer Notiz oder eines Ordners kopierst du mit IntelliJs **Copy Path/Reference…** im Projektbaum: **Absolute Path** oder **Path From Content Root** – Letzteres entspricht dem Vault-relativen Pfad, wenn der Projektstamm dein Vault ist.
 
 ## Lese- und Navigationsmodus (geplant)
 
@@ -95,7 +103,7 @@ Fehlende Dateien werden nur bei Auswahl angelegt. **Später** verschiebt den Hin
 
 ## Grenzen, Lizenz und Support
 
-Dateien und Bilder außerhalb des aktuellen Projektstamms sind nicht zugänglich. Links öffnen andere Dateien; die Navigation zu Überschriften in anderen Dokumenten ist noch unvollständig. Beim PDF-Export wird der Editor vorübergehend verlassen und anschließend neu geladen. Desktop-Vault-Einstellungen, native Kalender und Massenexport gehören nicht zum Plugin. Die Marketplace-Ausgabe enthält die noch unveröffentlichte Tour und das Video nicht.
+Dateien und Bilder außerhalb des aktuellen Projektstamms sind nicht zugänglich. Links öffnen andere Dateien; die Navigation zu Überschriften in anderen Dokumenten ist noch unvollständig. Beim PDF-Export wird der Editor vorübergehend verlassen und anschließend neu geladen. Desktop-Vault-Einstellungen, die macOS-Kalender-App und Massenexport gehören nicht zum Plugin. Die Marketplace-Ausgabe enthält die noch unveröffentlichte Tour und das Video nicht.
 
 Merkzeug steht unter der [MIT-Lizenz](../../resources/legal/EULA.de.md). Lizenz und Hinweise zu Drittanbietern liegen auch dem Plugin bei.
 
