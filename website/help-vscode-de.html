@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de">
+<html lang="de" class="no-js">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -12,23 +12,29 @@
 <meta property="og:description" content="Markdown lesen, visuell bearbeiten und als Dokument im eigenen Layout teilen. Für Mac, iPhone, iPad, Linux und IntelliJ IDEA.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://merkzeug.creative-it.com/assets/mac-de.png">
-<link rel="stylesheet" href="landing.css?v=20260924-image-layout">
+<link rel="preload" href="fonts/barlow-condensed-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="drafting.css?v=20260929-draft6">
 <script defer src="landing.js?v=20260924-image-layout">
+</script>
+<script defer src="drafting.js?v=20260929-draft6">
 </script>
 </head>
 <body>
 <a class="skip" href="#content">Zum Inhalt</a>
-<header>
+<header class="nav">
+<div class="container">
 <a class="brand" href="de.html">
-<img src="assets/icon.png" alt="" width="36" height="36">
-<strong>Merkzeug</strong>
+<img src="assets/icon.png" alt="" width="32" height="32">
+<strong>Merkzeug<span class="red">.</span></strong>
+<small class="mono">/ von creative-it</small>
 </a>
-<nav aria-label="Hauptnavigation">
+<nav aria-label="Hauptnavigation" class="mono">
 <a href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug">GitHub</a>
 <a href="help-de.html">Hilfe</a>
 <a href="https://support.apps.creative-it.com/?app=merkzeug&amp;lang=de">Support</a>
 <a href="help-vscode-en.html" lang="en">English</a>
 </nav>
+</div>
 </header>
 <main id="content" class="guide"><p class="notice">Wähle deine Edition: Mac & Linux, iPhone & iPad, IntelliJ IDEA oder Visual Studio Code.</p><p><a href="help-de.html">Mac &amp; Linux</a> · <a href="help-ios-de.html">iPhone &amp; iPad</a> · <a href="help-intellij-de.html">IntelliJ IDEA</a> · <a href="help-vscode-de.html">Visual Studio Code</a></p><h1 id="merkzeug-für-visual-studio-code">Merkzeug für Visual Studio Code</h1>
 <p>Die VS-Code-Erweiterung bietet dieselben Funktionen wie das <a href="help-intellij-de.html">IntelliJ-Plugin</a>. Sie nutzt die VS-Code-eigenen Mechanismen für Einstellungen, Befehle, Speichern, Rückgängig-Verlauf und Datei-Refactoring.</p>
@@ -130,8 +136,9 @@
 <h2 id="lizenz">Lizenz</h2>
 <p>Merkzeug steht unter der <a href="license-de.html">MIT-Lizenz</a>. Das Erweiterungspaket enthält die Lizenz und die Lizenzhinweise von Drittanbietern.</p>
 </main><footer>
+<div class="container footer-inner">
 <span>© 2026 creative-it Software &amp; Consulting e.U.</span>
-<nav aria-label="Weitere Links">
+<nav aria-label="Weitere Links" class="mono">
 <a href="release-notes-de.html">Release Notes</a>
 <a href="privacy-de.html">Datenschutz</a>
 <a href="license-de.html">Lizenz</a>
@@ -139,6 +146,7 @@
 <a href="https://apps.creative-it.com/">Weitere Apps</a>
 <a href="https://www.creative-it.com/">creative-it</a>
 </nav>
+</div>
 </footer>
 </body>
 </html>

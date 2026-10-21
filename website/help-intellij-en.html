@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -12,25 +12,29 @@
 <meta property="og:description" content="Explore Markdown, edit visually, and share documents with your layout. For Mac, iPhone, iPad, Linux and IntelliJ IDEA.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://merkzeug.creative-it.com/assets/mac-en.png">
-<link rel="stylesheet" href="sheets.css?v=20260929-sheets">
+<link rel="preload" href="fonts/barlow-condensed-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="drafting.css?v=20260929-draft6">
 <script defer src="landing.js?v=20260924-image-layout">
 </script>
-<script defer src="thread.js?v=20260929-sheets">
+<script defer src="drafting.js?v=20260929-draft6">
 </script>
 </head>
 <body>
 <a class="skip" href="#content">Skip to content</a>
-<header>
+<header class="nav">
+<div class="container">
 <a class="brand" href="index.html">
-<img src="assets/icon.png" alt="" width="36" height="36">
-<strong>Merkzeug</strong>
+<img src="assets/icon.png" alt="" width="32" height="32">
+<strong>Merkzeug<span class="red">.</span></strong>
+<small class="mono">/ by creative-it</small>
 </a>
-<nav aria-label="Main navigation">
+<nav aria-label="Main navigation" class="mono">
 <a href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug">GitHub</a>
 <a href="help-en.html">Help</a>
 <a href="https://support.apps.creative-it.com/?app=merkzeug&amp;lang=en">Support</a>
 <a href="help-intellij-de.html" lang="de">Deutsch</a>
 </nav>
+</div>
 </header>
 <main id="content" class="guide"><p class="notice">Choose your edition: Mac & Linux, iPhone & iPad, IntelliJ IDEA or Visual Studio Code.</p><p><a href="help-en.html">Mac &amp; Linux</a> · <a href="help-ios-en.html">iPhone &amp; iPad</a> · <a href="help-intellij-en.html">IntelliJ IDEA</a> · <a href="help-vscode-en.html">Visual Studio Code</a></p><h1 id="intellij-idea-guide">IntelliJ IDEA guide</h1>
 <p>The same features are available in Visual Studio Code; see the <a href="help-vscode-en.html">VS Code guide</a>.</p>
@@ -54,9 +58,13 @@
 </ol>
 <p>The built-in Markdown editor remains available. Marketplace installations receive updates through IntelliJ’s plugin manager; update a beta ZIP through the same disk-install procedure. To remove Merkzeug, uninstall it in Settings → Plugins and restart when requested. Notes remain ordinary Markdown files.</p>
 <h2 id="editing">Editing</h2>
-<p>Use the shared visual editor, slash menu, formatting tools, frontmatter panel and Mermaid diagrams. The compact toolbar provides paragraph styles, bold, italic, strikethrough, inline code, lists, quotes, code blocks, links, images, tables and dividers. Search (⌘F / Ctrl+F), undo and redo remain available through keyboard shortcuts without duplicate toolbar buttons. Changes update IntelliJ&#39;s document; IntelliJ owns disk saving, Git integration and undo history. <strong>⌘S / Ctrl+S</strong> explicitly saves.</p>
+<p>Use the shared visual editor, slash menu, formatting tools, frontmatter panel, Mermaid diagrams and Obsidian-compatible callouts (<code>&gt; [!type] Title</code>, including GitHub alerts such as <code>&gt; [!NOTE]</code>). HTML <code>&lt;img&gt;</code> tags are shown as images with their <code>width</code>/<code>height</code>; the HTML stays unchanged. The compact toolbar provides paragraph styles, bold, italic, strikethrough, inline code, lists, quotes, code blocks, links, images, tables and dividers. Search (⌘F / Ctrl+F), undo and redo remain available through keyboard shortcuts without duplicate toolbar buttons. Changes update IntelliJ&#39;s document; IntelliJ owns disk saving, Git integration and undo history. <strong>⌘S / Ctrl+S</strong> explicitly saves. On macOS, the usual text navigation shortcuts work as in other Mac apps: ⌘← / ⌘→ move to the start or end of the visual line, ⌘↑ / ⌘↓ to the start or end of the document, ⌥← / ⌥→ by word, with ⇧ to select; ⌘⌫ and ⌥⌫ delete to the line start or the previous word.</p>
 <p>Selecting a whole table cell highlights the cell; click inside its text to place the caret and edit. Text and links retain their colors while the cell is selected, including when using PDF-template styles.</p>
 <p>If another editor changes the document, Merkzeug reloads it when there are no local edits. Otherwise a conflict banner lets you reload the other version or deliberately keep your own version.</p>
+<h2 id="meeting-notes">Meeting notes</h2>
+<p>Right-click a folder in the project view and choose <strong>New → Merkzeug Meeting Note…</strong>; <strong>File → New</strong> offers the same entry for the selected folder or file. Choose an event from the next 14 days: Merkzeug creates the note in that folder and opens it in the Merkzeug tab. Choosing the same event again reopens its existing note instead of creating a duplicate.</p>
+<p>Events come from <strong>Calendar sources</strong> in the dialog: import ICS files or subscribe to private HTTPS/Webcal feeds, for example from iCloud, Google or Outlook. IntelliJ keeps these sources in its password safe, separately from the desktop app. On Windows, events from classic Outlook appear as well, as in the desktop app; Outlook may ask for permission the first time. The macOS Calendar app cannot be read from IntelliJ; subscribe to the calendar&#39;s feed instead.</p>
+<p>To copy the path of a note or folder, use IntelliJ&#39;s <strong>Copy Path/Reference…</strong> in the project view: <strong>Absolute Path</strong>, or <strong>Path From Content Root</strong>, which matches the vault-relative path when the project root is your vault.</p>
 <h2 id="reading-and-navigation-modes-planned">Reading and navigation modes (planned)</h2>
 <p>The current plugin follows the file&#39;s write permissions; a manual Read/Edit switch is not available yet. The following describes the planned behavior.</p>
 <p>Each Merkzeug editor stays associated with its IntelliJ file. Following an internal link will ask IntelliJ to open the destination in its own editor tab or activate its already open tab; it will not replace the source editor&#39;s document.</p>
@@ -86,7 +94,7 @@
 <li>Files and images outside the current project root are not accessible through the plugin.</li>
 <li>Cross-document links open the target file; cross-document heading navigation is incomplete.</li>
 <li>PDF export temporarily switches away from the editor, then reloads the document.</li>
-<li>Desktop vault settings, native OS calendars and bulk PDF export are not part of the plugin.</li>
+<li>Desktop vault settings, the macOS Calendar app and bulk PDF export are not part of the plugin.</li>
 </ul>
 
 <h2 id="contact-support">Contact support</h2>
@@ -96,7 +104,7 @@
 <h2 id="appearance-tours-and-agent-guidance">Appearance, tours and agent guidance</h2>
 <p>The editor automatically follows IntelliJ’s active theme, including live changes. There is no separate appearance selector. The <strong>⋯</strong> menu contains the guided tour, the prepared desktop tour video, attachment guidance and a shortcut to the PDF settings. These controls stay hidden during normal editing.</p>
 <p>In the <strong>⋯</strong> menu, Merkzeug can suggest root <code>AGENTS.md</code> / <code>CLAUDE.md</code> instructions for <code>Note.md</code> and <code>Note.assets/</code>. Review the single proposed text and the full contents of both instruction files. Select the destination files explicitly before choosing <strong>Add</strong>; none is preselected. For example, leave <code>CLAUDE.md</code> unchanged when it only redirects to <code>AGENTS.md</code>. Missing files are created only when selected. <strong>Later</strong> postpones it for the current session; <strong>Do not suggest again for this vault</strong> suppresses future prompts for that vault. Contradictory or unclear attachment rules require manual review. Concurrent external changes are preserved and require a refreshed preview. Existing shared <code>assets/</code> references remain readable.</p>
-<p>Calendar and meeting-note creation are available in the standalone apps. Create new files using IntelliJ’s project tools.</p>
+<p>Create new files using IntelliJ’s project tools; meeting notes are described in <a href="#meeting-notes">Meeting notes</a>.</p>
 <p>After installing a plugin update while IntelliJ is running, restart the IDE to load it. Synchronization status remains available to assistive technology and as a tooltip in the toolbar.</p>
 <h2 id="preview-pdf-styles-while-editing">Preview PDF styles while editing</h2>
 <p>Enable <strong>Use PDF template while editing</strong> in the <strong>⋯</strong> menu. The choice is remembered per project. Content styles from the project&#39;s PDF template apply to the editor; the frontmatter area shares its light paper surface; toolbar, dialogs and IDE controls keep the IntelliJ theme. Disable the option to restore the normal editor appearance. This previews content typography and colors, not PDF pagination, cover pages or headers and footers. The preview refreshes after changing PDF settings and when the editor window regains focus.</p>
@@ -128,8 +136,9 @@
 <h2 id="about-merkzeug">About Merkzeug</h2>
 <p>Merkzeug is open source under the MIT License. The About Merkzeug view shows the version, publisher and product website. On desktop, use the Merkzeug menu; on iPhone/iPad, open Help; in IntelliJ, open the editor’s <strong>…</strong> menu.</p>
 </main><footer>
+<div class="container footer-inner">
 <span>© 2026 creative-it Software &amp; Consulting e.U.</span>
-<nav aria-label="Footer">
+<nav aria-label="Footer" class="mono">
 <a href="release-notes-en.html">Release Notes</a>
 <a href="privacy-en.html">Privacy</a>
 <a href="license-en.html">License</a>
@@ -137,6 +146,7 @@
 <a href="https://apps.creative-it.com/">More apps</a>
 <a href="https://www.creative-it.com/">creative-it</a>
 </nav>
+</div>
 </footer>
 </body>
 </html>

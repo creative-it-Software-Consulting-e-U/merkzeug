@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.4.0
 
 - Desktop: **AI assistant** panel (⇧⌘A) for Mermaid diagrams, summaries, rewrites and tables with one-click insertion into the note. Backends: Anthropic API and OpenAI API with your own key, or the locally installed Claude Code and Codex CLIs with their existing login. Mermaid answers are validated and repaired automatically before they are offered.
 - Desktop: the file tree context menu offers **Copy path** (vault-relative or absolute) and, on folders, **New meeting note…** for that folder.
@@ -10,9 +10,9 @@
 - The caret stays at the end of a soft-wrapped line after ⌘→ instead of jumping to the next line.
 - Visual Studio Code extension with the same features as the IntelliJ plugin: visual editing of the VS Code document with native saving and undo, `.assets` companion folders and link updates on rename/move, PDF export and printing with templates via an installed Chromium browser, vault and central templates, template styling prompts, agent guidance, release notes and support. Settings use VS Code's Settings editor (`merkzeug.*`).
 - IntelliJ and VS Code share one IDE web shell (`@merkzeug/ide`); a parity test keeps their bridge requests identical.
-
-## 1.3.1
-
+- Obsidian callouts and GitHub alerts (`> [!note]`, `> [!warning]` …) render as colored, foldable boxes; the slash menu inserts them and PDF exports print them expanded.
+- Raw HTML `<img>` tags display as images (with width, height and centering) in the editor and PDF export; note moves and renames update their paths.
+- Mermaid 12, Electron 44.9, Capacitor 8.5.3 and current Milkdown/React releases.
 - PDF export no longer fails with “The source image cannot be decoded” when a document contains inline HTML such as `<details>`; a broken image no longer aborts the whole export.
 
 ## 1.3.0
