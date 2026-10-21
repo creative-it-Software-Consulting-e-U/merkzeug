@@ -14,3 +14,15 @@ export function renderMermaid(code: string, forceLight = false): Promise<string>
   queue = render.catch(() => {})
   return render
 }
+
+/** Parses a diagram without rendering; resolves with the error message or null when valid. */
+export async function validateMermaid(code: string): Promise<string | null> {
+  mermaidModule ??= (await import('mermaid')).default
+  try {
+    await mermaidModule.parse(code)
+    return null
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    return message.split('\n').filter((line) => line.trim()).slice(0, 4).join('\n')
+  }
+}

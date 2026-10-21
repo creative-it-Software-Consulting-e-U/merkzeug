@@ -34,6 +34,8 @@ This test currently requires macOS and the installed matching IDE. It launches a
 
 Run in a graphical macOS session with application access. A filesystem sandbox can prevent AppKit application registration before IntelliJ starts. The test does not restart or install plugins in the user's normal IDE.
 
+`python3 intellij/meeting-smoke.py [de|en]` checks the New-menu meeting action and its dialog bridge headless: no windows open, credentials stay in memory, and ICS fixtures replace real calendars. Classic Outlook on Windows still needs a manual check in a Windows session.
+
 Inspect `actual.pdf` visually after meaningful rendering changes; successful file creation alone is insufficient. The last prototype test checked a four-page PDF with cover, table of contents, Mermaid, table, umlauts, linked appendix and page headers/footers.
 
 ## Integration boundaries

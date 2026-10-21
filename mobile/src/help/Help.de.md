@@ -21,7 +21,7 @@ funktioniert auch jeder andere Ordner aus der Dateien-App.
 ## Navigieren
 
 - Die Ordneransicht zeigt Unterordner und Notizen als Liste; Antippen
-  öffnet den Eintrag. Langes Drücken öffnet **Umbenennen** und **Löschen**. Dateinamen und Menübeschriftungen sind nicht als Text auswählbar; Notiztext bleibt auswählbar.
+  öffnet den Eintrag. Langes Drücken öffnet **Pfad kopieren**, **Umbenennen** und **Löschen**; Ordner bieten zusätzlich **Neue Meeting-Notiz…**. Dateinamen und Menübeschriftungen sind nicht als Text auswählbar; Notiztext bleibt auswählbar.
 - Links in Notizen führen direkt zur verlinkten Notiz oder zum Ordner.
 - **Zurück und vorwärts**: mit den Pfeiltasten ‹ › oben links – oder per
   Wischgeste von der linken bzw. rechten Bildschirmkante.
@@ -57,8 +57,10 @@ Bearbeitungsmodus:
 
 - **＋** in der Ordneransicht legt eine neue Notiz oder einen neuen
   Ordner an. Neue Notizen öffnen sich direkt im Bearbeitungsmodus.
-- **Eintrag gedrückt halten** öffnet das Menü mit *Umbenennen* und
-  *Löschen*. Beim Löschen eines Ordners verschwindet sein gesamter
+- **Eintrag gedrückt halten** öffnet das Menü mit *Pfad kopieren*
+  (relativ zum Vault, z. B. `Projekte/Plan.md`), *Umbenennen* und
+  *Löschen*. Bei Ordnern legt *Neue Meeting-Notiz…* die Meeting-Notiz in
+  diesem Ordner an. Beim Löschen eines Ordners verschwindet sein gesamter
   Inhalt – in Working Copy lässt sich das bis zum nächsten Commit
   rückgängig machen.
 

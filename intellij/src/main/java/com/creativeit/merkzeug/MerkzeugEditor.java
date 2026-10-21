@@ -66,19 +66,7 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
             } catch (RuntimeException ignored) { }
             return null;
         });
-        browser.getJBCefClient().getCefClient().addRequestHandler(new CefRequestHandlerAdapter() {
-            @Override public boolean onBeforeBrowse(CefBrowser b, CefFrame f, CefRequest r, boolean gesture, boolean redirect) {
-                return !r.getURL().startsWith(origin);
-            }
-            @Override public CefResourceRequestHandler getResourceRequestHandler(CefBrowser b, CefFrame f, CefRequest r, boolean navigation, boolean download, String initiator, BoolRef disable) {
-                return new CefResourceRequestHandlerAdapter() {
-                    @Override public CefResourceHandler getResourceHandler(CefBrowser b2, CefFrame f2, CefRequest request) {
-                        if (!request.getURL().startsWith(origin)) return null;
-                        return resource(request.getURL());
-                    }
-                };
-            }
-        });
+        WebAssets.install(browser, origin, uri -> uri.getPath().equals("/image") ? image(uri) : null);
         browser.getJBCefClient().getCefClient().addLoadHandler(new CefLoadHandlerAdapter() {
             @Override public void onLoadEnd(CefBrowser b, CefFrame frame, int status) {
                 if (!frame.isMain() || !frame.getURL().startsWith(origin)) return;
@@ -93,7 +81,7 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
         }, this);
         ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(LafManagerListener.TOPIC, manager -> {
             browser.getComponent().setBackground(UIUtil.getPanelBackground());
-            script("window.__merkzeugTheme?.(" + JSON.toJson(theme()) + ")");
+            script("window.__merkzeugTheme?.(" + JSON.toJson(WebAssets.theme()) + ")");
         });
         project.getMessageBus().connect(this).subscribe(VirtualFileManager.VFS_CHANGES, new com.intellij.openapi.vfs.newvfs.BulkFileListener() {
             @Override public void after(java.util.List<? extends com.intellij.openapi.vfs.newvfs.events.VFileEvent> events) {
@@ -111,14 +99,6 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
         browser.loadURL(origin + "index.html");
     }
 
-    private static String color(java.awt.Color value) { return String.format("#%02x%02x%02x", value.getRed(), value.getGreen(), value.getBlue()); }
-    private static Map<String, Object> theme() {
-        java.awt.Color bg = UIUtil.getPanelBackground();
-        return Map.of("choice", "system", "dark", (bg.getRed() * 299 + bg.getGreen() * 587 + bg.getBlue() * 114) < 128000,
-            "colors", Map.of("bg", color(bg), "bg-sidebar", color(bg), "text", color(UIUtil.getLabelForeground()),
-                "text-dim", color(UIUtil.getContextHelpForeground())));
-    }
-
     private void script(String code) {
         if (!disposed) browser.getCefBrowser().executeJavaScript(code, origin, 0);
     }
@@ -132,7 +112,7 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
         if (disposed || project.isDisposed()) return;
         try {
             Object result = switch (arg(m, "method")) {
-                case "init" -> Map.of("path", file.getPath(), "vault", root().toString().replace('\\', '/'), "readonly", !file.isWritable(), "locale", Locale.getDefault().toLanguageTag(), "theme", theme(), "themeChoice", "system", "tourSeen", PropertiesComponent.getInstance().getBoolean("merkzeug.tour.seen", false));
+                case "init" -> Map.of("path", file.getPath(), "vault", root().toString().replace('\\', '/'), "readonly", !file.isWritable(), "locale", Locale.getDefault().toLanguageTag(), "theme", WebAssets.theme(), "themeChoice", "system", "tourSeen", PropertiesComponent.getInstance().getBoolean("merkzeug.tour.seen", false));
                 case "tourSeen" -> { PropertiesComponent.getInstance().setValue("merkzeug.tour.seen", true); yield true; }
                 case "settings" -> { com.intellij.openapi.options.ShowSettingsUtil.getInstance().showSettingsDialog(project, MerkzeugSettings.class); yield true; }
                 case "guidanceSuppressed" -> guidanceDismissed.contains(root().toString()) || PropertiesComponent.getInstance().getBoolean("merkzeug.guidance." + root(), false);
@@ -305,7 +285,7 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
             if (ref.matches("(?i)^(data:|https?:).*")) continue;
             Path image = templateDirectory.resolve(URLDecoder.decode(ref, StandardCharsets.UTF_8)).normalize().toRealPath();
             if (!image.startsWith(templateDirectory)) throw new IOException(Messages.text("Template image is outside the template folder"));
-            String mime = mime(image.toString());
+            String mime = WebAssets.mime(image.toString());
             if (!mime.startsWith("image/")) throw new IOException(Messages.text("Template resource is not an image"));
             matcher.appendReplacement(output, java.util.regex.Matcher.quoteReplacement(matcher.group(1) + "data:" + mime + ";base64," + Base64.getEncoder().encodeToString(Files.readAllBytes(image))));
         }
@@ -391,65 +371,14 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
         else JOptionPane.showMessageDialog(panel, "PDF saved:\n" + target, "Merkzeug PDF", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private CefResourceHandler resource(String url) {
-        byte[] bytes;
-        String type;
-        int status = 200;
+    private CefResourceHandler image(URI uri) {
         try {
-            URI uri = URI.create(url);
-            String path = uri.getPath();
-            if (path.equals("/image")) {
-                String value = URLDecoder.decode(uri.getRawQuery().substring("path=".length()), StandardCharsets.UTF_8);
-                Path image = allowed(value);
-                type = mime(image.toString());
-                if (!type.startsWith("image/")) throw new IOException(Messages.text("Not an image file"));
-                bytes = Files.readAllBytes(image);
-            } else {
-                if (path.contains("..")) throw new IOException(Messages.text("Invalid resource path"));
-                try (InputStream input = getClass().getResourceAsStream("/web" + path)) {
-                    if (input == null) throw new FileNotFoundException(path);
-                    bytes = input.readAllBytes();
-                }
-                if (path.equals("/index.html") && !"pdf".equals(uri.getQuery())) {
-                    var initialTheme = theme();
-                    String choice = initialTheme.get("choice").toString();
-                    boolean dark = choice.equals("dark") || (choice.equals("system") && Boolean.TRUE.equals(initialTheme.get("dark")));
-                    String meta = Base64.getEncoder().encodeToString(JSON.toJson(initialTheme).getBytes(StandardCharsets.UTF_8));
-                    String html = new String(bytes, StandardCharsets.UTF_8).replace("<html>", "<html data-theme=\"" + (dark ? "dark" : "light") + "\">")
-                        .replace("<head>", "<head><meta name=\"merkzeug-host-theme\" content=\"" + meta + "\">");
-                    bytes = html.getBytes(StandardCharsets.UTF_8);
-                }
-                type = mime(path);
-            }
-        } catch (Exception e) { bytes = "Not found".getBytes(StandardCharsets.UTF_8); type = "text/plain"; status = 404; }
-        final byte[] data = bytes;
-        final String contentType = type;
-        final int responseStatus = status;
-        return new CefResourceHandlerAdapter() {
-            private int offset;
-            @Override public boolean processRequest(CefRequest request, CefCallback callback) { callback.Continue(); return true; }
-            @Override public boolean open(CefRequest request, BoolRef handle, CefCallback callback) { handle.set(true); return true; }
-            @Override public void getResponseHeaders(CefResponse response, IntRef length, StringRef redirect) {
-                response.setStatus(responseStatus); response.setMimeType(contentType); length.set(data.length);
-                response.setHeaderMap(Map.of("Content-Security-Policy", "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: http:; font-src 'self' data:; connect-src 'self'; media-src 'self'; object-src 'none'; base-uri 'none'"));
-            }
-            private boolean copy(byte[] out, int count, IntRef read) {
-                int size = Math.min(count, data.length - offset);
-                if (size <= 0) { read.set(0); return false; }
-                System.arraycopy(data, offset, out, 0, size); offset += size; read.set(size); return true;
-            }
-            @Override public boolean readResponse(byte[] out, int count, IntRef read, CefCallback callback) { return copy(out, count, read); }
-            @Override public boolean read(byte[] out, int count, IntRef read, CefResourceReadCallback callback) { return copy(out, count, read); }
-        };
-    }
-    private static String mime(String path) {
-        String ext = path.substring(path.lastIndexOf('.') + 1).toLowerCase(Locale.ROOT);
-        return switch (ext) {
-            case "mp4" -> "video/mp4"; case "html" -> "text/html"; case "js" -> "application/javascript"; case "css" -> "text/css";
-            case "svg" -> "image/svg+xml"; case "png" -> "image/png"; case "jpg", "jpeg" -> "image/jpeg";
-            case "gif" -> "image/gif"; case "webp" -> "image/webp"; case "bmp" -> "image/bmp"; case "avif" -> "image/avif";
-            case "woff2" -> "font/woff2"; case "woff" -> "font/woff"; default -> "application/octet-stream";
-        };
+            String value = URLDecoder.decode(uri.getRawQuery().substring("path=".length()), StandardCharsets.UTF_8);
+            Path image = allowed(value);
+            String type = WebAssets.mime(image.toString());
+            if (!type.startsWith("image/")) throw new IOException(Messages.text("Not an image file"));
+            return WebAssets.response(Files.readAllBytes(image), type, 200);
+        } catch (Exception e) { return WebAssets.notFound(); }
     }
     @Override public @NotNull JComponent getComponent() { return panel; }
     @Override public JComponent getPreferredFocusedComponent() { return browser.getComponent(); }

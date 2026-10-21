@@ -48,8 +48,10 @@ Links zeigt die Sidebar den Vault als hierarchischen Baum.
   sich mit der Maus ziehen; Doppelklick darauf stellt die Standardbreite wieder
   her. Reicht der Platz für lange Namen oder tiefe Hierarchien nicht, kann der
   Baum horizontal und vertikal gescrollt werden.
-- **Kontextmenü** (Rechtsklick): neue Notiz, neuer Ordner, als PDF exportieren,
-  Umbenennen, in den Papierkorb legen, im Finder/Explorer zeigen.
+- **Kontextmenü** (Rechtsklick): neue Notiz, neuer Ordner, neue Meeting-Notiz
+  (im angeklickten Ordner), als PDF exportieren, Umbenennen, im
+  Finder/Explorer zeigen, **Pfad kopieren** (relativ zum Vault mit `/` als
+  Trenner oder absolut), in den Papierkorb legen.
 - **Mehrfachauswahl:** ⌘-Klick (Windows/Linux: Ctrl-Klick) nimmt weitere
   Notizen in die Auswahl auf bzw. wieder heraus, ⇧-Klick wählt den Bereich
   bis zur angeklickten Notiz — beides nur unter Notizen **desselben Ordners**.
@@ -387,6 +389,7 @@ Ist der Vault ein **Git-Repository**, erscheint unten in der Sidebar eine Status
 | Zweite Sektion ein-/ausblenden | ⌘\ | Strg+\ |
 | Tab in andere Sektion verschieben | ⇧⌘\ | Strg+Shift+\ |
 | Ressourcen ein-/ausblenden | ⇧⌘R | Strg+Shift+R |
+| KI-Assistent ein-/ausblenden | ⇧⌘A | Strg+Shift+A |
 | Diese Hilfe | ⌘? | F1 |
 
 *(Windows/Linux: ⌘ = Strg, ⌥ = Alt, ⇧ = Umschalt)*
@@ -419,6 +422,40 @@ Erstelle zuerst eine Kopie und übergib dem Agenten diesen Ordner mit folgendem 
 > Lies README.md und alle fünf Vorlagendateien in diesem Ordner. Passe diese Kopie an meinen Stil an: [FARBEN], [SCHRIFTEN] und [LOKALER LOGO-PFAD]. Behalte Dateinamen, Titel-/Datumsplatzhalter und Chromium-Seitennummern bei. Verwende Inline-CSS für Kopf-/Fußzeilen und begrenze Dokumentstile auf PDF-Selektoren. Nutze lokale Dateien, keine Skripte oder Netzwerkabhängigkeiten. Unterstütze A4 im Hoch- und Querformat ohne abgeschnittene Inhalte. Dokumentiere Änderungen in README.md. Exportiere zur Prüfung Notizen mit langem Titel, Überschriften, Links, Code, einer Tabelle und einem Diagramm und kontrolliere jede PDF-Seite.
 
 Die README der Vorlage enthält das Dateiformat und einen wiederverwendbaren Prompt. Prüfe das Ergebnis durch einen Export in Merkzeug: Eine Browser-Vorschau allein prüft keine Seitenumbrüche. **Vorlagen-Anleitung und Agenten-Prompt** in den Einstellungen öffnet diesen Abschnitt der Online-Hilfe; dieselbe Anleitung findest du auch in der Offline-Hilfe der App.
+
+## KI-Assistent
+
+**⇧⌘A / Strg+Shift+A** (Menü „Ansicht → KI-Assistent“ oder der Funkel-Button in der
+Editor-Leiste) öffnet rechts eine Assistenten-Leiste. Dort bittest du zum
+Beispiel um ein **Mermaid-Diagramm** zum Text der Notiz, eine Zusammenfassung,
+eine Umformulierung der Auswahl oder eine Tabelle. Die Antwort erscheint im
+Chat; Codeblöcke bekommen die Buttons **Einfügen**, **Auswahl ersetzen** (wenn
+im Editor etwas markiert ist) und **Kopieren**, ganze Antworten **Antwort
+einfügen**. Mermaid-Blöcke werden vor dem Anbieten geprüft und als Vorschau
+gerendert; ein Diagramm, das sich nicht parsen lässt, schickt Merkzeug mit der
+Fehlermeldung automatisch zur Korrektur zurück (höchstens zweimal). Eingefügt
+wird zwischen den Absätzen an der Cursorposition, bei einer frisch geöffneten
+Notiz ohne Cursor am Ende.
+
+**Anbieter** wählst du in den Einstellungen (⌘,) unter **KI-Assistent** oder
+direkt im Kopf der Leiste:
+
+- **Anthropic API (Claude)** und **OpenAI API** mit eigenem API-Schlüssel
+  (Abrechnung nach Verbrauch). Schlüssel liegen verschlüsselt im
+  System-Schlüsselbund, nie im Vault oder in `settings.json`. **Modelle laden**
+  listet die verfügbaren Modelle; leer lässt das Standardmodell gelten.
+- **Claude Code (lokale Anmeldung)** nutzt die auf dem Rechner installierte
+  Claude-Code-CLI samt deren Anmeldung (Abo oder API-Schlüssel).
+- **Codex / ChatGPT (lokale Anmeldung)** nutzt die Codex-CLI – separat
+  installiert oder in der ChatGPT-Desktop-App enthalten – mit deren
+  ChatGPT-Anmeldung. Codex läuft dabei nur lesend in einem leeren Ordner und
+  sieht den Vault nicht.
+
+**Datenschutz:** Gesendet werden deine Frage, die Auswahl im Editor und – solange
+die Checkbox **Notiz als Kontext mitschicken** aktiv ist – die offene Notiz.
+Ohne deine Anfrage wird nichts übertragen; der Hinweis über dem Eingabefeld
+nennt den Anbieter. Die Unterhaltung lebt nur im Fenster und wird nicht
+gespeichert.
 
 ## Darstellung, Tour und Agentenhinweise
 
@@ -525,7 +562,9 @@ Meeting-Notizen unter Linux nutzen ICS-Dateien oder HTTPS/Webcal-Kalenderabos. E
   lassen sich über die Checkbox über der Liste einblenden. **„Frühere
   anzeigen“** blendet vergangene Termine ein, **„Suchen“** durchsucht Titel,
   Personen und Orte im Zeitraum ±90 Tage. Ein Klick auf einen Termin erzeugt
-  eine fertig benannte Notiz: Die Termin-Daten (Datum, Uhrzeit, Ort,
+  eine fertig benannte Notiz im Ordner der aktuellen Auswahl bzw. im
+  angeklickten Ordner, wenn du **Neue Meeting-Notiz…** im Kontextmenü des
+  Dateibaums gewählt hast: Die Termin-Daten (Datum, Uhrzeit, Ort,
   Organisator, Teilnehmer, erkannter Teams/Zoom/Meet/Webex-Link) landen im
   Frontmatter; im Text stehen Datum/Uhrzeit unter der Überschrift, eine
   **abhakbare Teilnehmerliste** (wer war wirklich dabei?) sowie die

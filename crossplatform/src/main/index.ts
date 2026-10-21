@@ -14,7 +14,8 @@ import { pathToFileURL } from 'node:url'
 import { existsSync, mkdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
-import type { TemplateState, CalendarEvent } from '../shared/types'
+import type { TemplateState, CalendarEvent, AiChatRequest, AiProviderId, AiSettings } from '../shared/types'
+import { aiStatus, cancelAiChat, listAiModels, saveAiKey, saveAiSettings, startAiChat } from './ai'
 import {
   createFolder,
   autoRenameNote,
@@ -294,6 +295,25 @@ function registerIpc(): void {
 
   registerPdfIpc()
   ipcMain.handle('zoom:openMermaid', (_e, svg: string) => openMermaidZoom(svg))
+
+  // KI-Assistent
+  const aiSettingsChanged = (): void => {
+    for (const win of BrowserWindow.getAllWindows()) win.webContents.send('ai:settingsChanged')
+  }
+  ipcMain.handle('ai:status', () => aiStatus())
+  ipcMain.handle('ai:saveSettings', (_e, settings: AiSettings) => {
+    const status = saveAiSettings(settings)
+    aiSettingsChanged()
+    return status
+  })
+  ipcMain.handle('ai:saveKey', (_e, provider: 'anthropic' | 'openai', key: string) => {
+    const status = saveAiKey(provider, key)
+    aiSettingsChanged()
+    return status
+  })
+  ipcMain.handle('ai:listModels', (_e, provider: AiProviderId) => listAiModels(provider))
+  ipcMain.handle('ai:chat', (event, request: AiChatRequest) => startAiChat(event.sender, request))
+  ipcMain.handle('ai:cancel', (_e, id: string) => cancelAiChat(id))
 
   // Synchrones Speichern für beforeunload (Fenster-/App-Schluss)
   ipcMain.on('file:writeSync', (event, path: string, content: string) => {

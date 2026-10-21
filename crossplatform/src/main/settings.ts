@@ -1,6 +1,7 @@
 import { app } from 'electron'
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { join, dirname } from 'node:path'
+import type { AiSettings } from '../shared/types'
 
 export interface SavedWindow {
   vault: string | null
@@ -17,6 +18,8 @@ interface Settings {
   folderBookmarks?: Record<string, string>
   /** Ordner mit den PDF-Vorlagen (je Vorlage ein Unterordner) */
   templatesRoot?: string
+  /** KI-Assistent: gewählter Anbieter und Modelle (Schlüssel liegen verschlüsselt daneben) */
+  ai?: AiSettings
 }
 
 let cache: Settings | null = null
@@ -88,5 +91,15 @@ export function claimReleaseNotes(version: string): boolean {
 }
 export function markReleaseNotesSeen(version: string): void {
   loadSettings().releaseNotesSeen = version
+  saveSettings()
+}
+
+export function getAiSettings(): AiSettings {
+  const ai = loadSettings().ai
+  return { provider: ai?.provider ?? null, models: { ...(ai?.models ?? {}) } }
+}
+
+export function setAiSettings(ai: AiSettings): void {
+  loadSettings().ai = { provider: ai.provider, models: { ...ai.models } }
   saveSettings()
 }

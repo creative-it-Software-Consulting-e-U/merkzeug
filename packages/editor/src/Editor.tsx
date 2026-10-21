@@ -8,7 +8,9 @@ import {
   useState
 } from 'react'
 import { Crepe } from '@milkdown/crepe'
-import { editorViewCtx, remarkStringifyOptionsCtx } from '@milkdown/kit/core'
+import { editorViewCtx, parserCtx, remarkStringifyOptionsCtx } from '@milkdown/kit/core'
+import { Slice } from '@milkdown/kit/prose/model'
+import { TextSelection } from '@milkdown/kit/prose/state'
 import { InputRule } from '@milkdown/kit/prose/inputrules'
 import { $inputRule, callCommand } from '@milkdown/kit/utils'
 import { redoCommand, undoCommand } from '@milkdown/kit/plugin/history'
@@ -73,6 +75,13 @@ export interface EditorHandle {
   flush: () => Promise<void>
   flushSync: () => void
   getSelectedText: () => string
+  /** aktueller Markdown-Text des Editors (ohne Frontmatter) */
+  getMarkdown: () => string
+  /**
+   * Markdown an der Cursorposition einfügen ('insert': hinter einer Auswahl)
+   * oder die Auswahl damit ersetzen ('replace')
+   */
+  insertMarkdown: (markdown: string, mode: 'insert' | 'replace') => void
   /** Suchleiste öffnen (mit oder ohne Ersetzen-Zeile) */
   openSearch: (withReplace: boolean) => void
   /** aktuelle Scroll-Position des Editors (für die Tab-Historie) */
@@ -558,6 +567,9 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
           [Crepe.Feature.TopBar]: false
         },
         featureConfigs: {
+          // Der virtuelle Cursor kennt keine Affinität und springt bei weichen
+          // Umbrüchen vom Zeilenende an den Anfang der Folgezeile.
+          [Crepe.Feature.Cursor]: { virtual: false },
           [Crepe.Feature.Placeholder]: {
             text: translate("Start writing — type “/” for commands …"),
             mode: 'block'
@@ -927,6 +939,35 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       },
       jumpToHeading: (fragment) => {
         if (rootRef.current) jumpToFragment(rootRef.current, fragment)
+      },
+      getMarkdown: () => latestMarkdownRef.current ?? '',
+      insertMarkdown: (markdown, mode) => {
+        const crepe = crepeRef.current
+        if (!crepe) return
+        crepe.editor.action((ctx) => {
+          const view = ctx.get(editorViewCtx)
+          const doc = ctx.get(parserCtx)(markdown)
+          if (!doc) return
+          const { state } = view
+          let tr = state.tr
+          if (mode === 'replace' && !state.selection.empty) {
+            tr = tr.replaceSelection(new Slice(doc.content, 0, 0))
+          } else {
+            // Blöcke zwischen den Absätzen einfügen statt den aktuellen zu
+            // zerschneiden; ohne gesetzten Cursor (frisch geöffnete Notiz) ans Ende
+            const $pos = state.selection.empty ? state.selection.$from : state.doc.resolve(state.selection.to)
+            const untouched = state.selection.empty && $pos.pos <= 1 && !view.hasFocus()
+            let at: number
+            if (untouched) at = state.doc.content.size
+            else if ($pos.parent.isTextblock && $pos.parentOffset === 0) at = $pos.before()
+            else if ($pos.parent.isTextblock) at = $pos.after()
+            else at = $pos.pos
+            tr = tr.insert(at, doc.content)
+            tr = tr.setSelection(TextSelection.near(tr.doc.resolve(Math.min(at + doc.content.size, tr.doc.content.size)), -1))
+          }
+          view.dispatch(tr.scrollIntoView())
+          view.focus()
+        })
       },
       getSelectedText: () => {
         const crepe = crepeRef.current

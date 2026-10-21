@@ -47,6 +47,8 @@ with zipfile.ZipFile(jar, 'w', zipfile.ZIP_DEFLATED) as out:
         terms = (ROOT / f'resources/legal/EULA.{language}.md').read_text() + '\n' + (ROOT / f'resources/legal/INTELLIJ-ADDENDUM.{language}.md').read_text()
         out.writestr('META-INF/' + target_name, terms)
     out.write(ROOT / 'crossplatform/resources/THIRD_PARTY_NOTICES.txt', 'META-INF/THIRD_PARTY_NOTICES.txt')
+    # classic Outlook on Windows uses the desktop app's calendar helper
+    out.write(ROOT / 'crossplatform/resources/calendar/merkzeug-calendar.ps1', 'calendar/merkzeug-calendar.ps1')
     for base, prefix in [(ROOT / 'resources/pdf-templates', 'pdf-templates/'), (classes, ''), (ROOT / 'intellij/src/main/resources', ''), (BUILD / 'web', 'web/')]:
         for file in sorted(base.rglob('*')):
             if file.is_file(): out.write(file, prefix + file.relative_to(base).as_posix())

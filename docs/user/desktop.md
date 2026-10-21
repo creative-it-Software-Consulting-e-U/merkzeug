@@ -24,7 +24,7 @@ For an update, quit Merkzeug and install the newer version. Notes live in your v
 4. Changes are saved automatically after a short delay. **⌘S / Ctrl+S** saves explicitly.
 5. Use **File → Export as PDF…** to create a PDF.
 
-Use **File → Open Vault…** to switch folders, or **Recent Vaults** to reopen one. Notes can be organized in subfolders. Right-click an item to rename it, create items or move it to the trash.
+Use **File → Open Vault…** to switch folders, or **Recent Vaults** to reopen one. Notes can be organized in subfolders. Right-click an item to rename it, create notes, folders or meeting notes in a folder, copy its path (relative to the vault or absolute) or move it to the trash.
 
 ## Restoring windows
 
@@ -55,6 +55,10 @@ A sandboxed Mac App Store build is being prepared; it is not published yet. The 
 Choose **System**, **Light** or **Dark** for appearance. System follows the operating system (the IDE in IntelliJ); your choice is saved. The **Guided tour** starts only after you accept the first-use invitation and can be reopened at any time.
 
 When opening a vault, Merkzeug can suggest root `AGENTS.md` / `CLAUDE.md` instructions for `Note.md` and `Note.assets/`. Review the single proposed text and the full contents of both instruction files. Select the destination files explicitly before choosing **Add**; none is preselected. For example, leave `CLAUDE.md` unchanged when it only redirects to `AGENTS.md`. Missing files are created only when selected. **Later** postpones it for the current session; **Do not suggest again for this vault** suppresses future prompts for that vault. Contradictory or unclear attachment rules require manual review. Concurrent external changes are preserved and require a refreshed preview. Existing shared `assets/` references remain readable.
+
+## AI assistant
+
+**View → AI Assistant** (⇧⌘A / Ctrl+Shift+A) opens a panel beside the editor for Mermaid diagrams, summaries, rewrites and tables; answers are inserted into the note with one click and Mermaid blocks are validated first. Providers are the Anthropic and OpenAI APIs with your own key (stored in the system keyring) or the locally installed Claude Code and Codex CLIs with their own login, so no credentials pass through Merkzeug. The open note is only sent while **Send note as context** is checked. Details are in the bundled help under **AI assistant**.
 
 ## Calendar sources
 

@@ -21,6 +21,7 @@ interface SidebarProps {
   onSelect: (path: string, mode?: 'toggle' | 'range') => void
   onCreateNote: (dir: string) => void
   onCreateFolder: (dir: string) => void
+  onCreateMeetingNote: (dir: string) => void
   onRename: (path: string, newName: string) => void
   onTrash: (path: string) => void
   onShowInFolder: (path: string) => void
@@ -59,6 +60,7 @@ export function Sidebar(props: SidebarProps): React.JSX.Element {
             onSelect={props.onSelect}
             onCreateNote={props.onCreateNote}
             onCreateFolder={props.onCreateFolder}
+            onCreateMeetingNote={props.onCreateMeetingNote}
             onRename={props.onRename}
             onTrash={props.onTrash}
             onShowInFolder={props.onShowInFolder}
