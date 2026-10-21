@@ -112,6 +112,86 @@
       "scene": "diagram",
       "fixture": "store/demo/en",
       "sha256": "7f3af474419893841c06ae81a9abe18ccb05d25ea9d1eb884301b08499925a03"
+    },
+    {
+      "file": "ipad-en.png",
+      "locale": "en",
+      "platform": "ipad",
+      "scene": "writing",
+      "fixture": "store/demo/en",
+      "sha256": "29ef1366c2938450b52f9d02f5d90b09ce4ff811d6d4114fca918c5b29569222"
+    },
+    {
+      "file": "ipad-de.png",
+      "locale": "de",
+      "platform": "ipad",
+      "scene": "writing",
+      "fixture": "store/demo/de",
+      "sha256": "6408fa3e353e9d76b1ee0d5f9697e209b0a65cd8395c325d225224fdfec88f88"
+    },
+    {
+      "file": "ipad-en-frontmatter.png",
+      "locale": "en",
+      "platform": "ipad",
+      "scene": "frontmatter",
+      "fixture": "store/demo/en",
+      "sha256": "37a3cf77245e6eff8a656f9fa9fbd493bc7186c939d1606cc8781d25a79b0dfc"
+    },
+    {
+      "file": "ipad-de-frontmatter.png",
+      "locale": "de",
+      "platform": "ipad",
+      "scene": "frontmatter",
+      "fixture": "store/demo/de",
+      "sha256": "66d55a8131a2426ba4bdce1429119ad30fc23ce487d7a1fa91c10c221a4e5d49"
+    },
+    {
+      "file": "intellij-en-editor.png",
+      "locale": "en",
+      "platform": "intellij",
+      "scene": "editor",
+      "fixture": "intellij Showcase project (marketplace capture)",
+      "sha256": "4944ec29d5e1618b67da588c88a714c925bd95b73c402036357931676455089e"
+    },
+    {
+      "file": "intellij-en-template.png",
+      "locale": "en",
+      "platform": "intellij",
+      "scene": "template",
+      "fixture": "intellij Showcase project (marketplace capture)",
+      "sha256": "1f09b78bbaea6ed1fab070c561f9996ee0c98f34c049d654a672917fde0b246d"
+    },
+    {
+      "file": "intellij-en-mermaid.png",
+      "locale": "en",
+      "platform": "intellij",
+      "scene": "mermaid",
+      "fixture": "intellij Showcase project (marketplace capture)",
+      "sha256": "4656ddda835e2aca21b3dc57c7f67279154ec2db5dfca21854baaec31ad6b3ec"
+    },
+    {
+      "file": "intellij-en-agent-guidance.png",
+      "locale": "en",
+      "platform": "intellij",
+      "scene": "agent-guidance",
+      "fixture": "intellij Showcase project (marketplace capture)",
+      "sha256": "96607a741ed3e206ac68b8b8141d59762e91cf0839867db2f8c24c13362f17f9"
+    },
+    {
+      "file": "intellij-en-rename.png",
+      "locale": "en",
+      "platform": "intellij",
+      "scene": "rename",
+      "fixture": "intellij Showcase project (marketplace capture)",
+      "sha256": "bcdd24487f26bfc2d8ce16b8174cb25f9ccf16f49257657a0c24dc9eb42b77df"
+    },
+    {
+      "file": "intellij-en-pdf.png",
+      "locale": "en",
+      "platform": "intellij",
+      "scene": "pdf",
+      "fixture": "intellij Showcase project (marketplace capture)",
+      "sha256": "56c259bf73eb6f02b12b0202076baade92051c38d257e1fe6764ead8fb777c97"
     }
   ]
 }
