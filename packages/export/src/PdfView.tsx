@@ -5,6 +5,7 @@ import { Crepe } from '@milkdown/crepe'
 import { frontmatterFlag, frontmatterScalar, pdfExportTitle, splitFrontmatter } from '@merkzeug/core/docTitle'
 import type { PdfDoc, PdfTemplate } from '@merkzeug/core/pdf'
 import { renderMermaid } from '@merkzeug/editor/mermaid'
+import { enableCallouts } from '@merkzeug/editor/callouts'
 import { isExternalLink, resolveVaultLink } from '@merkzeug/core/paths'
 import { imagesDecoded } from '@merkzeug/core/pdfImages'
 import '@milkdown/crepe/theme/common/style.css'
@@ -154,6 +155,8 @@ function DocView({
           }
         }
       })
+      // Im Druck alle Callouts ausgeklappt: ein PDF kann nichts aufklappen
+      enableCallouts(crepe.editor, { interactive: false })
       await crepe.create()
       if (cancelled) return
       crepe.setReadonly(true)

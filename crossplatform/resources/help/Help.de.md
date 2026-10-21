@@ -122,6 +122,17 @@ Der Editor zeigt die Notiz formatiert an; gespeichert wird Markdown.
 - **Auto-Formatierung beim Tippen:** `# `, `## `, `- `, `1. `, `> ` am Zeilenanfang
   sowie ` ``` ` erzeugen das jeweilige Format sofort; `->` wird zu einem
   Pfeil „→“.
+- **Callouts (Infoboxen):** Ein Zitat, dessen erste Zeile mit `[!typ]`
+  beginnt, wird zu einem farbigen Kasten – kompatibel mit Obsidian-Callouts
+  und GitHub-Alerts, z. B. `> [!info] Optionaler Titel`, gefolgt von
+  `> `-Zeilen mit dem Inhalt. Typen: note, abstract, info, todo, tip, success,
+  question, warning, failure, danger, bug, example und quote, dazu Aliasse wie
+  `important`, `caution` oder `faq`; unbekannte Typen erscheinen wie note.
+  Ohne Titel wird der Typ angezeigt. `[!faq]-` startet eingeklappt, `[!faq]+`
+  ausgeklappt; der Pfeil neben dem Titel klappt den Kasten nur in der Ansicht
+  ein, die Datei bleibt unverändert. Zum Bearbeiten des Markers in die
+  Titelzeile klicken. Einfügen über das Slash-Menü (**Callout**). PDF-Exporte
+  drucken Callouts immer ausgeklappt.
 - **Tabellen:** Einfügen über ⌥⌘T / Strg+Alt+T, das Slash-Menü oder Menü „Bearbeiten“. Mit Tab
   von Zelle zu Zelle springen; Zeilen/Spalten über die Tabellen-Steuerung direkt
   an der Tabelle oder das Menü **Tabelle** einfügen und löschen.

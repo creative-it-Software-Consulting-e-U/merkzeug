@@ -116,6 +116,16 @@ The editor shows the note formatted; what is saved is Markdown.
 - **Auto-formatting while typing:** `# `, `## `, `- `, `1. `, `> ` at the start
   of a line and ` ``` ` immediately create the corresponding format; `->`
   becomes an arrow "→".
+- **Callouts (info boxes):** a quote whose first line starts with `[!type]`
+  becomes a colored box — compatible with Obsidian callouts and GitHub alerts,
+  e.g. `> [!info] Optional title` followed by `> ` lines with the content.
+  Types: note, abstract, info, todo, tip, success, question, warning, failure,
+  danger, bug, example and quote, plus aliases such as `important`, `caution`
+  or `faq`; unknown types look like note. Without a title the type is shown.
+  `[!faq]-` starts collapsed and `[!faq]+` expanded; the arrow next to the
+  title folds the box in the view only, without changing the file. Click into
+  the title line to edit the marker. Insert via the slash menu (**Callout**).
+  PDF exports always print callouts expanded.
 - **Tables:** insert via ⌥⌘T / Ctrl+Alt+T, the slash menu or the Edit menu. Jump from cell to
   cell with Tab; add and delete rows/columns via the table controls right at the
   table or the **Table** menu.

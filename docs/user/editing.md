@@ -8,6 +8,22 @@ For Mermaid, insert a code block with the language `mermaid`. Use its preview co
 
 Paste or insert images using the editor's image controls. Desktop and IntelliJ store inserted images in a sibling `NOTE.assets` directory; the iOS adapter uses a sibling `assets` directory. Keep images with their notes when moving them between machines. Existing image paths are preserved.
 
+## Callouts
+
+A quote whose first line starts with `[!type]` is shown as a colored callout. The syntax matches Obsidian callouts and therefore also covers GitHub alerts such as `[!NOTE]` or `[!WARNING]`:
+
+```markdown
+> [!info] Optional title
+> Content of the callout.
+
+> [!faq]- Collapsed by default
+> Shown after expanding.
+```
+
+Supported types are `note`, `abstract`, `info`, `todo`, `tip`, `success`, `question`, `warning`, `failure`, `danger`, `bug`, `example` and `quote`, including Obsidian's aliases (for example `summary`, `important`, `check`, `faq`, `caution`, `error` or `cite`). Types are case-insensitive; unknown types look like `note`. Without a title, the type name is shown.
+
+A `-` after the marker starts the callout collapsed and a `+` starts it expanded; both show an arrow next to the title. Folding only changes the view, never the file. Click into the title line to see and edit the marker. Use **Callout** in the slash menu to insert one. PDF exports always print callouts expanded.
+
 ## Links and frontmatter
 
 Use ordinary Markdown links such as `[Plan](plan.md)` or `[Section](plan.md#next-steps)`. Local link behavior varies by edition; IntelliJ currently restricts access to the project root.

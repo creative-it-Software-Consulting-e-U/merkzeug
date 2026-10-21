@@ -42,6 +42,11 @@ accidental changes. The pencil **✎** switches to edit mode:
 - Images from your photo library are stored automatically in the
   `NoteName.assets/` folder next to `NoteName.md` when inserted.
 - Mermaid code blocks show a diagram preview.
+- Callouts as in Obsidian and GitHub: a quote starting with `[!type]`
+  (e.g. `> [!warning] Title`) becomes a colored box. `[!type]-` starts
+  collapsed, `[!type]+` expanded; tap the arrow to fold it in the view only.
+  Tap into the title line to edit the marker. The insert menu offers
+  **Callout**.
 
 Selecting a whole table cell highlights the cell; click inside its text to place the caret and edit. Text and links retain their colors while the cell is selected, including when using PDF-template styles.
 

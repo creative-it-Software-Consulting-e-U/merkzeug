@@ -44,6 +44,11 @@ Bearbeitungsmodus:
 - Bilder aus der Foto-Mediathek werden beim Einfügen automatisch im
   Ordner `Notizname.assets/` neben `Notizname.md` abgelegt.
 - Mermaid-Codeblöcke zeigen eine Diagramm-Vorschau.
+- Callouts wie in Obsidian und GitHub: Ein Zitat, das mit `[!typ]` beginnt
+  (z. B. `> [!warning] Titel`), wird zu einem farbigen Kasten. `[!typ]-`
+  startet eingeklappt, `[!typ]+` ausgeklappt; der Pfeil klappt ihn nur in der
+  Ansicht ein. Zum Bearbeiten des Markers in die Titelzeile tippen. Das
+  Einfüge-Menü bietet **Callout**.
 
 ## Anlegen, Umbenennen, Löschen
 
