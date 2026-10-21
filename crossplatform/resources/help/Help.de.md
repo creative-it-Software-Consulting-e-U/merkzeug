@@ -574,6 +574,8 @@ Meeting-Notizen unter Linux nutzen ICS-Dateien oder HTTPS/Webcal-Kalenderabos. E
   Sicherheitsabfrage („Ein Programm versucht, auf … zuzugreifen“), erlaube
   den Zugriff für ein paar Minuten. Unter Linux und mit neuem Outlook importierst du unter **Kalenderquellen** ICS-Dateien oder abonnierst HTTPS/Webcal-Feeds.
 
+**Einstellungen → Kalender** zeigt, welchen Systemkalender Merkzeug liest. Am Mac siehst du dort, ob der Zugriff auf die Kalender-App erlaubt ist und welche Konten er umfasst; **Zugriff erlauben…** fragt macOS nach der Erlaubnis, und **Systemeinstellungen öffnen** führt zu Datenschutz & Sicherheit → Kalender, falls der Zugriff ausgeschaltet wurde. Darunter folgen die Kalenderquellen.
+
 Öffne **Ablage → Neue Meeting-Notiz…** oder nutze den Kalender-Button unter dem Dateibaum. Erlaube am Mac den Kalenderzugriff; die eingerichteten Konten der Apple-Kalender-App liefern die Termine. Unter Linux öffnest du **Kalenderquellen**, importierst eine `.ics`-Datei oder fügst eine HTTPS/Webcal-Abo-URL hinzu. Lade die Termine neu: importierte Dateien sind Momentaufnahmen, Abos lassen sich aktualisieren. Private Abo-URLs werden im System-Schlüsselbund gespeichert und gehören nicht ins Git-Repository.
 
 Wähle einen Termin, um im gewählten Ordner eine Markdown-Meeting-Notiz anzulegen. Bearbeite die Agenda, protokolliere Ergebnisse und hake Teilnehmer und Aufgaben ab. Bei automatischer Benennung folgt der Dateiname der ersten Überschrift; manuell vergebene Namen bleiben erhalten. Der Kalendertermin wird nicht verändert.

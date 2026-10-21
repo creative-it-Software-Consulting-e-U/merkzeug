@@ -552,6 +552,8 @@ Linux meeting notes use ICS files or HTTPS/Webcal calendar subscriptions. There 
   security prompt ("A program is trying to access …"), allow access for a
   few minutes. On Linux and with new Outlook, use **Calendar sources** to import ICS files or subscribe to HTTPS/Webcal feeds.
 
+**Settings → Calendars** shows which system calendar Merkzeug reads. On Mac it shows whether access to the Calendar app is allowed and which accounts it includes; **Allow access…** asks macOS for permission, and **Open System Settings** leads to Privacy & Security → Calendars if access was turned off. The calendar sources are listed below.
+
 Open **File → New Meeting Note…**, or use the calendar button below the file tree. On Mac, allow Calendar access when requested; configured Apple Calendar accounts supply events. On Linux, open **Calendar sources** to import an `.ics` file or add an HTTPS/Webcal subscription URL. Refresh to load current events; imported files are snapshots, subscriptions can be refreshed. Private subscription URLs are stored using the system keyring. Never commit private feed URLs to Git.
 
 Choose an event to create a Markdown meeting note in the selected folder. Edit the agenda, record minutes and mark attendees and tasks as the meeting progresses. The note follows its first heading when renamed automatically; manual filenames are preserved. Your calendar event is never modified.

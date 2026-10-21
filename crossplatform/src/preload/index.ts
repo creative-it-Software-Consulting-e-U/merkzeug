@@ -6,6 +6,7 @@ import type {
   AiProviderId,
   AiSettings,
   AiStatus,
+  CalendarAccess,
   CalendarResult,
   FileNode,
   GitResult,
@@ -39,6 +40,8 @@ const api = {
     ipcRenderer.invoke('calendar:list', fromMs, toMs),
   calendarEventDetail: (event: CalendarEvent): Promise<CalendarEvent> =>
     ipcRenderer.invoke('calendar:detail', event),
+  calendarAccess: (request = false): Promise<CalendarAccess> => ipcRenderer.invoke('calendar:access', request),
+  openCalendarPrivacy: (): Promise<void> => ipcRenderer.invoke('calendar:openPrivacy'),
   createFolder: (dir: string): Promise<string> => ipcRenderer.invoke('file:createFolder', dir),
   renamePath: (path: string, newName: string): Promise<string> =>
     ipcRenderer.invoke('file:rename', path, newName),

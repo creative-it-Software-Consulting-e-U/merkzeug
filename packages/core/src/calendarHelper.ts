@@ -2,7 +2,7 @@
  * Gemeinsame Auswertung der Kalender-Helfer (macOS EventKit, Windows Outlook):
  * Desktop und IntelliJ lesen dasselbe JSON ({"events":[…]} bzw. {"error":…}).
  */
-import type { CalendarEvent, CalendarPerson, CalendarResult } from './calendar'
+import type { CalendarAccess, CalendarEvent, CalendarPerson, CalendarResult } from './calendar'
 
 /** Rohes Termin-Format der Kalender-Helfer */
 export interface RawEvent {
@@ -56,4 +56,14 @@ export function parseHelperOutput(stdout: string): CalendarResult {
     return { ok: false, error: 'failed', message: parsed.message ?? parsed.error, events: [] }
   }
   return { ok: true, events: parsed.events.map(toEvent) }
+}
+
+/** Antwort von `merkzeug-calendar status|request` (macOS) */
+export function parseAccessOutput(stdout: string): CalendarAccess {
+  const parsed = JSON.parse(stdout) as { access?: string; accounts?: unknown; error?: string; message?: string }
+  const states = ['granted', 'notDetermined', 'denied', 'restricted'] as const
+  const state = states.find(value => value === parsed.access)
+  if (!state) return { system: 'macos', state: 'failed', message: parsed.message ?? parsed.error }
+  const accounts = Array.isArray(parsed.accounts) ? parsed.accounts.filter((a): a is string => typeof a === 'string') : []
+  return { system: 'macos', state, accounts }
 }

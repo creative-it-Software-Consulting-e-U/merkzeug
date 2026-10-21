@@ -2,6 +2,7 @@ import { TemplateLocation } from '@merkzeug/editor/TemplateLocation'
 import { TemplateStylingPrompt } from '@merkzeug/editor/TemplateStylingPrompt'
 import { CalendarSources } from '@merkzeug/editor/CalendarSources'
 import { AiSettings } from './components/AiSettings'
+import { SystemCalendar } from './components/SystemCalendar'
 import { calendarSourceHost } from './util/calendarSources'
 import { ThemeSelect } from '@merkzeug/editor/ThemeSelect'
 import { t as translate, getLocale } from '@merkzeug/core/i18n'
@@ -62,7 +63,11 @@ export function SettingsApp(): React.JSX.Element {
     <div className="settings-app">
       <h1>{translate("Settings")}</h1>
       <ThemeSelect />
-      <CalendarSources host={calendarSourceHost} />
+      <section className="settings-section">
+        <h2>{translate("Calendars")}</h2>
+        <SystemCalendar />
+        <CalendarSources host={calendarSourceHost} />
+      </section>
       <AiSettings />
       <h2>{translate("PDF templates")}</h2>
 

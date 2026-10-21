@@ -13,13 +13,13 @@ import { t as translate } from '@merkzeug/core/i18n'
  * Debug: MERKZEUG_CALENDAR_FIXTURE=/pfad.json liefert Termine aus einer
  * JSON-Datei ({"events":[…]} wie der Helfer) statt vom System.
  */
-import { app } from 'electron'
+import { app, shell } from 'electron'
 import { execFile } from 'node:child_process'
 import { existsSync, statSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { parseHelperOutput, toEvent, type RawEvent } from '@merkzeug/core/calendarHelper'
-import type { CalendarEvent, CalendarResult } from '../shared/types'
+import { parseAccessOutput, parseHelperOutput, toEvent, type RawEvent } from '@merkzeug/core/calendarHelper'
+import type { CalendarAccess, CalendarEvent, CalendarResult } from '../shared/types'
 
 const HELPER_DIR_DEV = join(__dirname, '../../resources/calendar')
 const HELPER_NAME = 'merkzeug-calendar'
@@ -53,8 +53,11 @@ async function devHelperPath(): Promise<string> {
   return binary
 }
 
+const macHelper = async (): Promise<string> =>
+  app.isPackaged ? join(helperDir(), HELPER_NAME) : await devHelperPath()
+
 async function listMac(fromMs: number, toMs: number): Promise<CalendarResult> {
-  const helper = app.isPackaged ? join(helperDir(), HELPER_NAME) : await devHelperPath()
+  const helper = await macHelper()
   if (!existsSync(helper)) {
     return { ok: false, error: 'failed', message: translate("Calendar helper is missing."), events: [] }
   }
@@ -160,3 +163,23 @@ export async function listCalendarEvents(fromMs: number, toMs: number): Promise<
     return { ok: false, error: 'failed', message: String(err), events: [] }
   }
 }
+
+/**
+ * Systemkalender für die Einstellungen. macOS liest die Berechtigung ohne
+ * Rückfrage; mit request zeigt das System bei Bedarf seinen Zugriffsdialog.
+ */
+export async function calendarAccess(request = false): Promise<CalendarAccess> {
+  if (process.platform === 'win32') return { system: 'outlook' }
+  if (process.platform !== 'darwin') return { system: 'none' }
+  try {
+    const helper = await macHelper()
+    if (!existsSync(helper)) return { system: 'macos', state: 'failed', message: translate("Calendar helper is missing.") }
+    return parseAccessOutput(await run(helper, [request ? 'request' : 'status']))
+  } catch (err) {
+    return { system: 'macos', state: 'failed', message: String(err) }
+  }
+}
+
+/** Öffnet Systemeinstellungen → Datenschutz & Sicherheit → Kalender. */
+export const openCalendarPrivacy = (): Promise<void> =>
+  shell.openExternal('x-apple.systempreferences:com.apple.preference.security?Privacy_Calendars')

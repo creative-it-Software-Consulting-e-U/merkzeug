@@ -3,6 +3,7 @@
 ## 1.4.0
 
 - Desktop: **AI assistant** panel (⇧⌘A) for Mermaid diagrams, summaries, rewrites and tables with one-click insertion into the note. Backends: Anthropic API and OpenAI API with your own key, or the locally installed Claude Code and Codex CLIs with their existing login. Mermaid answers are validated and repaired automatically before they are offered.
+- Desktop: **Settings → Calendars** shows the system calendar (macOS Calendar access and accounts, classic Outlook on Windows) with buttons to allow access or open System Settings; the meeting dialog links to System Settings when access is off.
 - Desktop: the file tree context menu offers **Copy path** (vault-relative or absolute) and, on folders, **New meeting note…** for that folder.
 - iOS: press and hold an entry to copy its vault-relative path; folders offer **New meeting note…** for that folder.
 - IntelliJ: **New → Merkzeug Meeting Note…** creates meeting notes from calendar sources and, on Windows, classic Outlook.
