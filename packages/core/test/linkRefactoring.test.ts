@@ -26,3 +26,7 @@ test('plans only changed files and records both locations for rollback', () => {
  const plan = planLinkEdits([{path:'/v/notes/Old.md',content:'[x](Other.md)'},{path:'/v/unchanged.md',content:'# plain'}], moves, '/v')
  assert.equal(plan.length,1); assert.equal(plan[0].target,'/v/archive/New Name.md'); assert.equal(plan[0].before,'[x](Other.md)')
 })
+test('HTML image sources follow moves in blocks, quotes and inline HTML', () => {
+ const input = '<img src="Old.assets/a.png" alt="A" width="450">\n\n> <p align="center"><img src=\'Old.assets/b.png\'></p>\n\nText <img src="Other.assets/c.png"> end'
+ assert.equal(rewriteMarkdownLinks(input, '/v/notes/Old.md', moves, '/v'), '<img src="New%20Name.assets/a.png" alt="A" width="450">\n\n> <p align="center"><img src=\'New%20Name.assets/b.png\'></p>\n\nText <img src="../notes/Other.assets/c.png"> end')
+})

@@ -571,3 +571,97 @@ dialog { color: var(--text); background: var(--bg); border: 1px solid var(--bord
 .template-live .editor-root .milkdown-code-block:has(.mermaid-preview) {
   background: transparent;
 }
+
+/* ---- Callouts (Obsidian `> [!type]`, inkl. GitHub-Alerts) ---- */
+
+.milkdown .ProseMirror blockquote.callout[data-callout] {
+  --callout-rgb: 8, 109, 221;
+  color: var(--crepe-color-on-background);
+  margin: 10px 0;
+  padding: 6px 14px 6px 16px;
+  border-radius: 6px;
+  background: rgba(var(--callout-rgb), 0.1);
+  box-sizing: border-box;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.milkdown .ProseMirror blockquote.callout::before {
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 6px 0 0 6px;
+  background: rgb(var(--callout-rgb));
+}
+.milkdown .ProseMirror blockquote.callout[data-callout="abstract"],
+.milkdown .ProseMirror blockquote.callout[data-callout="tip"] { --callout-rgb: 0, 160, 158; }
+.milkdown .ProseMirror blockquote.callout[data-callout="success"] { --callout-rgb: 8, 155, 68; }
+.milkdown .ProseMirror blockquote.callout[data-callout="question"],
+.milkdown .ProseMirror blockquote.callout[data-callout="warning"] { --callout-rgb: 214, 106, 0; }
+.milkdown .ProseMirror blockquote.callout[data-callout="failure"],
+.milkdown .ProseMirror blockquote.callout[data-callout="danger"],
+.milkdown .ProseMirror blockquote.callout[data-callout="bug"] { --callout-rgb: 220, 38, 60; }
+.milkdown .ProseMirror blockquote.callout[data-callout="example"] { --callout-rgb: 120, 82, 238; }
+.milkdown .ProseMirror blockquote.callout[data-callout="quote"] { --callout-rgb: 140, 140, 140; }
+
+:root[data-theme="dark"] :is(.editor-root, .help-content) .milkdown .ProseMirror blockquote.callout {
+  --callout-rgb: 77, 163, 255;
+}
+:root[data-theme="dark"] :is(.editor-root, .help-content) .milkdown .ProseMirror blockquote.callout:is([data-callout="abstract"], [data-callout="tip"]) { --callout-rgb: 64, 214, 211; }
+:root[data-theme="dark"] :is(.editor-root, .help-content) .milkdown .ProseMirror blockquote.callout[data-callout="success"] { --callout-rgb: 68, 207, 110; }
+:root[data-theme="dark"] :is(.editor-root, .help-content) .milkdown .ProseMirror blockquote.callout:is([data-callout="question"], [data-callout="warning"]) { --callout-rgb: 240, 160, 70; }
+:root[data-theme="dark"] :is(.editor-root, .help-content) .milkdown .ProseMirror blockquote.callout:is([data-callout="failure"], [data-callout="danger"], [data-callout="bug"]) { --callout-rgb: 255, 107, 118; }
+:root[data-theme="dark"] :is(.editor-root, .help-content) .milkdown .ProseMirror blockquote.callout[data-callout="example"] { --callout-rgb: 168, 136, 255; }
+:root[data-theme="dark"] :is(.editor-root, .help-content) .milkdown .ProseMirror blockquote.callout[data-callout="quote"] { --callout-rgb: 158, 158, 158; }
+
+.milkdown .ProseMirror blockquote.callout .callout-icon,
+.milkdown .ProseMirror blockquote.callout .callout-title,
+.milkdown .ProseMirror blockquote.callout .callout-fold {
+  color: rgb(var(--callout-rgb));
+}
+.milkdown .ProseMirror blockquote.callout .callout-title { font-weight: 600; }
+.milkdown .ProseMirror blockquote.callout .callout-icon,
+.milkdown .ProseMirror blockquote.callout .callout-fold {
+  display: inline-flex;
+  vertical-align: -2px;
+  user-select: none;
+}
+.milkdown .ProseMirror blockquote.callout .callout-icon { margin-right: 6px; }
+.milkdown .ProseMirror blockquote.callout .callout-fold {
+  margin-left: 4px;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.milkdown .ProseMirror blockquote.callout-collapsed .callout-fold { transform: rotate(-90deg); }
+.milkdown .ProseMirror blockquote.callout .callout-title-break { display: block; font-size: 0; }
+.milkdown .ProseMirror blockquote.callout .callout-hidden { display: none; }
+
+/* Marker `[!type]±` nur beim Bearbeiten der Titelzeile zeigen, sonst Standardtitel */
+.milkdown .ProseMirror blockquote.callout .callout-marker { display: none; }
+.milkdown .ProseMirror[contenteditable="true"] blockquote.callout .callout-marker-editing {
+  display: inline;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+  font-weight: 400;
+  color: var(--text-dim);
+}
+.milkdown .ProseMirror[contenteditable="true"] blockquote.callout .callout-marker-editing + .callout-default-title {
+  display: none;
+}
+
+/* ---- HTML-Bilder (`<img src="…" width="…">`) ---- */
+
+.milkdown .ProseMirror .html-images img {
+  max-width: 100%;
+  vertical-align: bottom;
+}
+/* nur Breite angegeben: Seitenverhältnis beim Verkleinern halten */
+.milkdown .ProseMirror .html-images img:not([height]) { height: auto; }
+.milkdown .ProseMirror .html-images-centered {
+  display: block;
+  text-align: center;
+}
+.milkdown .ProseMirror .html-images.ProseMirror-selectednode {
+  outline: 2px solid var(--accent, #0a84ff);
+  outline-offset: 2px;
+  border-radius: 2px;
+}

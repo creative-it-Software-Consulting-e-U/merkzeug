@@ -1,6 +1,7 @@
 import { AboutButton } from '@merkzeug/editor/About'
 import { ReleaseNotesButton } from '@merkzeug/editor/ReleaseNotes'
 import { licenseText } from '@merkzeug/editor/licenseText'
+import { enableCallouts } from '@merkzeug/editor/callouts'
 import { TemplateStylingPrompt } from '@merkzeug/editor/TemplateStylingPrompt'
 import { supportUrl } from '@merkzeug/core/support'
 import appPackage from '../../package.json'
@@ -35,6 +36,7 @@ export function HelpView({ onClose }: HelpViewProps): React.JSX.Element {
         [Crepe.Feature.Toolbar]: false
       }
     })
+    enableCallouts(crepe.editor, { interactive: true })
     let cancelled = false
     void crepe.create().then(() => {
       if (cancelled) return

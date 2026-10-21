@@ -124,11 +124,26 @@ Der Editor zeigt die Notiz formatiert an; gespeichert wird Markdown.
 - **Auto-Formatierung beim Tippen:** `# `, `## `, `- `, `1. `, `> ` am Zeilenanfang
   sowie ` ``` ` erzeugen das jeweilige Format sofort; `->` wird zu einem
   Pfeil „→“.
+- **Callouts (Infoboxen):** Ein Zitat, dessen erste Zeile mit `[!typ]`
+  beginnt, wird zu einem farbigen Kasten – kompatibel mit Obsidian-Callouts
+  und GitHub-Alerts, z. B. `> [!info] Optionaler Titel`, gefolgt von
+  `> `-Zeilen mit dem Inhalt. Typen: note, abstract, info, todo, tip, success,
+  question, warning, failure, danger, bug, example und quote, dazu Aliasse wie
+  `important`, `caution` oder `faq`; unbekannte Typen erscheinen wie note.
+  Ohne Titel wird der Typ angezeigt. `[!faq]-` startet eingeklappt, `[!faq]+`
+  ausgeklappt; der Pfeil neben dem Titel klappt den Kasten nur in der Ansicht
+  ein, die Datei bleibt unverändert. Zum Bearbeiten des Markers in die
+  Titelzeile klicken. Einfügen über das Slash-Menü (**Callout**). PDF-Exporte
+  drucken Callouts immer ausgeklappt.
 - **Tabellen:** Einfügen über ⌥⌘T / Strg+Alt+T, das Slash-Menü oder Menü „Bearbeiten“. Mit Tab
   von Zelle zu Zelle springen; Zeilen/Spalten über die Tabellen-Steuerung direkt
   an der Tabelle oder das Menü **Tabelle** einfügen und löschen.
 - **Bilder:** per Einfügen aus der Zwischenablage, Drag & Drop, Slash-Menü oder
-  Menü „Bearbeiten → Bild einfügen…“.
+  Menü „Bearbeiten → Bild einfügen…“. HTML-Bild-Tags wie
+  `<img src="Notiz.assets/bild.png" alt="…" width="450">` erscheinen als Bild in
+  der angegebenen Größe, auch innerhalb von `<p align="center">` oder eines
+  Links; das HTML bleibt in der Datei unverändert. Anderes HTML wird als
+  Quelltext angezeigt.
 - **Undo/Redo** wie gewohnt (⌘Z / Strg+Z / ⇧⌘Z / Strg+Shift+Z).
 - **Suchen & Ersetzen:** **⌘F / Strg+F** öffnet die Suchleiste rechts oben im Editor,
   **⌥⌘F / Strg+Alt+F** zusätzlich die Ersetzen-Zeile (auch über **Bearbeiten → Suchen…**).
@@ -490,7 +505,7 @@ Eine Meeting-Notiz verwendet ihre erste Überschrift als Dateinamen. Großschrei
 
 ## Links beim Umbenennen und Verschieben
 
-Beim Umbenennen einer Notiz oder eines Ordners durch Merkzeug werden lokale Markdown-Verweise darauf in anderen Markdown-Dateien desselben Vaults aktualisiert. Das gilt auch, wenn eine gespeicherte Überschrift automatisch den Dateinamen ändert. Der zugehörige `.assets/`-Ordner und Bildverweise folgen der Notiz. Beim Verschieben werden zusätzlich ihre ausgehenden relativen Links angepasst; gemeinsame Bilderordner bleiben an ihrem Ort.
+Beim Umbenennen einer Notiz oder eines Ordners durch Merkzeug werden lokale Markdown-Verweise darauf in anderen Markdown-Dateien desselben Vaults aktualisiert. Das gilt auch, wenn eine gespeicherte Überschrift automatisch den Dateinamen ändert. Der zugehörige `.assets/`-Ordner und Bildverweise folgen der Notiz, auch `src`-Pfade in HTML-`<img>`-Tags. Beim Verschieben werden zusätzlich ihre ausgehenden relativen Links angepasst; gemeinsame Bilderordner bleiben an ihrem Ort.
 
 Unterstützt werden direkte Links, Bilder und Referenz-Linkdefinitionen, auch mit URL-kodierten Namen und `#abschnitt`-Anhängen. Linktexte und Linktitel bleiben erhalten. Abschnittsanhänge werden beibehalten, bei Änderungen einer Überschrift aber nicht neu berechnet. Codebeispiele, Frontmatter, externe URLs und gewöhnlicher Text werden nicht verändert. HTML-Links und Wiki-Link-Syntax sind nicht enthalten.
 

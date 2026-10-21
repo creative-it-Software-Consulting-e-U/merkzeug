@@ -44,6 +44,14 @@ Bearbeitungsmodus:
 - Bilder aus der Foto-Mediathek werden beim Einfügen automatisch im
   Ordner `Notizname.assets/` neben `Notizname.md` abgelegt.
 - Mermaid-Codeblöcke zeigen eine Diagramm-Vorschau.
+- HTML-Bild-Tags wie `<img src="Notiz.assets/bild.png" width="450">`
+  erscheinen als Bild in der angegebenen Größe; das HTML bleibt unverändert.
+  Anderes HTML wird als Quelltext angezeigt.
+- Callouts wie in Obsidian und GitHub: Ein Zitat, das mit `[!typ]` beginnt
+  (z. B. `> [!warning] Titel`), wird zu einem farbigen Kasten. `[!typ]-`
+  startet eingeklappt, `[!typ]+` ausgeklappt; der Pfeil klappt ihn nur in der
+  Ansicht ein. Zum Bearbeiten des Markers in die Titelzeile tippen. Das
+  Einfüge-Menü bietet **Callout**.
 
 ## Anlegen, Umbenennen, Löschen
 
@@ -147,7 +155,7 @@ Eine Meeting-Notiz verwendet ihre erste Überschrift als Dateinamen. Großschrei
 
 ## Links beim Umbenennen und Verschieben
 
-Beim Umbenennen einer Notiz oder eines Ordners durch Merkzeug werden lokale Markdown-Verweise darauf in anderen Markdown-Dateien desselben Vaults aktualisiert. Das gilt auch, wenn eine gespeicherte Überschrift automatisch den Dateinamen ändert. Der zugehörige `.assets/`-Ordner und Bildverweise folgen der Notiz. Beim Verschieben werden zusätzlich ihre ausgehenden relativen Links angepasst; gemeinsame Bilderordner bleiben an ihrem Ort.
+Beim Umbenennen einer Notiz oder eines Ordners durch Merkzeug werden lokale Markdown-Verweise darauf in anderen Markdown-Dateien desselben Vaults aktualisiert. Das gilt auch, wenn eine gespeicherte Überschrift automatisch den Dateinamen ändert. Der zugehörige `.assets/`-Ordner und Bildverweise folgen der Notiz, auch `src`-Pfade in HTML-`<img>`-Tags. Beim Verschieben werden zusätzlich ihre ausgehenden relativen Links angepasst; gemeinsame Bilderordner bleiben an ihrem Ort.
 
 Unterstützt werden direkte Links, Bilder und Referenz-Linkdefinitionen, auch mit URL-kodierten Namen und `#abschnitt`-Anhängen. Linktexte und Linktitel bleiben erhalten. Abschnittsanhänge werden beibehalten, bei Änderungen einer Überschrift aber nicht neu berechnet. Codebeispiele, Frontmatter, externe URLs und gewöhnlicher Text werden nicht verändert. HTML-Links und Wiki-Link-Syntax sind nicht enthalten.
 

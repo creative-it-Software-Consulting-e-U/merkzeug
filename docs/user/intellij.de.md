@@ -29,7 +29,7 @@ Merkzeug ergänzt einen eigenen Editor-Tab. Der mitgelieferte Markdown-Editor ka
 
 ## Bearbeiten und Speichern
 
-Die Werkzeugleiste bietet Absatzformate, Fett, Kursiv, Durchstreichen, Inline-Code, Listen, Zitate, Codeblöcke, Links, Bilder, Tabellen und Trennlinien. Außerdem stehen Slash-Menü, Frontmatter und Mermaid-Diagramme zur Verfügung. Mermaid-Code lässt sich direkt am Diagramm bearbeiten.
+Die Werkzeugleiste bietet Absatzformate, Fett, Kursiv, Durchstreichen, Inline-Code, Listen, Zitate, Codeblöcke, Links, Bilder, Tabellen und Trennlinien. Außerdem stehen Slash-Menü, Frontmatter, Mermaid-Diagramme und Obsidian-kompatible Callouts (`> [!typ] Titel`, inklusive GitHub-Alerts wie `> [!NOTE]`) zur Verfügung. HTML-`<img>`-Tags erscheinen als Bild mit ihrer `width`/`height`; das HTML bleibt unverändert. Mermaid-Code lässt sich direkt am Diagramm bearbeiten.
 
 Suchen (**⌘F / Ctrl+F**), Rückgängig und Wiederherstellen bleiben über Tastenkürzel erreichbar. IntelliJ verwaltet Dokument, Speichern, Git und Rückgängig-Verlauf. **⌘S / Ctrl+S** speichert ausdrücklich. Unter macOS funktionieren die gewohnten Textnavigations-Kürzel wie in anderen Mac-Apps: ⌘← / ⌘→ springen an Anfang oder Ende der sichtbaren Zeile, ⌘↑ / ⌘↓ an Anfang oder Ende des Dokuments, ⌥← / ⌥→ wortweise, mit ⇧ wird markiert; ⌘⌫ und ⌥⌫ löschen bis zum Zeilenanfang bzw. das vorherige Wort. Neue Dateien erzeugst du über IntelliJs Projektwerkzeuge, Meeting-Notizen wie unter [Meeting-Notizen](#meeting-notizen) beschrieben.
 

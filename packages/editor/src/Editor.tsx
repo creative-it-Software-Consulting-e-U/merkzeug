@@ -38,6 +38,8 @@ import {
 import { splitFrontmatter } from '@merkzeug/core/docTitle'
 import { searchPlugin, searchPluginKey, type SearchMeta } from './searchPlugin'
 import { renderMermaid } from './mermaid'
+import { calloutMenuIcon, insertCallout, enableCallouts } from './callouts'
+import { enableHtmlImages } from './htmlImages'
 import { jumpToFragment } from './anchors'
 import { isExternalLink } from '@merkzeug/core/paths'
 import type { EditorHost, JumpTarget } from './host'
@@ -629,6 +631,13 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
             blockCaptionPlaceholderText: translate("Label")
           },
           [Crepe.Feature.BlockEdit]: {
+            buildMenu: (builder) => {
+              builder.getGroup('text').addItem('callout', {
+                label: translate("Callout"),
+                icon: calloutMenuIcon,
+                onRun: insertCallout
+              })
+            },
             textGroup: {
               label: 'Text',
               text: { label: 'Text' },
@@ -670,6 +679,8 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
           rule: '-' as const
         }))
       })
+      enableCallouts(crepe.editor, { interactive: true })
+      enableHtmlImages(crepe.editor, displayUrl)
       crepe.editor.use(arrowInputRule)
       crepe.editor.use(searchPlugin)
 

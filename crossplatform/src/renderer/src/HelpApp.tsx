@@ -1,5 +1,6 @@
 import { ReleaseNotesButton } from '@merkzeug/editor/ReleaseNotes'
 import { licenseText } from '@merkzeug/editor/licenseText'
+import { enableCallouts } from '@merkzeug/editor/callouts'
 import { t as translate, getLocale } from '@merkzeug/core/i18n'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Crepe } from '@milkdown/crepe'
@@ -31,6 +32,7 @@ export function HelpApp(): React.JSX.Element {
           [Crepe.Feature.Toolbar]: false
         }
       })
+      enableCallouts(crepe.editor, { interactive: true })
       await crepe.create()
       if (cancelled) {
         void crepe.destroy()
