@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -12,32 +12,59 @@
 <meta property="og:description" content="Explore Markdown, edit visually, and share documents with your layout. For Mac, iPhone, iPad, Linux and IntelliJ IDEA.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://merkzeug.creative-it.com/assets/mac-en.png">
-<link rel="stylesheet" href="landing.css?v=20260924-image-layout">
+<link rel="preload" href="fonts/barlow-condensed-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="drafting.css?v=20260929-draft6">
 <script defer src="landing.js?v=20260924-image-layout">
+</script>
+<script defer src="drafting.js?v=20260929-draft6">
 </script>
 </head>
 <body>
 <a class="skip" href="#content">Skip to content</a>
-<header>
+<header class="nav">
+<div class="container">
 <a class="brand" href="index.html">
-<img src="assets/icon.png" alt="" width="36" height="36">
-<strong>Merkzeug</strong>
+<img src="assets/icon.png" alt="" width="32" height="32">
+<strong>Merkzeug<span class="red">.</span></strong>
+<small class="mono">/ by creative-it</small>
 </a>
-<nav aria-label="Main navigation">
+<nav aria-label="Main navigation" class="mono">
 <a href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug">GitHub</a>
 <a href="help-en.html">Help</a>
 <a href="https://support.apps.creative-it.com/?app=merkzeug&amp;lang=en">Support</a>
 <a href="de.html" lang="de">Deutsch</a>
 </nav>
+</div>
 </header>
-<main id="content" class="landing">
-<section class="hero">
-<p class="eyebrow">Mac · iPhone · iPad · Linux · IntelliJ IDEA</p>
-<h1>Markdown.<br>
-<em>Your way.</em>
+<main id="content" class="landing draft">
+<nav class="rail" aria-label="Sheets">
+<ol>
+<li><a class="mono" href="#top" data-rail><span class="rail-no">00</span><span class="rail-label">Merkzeug</span></a></li>
+<li><a class="mono" href="#vaults" data-rail><span class="rail-no">01</span><span class="rail-label">Your files</span></a></li>
+<li><a class="mono" href="#editor" data-rail><span class="rail-no">02</span><span class="rail-label">Read &amp; edit</span></a></li>
+<li><a class="mono" href="#templates" data-rail><span class="rail-no">03</span><span class="rail-label">Your layout</span></a></li>
+<li><a class="mono" href="#assets" data-rail><span class="rail-no">04</span><span class="rail-label">Assets</span></a></li>
+<li><a class="mono" href="#agents" data-rail><span class="rail-no">05</span><span class="rail-label">Agents</span></a></li>
+<li><a class="mono" href="#calendar" data-rail><span class="rail-no">06</span><span class="rail-label">Meeting notes</span></a></li>
+<li><a class="mono" href="#compare" data-rail><span class="rail-no">07</span><span class="rail-label">vs Obsidian</span></a></li>
+<li><a class="mono" href="#platforms" data-rail><span class="rail-no">08</span><span class="rail-label">Editions</span></a></li>
+</ol>
+</nav>
+<div class="progress" aria-hidden="true"><span data-progress></span></div>
+
+<!-- Sheet 00 — hero -->
+<section id="top" class="hero" data-sheet>
+<div class="container">
+<div class="hero-grid">
+<div>
+<div class="tblock"><span class="tb-no">Sheet 00</span><span class="tb-title">Merkzeug · Markdown → Document</span><span class="tb-meta">MIT</span><span class="tb-meta">Mac · iOS · Linux · IntelliJ</span><span class="tb-dot"><i></i></span></div>
+<h1 class="display">
+<span class="hw"><span style="--i:0">Markdown.</span></span><br>
+<span class="hw"><span style="--i:1">Your</span></span>
+<span class="hw"><span style="--i:2" class="red">way</span></span><span class="pen" aria-hidden="true"></span>
 </h1>
+<div class="hero-fade">
 <p class="lead">Explore and edit Markdown collections, then turn them into documents with your layout — from personal notebooks to documentation written by agents.</p>
-<p class="table-note"><a href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug">Open source under the MIT License. Explore the code and contribute on GitHub.</a></p>
 <div class="actions">
 <div class="store-download">
 <a class="app-store-badge" href="https://apps.apple.com/app/merkzeug/id6799114334">
@@ -48,285 +75,405 @@
 <div class="marketplace-install">
 <div id="marketplace-install" data-marketplace-widget hidden>
 </div>
-<a class="button secondary" href="https://plugins.jetbrains.com/plugin/34221-merkzeug">IntelliJ IDEA · Marketplace ↗</a>
+<a class="button secondary" href="https://plugins.jetbrains.com/plugin/34221-merkzeug">IntelliJ IDEA ↗</a>
 <span class="store-caption">Plugin for IntelliJ</span>
 </div>
 <div class="store-download"><a class="button secondary" href="#linux-downloads">Linux ↓</a><span class="store-caption">AppImage · DEB · RPM</span></div>
 </div>
-<p class="availability">Available now. Windows coming soon. Android &amp; VS Code planned.</p>
-</section>
-<nav class="story-nav" aria-label="Topics">
-<a href="#vaults">Your files</a>
-<a href="#editor">Read & edit</a>
-<a href="#templates">Your layout</a>
-<a href="#assets">Assets & agents</a>
-<a href="#platforms">Editions</a>
-</nav>
-<figure class="device-gallery" data-gallery>
+<p class="availability">Available now. Windows coming soon. Android &amp; VS Code planned. <a href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug">Open source under the MIT License ↗</a></p>
+</div>
+</div>
+<figure class="shot device-gallery hero-fade" data-gallery>
+<div class="shot-bar mono"><span>Fig. 00 — A real Markdown notebook</span><span>Example content</span></div>
 <div class="shot-stage">
 <a data-full-image href="assets/mac-en.png">
 <picture>
 <source media="(max-width: 700px)" srcset="assets/iphone-en.png" width="1320" height="2868">
-<img width="2560" height="1600" loading="lazy" src="assets/mac-en.png" data-desktop="assets/mac-en.png" data-mobile="assets/iphone-en.png" alt="A real Markdown notebook. Example content, no private notes." class="product-shot" data-desktop-width="2560" data-desktop-height="1600" data-mobile-width="1320" data-mobile-height="2868">
+<img width="2560" height="1600" src="assets/mac-en.png" data-desktop="assets/mac-en.png" data-mobile="assets/iphone-en.png" data-tablet="assets/ipad-en.png" alt="A real Markdown notebook. Example content, no private notes." class="product-shot" data-desktop-width="2560" data-desktop-height="1600" data-mobile-width="1320" data-mobile-height="2868" data-tablet-width="2064" data-tablet-height="2752">
 </picture>
 </a>
 </div>
-<figcaption>A real Markdown notebook. Example content, no private notes.</figcaption>
-<div class="view-switch" role="group" aria-label="Choose a view">
-<button type="button" data-view="desktop">Mac</button>
-<button type="button" data-view="mobile">iPhone</button>
-</div>
-</figure>
-<section id="vaults" class="story">
-<p class="eyebrow">01 / Start where you are</p>
-<h2>One folder. Your whole collection.</h2>
-<p class="lead">A vault is simply a folder of Markdown files. Your notebook, your cloud folder, or the documentation beside your code.</p>
-<div class="story-cards">
-<article>
-<h3>Local & in the cloud</h3>
-<p>Open existing files without importing them into a new database. Your chosen cloud service handles synchronization.</p>
-</article>
-<article>
-<h3>Git, your way</h3>
-<p>Use repository folders on Mac and Linux or directly in IntelliJ. On iPhone and iPad, open your Git app’s repository folder through the Files app.</p>
-</article>
-<article>
-<h3>Open files</h3>
-<p>Markdown stays Markdown. Work on the same files with other editors, Git tools, and agents.</p>
-</article>
-</div>
-<aside class="git-explainer"><h3>Git on iPhone and iPad: your choice, with direct integration</h3><p>Working Copy is a separate Git app for iPhone and iPad. It clones repositories and handles version control and synchronization; Merkzeug reads and edits the Markdown files inside them.</p><p>You can also use any other Git app that makes its repository folder available for opening and editing through the Files app. Perform Git operations in that app. Working Copy additionally has a direct integration: once configured, you can start Pull, Commit, and Push from Merkzeug.</p><a href="https://apps.apple.com/app/id896694807">Working Copy on the App Store ↗</a></aside>
-<a class="learn" href="help-ios-en.html#syncing-with-working-copy">Working Copy on iPhone and iPad →</a>
-</section>
-<section id="editor" class="story">
-<p class="eyebrow">02 / Understand & develop</p>
-<h2>Less syntax. More perspective.</h2>
-<p class="lead">Edit headings, tables, and tasks visually. Mermaid diagrams live inside the document: edit the code, see the result, keep reading.</p>
-<figure class="device-gallery" data-gallery>
-<div class="shot-stage">
-<a data-full-image href="assets/macos-en-diagram.png">
-<picture>
-<source media="(max-width: 700px)" srcset="assets/iphone-en-diagram.png" width="1320" height="2868">
-<img width="2560" height="1600" loading="lazy" src="assets/macos-en-diagram.png" data-desktop="assets/macos-en-diagram.png" data-mobile="assets/iphone-en-diagram.png" data-tablet="assets/ipad-en-diagram.png" alt="Mermaid diagrams and tables in the same document." class="product-shot" data-desktop-width="2560" data-desktop-height="1600" data-mobile-width="1320" data-mobile-height="2868" data-tablet-width="2064" data-tablet-height="2752">
-</picture>
-</a>
-</div>
-<figcaption>Mermaid diagrams and tables in the same document.</figcaption>
-<div class="view-switch" role="group" aria-label="Choose a view">
+<figcaption><span>No private notes — a fictional demo vault.</span>
+<span class="view-switch" role="group" aria-label="Choose a view">
 <button type="button" data-view="desktop">Mac</button>
 <button type="button" data-view="mobile">iPhone</button>
 <button type="button" data-view="tablet">iPad</button>
-</div>
+</span></figcaption>
 </figure>
-<div class="story-cards">
-<article>
-<h3>Read & navigate</h3>
-<p>On Mac, Linux, iPhone, and iPad, follow links in reading mode without accidentally changing text. Switch back to the editor when you want to write.</p>
-</article>
-<article>
-<h3>Inside your IDE</h3>
-<p>Merkzeug works alongside other Markdown editors in IntelliJ. Use the editor tabs to switch between visual editing and source; linked files open through the IDE.</p>
-</article>
 </div>
-<a class="learn" href="help-en.html#6-navigation-mode-reading-amp-browsing">Explore reading mode →</a> <a class="learn" href="help-intellij-en.html#alongside-other-markdown-editors">IntelliJ & Markdown →</a>
+
+<nav class="parts hero-fade" aria-label="Use cases">
+<div class="parts-head mono"><span>Pos.</span><span>Use case</span><span>Where</span></div>
+<div class="parts-head mono"><span>Pos.</span><span>Use case</span><span>Where</span></div>
+<a class="part" href="#vaults"><span class="part-no mono">01</span><span><span class="part-name display">One folder, your collection</span><span class="part-spec mono">Local · cloud · Git</span></span><span class="part-status mono">All editions</span></a>
+<a class="part" href="#assets"><span class="part-no mono">04</span><span><span class="part-name display">Rename, and links follow</span><span class="part-spec mono">Assets · refactoring</span></span><span class="part-status mono">All editions</span></a>
+<a class="part" href="#editor"><span class="part-no mono">02</span><span><span class="part-name display">Visual editing &amp; Mermaid</span><span class="part-spec mono">Tables · tasks · diagrams</span></span><span class="part-status mono">All editions</span></a>
+<a class="part" href="#agents"><span class="part-no mono">05</span><span><span class="part-name display">Agents write, you review</span><span class="part-spec mono">AGENTS.md · CLAUDE.md</span></span><span class="part-status mono">All editions</span></a>
+<a class="part" href="#templates"><span class="part-no mono">03</span><span><span class="part-name display">Notes become one PDF</span><span class="part-spec mono">HTML/CSS templates</span></span><span class="part-status mono">All editions</span></a>
+<a class="part" href="#calendar"><span class="part-no mono">06</span><span><span class="part-name display">Event to meeting note</span><span class="part-spec mono">Calendar · ICS</span></span><span class="part-status mono">All editions</span></a>
+</nav>
+</div>
 </section>
-<section id="templates" class="story template-story">
-<p class="eyebrow">03 / From draft to delivery</p>
-<h2>Your Markdown.<br>Your finished document.</h2>
-<p class="lead">Turn a collection of notes into a document for clients, teams, or your next meeting. With your letterhead, your typography, and your layout.</p>
-<div class="story-cards">
-<article>
-<h3>One layout, many uses</h3>
-<p>Use HTML/CSS templates while editing and when printing. Mac, Linux, iPhone, iPad, and IntelliJ also export PDF files with those templates.</p>
-</article>
-<article>
-<h3>Several notes, one PDF</h3>
-<p>On Mac, Linux, iPhone, iPad, and in IntelliJ, an overview document can include directly linked Markdown files from its own folder and subfolders in the export.</p>
-</article>
-<article>
-<h3>Share your templates</h3>
-<p>Sync templates between Apple devices through iCloud, or keep them inside your vault. Choose the location directly in the PDF controls; the shared assignment travels with your Git repository.</p>
-</article>
-</div>
-<figure class="pdf-output">
-<a href="assets/macos-en-pdf.png">
-<img width="2880" height="1800" loading="lazy" src="assets/macos-en-pdf.png" alt="An example exported PDF. Document output, independent of device.">
-</a>
-<figcaption>An example exported PDF. Document output, independent of device.</figcaption>
-</figure>
-<div class="document-link">
-<span>PDF</span>
+
+<!-- Sheet 01 — Your files -->
+<section id="vaults" class="scene" data-sheet>
+<div class="container sheet-grid">
 <div>
-<h3>See Markdown become a document</h3>
-<p>A real PDF output with example content, a cover, and formatted pages.</p>
-<a href="assets/macos-en-pdf.png">View the example output ↗</a>
+<div class="tblock"><span class="tb-no">Sheet 01</span><span class="tb-title">Your files</span><span class="tb-meta">Start where you are</span><span class="tb-dot"><i></i></span></div>
+<h2 class="case-h display">One folder. <span class="red">Your whole</span> collection.</h2>
+<p class="case-p">A vault is simply a folder of Markdown files. Your notebook, your cloud folder, or the documentation beside your code.</p>
+<ul class="points">
+<li><b>Local &amp; in the cloud</b><span>Open existing files without importing them into a new database. Your chosen cloud service handles synchronization.</span></li>
+<li><b>Git, your way</b><span>Use repository folders on Mac and Linux or directly in IntelliJ. On iPhone and iPad, open your Git app’s repository folder through the Files app.</span></li>
+<li><b>Open files</b><span>Markdown stays Markdown. Work on the same files with other editors, Git tools, and agents.</span></li>
+</ul>
+<details class="git-explainer"><summary>Git on iPhone and iPad: your choice, with direct integration</summary><p>Working Copy is a separate Git app for iPhone and iPad. It clones repositories and handles version control and synchronization; Merkzeug reads and edits the Markdown files inside them.</p><p>You can also use any other Git app that makes its repository folder available for opening and editing through the Files app. Perform Git operations in that app. Working Copy additionally has a direct integration: once configured, you can start Pull, Commit, and Push from Merkzeug.</p><a href="https://apps.apple.com/app/id896694807">Working Copy on the App Store ↗</a> · <a href="help-ios-en.html#syncing-with-working-copy">Working Copy on iPhone and iPad →</a></details>
+</div>
+<div class="fig-col"><figure class="fig" data-fig aria-hidden="true">
+<div class="fig-cap mono"><span>Fig. 01 — Any folder becomes a vault</span><span>Not to scale</span></div>
+<div class="f-vault">
+<ul class="sources">
+<li class="r-rise" data-r="0,.14"><b>iCloud Drive</b><span>Your cloud folder</span><span class="wire r-grow" data-r=".3,.42"></span></li>
+<li class="r-rise" data-r=".06,.2"><b>Git · main</b><span>Repository beside your code</span><span class="wire r-grow" data-r=".36,.48"></span></li>
+<li class="r-rise" data-r=".12,.26"><b>Agent</b><span>Writes Markdown files</span><span class="wire r-grow" data-r=".42,.54"></span></li>
+</ul>
+<div class="win">
+<div class="win-bar mono"><i></i><i></i><i></i><span>Merkzeug — handbook/</span></div>
+<div class="win-body" style="grid-template-columns:1fr">
+<div class="side" style="border:0">
+<ul class="tree">
+<li class="r-rise" data-r=".4,.5">▾ handbook/</li>
+<li class="r-rise" data-r=".46,.56" style="--lv:1">Overview.md</li>
+<li class="r-rise" data-r=".52,.62" style="--lv:1">Architecture.md</li>
+<li class="r-rise dim" data-r=".56,.66" style="--lv:1">▸ Architecture.assets/</li>
+<li class="r-rise" data-r=".62,.72" style="--lv:1">Runbook.md<span class="tag">agent</span></li>
+<li class="r-rise dim" data-r=".66,.76" style="--lv:1">AGENTS.md</li>
+<li class="r-rise dim" data-r=".7,.8" style="--lv:1">▸ templates/</li>
+</ul>
+<div class="side-foot mono">⎇ main · <span class="swap"><b class="old" data-r=".78,.9">3 changed</b><b class="new" data-r=".78,.9">synced ✓</b></span></div>
 </div>
 </div>
-<a class="learn" href="help-en.html#9-pdf-export">PDF & templates in detail →</a> <a class="learn" href="help-en.html#sharing-templates-in-a-repository">Share templates with your team →</a>
+</div>
+</div>
+</figure><div class="captures"><p class="captures-h mono">Real screenshots</p><ul><li><a href="assets/macos-en-git.png" data-shot data-caption="Mac — a vault with the integrated Git panel"><img src="assets/thumbs/macos-en-git.png" width="720" height="450" loading="lazy" alt="Mac — a vault with the integrated Git panel"></a><span class="mono">Mac</span></li><li><a href="assets/iphone-en.png" data-shot data-caption="iPhone — the demo notebook"><img src="assets/thumbs/iphone-en.png" width="331" height="720" loading="lazy" alt="iPhone — the demo notebook"></a><span class="mono">iPhone</span></li><li><a href="assets/ipad-en.png" data-shot data-caption="iPad — the demo notebook"><img src="assets/thumbs/ipad-en.png" width="540" height="720" loading="lazy" alt="iPad — the demo notebook"></a><span class="mono">iPad</span></li><li><a href="assets/intellij-en-editor.png" data-shot data-caption="IntelliJ IDEA — Markdown files inside your project"><img src="assets/thumbs/intellij-en-editor.png" width="720" height="480" loading="lazy" alt="IntelliJ IDEA — Markdown files inside your project"></a><span class="mono">IntelliJ</span></li></ul></div></div>
+</div>
+<span class="sheet-mark mono">Sheet 01 / 08</span>
 </section>
-<section id="frontmatter" class="story">
-<h2>The details make the document.</h2>
-<p class="lead">Fine-tune exports with frontmatter: title, language, table of contents, and excluded notes. Your Markdown remains the source.</p>
-<figure class="device-gallery" data-gallery>
-<div class="shot-stage">
-<a data-full-image href="assets/macos-en-frontmatter.png">
-<picture>
-<source media="(max-width: 700px)" srcset="assets/iphone-en-frontmatter.png" width="1320" height="2868">
-<img width="2560" height="1600" loading="lazy" src="assets/macos-en-frontmatter.png" data-desktop="assets/macos-en-frontmatter.png" data-mobile="assets/iphone-en-frontmatter.png" alt="Edit frontmatter: metadata belongs with the note." class="product-shot" data-desktop-width="2560" data-desktop-height="1600" data-mobile-width="1320" data-mobile-height="2868">
-</picture>
-</a>
+
+<!-- Sheet 02 — Read & edit -->
+<section id="editor" class="scene" data-sheet>
+<div class="container sheet-grid">
+<div>
+<div class="tblock"><span class="tb-no">Sheet 02</span><span class="tb-title">Read &amp; edit</span><span class="tb-meta">Understand &amp; develop</span><span class="tb-dot"><i></i></span></div>
+<h2 class="case-h display">Less syntax. <span class="red">More</span> perspective.</h2>
+<p class="case-p">Edit headings, tables, and tasks visually. Mermaid diagrams live inside the document: edit the code, see the result, keep reading.</p>
+<ul class="points">
+<li><b>Read &amp; navigate</b><span>On Mac, Linux, iPhone, and iPad, follow links in reading mode without accidentally changing text. Switch back to the editor when you want to write.</span></li>
+<li><b>Inside your IDE</b><span>Merkzeug works alongside other Markdown editors in IntelliJ. Use the editor tabs to switch between visual editing and source; linked files open through the IDE.</span></li>
+</ul>
+<div class="links mono"><a href="help-en.html#6-navigation-mode-reading-amp-browsing">Reading mode →</a><a href="help-intellij-en.html#alongside-other-markdown-editors">IntelliJ &amp; Markdown →</a></div>
 </div>
-<figcaption>Edit frontmatter: metadata belongs with the note.</figcaption>
-<div class="view-switch" role="group" aria-label="Choose a view">
-<button type="button" data-view="desktop">Mac</button>
-<button type="button" data-view="mobile">iPhone</button>
+<div class="fig-col"><figure class="fig f-edit" data-fig aria-hidden="true">
+<div class="fig-cap mono"><span>Fig. 02 — Source becomes a document</span><span>Mermaid inline</span></div>
+<div class="win">
+<div class="win-bar mono"><i></i><i></i><i></i><span>Architecture.md</span></div>
+<div class="main-pane">
+<div class="toggle mono" data-r=".25,.4"><span>Source</span><span>Visual</span></div>
+<div class="layer layer-src src" data-r=".25,.4">
+<div><span class="m">##</span> Request flow</div>
+<div><span class="m">|</span> Service <span class="m">|</span> Role <span class="m">|</span></div>
+<div class="g">|---|---|</div>
+<div><span class="m">|</span> API Gateway <span class="m">|</span> HTTPS entry <span class="m">|</span></div>
+<div><span class="m">|</span> Lambda <span class="m">|</span> Business logic <span class="m">|</span></div>
+<div><span class="m">- [x]</span> Load test passed</div>
+<div class="g">```mermaid</div>
+<div>graph LR; Client--&gt;API--&gt;Lambda</div>
+<div class="g">```</div>
+<div>See the <span class="m">[Runbook](Runbook.md)</span><span class="caret"></span></div>
 </div>
-</figure>
-<a class="learn" href="help-en.html#9-pdf-export">Export settings →</a>
+<div class="layer layer-vis" data-r=".25,.4">
+<div class="vis-h">Request flow</div>
+<table class="mini-table">
+<thead><tr><th>Service</th><th>Role</th></tr></thead>
+<tbody><tr><td>API Gateway</td><td>HTTPS entry</td></tr><tr><td>Lambda</td><td>Business logic</td></tr></tbody>
+</table>
+<div class="task"><i></i>Load test passed</div>
+<svg class="mermaid" viewBox="0 0 240 44" fill="none">
+<g stroke="#1C1B1A" stroke-width="1">
+<rect class="r-draw" pathLength="1" data-r=".4,.5" x="2" y="10" width="58" height="24"/>
+<rect class="r-draw" pathLength="1" data-r=".46,.56" x="92" y="10" width="50" height="24"/>
+<rect class="r-draw" pathLength="1" data-r=".52,.62" x="174" y="10" width="62" height="24" stroke="#B5371A"/>
+<path class="r-draw" pathLength="1" data-r=".5,.56" d="M 60 22 H 88 M 83 18 L 88 22 L 83 26"/>
+<path class="r-draw" pathLength="1" data-r=".56,.62" d="M 142 22 H 170 M 165 18 L 170 22 L 165 26"/>
+</g>
+<g class="r-fade" data-r=".48,.64" text-anchor="middle"><text x="31" y="25">CLIENT</text><text x="117" y="25">API</text><text x="205" y="25">LAMBDA</text></g>
+</svg>
+<div style="font-size:.75rem;margin-top:.4rem">See the <span class="read-link">Runbook</span></div>
+</div>
+<span class="read-chip mono r-pop" data-r=".72,.86">Reading mode · links open, text stays</span>
+</div>
+</div>
+</figure><div class="captures"><p class="captures-h mono">Real screenshots</p><ul><li><a href="assets/macos-en-diagram.png" data-shot data-caption="Mac — Mermaid diagram and table in one document"><img src="assets/thumbs/macos-en-diagram.png" width="720" height="450" loading="lazy" alt="Mac — Mermaid diagram and table in one document"></a><span class="mono">Mac</span></li><li><a href="assets/iphone-en-diagram.png" data-shot data-caption="iPhone — Mermaid diagram and table"><img src="assets/thumbs/iphone-en-diagram.png" width="331" height="720" loading="lazy" alt="iPhone — Mermaid diagram and table"></a><span class="mono">iPhone</span></li><li><a href="assets/ipad-en-diagram.png" data-shot data-caption="iPad — Mermaid diagram and table"><img src="assets/thumbs/ipad-en-diagram.png" width="540" height="720" loading="lazy" alt="iPad — Mermaid diagram and table"></a><span class="mono">iPad</span></li><li><a href="assets/intellij-en-mermaid.png" data-shot data-caption="IntelliJ IDEA — edit Mermaid inline with a live preview"><img src="assets/thumbs/intellij-en-mermaid.png" width="720" height="480" loading="lazy" alt="IntelliJ IDEA — edit Mermaid inline with a live preview"></a><span class="mono">IntelliJ</span></li><li class="soon"><span class="shot-ph mono">VS Code</span><span class="mono">Planned</span></li></ul></div></div>
+</div>
+<span class="sheet-mark mono">Sheet 02 / 08</span>
 </section>
-<section id="assets" class="story">
-<p class="eyebrow">04 / Keep things together</p>
-<h2>Notes evolve.<br>Their connections stay.</h2>
-<div class="file-pair" aria-label="Note and companion images">
-<code>Project.md</code>
-<span>↔</span>
-<code>Project.assets/</code>
+
+<!-- Sheet 03 — Your layout -->
+<section id="templates" class="scene" data-sheet>
+<div class="container sheet-grid">
+<div>
+<div class="tblock"><span class="tb-no">Sheet 03</span><span class="tb-title">Your layout</span><span class="tb-meta">From draft to delivery</span><span class="tb-dot"><i></i></span></div>
+<h2 class="case-h display">Your Markdown. <span class="red">Your finished</span> document.</h2>
+<p class="case-p">Turn a collection of notes into a document for clients, teams, or your next meeting. With your letterhead, your typography, and your layout.</p>
+<ul class="points">
+<li><b>One layout, many uses</b><span>Use HTML/CSS templates while editing and when printing. Mac, Linux, iPhone, iPad, and IntelliJ also export PDF files with those templates.</span></li>
+<li><b>Several notes, one PDF</b><span>On Mac, Linux, iPhone, iPad, and in IntelliJ, an overview document can include directly linked Markdown files from its own folder and subfolders in the export.</span></li>
+<li id="frontmatter"><b>The details make the document</b><span>Fine-tune exports with frontmatter: title, language, table of contents, and excluded notes. Your Markdown remains the source.</span></li>
+<li><b>Share your templates</b><span>Sync templates between Apple devices through iCloud, or keep them inside your vault. Choose the location directly in the PDF controls; the shared assignment travels with your Git repository.</span></li>
+</ul>
+<div class="links mono"><a href="help-en.html#9-pdf-export">PDF &amp; templates →</a><a href="help-en.html#sharing-templates-in-a-repository">Share with your team →</a><a href="assets/macos-en-pdf.png">Real PDF output ↗</a></div>
 </div>
-<div class="story-cards">
-<article>
-<h3>Images beside the note</h3>
-<p>Inserted images live in a companion .assets folder. Move or rename a note with Merkzeug and its assets follow; references are updated.</p>
-</article>
-<article>
-<h3>One heading, one filename</h3>
-<p>On Mac and Linux, filenames can follow the first main heading. Meeting notes on Mac, Linux, iPhone, and iPad also follow their heading when it changes. IntelliJ retains control of filenames.</p>
-</article>
-<article>
-<h3>Refactoring included</h3>
-<p>Merkzeug updates local Markdown links when notes are renamed or moved. The IntelliJ plugin also adds the asset rules to the IDE’s Move/Rename actions.</p>
-</article>
+<div class="fig-col"><figure class="fig" data-fig aria-hidden="true">
+<div class="fig-cap mono"><span>Fig. 03 — Linked notes, one PDF</span><span>Template: letterhead.css</span></div>
+<div class="f-pdf">
+<div class="win">
+<div class="win-bar mono"><i></i><i></i><i></i><span>Overview.md</span></div>
+<div class="win-body">
+<div class="side">
+<ul class="tree">
+<li>▾ handbook/</li>
+<li class="sel" style="--lv:1">Overview.md<span class="dot r-fade" data-r=".45,.55">●</span></li>
+<li style="--lv:1">Architecture.md<span class="dot r-fade" data-r=".5,.6">●</span></li>
+<li style="--lv:1">Runbook.md<span class="dot r-fade" data-r=".55,.65">●</span></li>
+<li class="dim" style="--lv:1">Drafts.md</li>
+<li class="dim" style="--lv:1">▸ templates/</li>
+</ul>
 </div>
-<a class="learn" href="help-intellij-en.html#images-and-companion-folders">Images & refactoring →</a>
-</section>
-<section id="agents" class="story">
-<h2>Agents contribute.<br>You keep the overview.</h2>
-<p class="lead">Make a readable collection out of agent-written Markdown files. Merkzeug helps you review, edit, and share the result.</p>
-<div class="story-cards">
-<article>
-<h3>A prompt for your layout</h3>
-<p>Give your agent a template prompt with the file structure, available fields, and styling rules, so it can adapt a template to your visual identity.</p>
-</article>
-<article>
-<h3>Pass on the rules</h3>
-<p>Review the asset guidance and existing AGENTS.md / CLAUDE.md files. Choose which files receive the instructions. Merkzeug itself does not run agents.</p>
-</article>
+<div class="main-pane src">
+<div class="fm">
+<div class="g r-rise" data-r="0,.1">---</div>
+<div class="r-rise" data-r=".05,.15"><span class="m">title:</span> Project Handbook</div>
+<div class="r-rise" data-r=".1,.2"><span class="m">toc:</span> true</div>
+<div class="r-rise" data-r=".15,.25"><span class="m">exclude:</span> Drafts.md</div>
+<div class="g r-rise" data-r=".2,.3">---</div>
 </div>
-<a class="learn" href="help-en.html#template-styling-prompt">Template prompts & agent guidance →</a>
+<div class="r-rise" data-r=".25,.35"><span class="m">-</span> [Architecture](Architecture.md)</div>
+<div class="r-rise" data-r=".3,.4"><span class="m">-</span> [Runbook](Runbook.md)</div>
+</div>
+</div>
+</div>
+<span class="wire r-grow" data-r=".55,.65"></span>
+<div class="pdf" data-r=".6,.75">
+<div class="page p3"></div>
+<div class="page p2"></div>
+<div class="page">
+<div class="cover">
+<div class="lh"><img src="assets/icon.png" alt="" width="64" height="64"><span>Your letterhead</span></div>
+<h4>Project<br>Handbook</h4>
+<div class="sub">Overview · Architecture · Runbook</div>
+<ol class="toc">
+<li class="r-rise" data-r=".72,.8"><b>1</b> Overview<span>2</span></li>
+<li class="r-rise" data-r=".76,.84"><b>2</b> Architecture<span>4</span></li>
+<li class="r-rise" data-r=".8,.88"><b>3</b> Runbook<span>9</span></li>
+</ol>
+<div class="foot"><span>Confidential</span><span>1 / 12</span></div>
+</div>
+</div>
+</div>
+<div class="stamp" data-r=".86,.96"><b>3 notes → 1 PDF</b><small>Drafts.md excluded</small></div>
+</div>
+</figure><div class="captures"><p class="captures-h mono">Real screenshots</p><ul><li><a href="assets/macos-en-pdf.png" data-shot data-caption="Mac — an exported PDF with cover and template"><img src="assets/thumbs/macos-en-pdf.png" width="720" height="450" loading="lazy" alt="Mac — an exported PDF with cover and template"></a><span class="mono">Mac · PDF</span></li><li><a href="assets/macos-en-frontmatter.png" data-shot data-caption="Mac — frontmatter controls the export"><img src="assets/thumbs/macos-en-frontmatter.png" width="720" height="450" loading="lazy" alt="Mac — frontmatter controls the export"></a><span class="mono">Mac</span></li><li><a href="assets/iphone-en-frontmatter.png" data-shot data-caption="iPhone — frontmatter fields"><img src="assets/thumbs/iphone-en-frontmatter.png" width="331" height="720" loading="lazy" alt="iPhone — frontmatter fields"></a><span class="mono">iPhone</span></li><li><a href="assets/ipad-en-frontmatter.png" data-shot data-caption="iPad — frontmatter fields"><img src="assets/thumbs/ipad-en-frontmatter.png" width="540" height="720" loading="lazy" alt="iPad — frontmatter fields"></a><span class="mono">iPad</span></li><li><a href="assets/intellij-en-template.png" data-shot data-caption="IntelliJ IDEA — PDF template applied while editing"><img src="assets/thumbs/intellij-en-template.png" width="720" height="480" loading="lazy" alt="IntelliJ IDEA — PDF template applied while editing"></a><span class="mono">IntelliJ</span></li><li><a href="assets/intellij-en-pdf.png" data-shot data-caption="IntelliJ IDEA — a page of the exported PDF"><img src="assets/thumbs/intellij-en-pdf.png" width="510" height="720" loading="lazy" alt="IntelliJ IDEA — a page of the exported PDF"></a><span class="mono">IntelliJ · PDF</span></li></ul></div></div>
+</div>
+<span class="sheet-mark mono">Sheet 03 / 08</span>
 </section>
-<section id="calendar" class="story calendar-story">
-<p class="eyebrow">For your everyday work, too</p>
-<h2>From calendar event to meeting note.</h2>
-<p>On Mac, iPhone, or iPad, choose an event and start with a title, time, and attendees instead of an empty page. On Linux, use ICS files or HTTPS/Webcal subscriptions. Your calendar stays unchanged. Personal notes and ideas need neither Git nor an agent.</p>
-<a class="learn" href="help-en.html#meeting-notes-and-calendars">Calendar sources & meeting notes →</a>
+
+<!-- Sheet 04 — Assets -->
+<section id="assets" class="scene" data-sheet>
+<div class="container sheet-grid">
+<div>
+<div class="tblock"><span class="tb-no">Sheet 04</span><span class="tb-title">Assets</span><span class="tb-meta">Keep things together</span><span class="tb-dot"><i></i></span></div>
+<h2 class="case-h display">Notes evolve. <span class="red">Their connections</span> stay.</h2>
+<p class="case-p">Inserted images live in a companion <code>.assets</code> folder beside the note. Rename or move the note — its images and every link follow.</p>
+<ul class="points">
+<li><b>Images beside the note</b><span>Inserted images live in a companion .assets folder. Move or rename a note with Merkzeug and its assets follow; references are updated.</span></li>
+<li><b>One heading, one filename</b><span>On Mac and Linux, filenames can follow the first main heading. Meeting notes on Mac, Linux, iPhone, and iPad also follow their heading when it changes. IntelliJ retains control of filenames.</span></li>
+<li><b>Refactoring included</b><span>Merkzeug updates local Markdown links when notes are renamed or moved. The IntelliJ plugin also adds the asset rules to the IDE’s Move/Rename actions.</span></li>
+</ul>
+<div class="links mono"><a href="help-intellij-en.html#images-and-companion-folders">Images &amp; refactoring →</a></div>
+</div>
+<div class="fig-col"><figure class="fig f-assets" data-fig aria-hidden="true">
+<div class="fig-cap mono"><span>Fig. 04 — Rename a note</span><span>Assets and links follow</span></div>
+<div class="win">
+<div class="win-bar mono"><i></i><i></i><i></i><span>Merkzeug — garden/</span></div>
+<div class="win-body">
+<div class="side">
+<ul class="tree">
+<li>▾ garden/</li>
+<li class="rename rename-box" data-r=".08,.2" style="--lv:1"><span class="swap"><span class="old" data-r=".25,.4">Garden.md</span><span class="new" data-r=".25,.4">Garden-Plan.md</span></span></li>
+<li style="--lv:1">▾ <span class="swap"><span class="old" data-r=".38,.52">Garden.assets/</span><span class="new" data-r=".38,.52">Garden-Plan.assets/</span></span></li>
+<li class="dim" style="--lv:2">bed.png</li>
+<li style="--lv:1">Overview.md</li>
+</ul>
+</div>
+<div class="main-pane src">
+<div class="g">Overview.md</div>
+<div><span class="m">#</span> Overview</div>
+<div>&nbsp;</div>
+<div><span class="m">-</span> [Garden](<span class="swap"><span class="old" data-r=".55,.68">Garden.md</span><span class="new" data-r=".55,.68">Garden-Plan.md</span></span>)</div>
+<div><span class="m">!</span>[Bed](<span class="swap"><span class="old" data-r=".62,.75">Garden.assets/bed.png</span><span class="new" data-r=".62,.75">Garden-Plan.assets/bed.png</span></span>)</div>
+</div>
+</div>
+</div>
+<div class="stamp" data-r=".8,.92"><b>Renamed</b><small>Assets moved · 2 links updated</small></div>
+</figure><div class="captures"><p class="captures-h mono">Real screenshots</p><ul><li><a href="assets/intellij-en-rename.png" data-shot data-caption="IntelliJ IDEA — after Refactor → Rename, the companion folder and image reference follow"><img src="assets/thumbs/intellij-en-rename.png" width="720" height="480" loading="lazy" alt="IntelliJ IDEA — after Refactor → Rename, the companion folder and image reference follow"></a><span class="mono">IntelliJ</span></li></ul></div></div>
+</div>
+<span class="sheet-mark mono">Sheet 04 / 08</span>
 </section>
-<section id="platforms" class="story">
-<p class="eyebrow">05 / Everywhere</p>
-<h2>Your workflow. Your device.</h2>
-<p>Available for Mac, iPhone, iPad, Linux, and IntelliJ IDEA. Editions share the file format and visual editor, with integrations suited to each device.</p>
+
+<!-- Sheet 05 — Agents -->
+<section id="agents" class="scene" data-sheet>
+<div class="container sheet-grid">
+<div>
+<div class="tblock"><span class="tb-no">Sheet 05</span><span class="tb-title">Agents</span><span class="tb-meta">You keep the overview</span><span class="tb-dot"><i></i></span></div>
+<h2 class="case-h display">Agents contribute. <span class="red">You keep</span> the overview.</h2>
+<p class="case-p">Make a readable collection out of agent-written Markdown files. Merkzeug helps you review, edit, and share the result.</p>
+<ul class="points">
+<li><b>A prompt for your layout</b><span>Give your agent a template prompt with the file structure, available fields, and styling rules, so it can adapt a template to your visual identity.</span></li>
+<li><b>Pass on the rules</b><span>Review the asset guidance and existing AGENTS.md / CLAUDE.md files. Choose which files receive the instructions. Merkzeug itself does not run agents.</span></li>
+</ul>
+<div class="links mono"><a href="help-en.html#template-styling-prompt">Template prompts &amp; agent guidance →</a></div>
+</div>
+<div class="fig-col"><figure class="fig" data-fig aria-hidden="true">
+<div class="fig-cap mono"><span>Fig. 05 — Agent writes, Merkzeug keeps it tidy</span><span>Example session</span></div>
+<div class="log">
+<div class="log-bar"><span>Session · handbook/</span><b>Your agent + Merkzeug</b></div>
+<ol class="log-body">
+<li data-on=".05"><span class="d">agent    </span> <span class="k">write</span>  docs/Runbook.md</li>
+<li data-on=".12"><span class="d">agent    </span> <span class="k">image</span>  Runbook.assets/flow.png <span class="ok">✓ asset rule</span></li>
+<li data-on=".19"><span class="d">agent    </span> <span class="k">link </span>  Overview.md → Runbook.md</li>
+<li data-on=".3"><span class="s">merkzeug </span> <span class="k">rules</span>  asset guidance → AGENTS.md <span class="ok">✓</span></li>
+<li data-on=".37"><span class="s">merkzeug </span> <span class="k">rules</span>  asset guidance → CLAUDE.md <span class="ok">✓</span></li>
+<li data-on=".48"><span class="s">merkzeug </span> <span class="k">copy </span>  template prompt → clipboard</li>
+<li data-on=".58"><span class="d">agent    </span> <span class="k">style</span>  templates/letterhead.css</li>
+<li data-on=".7"><span class="ok">you      </span> <span class="k">read </span>  Runbook.md in reading mode</li>
+</ol>
+</div>
+<div class="pick mono"><span data-on=".3"><i></i>AGENTS.md</span><span data-on=".37"><i></i>CLAUDE.md</span><span data-on=".7"><i></i>Reviewed</span></div>
+</figure><div class="captures"><p class="captures-h mono">Real screenshots</p><ul><li><a href="assets/intellij-en-agent-guidance.png" data-shot data-caption="IntelliJ IDEA — review the guidance and choose AGENTS.md or CLAUDE.md"><img src="assets/thumbs/intellij-en-agent-guidance.png" width="720" height="480" loading="lazy" alt="IntelliJ IDEA — review the guidance and choose AGENTS.md or CLAUDE.md"></a><span class="mono">IntelliJ</span></li></ul></div></div>
+</div>
+<span class="sheet-mark mono">Sheet 05 / 08</span>
+</section>
+
+<!-- Sheet 06 — Meeting notes -->
+<section id="calendar" class="scene" data-sheet>
+<div class="container sheet-grid">
+<div>
+<div class="tblock"><span class="tb-no">Sheet 06</span><span class="tb-title">Meeting notes</span><span class="tb-meta">For your everyday work, too</span><span class="tb-dot"><i></i></span></div>
+<h2 class="case-h display">From calendar event <span class="red">to meeting note</span>.</h2>
+<p class="case-p">On Mac, iPhone, or iPad, choose an event and start with a title, time, and attendees instead of an empty page. On Linux and in IntelliJ, use ICS files or HTTPS/Webcal subscriptions; IntelliJ on Windows also reads classic Outlook. Your calendar stays unchanged. Personal notes and ideas need neither Git nor an agent.</p>
+<div class="links mono"><a href="help-en.html#meeting-notes-and-calendars">Calendar sources &amp; meeting notes →</a><a href="assets/macos-en-calendar.png">Screenshot ↗</a></div>
+</div>
+<div class="fig-col"><figure class="fig" data-fig aria-hidden="true">
+<div class="fig-cap mono"><span>Fig. 06 — Pick an event</span><span>Calendar stays unchanged</span></div>
+<div class="f-cal">
+<div class="cal r-rise" data-r="0,.15">
+<div class="cal-head mono"><span>Thu</span><span>September 2026</span></div>
+<div class="cal-day">10</div>
+<div class="ev"><small>08:00–08:30</small>Stand-up</div>
+<div class="ev pickme" data-on=".22"><small>09:00–10:00 · Garden studio</small>Garden project planning</div>
+<div class="ev"><small>14:00–15:00</small>Supplier call</div>
+</div>
+<span class="wire r-grow" data-r=".25,.36"></span>
+<div class="win">
+<div class="win-bar mono"><i></i><i></i><i></i><span>New meeting note</span></div>
+<div class="main-pane">
+<div class="note-h r-rise" data-r=".35,.45">Garden project planning</div>
+<div class="note-meta r-rise" data-r=".4,.5">Thu, 09/10/2026 · 09:00–10:00 · Garden studio</div>
+<div class="note-sub r-rise" data-r=".46,.56">Attendees</div>
+<div class="chk r-rise" data-r=".5,.6"><i></i>Alex Example</div>
+<div class="chk r-rise" data-r=".54,.64"><i></i>Sam Example</div>
+<div class="chk r-rise" data-r=".58,.68"><i></i>Robin Example</div>
+<div class="note-sub r-rise" data-r=".62,.72">Agenda</div>
+<div class="note-sub r-rise" data-r=".66,.76">Tasks</div>
+<span class="fname mono r-pop" data-r=".78,.9">2026-09-10-garden-project-planning.md</span>
+</div>
+</div>
+</div>
+</figure><div class="captures"><p class="captures-h mono">Real screenshots</p><ul><li><a href="assets/macos-en-calendar.png" data-shot data-caption="Mac — create a meeting note from a calendar event"><img src="assets/thumbs/macos-en-calendar.png" width="720" height="450" loading="lazy" alt="Mac — create a meeting note from a calendar event"></a><span class="mono">Mac</span></li></ul></div></div>
+</div>
+<span class="sheet-mark mono">Sheet 06 / 08</span>
+</section>
+
+<!-- Sheet 07 — vs Obsidian -->
+<section id="compare" class="scene" data-sheet>
+<div class="container single">
+<div class="tblock"><span class="tb-no">Sheet 07</span><span class="tb-title">Merkzeug vs Obsidian</span><span class="tb-meta">Why Merkzeug</span><span class="tb-dot"><i></i></span></div>
+<h2 class="case-h display">Merkzeug <span class="red">vs</span> Obsidian</h2>
+<p class="case-p">A fixed Markdown workflow — without the plugin maze.</p>
+<svg class="mark-defs" aria-hidden="true" focusable="false" width="0" height="0" style="position:absolute">
+<symbol id="mark-yes" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12"/><path d="M6.8 12.4l3.4 3.4 7-7.4" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="mark-partial" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12"/><path d="M6.5 14c1.6-4 3.6-4 5.5-1.5s3.9 2.5 5.5-1.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></symbol>
+<symbol id="mark-no" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12"/><path d="M8 8l8 8M16 8l-8 8" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></symbol>
+</svg>
+<ul class="legend mono" aria-label="Legend">
+<li><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg>Yes</li>
+<li><svg class="mark partial" aria-hidden="true"><use href="#mark-partial"/></svg>Partial</li>
+<li><svg class="mark no" aria-hidden="true"><use href="#mark-no"/></svg>No</li>
+</ul>
+<div class="versus-wrap" data-fig tabindex="0" role="region" aria-label="Merkzeug compared with Obsidian">
+<table class="versus">
+<thead>
+<tr><th scope="col">Feature</th><th scope="col">Merkzeug</th><th scope="col">Obsidian</th></tr>
+</thead>
+<tbody>
+<!-- comparison:start -->
+<tr><th scope="row">Inline Mermaid and images</th><td><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg><span class="sr">Yes</span></td><td><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg><span class="sr">Yes</span></td></tr>
+<tr><th scope="row">Manage linked documents</th><td><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg><span class="sr">Yes</span></td><td><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg><span class="sr">Yes</span></td></tr>
+<tr><th scope="row">Manage image assets (move, rename)</th><td><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg><span class="sr">Yes</span></td><td><svg class="mark partial" aria-hidden="true"><use href="#mark-partial"/></svg><span class="sr">Partial</span></td></tr>
+<tr><th scope="row">All features on desktop and mobile</th><td><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg><span class="sr">Yes</span></td><td><svg class="mark partial" aria-hidden="true"><use href="#mark-partial"/></svg><span class="sr">Partial</span></td></tr>
+<tr><th scope="row">Runs in IDEs (IntelliJ, Visual Studio Code)</th><td><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg><span class="sr">Yes</span><small>IntelliJ · VS Code planned</small></td><td><svg class="mark no" aria-hidden="true"><use href="#mark-no"/></svg><span class="sr">No</span></td></tr>
+<tr><th scope="row">Integrates with Git apps on iOS</th><td><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg><span class="sr">Yes</span></td><td><svg class="mark partial" aria-hidden="true"><use href="#mark-partial"/></svg><span class="sr">Partial</span></td></tr>
+<tr><th scope="row">Fast, lightweight, fixed feature set</th><td><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg><span class="sr">Yes</span></td><td><svg class="mark no" aria-hidden="true"><use href="#mark-no"/></svg><span class="sr">No</span></td></tr>
+<tr><th scope="row">Plugin system</th><td><svg class="mark no" aria-hidden="true"><use href="#mark-no"/></svg><span class="sr">No</span></td><td><svg class="mark yes" aria-hidden="true"><use href="#mark-yes"/></svg><span class="sr">Yes</span></td></tr>
+<!-- comparison:end -->
+</tbody>
+</table>
+</div>
+<p class="note">Our assessment of the core apps without community plugins, as of <span data-comparison-date>September 2026</span>. Source: <a href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug/blob/main/COMPARISON.md">COMPARISON.md</a>. Obsidian is a trademark of its respective owner; Merkzeug is not affiliated with Obsidian.</p>
+</div>
+<span class="sheet-mark mono">Sheet 07 / 08</span>
+</section>
+
+<!-- Sheet 08 — Editions -->
+<section id="platforms" class="scene" data-sheet>
+<div class="container single">
+<div class="tblock"><span class="tb-no">Sheet 08</span><span class="tb-title">Editions</span><span class="tb-meta">Everywhere</span><span class="tb-dot"><i></i></span></div>
+<h2 class="case-h display">Your workflow. <span class="red">Your device.</span></h2>
+<p class="case-p">Available for Mac, iPhone, iPad, Linux, and IntelliJ IDEA. Editions share the file format and visual editor, with integrations suited to each device. Windows is coming soon; Android &amp; VS Code are planned, with no release date promised.</p>
 <div class="comparison-wrap" tabindex="0" role="region" aria-label="Edition comparison">
 <table class="comparison">
 <caption>Features by edition</caption>
 <thead>
-<tr>
-<th scope="col">Feature</th>
-<th scope="col">Mac</th>
-<th scope="col">iPhone &amp; iPad</th>
-<th scope="col">IntelliJ IDEA</th>
-<th scope="col">Linux</th>
-</tr>
+<tr><th scope="col">Feature</th><th scope="col">Mac</th><th scope="col">iPhone &amp; iPad</th><th scope="col">IntelliJ IDEA</th><th scope="col">Linux</th></tr>
 </thead>
 <tbody>
-<tr>
-<th scope="row">Visual editing & Mermaid</th>
-<td>Yes</td>
-<td>Yes</td>
-<td>Yes</td>
-<td>Yes</td>
-</tr>
-<tr>
-<th scope="row">Reading mode</th>
-<td>Yes</td>
-<td>Yes</td>
-<td>Planned</td>
-<td>Yes</td>
-</tr>
-<tr>
-<th scope="row">Template styles while editing</th>
-<td>Yes</td>
-<td>Yes</td>
-<td>Yes</td>
-<td>Yes</td>
-</tr>
-<tr>
-<th scope="row">Export a PDF file</th>
-<td>Yes</td>
-<td>Yes</td>
-<td>Yes</td>
-<td>Yes</td>
-</tr>
-<tr>
-<th scope="row">Print with a template</th>
-<td>Yes</td>
-<td>AirPrint</td>
-<td>PDF preview</td>
-<td>System print dialog</td>
-</tr>
-<tr>
-<th scope="row">Linked notes in one PDF</th>
-<td>Yes</td>
-<td>Yes</td>
-<td>Yes</td>
-<td>Yes</td>
-</tr>
-<tr>
-<th scope="row">Calendar & meeting notes</th>
-<td>Yes</td>
-<td>Yes</td>
-<td>—</td>
-<td>ICS / Webcal</td>
-</tr>
-<tr>
-<th scope="row">Git-Workflow</th>
-<td>Integrated</td>
-<td>External Git app; Working Copy integration</td>
-<td>IntelliJ</td>
-<td>Installed Git client</td>
-</tr>
-<tr>
-<th scope="row">Images & links on move/rename</th>
-<td>Yes</td>
-<td>Yes</td>
-<td>IDE refactoring</td>
-<td>Yes</td>
-</tr>
+<tr><th scope="row">Visual editing &amp; Mermaid</th><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><th scope="row">Reading mode</th><td>Yes</td><td>Yes</td><td>Planned</td><td>Yes</td></tr>
+<tr><th scope="row">Template styles while editing</th><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><th scope="row">Export a PDF file</th><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><th scope="row">Print with a template</th><td>Yes</td><td>AirPrint</td><td>PDF preview</td><td>System print dialog</td></tr>
+<tr><th scope="row">Linked notes in one PDF</th><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><th scope="row">Calendar &amp; meeting notes</th><td>Yes</td><td>Yes</td><td>ICS / Webcal</td><td>ICS / Webcal</td></tr>
+<tr><th scope="row">Git-Workflow</th><td>Integrated</td><td>External Git app; Working Copy integration</td><td>IntelliJ</td><td>Installed Git client</td></tr>
+<tr><th scope="row">Images &amp; links on move/rename</th><td>Yes</td><td>Yes</td><td>IDE refactoring</td><td>Yes</td></tr>
 </tbody>
 </table>
 </div>
-<p class="table-note">The guides explain requirements and differences in detail. Working Copy is a separate app. The IntelliJ plugin is available in the Stable channel. Linux calendars use ICS imports or HTTPS/Webcal subscriptions; private subscriptions need a system keyring. Git requires an installed Git client.</p>
-<div class="edition-guides">
-<a href="help-en.html">Mac &amp; Linux →</a>
-<a href="help-ios-en.html">iPhone & iPad →</a>
-<a href="help-intellij-en.html">IntelliJ IDEA →</a>
-</div>
-<div class="story-cards">
-<article>
-<h3>Windows</h3>
-<p>Coming soon — the next desktop edition.</p>
-</article>
-<article>
-<h3>Android & VS Code</h3>
-<p>Planned — no release date promised.</p>
-</article>
+<p class="note">The guides explain requirements and differences in detail. Working Copy is a separate app. The IntelliJ plugin is available in the Stable channel. Linux and IntelliJ calendars use ICS imports or HTTPS/Webcal subscriptions; on Linux, private subscriptions need a system keyring. Git requires an installed Git client.</p>
+<div class="edition-guides mono">
+<a href="help-en.html">Mac &amp; Linux guide →</a>
+<a href="help-ios-en.html">iPhone &amp; iPad guide →</a>
+<a href="help-intellij-en.html">IntelliJ IDEA guide →</a>
 </div>
 <div class="actions">
 <div class="store-download">
@@ -337,18 +484,29 @@
 </div>
 <div class="marketplace-install">
 <div id="marketplace-install-bottom" data-marketplace-widget hidden></div>
-<a class="button secondary" href="https://plugins.jetbrains.com/plugin/34221-merkzeug">IntelliJ IDEA · Marketplace ↗</a>
+<a class="button secondary" href="https://plugins.jetbrains.com/plugin/34221-merkzeug">IntelliJ IDEA ↗</a>
 <span class="store-caption">Plugin for IntelliJ</span>
 </div>
-<div class="store-download"><a class="button secondary" href="#linux-downloads">Linux ↓</a><span class="store-caption">AppImage · DEB · RPM</span></div>
 </div>
+<div id="linux-downloads" class="linux-downloads">
+<div class="tblock"><span class="tb-no">Linux</span><span class="tb-title">1.2.1 · x86_64 &amp; ARM64</span></div>
+<h3 class="display">Your notes on Linux.</h3>
+<p>Choose your processor architecture first, then the package for your distribution. Each download contains one architecture only. Updates are installed manually. If unsure, run <code>uname -m</code>: <code>x86_64</code> means Intel/AMD, <code>aarch64</code> means ARM64.</p>
+<div class="arch-grid">
+<div><h4>Intel / AMD · x86_64</h4><div class="actions"><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-x64.AppImage">AppImage</a><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-x64.deb">DEB · Ubuntu / Debian</a><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-x64.rpm">RPM · Fedora</a></div></div>
+<div><h4>ARM64 · aarch64</h4><div class="actions"><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-arm64.AppImage">AppImage</a><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-arm64.deb">DEB · Ubuntu / Debian</a><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-arm64.rpm">RPM · Fedora</a></div><p>For ARM Linux, including Linux in Parallels on Apple Silicon Macs.</p></div>
+</div>
+<p>AppImage requires FUSE 2 and permission to use unprivileged user namespaces. On systems that restrict this, use DEB or RPM. DEB and RPM install through your package manager. Use local folders, Git repositories, or folders mounted by your sync provider; automatic iCloud discovery is not available on Linux. <a class="red" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/SHA256SUMS.txt">SHA-256</a> · <a class="red" href="help-en.html#linux-installation-and-platform-differences">Installation and help</a></p>
+</div>
+</div>
+<span class="sheet-mark mono">Sheet 08 / 08</span>
 </section>
-<section id="linux-downloads" class="story"><p class="eyebrow">Linux · 1.2.1</p><h2>Your notes on Linux.</h2><p>Choose your processor architecture first, then the package for your distribution. Each download contains one architecture only. Updates are installed manually. If unsure, run <code>uname -m</code>: <code>x86_64</code> means Intel/AMD, <code>aarch64</code> means ARM64.</p><h3>Intel / AMD · x86_64</h3><div class="actions"><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-x64.AppImage">AppImage</a><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-x64.deb">DEB · Ubuntu / Debian</a><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-x64.rpm">RPM · Fedora</a></div><h3>ARM64 · aarch64</h3><p>For ARM Linux, including Linux in Parallels on Apple Silicon Macs.</p><div class="actions"><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-arm64.AppImage">AppImage</a><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-arm64.deb">DEB · Ubuntu / Debian</a><a class="button secondary" href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/Merkzeug-1.2.1-linux-arm64.rpm">RPM · Fedora</a></div><p>AppImage requires FUSE 2 and permission to use unprivileged user namespaces. On systems that restrict this, use DEB or RPM. DEB and RPM install through your package manager. Use local folders, Git repositories, or folders mounted by your sync provider; automatic iCloud discovery is not available on Linux.</p><p><a href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug-downloads/releases/download/v1.2.1/SHA256SUMS.txt">SHA-256</a> · <a href="help-en.html#linux-installation-and-platform-differences">Installation and help</a></p></section>
 <!-- progress:start --><section id="release-notes" class="feature-section"><p class="eyebrow">Release Notes</p><h2>What’s new in Merkzeug.</h2><p>Version 1.3.1 is being prepared. Read what is included; published updates will appear here as they become available.</p><a class="button secondary" href="release-notes-en.html">Read the release notes</a></section><!-- progress:end -->
 </main>
 <footer>
+<div class="container footer-inner">
 <span>© 2026 creative-it Software &amp; Consulting e.U.</span>
-<nav aria-label="Footer">
+<nav aria-label="Footer" class="mono">
 <a href="release-notes-en.html">Release Notes</a>
 <a href="privacy-en.html">Privacy</a>
 <a href="license-en.html">License</a>
@@ -356,6 +514,7 @@
 <a href="https://apps.creative-it.com/">More apps</a>
 <a href="https://www.creative-it.com/">creative-it</a>
 </nav>
+</div>
 </footer>
 </body>
 </html>
