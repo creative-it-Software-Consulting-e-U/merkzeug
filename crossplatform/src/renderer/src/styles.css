@@ -879,6 +879,43 @@ button.primary:disabled {
   margin: 8px 0 0;
 }
 
+.system-calendar {
+  margin-bottom: 10px;
+}
+
+.system-calendar h3 {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.system-calendar .settings-row {
+  margin-top: 8px;
+}
+
+.settings-status {
+  font-size: 12.5px;
+  margin: 4px 0 0;
+}
+
+.settings-status::before {
+  content: "●";
+  margin-right: 6px;
+  color: var(--text-dim);
+}
+
+.settings-status.ok::before {
+  color: #2e9e5b;
+}
+
+.settings-status.error::before {
+  color: var(--danger);
+}
+
+.settings-section .calendar-sources {
+  padding: 4px 0 0;
+}
+
 /* ---- Zoom-Fenster ---- */
 
 .zoom-app {
@@ -1093,6 +1130,16 @@ button.primary:disabled {
   padding: 18px 14px;
   font-size: 13px;
   color: var(--text-dim);
+}
+
+.meeting-status .link-button {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: var(--accent);
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .meeting-foot .meeting-past-toggle {

@@ -4,6 +4,10 @@
 // Aufruf:   merkzeug-calendar <von-epoch-sekunden> <bis-epoch-sekunden>
 // Ausgabe:  {"events":[…]}  oder  {"error":"denied"|"usage"}
 //
+// Aufruf:   merkzeug-calendar status | request
+// Ausgabe:  {"access":"granted"|"notDetermined"|"denied"|"restricted","accounts":[…]}
+//           status fragt nichts an; request zeigt bei Bedarf den Systemdialog.
+//
 // Der Kalender-Zugriff wird beim ersten Aufruf vom System erfragt; die
 // Berechtigung hängt am aufrufenden Programm (der Merkzeug-App).
 
@@ -60,6 +64,68 @@ func person(from participant: EKParticipant) -> Person {
   )
 }
 
+struct AccessOutput: Codable {
+  let access: String
+  let accounts: [String]
+}
+
+let store = EKEventStore()
+
+/** Fragt den Zugriff an; ohne Rückfrage, wenn das System bereits entschieden hat. */
+func requestAccess() -> Bool {
+  let semaphore = DispatchSemaphore(value: 0)
+  var granted = false
+  if #available(macOS 14.0, *) {
+    store.requestFullAccessToEvents { ok, _ in
+      granted = ok
+      semaphore.signal()
+    }
+  } else {
+    store.requestAccess(to: .event) { ok, _ in
+      granted = ok
+      semaphore.signal()
+    }
+  }
+  semaphore.wait()
+  return granted
+}
+
+/** Berechtigung ohne Systemdialog; Schreibzugriff allein reicht nicht zum Lesen. */
+func accessState() -> String {
+  let status = EKEventStore.authorizationStatus(for: .event)
+  if #available(macOS 14.0, *) {
+    if status == .fullAccess { return "granted" }
+    if status == .writeOnly { return "denied" }
+  } else if status.rawValue == 3 {
+    return "granted"  // .authorized vor macOS 14
+  }
+  switch status {
+  case .notDetermined: return "notDetermined"
+  case .restricted: return "restricted"
+  default: return "denied"
+  }
+}
+
+func emitAccess() {
+  let state = accessState()
+  // Konten (iCloud, Exchange, Google, …) nur bei erteiltem Zugriff lesbar
+  let accounts = state == "granted"
+    ? Array(Set(store.calendars(for: .event).compactMap { $0.source?.title })).sorted()
+    : []
+  emit(AccessOutput(access: state, accounts: accounts))
+}
+
+if CommandLine.arguments.count == 2 && CommandLine.arguments[1] == "status" {
+  emitAccess()
+  exit(0)
+}
+if CommandLine.arguments.count == 2 && CommandLine.arguments[1] == "request" {
+  _ = requestAccess()
+  if accessState() == "granted" { store.reset() }
+  emitAccess()
+  exit(0)
+}
+
 guard CommandLine.arguments.count == 3,
   let fromEpoch = Double(CommandLine.arguments[1]),
   let toEpoch = Double(CommandLine.arguments[2])
@@ -68,23 +134,7 @@ else {
   exit(2)
 }
 
-let store = EKEventStore()
-let semaphore = DispatchSemaphore(value: 0)
-var granted = false
-if #available(macOS 14.0, *) {
-  store.requestFullAccessToEvents { ok, _ in
-    granted = ok
-    semaphore.signal()
-  }
-} else {
-  store.requestAccess(to: .event) { ok, _ in
-    granted = ok
-    semaphore.signal()
-  }
-}
-semaphore.wait()
-
-guard granted else {
+guard requestAccess() else {
   emit(ErrorOutput(error: "denied"))
   exit(1)
 }

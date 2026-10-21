@@ -265,7 +265,7 @@ export function MeetingNoteDialog({ onPick, onCancel }: MeetingNoteDialogProps):
         </label>
         <div className="meeting-list" ref={listRef}>
           {rows}
-          {status && <div className="meeting-status">{status}</div>}
+          {status && <div className="meeting-status">{status}{error === 'denied' && <> <button className="link-button" onClick={() => void window.merkzeug.openCalendarPrivacy()}>{translate("Open System Settings")}</button></>}</div>}
         </div>
         <p className="dialog-hint">
           {translate("Select an event to create a note with its title, time, organizer and attendees.")}

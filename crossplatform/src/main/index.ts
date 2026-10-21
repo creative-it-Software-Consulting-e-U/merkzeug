@@ -55,7 +55,7 @@ import {
 } from './windows'
 import { watchVault } from './watcher'
 import { registerPdfIpc } from './pdfExport'
-import { calendarEventDetail, listCalendarEvents } from './calendar'
+import { calendarAccess, calendarEventDetail, listCalendarEvents, openCalendarPrivacy } from './calendar'
 
 protocol.registerSchemesAsPrivileged([
   { scheme: 'vault-file', privileges: { stream: true, supportFetchAPI: true, bypassCSP: true } }
@@ -201,6 +201,8 @@ function registerIpc(): void {
     listCalendarEvents(fromMs, toMs)
   )
   ipcMain.handle('calendar:detail', (_e, event: CalendarEvent) => calendarEventDetail(event))
+  ipcMain.handle('calendar:access', (_e, request: boolean) => calendarAccess(request === true))
+  ipcMain.handle('calendar:openPrivacy', () => openCalendarPrivacy())
   const refactorRoot = (event: Electron.IpcMainInvokeEvent): string => {
     const root = getWindowVault(winFromEvent(event)?.id ?? -1)
     if (!root) throw new Error('No vault is open.')

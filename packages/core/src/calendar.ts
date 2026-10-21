@@ -36,3 +36,13 @@ export interface CalendarResult {
   events: CalendarEvent[]
 }
 
+/** Anbindung an den Systemkalender, wie sie die Einstellungen anzeigen */
+export interface CalendarAccess {
+  /** macos = Kalender-App über EventKit, outlook = klassisches Outlook (Windows), none = keine Anbindung */
+  system: 'macos' | 'outlook' | 'none'
+  /** Nur macOS: Berechtigung; failed = Helfer nicht ausführbar */
+  state?: 'granted' | 'notDetermined' | 'denied' | 'restricted' | 'failed'
+  /** Nur macOS bei erteiltem Zugriff: Konten der Kalender-App (iCloud, Exchange, …) */
+  accounts?: string[]
+  message?: string
+}

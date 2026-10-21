@@ -26,7 +26,7 @@ export interface GitResult {
   output: string
 }
 
-export type { CalendarPerson, CalendarEvent, CalendarResult } from '@merkzeug/core/calendar'
+export type { CalendarAccess, CalendarPerson, CalendarEvent, CalendarResult } from '@merkzeug/core/calendar'
 
 /** Aktionen, die das Menü an den Renderer schickt */
 export type MenuAction =
