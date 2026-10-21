@@ -22,10 +22,10 @@
     "@merkzeug/core": "1.3.1"
   },
   "peerDependencies": {
-    "@milkdown/crepe": "^7.22.1",
-    "@milkdown/kit": "^7.22.1",
-    "mermaid": "^11.16.1",
-    "react": "^19.3.0"
+    "@milkdown/crepe": "^7.22.3",
+    "@milkdown/kit": "^7.22.3",
+    "mermaid": "^12.2.0",
+    "react": "^19.3.1"
   },
   "license": "MIT"
 }
