@@ -48,8 +48,10 @@ Links zeigt die Sidebar den Vault als hierarchischen Baum.
   sich mit der Maus ziehen; Doppelklick darauf stellt die Standardbreite wieder
   her. Reicht der Platz für lange Namen oder tiefe Hierarchien nicht, kann der
   Baum horizontal und vertikal gescrollt werden.
-- **Kontextmenü** (Rechtsklick): neue Notiz, neuer Ordner, als PDF exportieren,
-  Umbenennen, in den Papierkorb legen, im Finder/Explorer zeigen.
+- **Kontextmenü** (Rechtsklick): neue Notiz, neuer Ordner, neue Meeting-Notiz
+  (im angeklickten Ordner), als PDF exportieren, Umbenennen, im
+  Finder/Explorer zeigen, **Pfad kopieren** (relativ zum Vault mit `/` als
+  Trenner oder absolut), in den Papierkorb legen.
 - **Mehrfachauswahl:** ⌘-Klick (Windows/Linux: Ctrl-Klick) nimmt weitere
   Notizen in die Auswahl auf bzw. wieder heraus, ⇧-Klick wählt den Bereich
   bis zur angeklickten Notiz — beides nur unter Notizen **desselben Ordners**.
@@ -545,7 +547,9 @@ Meeting-Notizen unter Linux nutzen ICS-Dateien oder HTTPS/Webcal-Kalenderabos. E
   lassen sich über die Checkbox über der Liste einblenden. **„Frühere
   anzeigen“** blendet vergangene Termine ein, **„Suchen“** durchsucht Titel,
   Personen und Orte im Zeitraum ±90 Tage. Ein Klick auf einen Termin erzeugt
-  eine fertig benannte Notiz: Die Termin-Daten (Datum, Uhrzeit, Ort,
+  eine fertig benannte Notiz im Ordner der aktuellen Auswahl bzw. im
+  angeklickten Ordner, wenn du **Neue Meeting-Notiz…** im Kontextmenü des
+  Dateibaums gewählt hast: Die Termin-Daten (Datum, Uhrzeit, Ort,
   Organisator, Teilnehmer, erkannter Teams/Zoom/Meet/Webex-Link) landen im
   Frontmatter; im Text stehen Datum/Uhrzeit unter der Überschrift, eine
   **abhakbare Teilnehmerliste** (wer war wirklich dabei?) sowie die

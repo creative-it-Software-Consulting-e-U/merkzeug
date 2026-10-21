@@ -557,6 +557,18 @@ button {
   background: var(--bg-hover);
 }
 
+.context-menu-item.has-submenu {
+  position: relative;
+  padding-right: 26px;
+}
+
+.context-menu-item.has-submenu::after {
+  content: '›';
+  position: absolute;
+  right: 10px;
+  color: var(--text-dim);
+}
+
 .context-menu-item.danger {
   color: var(--danger);
 }

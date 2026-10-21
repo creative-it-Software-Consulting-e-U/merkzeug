@@ -16,9 +16,12 @@ import { PdfView } from '@merkzeug/export'
 import { collectLinkedDocs, fillTemplate, resolvePath } from '@merkzeug/core/exportPlan'
 import type { PdfPayload, PdfTemplate } from '@merkzeug/core/pdf'
 import { request } from './bridge'
+import { installMacNavigation } from './macNavigation'
+import { MeetingApp } from './MeetingApp'
 import './style.css'
 
 initializeTheme()
+installMacNavigation()
 
 function imageUrl(path: string, url: string): string {
   if (!url || /^(https?:|data:)/i.test(url)) return url
@@ -173,4 +176,5 @@ if (new URLSearchParams(location.search).has('pdf')) {
     pdfReady: landscape => { void request('pdfReady', { landscape }) },
     pdfError: message => { void request('pdfError', { message }) }
   }} />)
-} else createRoot(document.getElementById('root')!).render(<App />)
+} else if (new URLSearchParams(location.search).has('meeting')) createRoot(document.getElementById('root')!).render(<MeetingApp />)
+else createRoot(document.getElementById('root')!).render(<App />)

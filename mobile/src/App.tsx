@@ -55,7 +55,8 @@ export default function App(): React.JSX.Element {
   const [dirty, setDirty] = useState(false)
   const [sheet, setSheet] = useState<SheetState | null>(null)
   const [searching, setSearching] = useState(false)
-  const [showMeetings, setShowMeetings] = useState(false)
+  // Zielordner der Meeting-Notiz; null = Dialog geschlossen
+  const [meetingFolder, setMeetingFolder] = useState<string | null>(null)
   const [showHelp, setShowHelp] = useState(false)
   const [printDoc, setPrintDoc] = useState<{ path: string; content: string; linkedDocs: PdfDoc[] } | null>(null)
   const [pdfTemplate, setPdfTemplate] = useState<PdfTemplate | null>(null)
@@ -84,7 +85,7 @@ export default function App(): React.JSX.Element {
   treeRef.current = tree
   // Solange ein Overlay offen ist, sollen die Kanten-Wischgesten nicht greifen
   const overlayOpenRef = useRef(false)
-  overlayOpenRef.current = sheet !== null || searching || showHelp || showMeetings
+  overlayOpenRef.current = sheet !== null || searching || showHelp || meetingFolder !== null
 
   const meetingRenamePending = useRef(false)
   const renameSavedMeeting = async (path: string, markdown: string): Promise<void> => {
@@ -490,8 +491,8 @@ export default function App(): React.JSX.Element {
       <GuidedTour edition="ios" />
       <WorkingCopy key={`git:${vaultInfo.id ?? vaultInfo.name}`} vaultId={vaultInfo.id ?? vaultInfo.name} />
       <VaultGuidance key={vaultInfo.id ?? vaultInfo.name} vaultId={vaultInfo.id ?? vaultInfo.name} host={guidanceHost} />
-      <div className="appearance-bar">{isNote && <button disabled={preparingPrint} onClick={() => void preparePrint()}>{translate("PDF / Print…")}</button>}<button onClick={() => setShowMeetings(true)}>{translate('New meeting note')}</button><ThemeSelect /></div>
-      {showMeetings && <MeetingNotes folder={isNote ? dirname(current) : current} onClose={() => setShowMeetings(false)} onOpen={path => { setShowMeetings(false); void reloadTree(); navigateTo(path) }} />}
+      <div className="appearance-bar">{isNote && <button disabled={preparingPrint} onClick={() => void preparePrint()}>{translate("PDF / Print…")}</button>}<button onClick={() => setMeetingFolder(isNote ? dirname(current) : current)}>{translate('New meeting note')}</button><ThemeSelect /></div>
+      {meetingFolder !== null && <MeetingNotes folder={meetingFolder} onClose={() => setMeetingFolder(null)} onOpen={path => { setMeetingFolder(null); void reloadTree(); navigateTo(path) }} />}
       <TemplateSettings key={`templates:${vaultInfo.id ?? vaultInfo.name}`} vaultId={vaultInfo.id ?? vaultInfo.name} onChange={setPdfTemplate} />
       <main className="content" ref={contentRef}>
         {isNote ? (
@@ -537,6 +538,9 @@ export default function App(): React.JSX.Element {
           title={sheet.node.isDirectory ? sheet.node.name : sheet.node.name.replace(/\.md$/i, '')}
           onClose={() => setSheet(null)}
           actions={[
+            ...(sheet.node.isDirectory ? [{ label: translate("New meeting note…"), onSelect: () => setMeetingFolder(sheet.node.path) }] : []),
+            // Vault-relativ wie am Desktop; absolute iOS-Pfade sind außerhalb des Geräts nutzlos
+            { label: translate("Copy path"), onSelect: () => void navigator.clipboard?.writeText(sheet.node.path.replace(/^\/+/, '') || '.') },
             { label: translate("Rename"), onSelect: () => void renameItem(sheet.node) },
             { label: translate("Delete"), danger: true, onSelect: () => void deleteItem(sheet.node) }
           ]}

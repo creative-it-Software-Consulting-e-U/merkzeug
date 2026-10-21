@@ -565,6 +565,9 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
           [Crepe.Feature.TopBar]: false
         },
         featureConfigs: {
+          // Der virtuelle Cursor kennt keine Affinität und springt bei weichen
+          // Umbrüchen vom Zeilenende an den Anfang der Folgezeile.
+          [Crepe.Feature.Cursor]: { virtual: false },
           [Crepe.Feature.Placeholder]: {
             text: translate("Start writing — type “/” for commands …"),
             mode: 'block'

@@ -20,7 +20,7 @@ just as well as a Working Copy repository.
 
 ## Navigating
 
-- The folder view lists subfolders and notes; tap an entry to open it. Press and hold for **Rename** or **Delete**. File names and action-menu labels are not selectable; note text remains selectable.
+- The folder view lists subfolders and notes; tap an entry to open it. Press and hold for **Copy path**, **Rename** or **Delete**; folders also offer **New meeting note…**. File names and action-menu labels are not selectable; note text remains selectable.
 - Links inside notes take you straight to the linked note or folder.
 - **Back and forward**: with the ‹ › buttons at the top left – or by
   swiping from the left or right edge of the screen.
@@ -49,8 +49,10 @@ Selecting a whole table cell highlights the cell; click inside its text to place
 
 - **＋** in the folder view creates a new note or folder. New notes open
   directly in edit mode.
-- **Press and hold an entry** to open the menu with *Rename* and
-  *Delete*. Deleting a folder removes its entire contents – in Working
+- **Press and hold an entry** to open the menu with *Copy path*
+  (relative to the vault, e.g. `Projects/Plan.md`), *Rename* and
+  *Delete*. On folders, *New meeting note…* creates the meeting note in
+  that folder. Deleting a folder removes its entire contents – in Working
   Copy this can be undone until the next commit.
 
 ## Syncing with Working Copy

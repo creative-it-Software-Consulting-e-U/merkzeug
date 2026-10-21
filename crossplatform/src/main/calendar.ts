@@ -18,23 +18,8 @@ import { execFile } from 'node:child_process'
 import { existsSync, statSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import type { CalendarEvent, CalendarPerson, CalendarResult } from '../shared/types'
-
-/** Rohes Termin-Format des EventKit-Helfers */
-interface RawEvent {
-  id: string
-  title: string
-  start: string
-  end: string
-  allDay: boolean
-  location?: string
-  calendar?: string
-  organizer?: CalendarPerson
-  attendees?: CalendarPerson[]
-  attendeeCount?: number
-  url?: string
-  notes?: string
-}
+import { parseHelperOutput, toEvent, type RawEvent } from '@merkzeug/core/calendarHelper'
+import type { CalendarEvent, CalendarResult } from '../shared/types'
 
 const HELPER_DIR_DEV = join(__dirname, '../../resources/calendar')
 const HELPER_NAME = 'merkzeug-calendar'
@@ -48,44 +33,6 @@ const epochArgs = (fromMs: number, toMs: number): string[] => [
   String(Math.floor(fromMs / 1000)),
   String(Math.ceil(toMs / 1000))
 ]
-
-/** Erkennt Besprechungs-Links (Teams, Zoom, Meet, Webex) in URL/Ort/Notizen. */
-function extractMeetingUrl(raw: RawEvent): string | undefined {
-  const pattern =
-    /https:\/\/(?:[\w.-]*teams\.microsoft\.com\/l\/meetup-join\/[^\s<>"')\]]+|[\w.-]*zoom\.us\/[jw]\/[^\s<>"')\]]+|meet\.google\.com\/[a-z-]+|[\w.-]*webex\.com\/(?:meet|join)\/[^\s<>"')\]]+)/i
-  for (const text of [raw.url, raw.location, raw.notes]) {
-    const match = text?.match(pattern)
-    if (match) return match[0]
-  }
-  return undefined
-}
-
-function toEvent(raw: RawEvent): CalendarEvent {
-  return {
-    id: raw.id,
-    title: raw.title,
-    start: raw.start,
-    end: raw.end,
-    allDay: raw.allDay,
-    location: raw.location,
-    calendar: raw.calendar,
-    organizer: raw.organizer,
-    attendees: raw.attendees ?? [],
-    attendeeCount: raw.attendeeCount,
-    meetingUrl: extractMeetingUrl(raw)
-  }
-}
-
-function parseHelperOutput(stdout: string): CalendarResult {
-  const parsed = JSON.parse(stdout) as { events?: RawEvent[]; error?: string; message?: string }
-  if (parsed.error === 'denied' || parsed.error === 'unsupported') {
-    return { ok: false, error: parsed.error, message: parsed.message, events: [] }
-  }
-  if (!parsed.events) {
-    return { ok: false, error: 'failed', message: parsed.message ?? parsed.error, events: [] }
-  }
-  return { ok: true, events: parsed.events.map(toEvent) }
-}
 
 /**
  * Liefert im Entwicklungsmodus den Pfad zum Helfer und kompiliert ihn bei

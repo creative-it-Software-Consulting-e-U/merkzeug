@@ -23,7 +23,7 @@ Merkzeug teaches IntelliJ's own **Refactor → Move** and **Refactor → Rename*
 
 Existing shared `assets/` folders remain supported and are not assigned to a single note. The integration applies to IntelliJ Move/Rename refactoring, not external filesystem actions, copying or deletion. Symbolic-link companions require manual handling.
 
-IntelliJ owns saving, Git integration and undo history. Merkzeug follows the IDE theme and offers optional PDF content styles while editing, portable vault templates, central templates and automatic discovery of desktop Merkzeug templates. An offline styling prompt explains template files, CSS and preview limitations for your agent. Optional coding-agent guidance can be added to explicitly selected `AGENTS.md` or `CLAUDE.md` files after reviewing their contents.
+IntelliJ owns saving, Git integration and undo history. Merkzeug follows the IDE theme and offers optional PDF content styles while editing, portable vault templates, central templates and automatic discovery of desktop Merkzeug templates. An offline styling prompt explains template files, CSS and preview limitations for your agent. Optional coding-agent guidance can be added to explicitly selected `AGENTS.md` or `CLAUDE.md` files after reviewing their contents. **New → Merkzeug Meeting Note** creates a meeting note from a calendar event in the chosen folder, using ICS files, calendar feeds and, on Windows, classic Outlook.
 
 Merkzeug is licensed under the MIT License, which permits commercial use, modification and redistribution with the required license and copyright notices. It adds its own editor tab; the JetBrains Markdown plugin is optional.
 
@@ -50,7 +50,7 @@ Merkzeug erweitert IntelliJs eigene Aktionen **Refactor → Move** und **Refacto
 
 Bestehende gemeinsame `assets/`-Ordner bleiben unterstützt und werden keiner einzelnen Notiz zugeordnet. Die Integration gilt für IntelliJs Move/Rename-Refactoring, nicht für externe Dateisystemaktionen, Kopieren oder Löschen. Begleitordner mit symbolischen Links müssen manuell behandelt werden.
 
-Speichern, Git-Integration und Undo-Verlauf bleiben bei IntelliJ. Merkzeug folgt dem IDE-Theme und bietet optional PDF-Inhaltsstile beim Bearbeiten, portable Vault-Vorlagen, zentrale Vorlagen und die automatische Erkennung von Vorlagen der Desktop-App. Ein offline verfügbarer Styling-Prompt erklärt einem Agenten Vorlagendateien, CSS und Grenzen der Vorschau. Hinweise für Coding-Agenten lassen sich nach Prüfung der vorhandenen Inhalte gezielt in ausgewählte `AGENTS.md`- oder `CLAUDE.md`-Dateien einfügen.
+Speichern, Git-Integration und Undo-Verlauf bleiben bei IntelliJ. Merkzeug folgt dem IDE-Theme und bietet optional PDF-Inhaltsstile beim Bearbeiten, portable Vault-Vorlagen, zentrale Vorlagen und die automatische Erkennung von Vorlagen der Desktop-App. Ein offline verfügbarer Styling-Prompt erklärt einem Agenten Vorlagendateien, CSS und Grenzen der Vorschau. Hinweise für Coding-Agenten lassen sich nach Prüfung der vorhandenen Inhalte gezielt in ausgewählte `AGENTS.md`- oder `CLAUDE.md`-Dateien einfügen. **Neu → Merkzeug-Meeting-Notiz** legt aus einem Kalendertermin eine Meeting-Notiz im gewählten Ordner an – aus ICS-Dateien, Kalender-Feeds und unter Windows aus dem klassischen Outlook.
 
 Merkzeug steht unter der MIT-Lizenz. Sie erlaubt kommerzielle Nutzung, Änderungen und Weitergabe unter Beibehaltung der erforderlichen Lizenz- und Urheberrechtshinweise. Es ergänzt einen eigenen Editor-Tab; das JetBrains-Markdown-Plugin ist optional.
 

@@ -5,7 +5,11 @@ import type { CalendarEvent } from '@merkzeug/core/calendar'
 import { localDate, meetingNoteContent, meetingNoteFileName, meetingTimeLabel } from '@merkzeug/core/meetingNote'
 import type { CalendarResult } from '@merkzeug/core/calendar'
 import type { CalendarSourceHost } from './calendarSourceStore'
-export interface MeetingHost { sources: CalendarSourceHost; list(from: number, to: number): Promise<CalendarResult>; create(path: string, content: string): Promise<string> }
+export interface MeetingHost {
+  sources: CalendarSourceHost; list(from: number, to: number): Promise<CalendarResult>; create(path: string, content: string): Promise<string>
+  /** Vervollständigt einen Listeneintrag (Outlook liefert Teilnehmer und Link erst auf Nachfrage). */
+  detail?(event: CalendarEvent): Promise<CalendarEvent>
+}
 
 export function MeetingNotes({ host, folder, onOpen, onClose }: { host: MeetingHost; folder: string; onOpen: (path: string) => void; onClose: () => void }) {
   const [day, setDay] = useState(localDate(new Date()))
@@ -33,8 +37,9 @@ export function MeetingNotes({ host, folder, onOpen, onClose }: { host: MeetingH
     creating.current = true; setBusy(true); setError('')
     try {
       // Hosts find existing calendar identities independently of the current filename.
-      const path = `${folder.replace(/\/$/, '')}/${await meetingNoteFileName(event)}`
-      const created = await host.create(path, meetingNoteContent(event))
+      const full = host.detail ? await host.detail(event) : event
+      const path = `${folder.replace(/\/$/, '')}/${await meetingNoteFileName(full)}`
+      const created = await host.create(path, meetingNoteContent(full))
       onOpen(created)
     } catch (e) { setError(String(e)) }
     finally { creating.current = false; setBusy(false) }
