@@ -24,6 +24,12 @@ try {
     }
     desired.push({platform,locale,attributes});
   }
+  // Without --version, CI still checks the notes of releases in preparation: they become whatsNew later.
+  if(args['validate-only'] && !args.version) for(const pending of releases.filter(r=>r.status==='preparation')) for(const lang of ['en','de']){
+    const whatsNew=pending.highlights[lang].map(s=>'• '+s).join('\n\n');
+    if(!whatsNew.length||[...whatsNew].length>4000) throw Error(`Invalid ${pending.version}/${lang}/whatsNew`);
+    if(/[<>]/.test(whatsNew)) throw Error(`App Store Connect rejects markup in ${pending.version}/${lang}/whatsNew`);
+  }
   if(args['validate-only']) report.status='validated';
   else {
     if(!/^\d+(\.\d+){0,2}$/.test(args.version??'')) throw Error('Specify the exact existing Store version');

@@ -15,6 +15,7 @@
 - Obsidian callouts and GitHub alerts (`> [!note]`, `> [!warning]` …) render as colored, foldable boxes; the slash menu inserts them and PDF exports print them expanded.
 - Raw HTML `<img>` tags display as images (with width, height and centering) in the editor and PDF export; note moves and renames update their paths.
 - Mermaid 12, Electron 44.9, Capacitor 8.5.3 and current Milkdown/React releases.
+- Security updates for bundled and build dependencies, including DOMPurify 3.4.17 (Mermaid) and KaTeX 0.18.10 (Markdown math parsing), plus fast-uri, xmldom, js-yaml, undici, uuid, brace-expansion and Vite in the build tools.
 - PDF export no longer fails with “The source image cannot be decoded” when a document contains inline HTML such as `<details>`; a broken image no longer aborts the whole export.
 
 ## 1.3.0
