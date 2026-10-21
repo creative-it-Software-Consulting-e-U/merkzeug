@@ -541,9 +541,9 @@ Open **Release Notes** in Help (IntelliJ, VS Code: **…**) for the complete Eng
 
 Choose a separate package for your Linux architecture: **x86_64 (x64)** for Intel/AMD PCs, or **ARM64 (aarch64)** for ARM computers, including Linux on Apple Silicon in Parallels. Run `uname -m` if unsure. The packages contain only their selected architecture. In the commands below, replace `x64` with `arm64` for ARM64.
 
-- **DEB:** install with `sudo apt install ./Merkzeug-1.2.1-linux-x64.deb` on Ubuntu/Debian-compatible systems.
-- **RPM:** install with `sudo dnf install ./Merkzeug-1.2.1-linux-x64.rpm` on Fedora-compatible systems.
-- **AppImage:** make the file executable in its file properties, or run `chmod +x Merkzeug-1.2.1-linux-x64.AppImage`, then open it. FUSE 2 is required (`libfuse2t64` on Ubuntu 24.04). Use the DEB package if AppImage is unsuitable for your system. Do not disable the application sandbox to work around an installation problem.
+- **DEB:** install with `sudo apt install ./Merkzeug-*-linux-x64.deb` on Ubuntu/Debian-compatible systems.
+- **RPM:** install with `sudo dnf install ./Merkzeug-*-linux-x64.rpm` on Fedora-compatible systems.
+- **AppImage:** make the file executable in its file properties, or run `chmod +x Merkzeug-*-linux-x64.AppImage`, then open it. FUSE 2 is required (`libfuse2t64` on Ubuntu 24.04). Use the DEB package if AppImage is unsuitable for your system. Do not disable the application sandbox to work around an installation problem.
 
 Download updates manually from the Merkzeug website. Verify downloads against the published SHA-256 checksums. These checksums detect changed files; they are not publisher certificates. Your notes and configuration remain outside the application package.
 

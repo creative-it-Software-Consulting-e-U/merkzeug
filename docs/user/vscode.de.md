@@ -4,7 +4,7 @@ Die VS-Code-Erweiterung bietet dieselben Funktionen wie das [IntelliJ-Plugin](in
 
 ## Voraussetzungen und Installation
 
-Die Erweiterung benötigt Visual Studio Code 1.100 oder neuer und arbeitet mit lokalen Ordnern, auch in VS-Code-Remote-Arbeitsbereichen, in denen die Erweiterung auf dem entfernten Rechner läuft. Virtuelle Arbeitsbereiche (etwa reine Browser-Repositories) werden nicht unterstützt. Version 1.3 wurde mit VS Code 1.139 unter macOS geprüft.
+Die Erweiterung benötigt Visual Studio Code 1.100 oder neuer und arbeitet mit lokalen Ordnern, auch in VS-Code-Remote-Arbeitsbereichen, in denen die Erweiterung auf dem entfernten Rechner läuft. Virtuelle Arbeitsbereiche (etwa reine Browser-Repositories) werden nicht unterstützt. Die Erweiterung wurde mit VS Code 1.139 unter macOS geprüft.
 
 PDF-Export und Drucken verwenden einen installierten Chromium-basierten Browser: Google Chrome, Microsoft Edge, Chromium oder Brave. Merkzeug findet Standardinstallationen automatisch; andernfalls gib unter **Merkzeug › Pdf: Browser Path** den Pfad an.
 

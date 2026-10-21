@@ -1,5 +1,5 @@
 // swift-tools-version:5.3
-// Same binary URLs and SHA-256 checksums as ionic-team/capacitor-swift-pm 8.5.1.
+// Same binary URLs and SHA-256 checksums as ionic-team/capacitor-swift-pm 8.5.3.
 // Keep this package local so Xcode Cloud does not request GitHub organization
 // installation rights for a public dependency. SwiftPM still verifies downloads.
 import PackageDescription
@@ -12,10 +12,10 @@ let package = Package(
     ],
     targets: [
         .binaryTarget(name: "Capacitor",
-            url: "https://github.com/ionic-team/capacitor-swift-pm/releases/download/8.5.1/Capacitor.xcframework.zip",
-            checksum: "c6ca2c8eb19a51e984320c1747bd9a18e4e8a39afad7524d4d8d0c0403944eb4"),
+            url: "https://github.com/ionic-team/capacitor-swift-pm/releases/download/8.5.3/Capacitor.xcframework.zip",
+            checksum: "9316f568444411d362dcb4d1946e7572d4aef5d690c122ff6f1cb8a44a920c9f"),
         .binaryTarget(name: "Cordova",
-            url: "https://github.com/ionic-team/capacitor-swift-pm/releases/download/8.5.1/Cordova.xcframework.zip",
-            checksum: "bee4a9362e93e8205be4dd43c0bec3e49ff77645b9f132a22bc8db01f4809563")
+            url: "https://github.com/ionic-team/capacitor-swift-pm/releases/download/8.5.3/Cordova.xcframework.zip",
+            checksum: "bdcd8eab2d62a077efd76c3c8b9629e65ae7043c1462289a1e55de9be19bbf1f")
     ]
 )

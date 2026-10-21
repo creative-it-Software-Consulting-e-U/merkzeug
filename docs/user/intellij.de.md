@@ -4,7 +4,7 @@ Dieselben Funktionen gibt es auch in Visual Studio Code; siehe [Merkzeug für VS
 
 ## Voraussetzungen und Installation
 
-Version 1.2 unterstützt IntelliJ IDEA **ab 2026.2.2 innerhalb der 2026.2-Reihe, Builds 262.10315.125–262.***, mit aktiviertem JCEF-Plugin. Die Kompatibilität wurde mit 2026.2.2 und 2026.2.3 geprüft; 2026.3 EAP ist nicht eingeschlossen. Andere IDE-Produkte und Build-Reihen wurden nicht geprüft.
+Version 1.4 unterstützt IntelliJ IDEA **ab 2026.2.2 innerhalb der 2026.2-Reihe, Builds 262.10315.125–262.***, mit aktiviertem JCEF-Plugin. Dieser Bereich ist seit Version 1.2 unverändert; damals wurde die Kompatibilität mit 2026.2.2 und 2026.2.3 geprüft. 2026.3 EAP ist nicht eingeschlossen. Andere IDE-Produkte und Build-Reihen wurden nicht geprüft.
 
 Version **1.2.0** ist im Standardkanal **Stable** freigegeben. Du kannst unter **Settings → Plugins → Marketplace** nach **Merkzeug** suchen und es ohne zusätzliches Repository installieren. Der [Marketplace-Eintrag (ID 34221)](https://plugins.jetbrains.com/plugin/34221-merkzeug) behält auch den Beta-Kanal; dort bleiben frühere Beta-Versionen verfügbar.
 

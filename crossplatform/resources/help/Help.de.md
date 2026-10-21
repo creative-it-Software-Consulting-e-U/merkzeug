@@ -559,9 +559,9 @@ Die portable Zuordnung liegt in `.merkzeug/settings.json`. Zentrale Vorlagen wer
 
 Wähle ein separates Paket für deine Linux-Architektur: **x86_64 (x64)** für Intel-/AMD-PCs oder **ARM64 (aarch64)** für ARM-Rechner, einschließlich Linux auf Apple Silicon in Parallels. `uname -m` zeigt deine Architektur. Jedes Paket enthält nur die gewählte Architektur. Ersetze in den folgenden Befehlen `x64` durch `arm64`, wenn du ARM64 nutzt.
 
-- **DEB:** auf Ubuntu-/Debian-kompatiblen Systemen mit `sudo apt install ./Merkzeug-1.2.1-linux-x64.deb` installieren.
-- **RPM:** auf Fedora-kompatiblen Systemen mit `sudo dnf install ./Merkzeug-1.2.1-linux-x64.rpm` installieren.
-- **AppImage:** in den Dateieigenschaften ausführbar machen oder `chmod +x Merkzeug-1.2.1-linux-x64.AppImage` ausführen und die Datei öffnen. FUSE 2 ist erforderlich (`libfuse2t64` unter Ubuntu 24.04). Nutze das DEB-Paket, wenn AppImage für dein System ungeeignet ist. Deaktiviere die Anwendungssandbox nicht, um Installationsprobleme zu umgehen.
+- **DEB:** auf Ubuntu-/Debian-kompatiblen Systemen mit `sudo apt install ./Merkzeug-*-linux-x64.deb` installieren.
+- **RPM:** auf Fedora-kompatiblen Systemen mit `sudo dnf install ./Merkzeug-*-linux-x64.rpm` installieren.
+- **AppImage:** in den Dateieigenschaften ausführbar machen oder `chmod +x Merkzeug-*-linux-x64.AppImage` ausführen und die Datei öffnen. FUSE 2 ist erforderlich (`libfuse2t64` unter Ubuntu 24.04). Nutze das DEB-Paket, wenn AppImage für dein System ungeeignet ist. Deaktiviere die Anwendungssandbox nicht, um Installationsprobleme zu umgehen.
 
 Updates werden manuell von der Merkzeug-Website geladen. Prüfe Downloads anhand der veröffentlichten SHA-256-Prüfsummen. Sie erkennen veränderte Dateien, ersetzen aber kein Herausgeber-Zertifikat. Notizen und Einstellungen liegen außerhalb des Anwendungspakets.
 
