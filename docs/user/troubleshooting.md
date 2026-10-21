@@ -21,7 +21,8 @@ If an iOS folder is no longer available, reopen the provider app and select the 
 - Try a single note without a custom template.
 - Check image paths and Mermaid syntax.
 - Ensure linked notes are within the index folder hierarchy and are not excluded by `pdf-exclude`.
-- On IntelliJ, keep referenced files within the project root.
+- On IntelliJ and VS Code, keep referenced files within the project or workspace folder.
+- In VS Code, PDF export needs Google Chrome, Microsoft Edge, Chromium or Brave; set `merkzeug.pdf.browserPath` if it is installed in a non-standard location.
 - Check that logos and other template resources are inside the chosen template folder.
 - Compare margins and landscape styles if tables or a cover are clipped.
 

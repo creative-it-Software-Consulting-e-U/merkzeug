@@ -1,0 +1,21 @@
+{
+  "name": "@merkzeug/ide",
+  "version": "1.3.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/IdeShell.tsx",
+    "./bridge": "./src/bridge.ts",
+    "./*.css": "./src/*.css"
+  },
+  "dependencies": {
+    "@merkzeug/core": "1.3.1",
+    "@merkzeug/editor": "1.3.1",
+    "@merkzeug/export": "1.3.1"
+  },
+  "peerDependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "license": "MIT"
+}

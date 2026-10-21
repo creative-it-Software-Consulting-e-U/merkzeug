@@ -17,7 +17,7 @@ for (const lang of ['en', 'de']) {
   }
 }
 const lock = JSON.parse(await read('package-lock.json'));
-for (const workspace of ['', 'packages/core', 'packages/editor', 'packages/export', 'crossplatform', 'mobile', 'intellij/web']) {
+for (const workspace of ['', 'packages/core', 'packages/editor', 'packages/export', 'packages/ide', 'crossplatform', 'mobile', 'intellij/web', 'vscode']) {
   assert.equal(JSON.parse(await read(`${workspace ? workspace + '/' : ''}package.json`)).license, 'MIT');
   assert.equal(lock.packages[workspace].license, 'MIT', `Stale ${workspace} lock license`);
 }

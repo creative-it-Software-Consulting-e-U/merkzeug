@@ -6,7 +6,7 @@ import { ensureMeetingFile } from '@merkzeug/core/meetingFiles'
 import { MeetingNotes, type MeetingHost } from '@merkzeug/editor/MeetingNotes'
 import { loadSources, sourceEvents, type CalendarSourceHost } from '@merkzeug/editor/calendarSourceStore'
 import { setHostTheme, setTheme } from '@merkzeug/editor/theme'
-import { request } from './bridge'
+import { request } from '@merkzeug/ide/bridge'
 
 const sources: CalendarSourceHost = {
   load: () => request('calendarSourcesLoad'),

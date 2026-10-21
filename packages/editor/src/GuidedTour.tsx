@@ -1,7 +1,7 @@
 import { TourVideo } from './TourVideo'
 import { useEffect, useRef, useState } from 'react'
 import { t } from '@merkzeug/core/i18n'
-type Edition = 'desktop' | 'ios' | 'intellij'
+type Edition = 'desktop' | 'ios' | 'intellij' | 'vscode'
 const steps = {
   desktop: [
     ['.sidebar, .welcome', 'Your vault', 'Open a folder of Markdown notes. Your files stay in that folder and can be opened with other tools.'],
@@ -25,6 +25,11 @@ const steps = {
     ['header', 'PDF export and templates', 'Choose a PDF template and export notes, including linked documents, diagrams and images.'],
     ['.theme-select', 'Follow your IDE theme', 'System follows IntelliJ colors. Light and Dark override the IDE appearance.'],
     ['header', 'Meeting notes', 'Import ICS calendars or subscribe to feeds to create meeting notes in your project.']
+  ],
+  vscode: [
+    ['.editor-host', 'Markdown in your IDE', 'Write in the visual editor while VS Code owns the document, saving and undo history.'],
+    ['header', 'PDF export and templates', 'Choose a PDF template and export notes, including linked documents, diagrams and images.'],
+    ['header', 'Follow your IDE theme', 'The editor follows the active VS Code color theme.']
   ]
 } satisfies Record<Edition, string[][]>
 export function GuidedTour({ edition, seen, onSeen, showLauncher = true }: { edition: Edition; seen?: boolean; onSeen?: () => void; showLauncher?: boolean }) {

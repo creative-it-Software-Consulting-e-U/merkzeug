@@ -6,7 +6,7 @@ Type `/` at the start of a block for headings, lists, tables, images and code. S
 
 For Mermaid, insert a code block with the language `mermaid`. Use its preview controls to switch between source and diagram. Invalid Mermaid syntax must be corrected before exporting a successful diagram.
 
-Paste or insert images using the editor's image controls. Desktop and IntelliJ store inserted images in a sibling `NOTE.assets` directory; the iOS adapter uses a sibling `assets` directory. Keep images with their notes when moving them between machines. Existing image paths are preserved.
+Paste or insert images using the editor's image controls. Desktop, IntelliJ and VS Code store inserted images in a sibling `NOTE.assets` directory; the iOS adapter uses a sibling `assets` directory. Keep images with their notes when moving them between machines. Existing image paths are preserved.
 
 HTML image tags such as `<img src="NOTE.assets/diagram.png" alt="Diagram" width="450">` are displayed as images, honoring `width` and `height`. Images wrapped in `<p>`, `<div>`, `<center>` or a link are shown too; `align="center"` centers them. Merkzeug never rewrites this HTML when saving, and moving or renaming notes updates its `src` paths like other image links. Any other HTML, such as tables or styled text, remains visible as source text.
 
@@ -28,7 +28,7 @@ A `-` after the marker starts the callout collapsed and a `+` starts it expanded
 
 ## Links and frontmatter
 
-Use ordinary Markdown links such as `[Plan](plan.md)` or `[Section](plan.md#next-steps)`. Local link behavior varies by edition; IntelliJ currently restricts access to the project root.
+Use ordinary Markdown links such as `[Plan](plan.md)` or `[Section](plan.md#next-steps)`. Local link behavior varies by edition; IntelliJ and VS Code restrict access to the project or workspace folder.
 
 Frontmatter is a YAML block at the beginning of a note. Merkzeug preserves it separately from the visible document body. Expand **Frontmatter** to edit it or use **+ Field** for supported keys.
 
@@ -47,7 +47,7 @@ pdf-exclude:
 
 ## Saving and conflicts
 
-Desktop and mobile use autosave. IntelliJ accepts changes into its native document and controls when that document is saved to disk. Watch the dirty indicator and any error banner; a failed save is not a saved document.
+Desktop and mobile use autosave. IntelliJ and VS Code accept changes into their native document and control when that document is saved to disk. Watch the dirty indicator and any error banner; a failed save is not a saved document.
 
 When a file changes elsewhere:
 

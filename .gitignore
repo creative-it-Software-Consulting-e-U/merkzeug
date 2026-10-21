@@ -39,3 +39,5 @@ crossplatform/dist-mas/
 mobile/public/THIRD_PARTY_NOTICES.txt
 
 /crossplatform/resources/icloud/*.node
+
+vscode/build/

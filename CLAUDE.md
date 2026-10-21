@@ -5,7 +5,8 @@ Merkzeug is a visual Markdown editor with shared TypeScript packages and platfor
 - `crossplatform/`: active Electron desktop application.
 - `mobile/`: active Capacitor iOS application.
 - `intellij/`: IntelliJ plugin preview.
-- `packages/`: shared core, editor and PDF rendering.
+- `vscode/`: VS Code extension with the same features as the IntelliJ plugin.
+- `packages/`: shared core, editor, PDF rendering and the IDE web shell (`packages/ide`).
 - `legacy/`: archived native macOS implementation; only modify when explicitly requested.
 
 ## Language and documentation
@@ -17,6 +18,7 @@ For each feature or behavior change, update the affected user guides and both bu
 - Desktop: `crossplatform/resources/help/Help.en.md` and `Help.de.md`.
 - iOS: `mobile/src/help/Help.en.md` and `Help.de.md`.
 - IntelliJ: `docs/user/intellij.md`.
+- VS Code: `docs/user/vscode.md` and `vscode.de.md`. IntelliJ and VS Code must keep the same features.
 
 Update shortcut references when shortcuts change. Avoid Mermaid examples in bundled help views that do not render diagrams. Keep developer READMEs focused on development; user instructions belong in `docs/user/` or the bundled manuals.
 
@@ -33,6 +35,7 @@ npm run test:release
 npm run build:desktop
 npm run build:mobile
 npm run build:intellij
+npm run build:vscode
 ```
 
 The IntelliJ build requires the pinned SDK. Native behavior needs native tests, not just successful web builds. Do not run a GUI IDE in a filesystem sandbox that prevents OS application registration.

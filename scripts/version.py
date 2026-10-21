@@ -9,7 +9,8 @@ import xml.etree.ElementTree as ET
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGES = ['package.json', 'crossplatform/package.json', 'mobile/package.json',
             'intellij/web/package.json', 'packages/core/package.json',
-            'packages/editor/package.json', 'packages/export/package.json']
+            'packages/editor/package.json', 'packages/export/package.json',
+            'packages/ide/package.json', 'vscode/package.json']
 PATTERN = re.compile(r'(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-(?:alpha|beta|rc)\.(0|[1-9]\d*))?')
 PLUGIN = 'intellij/src/main/resources/META-INF/plugin.xml'
 IOS = 'mobile/ios/App/App.xcodeproj/project.pbxproj'

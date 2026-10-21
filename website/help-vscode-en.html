@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Explore Markdown, edit visually, and share documents with your layout. For Mac, iPhone, iPad, Linux and IntelliJ IDEA.">
+<title>Merkzeug Visual Studio Code Guide</title>
+<link rel="stylesheet" href="style.css?v=20260924-anchors">
+<link rel="icon" href="assets/icon.png">
+<link rel="canonical" href="https://merkzeug.creative-it.com/help-vscode-en.html">
+<meta property="og:title" content="Markdown. Your way. · Merkzeug">
+<meta property="og:description" content="Explore Markdown, edit visually, and share documents with your layout. For Mac, iPhone, iPad, Linux and IntelliJ IDEA.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://merkzeug.creative-it.com/assets/mac-en.png">
+<link rel="stylesheet" href="landing.css?v=20260924-image-layout">
+<script defer src="landing.js?v=20260924-image-layout">
+</script>
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header>
+<a class="brand" href="index.html">
+<img src="assets/icon.png" alt="" width="36" height="36">
+<strong>Merkzeug</strong>
+</a>
+<nav aria-label="Main navigation">
+<a href="https://github.com/creative-it-Software-Consulting-e-U/merkzeug">GitHub</a>
+<a href="help-en.html">Help</a>
+<a href="https://support.apps.creative-it.com/?app=merkzeug&amp;lang=en">Support</a>
+<a href="help-vscode-de.html" lang="de">Deutsch</a>
+</nav>
+</header>
+<main id="content" class="guide"><p class="notice">Choose your edition: Mac & Linux, iPhone & iPad, IntelliJ IDEA or Visual Studio Code.</p><p><a href="help-en.html">Mac &amp; Linux</a> · <a href="help-ios-en.html">iPhone &amp; iPad</a> · <a href="help-intellij-en.html">IntelliJ IDEA</a> · <a href="help-vscode-en.html">Visual Studio Code</a></p><h1 id="visual-studio-code-guide">Visual Studio Code guide</h1>
+<p>The VS Code extension provides the same features as the <a href="help-intellij-en.html">IntelliJ plugin</a>. It uses VS Code&#39;s own mechanisms for settings, commands, saving, undo history and file refactoring.</p>
+<h2 id="requirements-and-installation">Requirements and installation</h2>
+<p>The extension requires Visual Studio Code 1.100 or later and works with local folders, including VS Code Remote workspaces where the extension runs on the remote machine. Virtual workspaces (for example browser-only repositories) are not supported. Version 1.3 was verified with VS Code 1.139 on macOS.</p>
+<p>PDF export and printing use an installed Chromium-based browser: Google Chrome, Microsoft Edge, Chromium or Brave. Merkzeug finds standard installations automatically; otherwise set <strong>Merkzeug › Pdf: Browser Path</strong> in the settings.</p>
+<p>To install a VSIX supplied by the maintainer:</p>
+<ol>
+<li>Obtain <code>merkzeug-VERSION.vsix</code>.</li>
+<li>Open the Extensions view, choose <strong>… → Install from VSIX…</strong> and select the file.</li>
+<li>Open a local <code>.md</code> file and choose <strong>Open in Merkzeug</strong> in the editor title bar.</li>
+</ol>
+<p>The extension is not yet published in the Visual Studio Marketplace. To remove Merkzeug, uninstall it in the Extensions view. Notes remain ordinary Markdown files.</p>
+<h2 id="opening-notes">Opening notes</h2>
+<p>Merkzeug is an additional editor for <code>.md</code> files; VS Code&#39;s text editor stays the default. Open a note in Merkzeug with:</p>
+<ul>
+<li><strong>Open in Merkzeug</strong> in the editor title bar of a Markdown file or in the Explorer context menu,</li>
+<li><strong>Open With… → Merkzeug</strong>, or</li>
+<li>the command palette: <strong>Merkzeug: Open in Merkzeug</strong>.</li>
+</ul>
+<p><strong>Show Markdown Source</strong> in the title bar returns to the text editor. To always open Markdown files in Merkzeug, use <strong>Open With… → Configure default editor for &#39;*.md&#39;…</strong>.</p>
+<h2 id="editing">Editing</h2>
+<p>Use the shared visual editor, slash menu, formatting tools, frontmatter panel and Mermaid diagrams. The compact toolbar provides paragraph styles, bold, italic, strikethrough, inline code, lists, quotes, code blocks, links, images, tables and dividers. Search (⌘F / Ctrl+F), undo and redo remain available through keyboard shortcuts. Changes update VS Code&#39;s document; VS Code owns disk saving, the dirty indicator, Git integration, hot exit and undo history. <strong>⌘S / Ctrl+S</strong> saves. You can show the same note in Merkzeug and in the text editor side by side.</p>
+<p>Selecting a whole table cell highlights the cell; click inside its text to place the caret and edit.</p>
+<p>If another editor changes the document, Merkzeug reloads it when there are no local edits. Otherwise a conflict banner lets you reload the other version or deliberately keep your own version.</p>
+<p>Merkzeug follows the file&#39;s write permissions. Links to other Markdown files open them in their own Merkzeug tab, or activate an already open tab; web links open in your browser. Cross-document heading navigation is incomplete, as in IntelliJ.</p>
+<h2 id="images-and-companion-folders">Images and companion folders</h2>
+<p>Images inserted through the image picker or pasted into <code>Plan.md</code> are written as separate image files in a sibling folder named <code>Plan.assets/</code>. Markdown uses relative references such as <code>![Diagram](Plan.assets/image-….png)</code>. The desktop, iOS and IntelliJ editions use the same layout. Include both the note and its companion folder when committing or sharing the note. Existing shared <code>assets/</code> links remain supported.</p>
+<h3 id="rename-and-move">Rename and move</h3>
+<p>Rename a Markdown file in the Explorer (F2), drag it to another folder, or use any other VS Code rename. If <code>Plan.md</code> has a sibling <code>Plan.assets/</code> folder, Merkzeug includes that folder in the same operation: renaming to <code>Draft.md</code> also renames the folder to <code>Draft.assets/</code>; moving the note moves its companion folder with it. Local Markdown links in all workspace notes are updated, including outgoing relative links of a moved note and notes without a companion folder. Renaming a folder updates Markdown paths as well. The folder move and link updates are applied as part of VS Code&#39;s rename operation; save any notes VS Code shows as modified afterwards.</p>
+<p>If the destination companion folder already exists, Merkzeug shows a warning and leaves the folder in place; folders are never merged or overwritten. Symbolic-link companions require manual handling. Files excluded by <code>files.exclude</code> or <code>search.exclude</code>, symbolic links and <code>node_modules</code> are not scanned. Changes made outside VS Code (for example in Finder or on the command line) do not trigger this integration. To turn it off, disable <strong>Merkzeug › Refactoring: Companion Folders</strong>. If you also enable VS Code&#39;s own <code>markdown.updateLinksOnFileMove.enabled</code>, both extensions may propose link updates.</p>
+<p>Inline links, images and reference-style definitions are supported. URL encoding, titles and <code>#section</code> suffixes are preserved. Code examples, frontmatter, external URLs, HTML links and wiki links are left alone.</p>
+<h2 id="settings">Settings</h2>
+<p>Merkzeug&#39;s settings are in <strong>Settings → Extensions → Merkzeug</strong>. Workspace settings apply to the current workspace, like IntelliJ&#39;s project settings.</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>merkzeug.pdf.templateFolder</code></td>
+<td>PDF template folder when no vault assignment exists. Empty exports without a template.</td>
+</tr>
+<tr>
+<td><code>merkzeug.editor.pdfTemplatePreview</code></td>
+<td>Use the PDF template&#39;s content styles while editing.</td>
+</tr>
+<tr>
+<td><code>merkzeug.pdf.browserPath</code></td>
+<td>Chromium-based browser used for PDF export (machine setting).</td>
+</tr>
+<tr>
+<td><code>merkzeug.refactoring.companionFolders</code></td>
+<td>Move companion folders and update links on rename/move.</td>
+</tr>
+</tbody></table>
+<p>In Restricted Mode, a template folder from the workspace settings is ignored; only your user setting applies.</p>
+<h2 id="pdf-export">PDF export</h2>
+<ol>
+<li>Optionally run <strong>Merkzeug: PDF Template Settings…</strong> (also in the editor&#39;s <strong>⋯</strong> menu as <strong>PDF template …</strong>) and choose a template.</li>
+<li>Click <strong>Export PDF</strong> in the toolbar, or choose <strong>Merkzeug: Export PDF</strong> from the editor title menu or command palette.</li>
+<li>If linked documents are found, a dialog lists them. Choose <strong>Only this document</strong> or <strong>Include linked documents</strong>. <strong>Cancel</strong> stops the export.</li>
+<li>Choose a destination filename and save. A notification offers to open the PDF or reveal it.</li>
+</ol>
+<p>The PDF uses the current VS Code document content, including unsaved changes. See the <a href="help-en.html">PDF guide</a> for template files, frontmatter and document selection.</p>
+<h2 id="printing">Printing</h2>
+<p>Click <strong>Print…</strong> in the toolbar or choose <strong>Merkzeug: Print…</strong>. Merkzeug renders the note with the same templates, headers/footers, diagrams, images and optional linked documents, then opens the PDF in your system&#39;s PDF viewer; print from there. The temporary PDF is removed automatically after a day.</p>
+<h2 id="pdf-templates">PDF templates</h2>
+<p><strong>Merkzeug: PDF Template Settings…</strong> offers:</p>
+<ul>
+<li><strong>Choose PDF template folder…</strong>: select the actual template folder (containing <code>stil.css</code>, <code>vorlage.json</code>, etc.). A desktop template folder can be selected directly; no copy is made.</li>
+<li><strong>Use bundled PDF template</strong>: copies the Merkzeug starter once into VS Code&#39;s extension storage (<code>…/globalStorage/creative-it.merkzeug/pdf-templates/Merkzeug</code>) and selects it. Existing copies are never overwritten. Copy the folder before customizing it with an agent.</li>
+<li><strong>Desktop templates</strong>: discovers the desktop app&#39;s standard locations on macOS, Windows and Linux, including its custom <code>templatesRoot</code> setting and the <code>MERKZEUG_TEMPLATES_ROOT</code> environment variable. Discovery does not copy files.</li>
+<li><strong>Template styling prompt</strong>: opens the complete agent brief for the folder currently configured and offers <strong>Copy styling prompt</strong>. See <a href="help-en.html">PDF templates and the suggested agent prompt</a>.</li>
+<li><strong>No template</strong> and <strong>Open Settings</strong>.</li>
+</ul>
+<p>The same actions are available as separate <strong>Merkzeug:</strong> commands in the command palette.</p>
+<h3 id="template-location-for-the-vault">Template location for the vault</h3>
+<p>In the editor&#39;s <strong>⋯</strong> menu, choose <strong>PDF template for this vault</strong>. Select <strong>Central template</strong> and a name, or <strong>Template inside this vault</strong> with a relative folder such as <code>.merkzeug/templates/Company</code>, and press <strong>Apply</strong>. The choice is stored in <code>.merkzeug/settings.json</code>, works across desktop, iPhone/iPad, IntelliJ and VS Code, and takes precedence over <code>merkzeug.pdf.templateFolder</code>. Choose <strong>No template</strong> and <strong>Apply</strong> to clear the assignment.</p>
+<h2 id="preview-pdf-styles-while-editing">Preview PDF styles while editing</h2>
+<p>Enable <strong>Use PDF template while editing</strong> in the <strong>⋯</strong> menu (stored as <code>merkzeug.editor.pdfTemplatePreview</code>). Content styles from the assigned template apply to the editor; the frontmatter area shares its light paper surface; the toolbar and VS Code keep the VS Code theme. This previews typography and colors, not pagination, cover pages or headers and footers. The preview refreshes when settings change and when the editor regains focus.</p>
+<h2 id="appearance-tours-and-agent-guidance">Appearance, tours and agent guidance</h2>
+<p>The editor automatically follows the active VS Code color theme, including live theme changes and high-contrast themes. The <strong>⋯</strong> menu contains About Merkzeug, Release Notes, the PDF template actions, the guided tour (not in Marketplace builds) and attachment guidance.</p>
+<p>Merkzeug can suggest root <code>AGENTS.md</code> / <code>CLAUDE.md</code> instructions for <code>Note.md</code> and <code>Note.assets/</code>. Review the proposed text and the full contents of both instruction files, select the destination files explicitly and choose <strong>Add</strong>; none is preselected. <strong>Later</strong> postpones it for the current session; <strong>Do not suggest again for this vault</strong> suppresses future prompts for that folder.</p>
+<h2 id="language">Language</h2>
+<p>The interface uses German when VS Code&#39;s display language is German, or when VS Code runs in English on a German system; otherwise English. Command and setting names follow VS Code&#39;s display language.</p>
+<h2 id="release-notes-about-and-support">Release notes, About and support</h2>
+<p>On the first start of a new version, its release notes open automatically; <strong>Done</strong> marks that version as read. The full history remains under <strong>⋯ → Release Notes</strong>. <strong>⋯ → About Merkzeug</strong> shows the version, license, publisher and website.</p>
+<p>Run <strong>Merkzeug: Contact Support…</strong> from the command palette. The browser opens the support form with Merkzeug, your language, VS Code and the extension version selected. Note contents and paths are not included.</p>
+<h2 id="scope-and-limitations">Scope and limitations</h2>
+<ul>
+<li>Files and images outside the note&#39;s workspace folder are not accessible through the editor. For a file opened without a workspace, its folder is the limit.</li>
+<li>PDF export and printing need a Chromium-based browser; pagination can differ slightly between browser versions.</li>
+<li>Desktop vault browsing, native OS calendars, meeting notes and bulk PDF export are not part of the extension. Create new files using VS Code&#39;s Explorer.</li>
+</ul>
+
+<h2 id="license">License</h2>
+<p>Merkzeug is licensed under the <a href="license-en.html">MIT License</a>. The extension package includes the license and third-party notices.</p>
+</main><footer>
+<span>© 2026 creative-it Software &amp; Consulting e.U.</span>
+<nav aria-label="Footer">
+<a href="release-notes-en.html">Release Notes</a>
+<a href="privacy-en.html">Privacy</a>
+<a href="license-en.html">License</a>
+<a href="legal-en.html">Legal notice</a>
+<a href="https://apps.creative-it.com/">More apps</a>
+<a href="https://www.creative-it.com/">creative-it</a>
+</nav>
+</footer>
+</body>
+</html>

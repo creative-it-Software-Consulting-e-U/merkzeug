@@ -1,0 +1,19 @@
+{
+  "displayName": "Merkzeug",
+  "description": "Visueller Markdown-Editor mit Mermaid-Diagrammen, Frontmatter, PDF-Export und Drucken. Notizen bleiben gewöhnliche Markdown-Dateien in deinem Arbeitsbereich.",
+  "untrusted": "Im eingeschränkten Modus wird der PDF-Vorlagenordner aus den Arbeitsbereichseinstellungen ignoriert.",
+  "command.openEditor": "In Merkzeug öffnen",
+  "command.openSource": "Markdown-Quelltext anzeigen",
+  "command.exportPdf": "PDF exportieren",
+  "command.print": "Drucken…",
+  "command.pdfTemplateSettings": "PDF-Vorlageneinstellungen…",
+  "command.chooseTemplateFolder": "PDF-Vorlagenordner auswählen…",
+  "command.useBundledTemplate": "Mitgelieferte PDF-Vorlage verwenden",
+  "command.chooseDesktopTemplate": "Desktop-Vorlage auswählen…",
+  "command.templateStylingPrompt": "Vorlagen-Styling-Prompt",
+  "command.contactSupport": "Support kontaktieren…",
+  "config.templateFolder": "PDF-Vorlagenordner (mit `stil.css`, `vorlage.json`, …). Leer lassen, um ohne Vorlage zu exportieren. Eine Vault-Zuweisung in `.merkzeug/settings.json` hat Vorrang. Mit dem Befehl **Merkzeug: PDF-Vorlageneinstellungen…** wählst du einen Ordner, die mitgelieferte Vorlage oder eine Desktop-Vorlage.",
+  "config.pdfTemplatePreview": "Inhaltsstile der zugewiesenen PDF-Vorlage beim Bearbeiten anwenden. Werkzeugleiste, Dialoge und VS-Code-Bedienelemente behalten das VS-Code-Design.",
+  "config.browserPath": "Chromium-basierter Browser für PDF-Export und Drucken (Google Chrome, Microsoft Edge, Chromium oder Brave). Leer lassen, um einen installierten Browser automatisch zu erkennen.",
+  "config.companionFolders": "Wenn eine Markdown-Notiz in VS Code umbenannt oder verschoben wird, auch ihren Begleitordner `Notiz.assets/` verschieben und Markdown-Links im Arbeitsbereich aktualisieren."
+}

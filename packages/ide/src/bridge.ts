@@ -4,6 +4,7 @@ declare global {
     __merkzeugSend?: (json: string) => void
     __merkzeugReply: (id: number, value: unknown, error?: string) => void
     __merkzeugChanged: () => void
+    __merkzeugSettingsChanged?: () => void
   }
 }
 let sequence = 0

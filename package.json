@@ -5,19 +5,21 @@
     "packages/*",
     "crossplatform",
     "mobile",
-    "intellij/web"
+    "intellij/web",
+    "vscode"
   ],
   "scripts": {
     "build:desktop": "npm run build -w merkzeug",
     "build:mobile": "npm run build -w merkzeug-mobile",
     "build:intellij": "python3 intellij/build.py",
     "test": "node --experimental-strip-types --test packages/core/test/*.test.ts scripts/tests/*.test.ts",
-    "typecheck": "tsc -p crossplatform/tsconfig.node.json --noEmit && tsc -p crossplatform/tsconfig.web.json --noEmit && tsc -p mobile/tsconfig.json --noEmit && tsc -p intellij/web/tsconfig.json --noEmit",
+    "typecheck": "tsc -p crossplatform/tsconfig.node.json --noEmit && tsc -p crossplatform/tsconfig.web.json --noEmit && tsc -p mobile/tsconfig.json --noEmit && tsc -p intellij/web/tsconfig.json --noEmit && tsc -p vscode/tsconfig.json --noEmit && tsc -p vscode/web/tsconfig.json --noEmit",
     "check:version": "python3 scripts/version.py check",
     "test:release": "python3 -m unittest discover -s scripts/tests -v",
     "check:docs": "python3 scripts/check-docs.py",
     "check:secrets": "python3 scripts/check-secrets.py",
     "check:licenses": "node scripts/check-licenses.mjs",
+    "build:vscode": "python3 vscode/build.py",
     "build:comparison": "node scripts/build-comparison.mjs"
   },
   "devDependencies": {
