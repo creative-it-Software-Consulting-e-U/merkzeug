@@ -360,6 +360,7 @@ the sidebar:
 | Toggle second section | ⌘\ | Ctrl+\ |
 | Move tab to other section | ⇧⌘\ | Ctrl+Shift+\ |
 | Show/hide assets | ⇧⌘R | Ctrl+Shift+R |
+| Show/hide AI assistant | ⇧⌘A | Ctrl+Shift+A |
 | This help | ⌘? | F1 |
 
 *(Windows/Linux: ⌘ = Ctrl, ⌥ = Alt, ⇧ = Shift)*
@@ -392,6 +393,37 @@ Create a copy first, then give the agent that folder and this prompt:
 > Read README.md and all five template files in this folder. Adapt this copy to my visual style: [COLORS], [FONTS] and [LOCAL LOGO PATH]. Preserve the filenames, title/date placeholders and Chromium page-number spans. Keep header/footer CSS inline and document CSS scoped to PDF selectors. Use local assets, no scripts or network dependencies. Support A4 portrait and landscape without clipping. Update README.md to explain the changes. Validate by exporting notes with a long title, headings, links, code, a table and a diagram; inspect every page of the resulting PDFs.
 
 The template README includes the full file-format reference and a reusable prompt. Export through Merkzeug to check the result: browser previews alone do not verify page breaks. The settings link **Template guide and agent prompt** opens this section of the online manual; the same instructions are also included in the app's offline help.
+
+## AI assistant
+
+**⇧⌘A / Ctrl+Shift+A** (menu "View → AI Assistant" or the sparkle button in the
+editor toolbar) opens an assistant panel on the right. Ask it for a
+**Mermaid diagram** of the note's content, a summary, a rewrite of the
+selection or a table. The answer appears in the chat; code blocks get the
+buttons **Insert**, **Replace selection** (when text is selected in the
+editor) and **Copy**, whole answers **Insert answer**. Mermaid blocks are
+validated before they are offered and rendered as a preview; a diagram that
+does not parse is sent back with the error message for correction
+automatically (at most twice). Content is inserted between paragraphs at the
+cursor, or at the end of a freshly opened note without a cursor.
+
+Choose the **provider** in the settings (⌘,) under **AI assistant** or in the
+panel header:
+
+- **Anthropic API (Claude)** and **OpenAI API** with your own API key
+  (pay-as-you-go). Keys are stored encrypted in the system keyring, never in
+  the vault or in `settings.json`. **Load models** lists the available models;
+  leave the field empty for the default model.
+- **Claude Code (local login)** uses the Claude Code CLI installed on this
+  computer together with its login (subscription or API key).
+- **Codex / ChatGPT (local login)** uses the Codex CLI – installed separately
+  or bundled with the ChatGPT desktop app – with its ChatGPT login. Codex runs
+  read-only in an empty folder and never sees the vault.
+
+**Privacy:** Merkzeug sends your question, the selection in the editor and – as
+long as **Send note as context** is checked – the open note. Nothing is
+transmitted until you ask; the hint above the input names the provider. The
+conversation lives only in the window and is not saved.
 
 ## Appearance, tours and agent guidance
 

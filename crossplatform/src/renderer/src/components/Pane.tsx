@@ -23,6 +23,7 @@ import {
   IconLink,
   IconOrderedList,
   IconQuote,
+  IconSparkle,
   IconStrike,
   IconTable,
   IconToc
@@ -46,6 +47,8 @@ interface PaneProps {
   onNavBack: (tabId: string) => void
   onNavForward: (tabId: string) => void
   onInsertLink: () => void
+  assistantOpen: boolean
+  onToggleAssistant: () => void
   onDirtyChange: (tabId: string, dirty: boolean) => void
   onEditorSaved: (tabId: string, markdown: string) => void
 }
@@ -197,6 +200,13 @@ export function PaneView(props: PaneProps): React.JSX.Element {
             </>
           )}
           <div className="toolbar-spacer" />
+          <button
+            className={`toolbar-btn icon${props.assistantOpen ? ' toggled' : ''}`}
+            data-tip={translate("AI Assistant (⇧⌘A)")}
+            onClick={props.onToggleAssistant}
+          >
+            <IconSparkle filled={props.assistantOpen} />
+          </button>
           <button
             className="toolbar-btn icon"
             data-tip={translate("Merkzeug Help (⌘?)")}
