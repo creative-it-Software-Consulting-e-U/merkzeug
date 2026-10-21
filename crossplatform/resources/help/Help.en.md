@@ -46,8 +46,10 @@ The sidebar on the left shows the vault as a hierarchical tree.
   area with the mouse; double-clicking it restores the default width. If there
   is not enough room for long names or deep hierarchies, the tree can be
   scrolled horizontally and vertically.
-- **Context menu** (right-click): new note, new folder, export as PDF, rename,
-  move to trash, show in Finder/Explorer.
+- **Context menu** (right-click): new note, new folder, new meeting note
+  (in the clicked folder), export as PDF, rename, show in Finder/Explorer,
+  **Copy path** (relative to the vault root with `/` separators, or absolute),
+  move to trash.
 - **Multi-selection:** ⌘-click (Windows/Linux: Ctrl-click) adds further notes
   to the selection or removes them again, ⇧-click selects the range up to the
   clicked note — both only among notes of the **same folder**. Right-clicking
@@ -527,7 +529,7 @@ Linux meeting notes use ICS files or HTTPS/Webcal calendar subscriptions. There 
   with no cloud API involved. All-day
   events (vacations, birthdays, …) are hidden by default and can be shown
   via the checkbox above the list. **"Show earlier events"** reveals past events, **"Search"** searches titles, people and
-  locations within ±90 days. Clicking an event creates a ready-named note:
+  locations within ±90 days. Clicking an event creates a ready-named note in the folder of the current selection, or in the folder you right-clicked when you chose **New meeting note…** from the file tree context menu:
   the event data (date, time, location, organizer, attendees, detected
   Teams/Zoom/Meet/Webex link) goes into the frontmatter; the body contains
   date and time below the heading, a **checkable attendee list** (who

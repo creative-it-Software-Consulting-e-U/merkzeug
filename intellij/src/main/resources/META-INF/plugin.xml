@@ -35,6 +35,7 @@
       <li>Appearance follows the IDE theme, with optional PDF content styles while editing.</li>
       <li>Portable vault templates and central PDF templates, including automatic discovery of desktop Merkzeug templates.</li>
       <li>Copyable template styling prompts with an offline technical reference for coding agents.</li>
+      <li>New → Merkzeug Meeting Note creates a meeting note from a calendar event in the chosen folder, using ICS files, calendar feeds and, on Windows, classic Outlook.</li>
       <li>Optional attachment guidance for coding agents: preview existing AGENTS.md and CLAUDE.md
       contents and explicitly select which files receive the guidance.</li>
     </ul>
@@ -55,6 +56,9 @@
     <fileEditorProvider implementation="com.creativeit.merkzeug.MerkzeugEditorProvider"/>
   </extensions>
   <actions>
+    <action id="Merkzeug.NewMeetingNote" class="com.creativeit.merkzeug.NewMeetingNoteAction" text="Merkzeug Meeting Note…" description="Create a meeting note from a calendar event in this folder">
+      <add-to-group group-id="NewGroup" anchor="last"/>
+    </action>
     <action id="Merkzeug.ContactSupport" class="com.creativeit.merkzeug.ContactSupportAction" text="Merkzeug: Contact Support…">
       <add-to-group group-id="HelpMenu" anchor="last"/>
     </action>

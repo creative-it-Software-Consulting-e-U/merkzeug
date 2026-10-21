@@ -24,7 +24,7 @@ For an update, quit Merkzeug and install the newer version. Notes live in your v
 4. Changes are saved automatically after a short delay. **⌘S / Ctrl+S** saves explicitly.
 5. Use **File → Export as PDF…** to create a PDF.
 
-Use **File → Open Vault…** to switch folders, or **Recent Vaults** to reopen one. Notes can be organized in subfolders. Right-click an item to rename it, create items or move it to the trash.
+Use **File → Open Vault…** to switch folders, or **Recent Vaults** to reopen one. Notes can be organized in subfolders. Right-click an item to rename it, create notes, folders or meeting notes in a folder, copy its path (relative to the vault or absolute) or move it to the trash.
 
 ## Restoring windows
 

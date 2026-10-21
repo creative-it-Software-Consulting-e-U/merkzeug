@@ -89,7 +89,8 @@ export function App(): React.JSX.Element {
   const [gitError, setGitError] = useState<string | null>(null)
   const [dirtyTabs, setDirtyTabs] = useState<Set<string>>(new Set())
   const [linkDialogOpen, setLinkDialogOpen] = useState(false)
-  const [meetingDialogOpen, setMeetingDialogOpen] = useState(false)
+  // Zielordner der Meeting-Notiz; null = Ordner der aktuellen Auswahl
+  const [meetingDialog, setMeetingDialog] = useState<{ dir: string | null } | null>(null)
   // laufender PDF-Export (Fortschritts-Toast); null = kein Export aktiv
   const [pdfProgress, setPdfProgress] = useState<{
     phase: PdfExportProgress['phase']
@@ -495,15 +496,15 @@ export function App(): React.JSX.Element {
     [expandFolder, refreshTree]
   )
 
-  /** Meeting-Notiz aus einem Kalendertermin im Ordner der aktuellen Auswahl. */
+  /** Meeting-Notiz aus einem Kalendertermin im Zielordner (sonst im Ordner der aktuellen Auswahl). */
   const handleCreateMeetingNote = useCallback(
-    async (ev: CalendarEvent): Promise<void> => {
-      setMeetingDialogOpen(false)
+    async (ev: CalendarEvent, target: string | null): Promise<void> => {
+      setMeetingDialog(null)
       const v = vaultRef.current
       if (!v) return
       const sel = selectedRef.current
       const node = sel ? findNode(treeRef.current, sel) : null
-      const dir = node ? (node.isDirectory ? node.path : dirname(node.path)) : v
+      const dir = target ?? (node ? (node.isDirectory ? node.path : dirname(node.path)) : v)
       // Windows liefert Teilnehmer und Meeting-Link erst auf Nachfrage
       const full = await window.merkzeug.calendarEventDetail(ev)
       const path = await window.merkzeug.createMeetingNote(dir, await meetingNoteFileName(full), meetingNoteContent(full))
@@ -765,7 +766,7 @@ export function App(): React.JSX.Element {
           createAtSelection('note')
           break
         case 'newMeetingNote':
-          setMeetingDialogOpen(true)
+          setMeetingDialog({ dir: null })
           break
         case 'newFolder':
           createAtSelection('folder')
@@ -1078,7 +1079,8 @@ export function App(): React.JSX.Element {
           onExportPdfMulti={(paths) => void exportPdfMulti(paths)}
           onMove={(src, dest) => void handleMove(src, dest)}
           onNewNote={() => createAtSelection('note')}
-          onNewMeetingNote={() => setMeetingDialogOpen(true)}
+          onNewMeetingNote={() => setMeetingDialog({ dir: null })}
+          onCreateMeetingNote={(dir) => setMeetingDialog({ dir })}
           onNewFolder={() => createAtSelection('folder')}
           onReload={() => {
             void refreshTree()
@@ -1145,10 +1147,10 @@ export function App(): React.JSX.Element {
           </div>
         </div>
       )}
-      {meetingDialogOpen && (
+      {meetingDialog && (
         <MeetingNoteDialog
-          onPick={(ev) => void handleCreateMeetingNote(ev)}
-          onCancel={() => setMeetingDialogOpen(false)}
+          onPick={(ev) => void handleCreateMeetingNote(ev, meetingDialog.dir)}
+          onCancel={() => setMeetingDialog(null)}
         />
       )}
       {linkDialogOpen && (
