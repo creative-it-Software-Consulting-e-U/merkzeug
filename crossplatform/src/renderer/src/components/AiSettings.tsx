@@ -62,7 +62,7 @@ export function AiSettings(): React.JSX.Element {
     },
     'codex-cli': {
       title: translate("Codex / ChatGPT (local login)"),
-      hint: translate("Uses the Codex CLI – installed separately or bundled with the ChatGPT desktop app – and its ChatGPT login. Runs read-only in an empty folder."),
+      hint: translate("Uses the Codex CLI – installed separately or bundled with the ChatGPT desktop app – and its ChatGPT login. Works in the vault folder with vault access (writing only when editing is allowed), otherwise read-only in an empty folder."),
       keyed: false
     }
   }

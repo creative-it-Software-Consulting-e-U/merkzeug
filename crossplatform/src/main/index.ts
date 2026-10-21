@@ -15,7 +15,7 @@ import { existsSync, mkdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import type { TemplateState, CalendarEvent, AiChatRequest, AiProviderId, AiSettings } from '../shared/types'
-import { aiStatus, cancelAiChat, listAiModels, saveAiKey, saveAiSettings, startAiChat } from './ai'
+import { aiStatus, cancelAiChat, listAiModels, saveAiKey, saveAiSettings, startAiChat, undoAiChanges } from './ai'
 import {
   createFolder,
   autoRenameNote,
@@ -314,8 +314,12 @@ function registerIpc(): void {
     return status
   })
   ipcMain.handle('ai:listModels', (_e, provider: AiProviderId) => listAiModels(provider))
-  ipcMain.handle('ai:chat', (event, request: AiChatRequest) => startAiChat(event.sender, request))
+  // the vault comes from the requesting window, never from the renderer's request
+  ipcMain.handle('ai:chat', (event, request: AiChatRequest) =>
+    startAiChat(event.sender, request, getWindowVault(winFromEvent(event)?.id ?? -1))
+  )
   ipcMain.handle('ai:cancel', (_e, id: string) => cancelAiChat(id))
+  ipcMain.handle('ai:undo', (_e, id: string) => undoAiChanges(id))
 
   // Synchrones Speichern für beforeunload (Fenster-/App-Schluss)
   ipcMain.on('file:writeSync', (event, path: string, content: string) => {

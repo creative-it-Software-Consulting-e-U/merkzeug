@@ -50,9 +50,10 @@ export function contextBlock(context: AssistantContext): string {
  * CLIs take a single prompt: fold instructions, context and the earlier turns
  * into one text (the hosted APIs get them as structured system/messages).
  */
-export function foldedPrompt(messages: AssistantMessage[], context: AssistantContext, includeInstructions: boolean): string {
+export function foldedPrompt(messages: AssistantMessage[], context: AssistantContext, includeInstructions: boolean, extraInstructions = ''): string {
   const parts: string[] = []
   if (includeInstructions) parts.push(STABLE_INSTRUCTIONS)
+  if (extraInstructions) parts.push(extraInstructions)
   const ctx = contextBlock(context)
   if (ctx) parts.push(ctx)
   const earlier = messages.slice(0, -1)

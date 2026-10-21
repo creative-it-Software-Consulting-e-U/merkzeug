@@ -448,14 +448,34 @@ direkt im Kopf der Leiste:
   Claude-Code-CLI samt deren Anmeldung (Abo oder API-Schlüssel).
 - **Codex / ChatGPT (lokale Anmeldung)** nutzt die Codex-CLI – separat
   installiert oder in der ChatGPT-Desktop-App enthalten – mit deren
-  ChatGPT-Anmeldung. Codex läuft dabei nur lesend in einem leeren Ordner und
-  sieht den Vault nicht.
+  ChatGPT-Anmeldung.
+
+**Vault-Dateien:** Mit **Vault lesen** (wird gespeichert, standardmäßig an)
+kann der Assistent die Textdateien des geöffneten Vaults (Markdown, txt, csv,
+json, yaml, mmd) auflisten, durchsuchen und lesen, wenn deine Anfrage sie
+braucht, etwa „Welche Notizen erwähnen das Budget?“. Versteckte Ordner wie
+`.git`, ignorierte Build-Ordner und Dateien außerhalb des Vaults bleiben
+unzugänglich, auch über symbolische Links. Mit **Bearbeiten erlauben** darf er
+außerdem Textdateien anlegen und ändern, z. B. „Gehe durch alle Notizen im
+Ordner xy und verlinke die Begriffe aus 99_wording.md“. Bearbeiten gilt nur
+für die laufende Sitzung und ist nach einem Neustart wieder aus. Braucht eine
+Anfrage Schreibzugriff, obwohl er aus ist, sagt der Assistent das, und die
+Antwort bietet **Bearbeiten erlauben und erneut senden** an. Jede Antwort
+listet die gelesenen und geänderten Dateien (**Vault-Zugriff**);
+**Änderungen rückgängig machen** stellt die geänderten Dateien wieder her,
+außer solchen, die seitdem erneut geändert wurden. Offene Notizen ohne
+ungespeicherte Änderungen werden automatisch neu geladen. Die CLIs von Claude
+Code und Codex arbeiten im Vault-Ordner mit ihren eigenen lesenden
+Dateiwerkzeugen (Codex in seiner Nur-Lesen-Sandbox); mit erlaubtem Bearbeiten
+dürfen sie nur innerhalb des Vaults schreiben. Ohne Vault-Zugriff läuft Codex
+in einem leeren Ordner.
 
 **Datenschutz:** Gesendet werden deine Frage, die Auswahl im Editor und – solange
 die Checkbox **Notiz als Kontext mitschicken** aktiv ist – die offene Notiz.
-Ohne deine Anfrage wird nichts übertragen; der Hinweis über dem Eingabefeld
-nennt den Anbieter. Die Unterhaltung lebt nur im Fenster und wird nicht
-gespeichert.
+Mit **Vault lesen** geht außerdem jede Datei, die der Assistent liest, an den
+Anbieter; die Liste unter der Antwort zeigt, welche. Ohne deine Anfrage wird
+nichts übertragen; der Hinweis über dem Eingabefeld nennt den Anbieter. Die
+Unterhaltung lebt nur im Fenster und wird nicht gespeichert.
 
 ## Darstellung, Tour und Agentenhinweise
 
