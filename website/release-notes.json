@@ -1,6 +1,6 @@
 [
   {
-    "version": "1.3.1",
+    "version": "1.4",
     "status": "preparation",
     "date": null,
     "platforms": [
@@ -12,9 +12,25 @@
     ],
     "highlights": {
       "en": [
+        "Callouts: quotes that start with [!note], [!tip], [!warning] and similar markers appear as colored boxes, compatible with Obsidian callouts and GitHub alerts. Insert them from the slash menu; PDF exports print them expanded.",
+        "HTML image tags such as <img src=\"…\" width=\"300\"> now appear as images in the editor and in PDF exports. Moving or renaming a note updates their paths.",
+        "Mac and Linux: the new AI assistant (⇧⌘A) drafts Mermaid diagrams, summaries, rewrites and tables and inserts them with one click. Use your own Anthropic or OpenAI API key, or an installed Claude Code or Codex command-line tool.",
+        "Mac and Linux: right-click a file or folder to copy its path, relative to the vault or absolute. Folders also offer New meeting note for that folder.",
+        "iPhone and iPad: press and hold a file or folder to copy its path within the vault. Folders offer New meeting note for that folder.",
+        "IntelliJ: New → Merkzeug Meeting Note creates a meeting note from a calendar event in the chosen folder, using ICS files, calendar subscriptions and, on Windows, classic Outlook.",
+        "IntelliJ on Mac: ⌘ and ⌥ with the arrow keys, Backspace and Delete move and delete as in other Mac apps.",
+        "⌘→ keeps the cursor at the end of a wrapped line instead of jumping to the start of the next one.",
         "PDF export no longer stops with “The source image cannot be decoded” when a note contains inline HTML such as collapsible details sections. A single broken image no longer aborts the whole export."
       ],
       "de": [
+        "Callouts: Zitate, die mit [!note], [!tip], [!warning] und ähnlichen Markierungen beginnen, erscheinen als farbige Kästen – kompatibel mit Obsidian-Callouts und GitHub-Alerts. Einfügen über das Slash-Menü; im PDF-Export werden sie aufgeklappt gedruckt.",
+        "HTML-Bild-Tags wie <img src=\"…\" width=\"300\"> erscheinen jetzt im Editor und im PDF-Export als Bilder. Beim Verschieben oder Umbenennen einer Notiz werden ihre Pfade angepasst.",
+        "Mac und Linux: Der neue KI-Assistent (⇧⌘A) entwirft Mermaid-Diagramme, Zusammenfassungen, Umformulierungen und Tabellen und fügt sie mit einem Klick ein. Mit eigenem Anthropic- oder OpenAI-API-Schlüssel oder einem installierten Claude-Code- bzw. Codex-Kommandozeilenwerkzeug.",
+        "Mac und Linux: Per Rechtsklick auf eine Datei oder einen Ordner kopierst du den Pfad – relativ zum Vault oder absolut. Ordner bieten außerdem „Neue Meeting-Notiz“ direkt für diesen Ordner.",
+        "iPhone und iPad: Lange auf eine Datei oder einen Ordner drücken, um den Pfad im Vault zu kopieren. Ordner bieten „Neue Meeting-Notiz“ direkt für diesen Ordner.",
+        "IntelliJ: Neu → Merkzeug-Meeting-Notiz legt im gewählten Ordner eine Meeting-Notiz aus einem Kalendertermin an – aus ICS-Dateien, Kalender-Abos und unter Windows dem klassischen Outlook.",
+        "IntelliJ am Mac: ⌘ und ⌥ mit den Pfeiltasten, Rückschritt und Entfernen bewegen und löschen wie in anderen Mac-Apps.",
+        "⌘→ lässt den Cursor am Ende einer umbrochenen Zeile, statt an den Anfang der nächsten Zeile zu springen.",
         "Der PDF-Export bricht nicht mehr mit „The source image cannot be decoded“ ab, wenn eine Notiz Inline-HTML wie aufklappbare Details-Abschnitte enthält. Ein einzelnes defektes Bild bricht nicht mehr den ganzen Export ab."
       ]
     }

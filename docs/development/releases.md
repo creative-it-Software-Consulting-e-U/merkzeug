@@ -212,17 +212,18 @@ The public repository's protected environments now require explicit release
 approval. Creating candidates or App Store drafts does not submit to App Review
 or publish a Marketplace update.
 
-## Version 1.3.1 — PDF image fix and Xcode 27
+## Version 1.4 — callouts, meeting notes everywhere and Xcode 27
 
-Patch release for all distributed editions: iOS/iPadOS and macOS App Store,
-IntelliJ Marketplace and Linux (x64 and ARM64). Windows production distribution
-remains deferred pending signing credentials. The shared PDF renderer fix reaches
-desktop, iOS and IntelliJ through `@merkzeug/export`.
+Feature release for all distributed editions: iOS/iPadOS and macOS App Store,
+IntelliJ Marketplace and Linux (x64 and ARM64). It replaces the unreleased 1.3.1
+patch and includes its PDF image fix. Windows production distribution remains
+deferred pending signing credentials. The VS Code extension is built and tested
+but has no distribution channel yet, so release notes do not list it.
 
-Apple Cloud workflows now build with Xcode 27 on macOS 27 (see
+Apple Cloud workflows build with Xcode 27 on macOS 27 (see
 [Apple build setup](apple-builds.md)); their Node installation needs the
 sequential Homebrew download in `ci_post_clone.sh`, so build only from a commit
 that contains it. Run the macOS staging workflow (branch `stage`) before the
-production workflows. Store versions are `1.3.1`; Cloud assigns new build numbers.
+production workflows. Store versions are `1.4`; Cloud assigns new build numbers.
 Decide on the approved macOS 1.3 version (pending developer release) before
-creating the macOS 1.3.1 version in App Store Connect.
+creating the macOS 1.4 version in App Store Connect.
