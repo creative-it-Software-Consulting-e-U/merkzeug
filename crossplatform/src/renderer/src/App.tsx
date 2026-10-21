@@ -27,6 +27,7 @@ import { PaneView } from './components/Pane'
 import { Sidebar } from './components/Sidebar'
 import { LinkDialog } from './components/LinkDialog'
 import { MeetingNoteDialog } from './components/MeetingNoteDialog'
+import { AssistantPanel, type AssistantNoteContext } from './components/AssistantPanel'
 import { TooltipLayer } from './components/Tooltip'
 import { meetingNoteContent, meetingNoteFileName } from './util/meetingNote'
 
@@ -66,6 +67,21 @@ export function App(): React.JSX.Element {
   // Mehrfachauswahl auch selectedPath (den Anker für ⇧-Klick-Bereiche)
   const [multiSelected, setMultiSelected] = useState<Set<string>>(new Set())
   const [assetsVisible, setAssetsVisible] = useState(false)
+  // KI-Assistent rechts; Zustand bleibt je Fenster-Profil erhalten
+  const [assistantOpen, setAssistantOpen] = useState(() => {
+    try {
+      return localStorage.getItem('merkzeug.assistantOpen') === '1'
+    } catch {
+      return false
+    }
+  })
+  useEffect(() => {
+    try {
+      localStorage.setItem('merkzeug.assistantOpen', assistantOpen ? '1' : '0')
+    } catch {
+      /* ohne Storage nur für die Sitzung */
+    }
+  }, [assistantOpen])
   const [gitStatus, setGitStatus] = useState<GitStatus | null>(null)
   const [gitBusy, setGitBusy] = useState(false)
   const [gitMessage, setGitMessage] = useState<string | null>(null)
@@ -846,6 +862,9 @@ export function App(): React.JSX.Element {
         case 'toggleAssets':
           setAssetsVisible((prev) => !prev)
           break
+        case 'toggleAssistant':
+          setAssistantOpen((prev) => !prev)
+          break
         case 'printNote': {
           const tab = activeTab()
           if (tab?.kind === 'note') void printNote(tab.path)
@@ -950,6 +969,18 @@ export function App(): React.JSX.Element {
     )
   }
 
+  /** Kontext für den KI-Assistenten: offene Notiz (vault-relativ), ihr Markdown und die Auswahl */
+  const assistantContext = (): AssistantNoteContext => {
+    const tab = activeTab()
+    const editor = activeEditor()
+    if (!tab || tab.kind !== 'note' || !editor) return { notePath: null, noteMarkdown: null, selection: null }
+    const relative = vault && tab.path.startsWith(vault) ? tab.path.slice(vault.length).replace(/^[/\\]/, '') : tab.path
+    const selection = editor.getSelectedText().trim()
+    return { notePath: relative, noteMarkdown: editor.getMarkdown(), selection: selection || null }
+  }
+  const activeNoteTab = panes[activePane].tabs.find((t) => t.id === panes[activePane].activeTabId) ?? null
+  const canInsertFromAssistant = Boolean(activeNoteTab && activeNoteTab.kind === 'note' && !activeNoteTab.navMode)
+
   const paneProps = (index: 0 | 1) => ({
     pane: panes[index],
     paneIndex: index,
@@ -980,6 +1011,8 @@ export function App(): React.JSX.Element {
     onNavBack: (tabId: string) => stepHistory(tabId, -1),
     onNavForward: (tabId: string) => stepHistory(tabId, 1),
     onInsertLink: () => setLinkDialogOpen(true),
+    assistantOpen,
+    onToggleAssistant: () => setAssistantOpen((prev) => !prev),
     onEditorSaved: handleEditorSaved,
     onDirtyChange: (tabId: string, dirty: boolean) =>
       setDirtyTabs((prev) => {
@@ -1079,6 +1112,16 @@ export function App(): React.JSX.Element {
           <PaneView {...paneProps(0)} />
           {split && <PaneView {...paneProps(1)} />}
         </div>
+        {assistantOpen && (
+          <AssistantPanel
+            vaultName={vault ? basename(vault) : null}
+            getContext={assistantContext}
+            canInsert={canInsertFromAssistant}
+            onInsert={(markdown, mode) => activeEditor()?.insertMarkdown(markdown, mode)}
+            onClose={() => setAssistantOpen(false)}
+            onOpenSettings={() => void window.merkzeug.openSettings()}
+          />
+        )}
       </div>
       {gitMessage && (
         <div className="git-toast" onClick={() => setGitMessage(null)}>

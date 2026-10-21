@@ -372,6 +372,7 @@ Ist der Vault ein **Git-Repository**, erscheint unten in der Sidebar eine Status
 | Zweite Sektion ein-/ausblenden | ⌘\ | Strg+\ |
 | Tab in andere Sektion verschieben | ⇧⌘\ | Strg+Shift+\ |
 | Ressourcen ein-/ausblenden | ⇧⌘R | Strg+Shift+R |
+| KI-Assistent ein-/ausblenden | ⇧⌘A | Strg+Shift+A |
 | Diese Hilfe | ⌘? | F1 |
 
 *(Windows/Linux: ⌘ = Strg, ⌥ = Alt, ⇧ = Umschalt)*
@@ -404,6 +405,40 @@ Erstelle zuerst eine Kopie und übergib dem Agenten diesen Ordner mit folgendem 
 > Lies README.md und alle fünf Vorlagendateien in diesem Ordner. Passe diese Kopie an meinen Stil an: [FARBEN], [SCHRIFTEN] und [LOKALER LOGO-PFAD]. Behalte Dateinamen, Titel-/Datumsplatzhalter und Chromium-Seitennummern bei. Verwende Inline-CSS für Kopf-/Fußzeilen und begrenze Dokumentstile auf PDF-Selektoren. Nutze lokale Dateien, keine Skripte oder Netzwerkabhängigkeiten. Unterstütze A4 im Hoch- und Querformat ohne abgeschnittene Inhalte. Dokumentiere Änderungen in README.md. Exportiere zur Prüfung Notizen mit langem Titel, Überschriften, Links, Code, einer Tabelle und einem Diagramm und kontrolliere jede PDF-Seite.
 
 Die README der Vorlage enthält das Dateiformat und einen wiederverwendbaren Prompt. Prüfe das Ergebnis durch einen Export in Merkzeug: Eine Browser-Vorschau allein prüft keine Seitenumbrüche. **Vorlagen-Anleitung und Agenten-Prompt** in den Einstellungen öffnet diesen Abschnitt der Online-Hilfe; dieselbe Anleitung findest du auch in der Offline-Hilfe der App.
+
+## KI-Assistent
+
+**⇧⌘A / Strg+Shift+A** (Menü „Ansicht → KI-Assistent“ oder der Funkel-Button in der
+Editor-Leiste) öffnet rechts eine Assistenten-Leiste. Dort bittest du zum
+Beispiel um ein **Mermaid-Diagramm** zum Text der Notiz, eine Zusammenfassung,
+eine Umformulierung der Auswahl oder eine Tabelle. Die Antwort erscheint im
+Chat; Codeblöcke bekommen die Buttons **Einfügen**, **Auswahl ersetzen** (wenn
+im Editor etwas markiert ist) und **Kopieren**, ganze Antworten **Antwort
+einfügen**. Mermaid-Blöcke werden vor dem Anbieten geprüft und als Vorschau
+gerendert; ein Diagramm, das sich nicht parsen lässt, schickt Merkzeug mit der
+Fehlermeldung automatisch zur Korrektur zurück (höchstens zweimal). Eingefügt
+wird zwischen den Absätzen an der Cursorposition, bei einer frisch geöffneten
+Notiz ohne Cursor am Ende.
+
+**Anbieter** wählst du in den Einstellungen (⌘,) unter **KI-Assistent** oder
+direkt im Kopf der Leiste:
+
+- **Anthropic API (Claude)** und **OpenAI API** mit eigenem API-Schlüssel
+  (Abrechnung nach Verbrauch). Schlüssel liegen verschlüsselt im
+  System-Schlüsselbund, nie im Vault oder in `settings.json`. **Modelle laden**
+  listet die verfügbaren Modelle; leer lässt das Standardmodell gelten.
+- **Claude Code (lokale Anmeldung)** nutzt die auf dem Rechner installierte
+  Claude-Code-CLI samt deren Anmeldung (Abo oder API-Schlüssel).
+- **Codex / ChatGPT (lokale Anmeldung)** nutzt die Codex-CLI – separat
+  installiert oder in der ChatGPT-Desktop-App enthalten – mit deren
+  ChatGPT-Anmeldung. Codex läuft dabei nur lesend in einem leeren Ordner und
+  sieht den Vault nicht.
+
+**Datenschutz:** Gesendet werden deine Frage, die Auswahl im Editor und – solange
+die Checkbox **Notiz als Kontext mitschicken** aktiv ist – die offene Notiz.
+Ohne deine Anfrage wird nichts übertragen; der Hinweis über dem Eingabefeld
+nennt den Anbieter. Die Unterhaltung lebt nur im Fenster und wird nicht
+gespeichert.
 
 ## Darstellung, Tour und Agentenhinweise
 

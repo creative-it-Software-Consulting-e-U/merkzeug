@@ -57,6 +57,7 @@ export type MenuAction =
   | 'toggleSplit'
   | 'moveTabOtherPane'
   | 'toggleAssets'
+  | 'toggleAssistant'
   | 'printNote'
   | 'exportPdf'
 
@@ -86,3 +87,55 @@ export interface PdfExportProgress {
 export interface VaultChange {
   vault: string
 }
+
+// ---- AI assistant --------------------------------------------------------
+
+/** Backends of the assistant panel: hosted APIs with a stored key, or locally installed CLIs that bring their own login. */
+export type AiProviderId = 'anthropic' | 'openai' | 'claude-cli' | 'codex-cli'
+
+export interface AiSettings {
+  provider: AiProviderId | null
+  /** Model per provider; empty string = provider default */
+  models: Partial<Record<AiProviderId, string>>
+}
+
+export interface AiProviderStatus {
+  id: AiProviderId
+  /** usable right now (key stored / CLI found) */
+  ready: boolean
+  /** key stored, CLI path, or why it is not ready */
+  detail: string
+}
+
+export interface AiStatus {
+  settings: AiSettings
+  providers: AiProviderStatus[]
+  /** whether encrypted key storage works on this machine */
+  keyStorage: boolean
+}
+
+export interface AiChatMessage {
+  role: 'user' | 'assistant'
+  content: string
+}
+
+/** What the panel sends along with the conversation */
+export interface AiContext {
+  vaultName: string | null
+  notePath: string | null
+  noteMarkdown: string | null
+  selection: string | null
+}
+
+export interface AiChatRequest {
+  id: string
+  messages: AiChatMessage[]
+  context: AiContext
+  /** UI language (answers follow the user's text; headings of generated sections use this) */
+  locale: string
+}
+
+export type AiChatEvent =
+  | { id: string; type: 'delta'; text: string }
+  | { id: string; type: 'done'; text: string; model?: string }
+  | { id: string; type: 'error'; message: string }

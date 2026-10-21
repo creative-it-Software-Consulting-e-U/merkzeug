@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Desktop: **AI assistant** panel (⇧⌘A) for Mermaid diagrams, summaries, rewrites and tables with one-click insertion into the note. Backends: Anthropic API and OpenAI API with your own key, or the locally installed Claude Code and Codex CLIs with their existing login. Mermaid answers are validated and repaired automatically before they are offered.
+
 ## 1.3.1
 
 - PDF export no longer fails with “The source image cannot be decoded” when a document contains inline HTML such as `<details>`; a broken image no longer aborts the whole export.
