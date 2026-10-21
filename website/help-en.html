@@ -612,9 +612,9 @@ the window and is not saved.</p>
 <h2 id="linux-installation-and-platform-differences">Linux installation and platform differences</h2>
 <p>Choose a separate package for your Linux architecture: <strong>x86_64 (x64)</strong> for Intel/AMD PCs, or <strong>ARM64 (aarch64)</strong> for ARM computers, including Linux on Apple Silicon in Parallels. Run <code>uname -m</code> if unsure. The packages contain only their selected architecture. In the commands below, replace <code>x64</code> with <code>arm64</code> for ARM64.</p>
 <ul>
-<li><strong>DEB:</strong> install with <code>sudo apt install ./Merkzeug-1.2.1-linux-x64.deb</code> on Ubuntu/Debian-compatible systems.</li>
-<li><strong>RPM:</strong> install with <code>sudo dnf install ./Merkzeug-1.2.1-linux-x64.rpm</code> on Fedora-compatible systems.</li>
-<li><strong>AppImage:</strong> make the file executable in its file properties, or run <code>chmod +x Merkzeug-1.2.1-linux-x64.AppImage</code>, then open it. FUSE 2 is required (<code>libfuse2t64</code> on Ubuntu 24.04). Use the DEB package if AppImage is unsuitable for your system. Do not disable the application sandbox to work around an installation problem.</li>
+<li><strong>DEB:</strong> install with <code>sudo apt install ./Merkzeug-*-linux-x64.deb</code> on Ubuntu/Debian-compatible systems.</li>
+<li><strong>RPM:</strong> install with <code>sudo dnf install ./Merkzeug-*-linux-x64.rpm</code> on Fedora-compatible systems.</li>
+<li><strong>AppImage:</strong> make the file executable in its file properties, or run <code>chmod +x Merkzeug-*-linux-x64.AppImage</code>, then open it. FUSE 2 is required (<code>libfuse2t64</code> on Ubuntu 24.04). Use the DEB package if AppImage is unsuitable for your system. Do not disable the application sandbox to work around an installation problem.</li>
 </ul>
 <p>Download updates manually from the Merkzeug website. Verify downloads against the published SHA-256 checksums. These checksums detect changed files; they are not publisher certificates. Your notes and configuration remain outside the application package.</p>
 <p>The shared desktop editor includes visual editing, Mermaid, reading/navigation mode, frontmatter, title-based filenames, companion image folders and link updates on move/rename, PDF templates, combined PDF export, printing and agent prompts. Install Git separately for the built-in Git operations; configure authentication through your normal Git tools.</p>

@@ -227,3 +227,14 @@ that contains it. Run the macOS staging workflow (branch `stage`) before the
 production workflows. Store versions are `1.4`; Cloud assigns new build numbers.
 Decide on the approved macOS 1.3 version (pending developer release) before
 creating the macOS 1.4 version in App Store Connect.
+
+State on 21 October 2026: macOS and iOS 1.3 are live; both App Store Connect
+drafts are still named 1.3.1 with the 1.3.1 builds 158/159 attached. Rename
+them to `1.4` (detach the 1.3.1 builds first) and attach new 1.4 builds from
+the production Cloud workflows. The IntelliJ Marketplace has 1.3.0; Linux
+downloads are 1.2.1 with an unpublished 1.3.1 draft release, so Linux 1.4
+replaces that draft and the website download links move to 1.4 after
+publication. The iOS Cloud builds failed from the Capacitor 8.5.3 update until
+the local `CapacitorRuntime` package and `scripts/prepare-ios-runtime.py` were
+moved to the official 8.5.3 binaries and checksums. Linux install commands in
+the manuals use `Merkzeug-*-…` patterns so they never name a stale version.

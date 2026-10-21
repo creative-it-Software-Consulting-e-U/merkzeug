@@ -4,7 +4,7 @@ The VS Code extension provides the same features as the [IntelliJ plugin](intell
 
 ## Requirements and installation
 
-The extension requires Visual Studio Code 1.100 or later and works with local folders, including VS Code Remote workspaces where the extension runs on the remote machine. Virtual workspaces (for example browser-only repositories) are not supported. Version 1.3 was verified with VS Code 1.139 on macOS.
+The extension requires Visual Studio Code 1.100 or later and works with local folders, including VS Code Remote workspaces where the extension runs on the remote machine. Virtual workspaces (for example browser-only repositories) are not supported. The extension was verified with VS Code 1.139 on macOS.
 
 PDF export and printing use an installed Chromium-based browser: Google Chrome, Microsoft Edge, Chromium or Brave. Merkzeug finds standard installations automatically; otherwise set **Merkzeug › Pdf: Browser Path** in the settings.
 
