@@ -647,3 +647,21 @@ dialog { color: var(--text); background: var(--bg); border: 1px solid var(--bord
 .milkdown .ProseMirror[contenteditable="true"] blockquote.callout .callout-marker-editing + .callout-default-title {
   display: none;
 }
+
+/* ---- HTML-Bilder (`<img src="…" width="…">`) ---- */
+
+.milkdown .ProseMirror .html-images img {
+  max-width: 100%;
+  vertical-align: bottom;
+}
+/* nur Breite angegeben: Seitenverhältnis beim Verkleinern halten */
+.milkdown .ProseMirror .html-images img:not([height]) { height: auto; }
+.milkdown .ProseMirror .html-images-centered {
+  display: block;
+  text-align: center;
+}
+.milkdown .ProseMirror .html-images.ProseMirror-selectednode {
+  outline: 2px solid var(--accent, #0a84ff);
+  outline-offset: 2px;
+  border-radius: 2px;
+}

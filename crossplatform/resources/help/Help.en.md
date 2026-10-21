@@ -130,7 +130,10 @@ The editor shows the note formatted; what is saved is Markdown.
   cell with Tab; add and delete rows/columns via the table controls right at the
   table or the **Table** menu.
 - **Images:** paste from the clipboard, drag & drop, slash menu or
-  **Edit → Insert Image…**.
+  **Edit → Insert Image…**. HTML image tags such as
+  `<img src="Note.assets/image.png" alt="…" width="450">` are shown as images
+  with their size, also when wrapped in `<p align="center">` or a link; the
+  HTML itself stays unchanged in the file. Other HTML is shown as source text.
 - **Undo/redo** as usual (⌘Z / Ctrl+Z / ⇧⌘Z / Ctrl+Shift+Z).
 - **Find & replace:** **⌘F / Ctrl+F** opens the search bar at the top right of the
   editor, **⌥⌘F / Ctrl+Alt+F** additionally shows the replace row (also via
@@ -451,7 +454,7 @@ A meeting note uses its first heading as the filename. Case, spaces and accents 
 
 ## Links when renaming or moving notes
 
-Renaming a note or folder through Merkzeug updates local Markdown links to it in other Markdown files in the same vault. This also applies when a saved heading automatically changes a note's filename. Companion `.assets/` folders and links to their images follow the note. Moving a note also recalculates its outgoing relative links; shared image folders stay in place.
+Renaming a note or folder through Merkzeug updates local Markdown links to it in other Markdown files in the same vault. This also applies when a saved heading automatically changes a note's filename. Companion `.assets/` folders and links to their images follow the note, including `src` paths in HTML `<img>` tags. Moving a note also recalculates its outgoing relative links; shared image folders stay in place.
 
 Inline links, images and reference-style link definitions are supported, including URL-encoded names and `#section` suffixes. Link labels and titles stay unchanged. Section suffixes are preserved, not recalculated when a heading changes. Code examples, frontmatter, external URLs and ordinary prose are not rewritten. HTML links and wiki-link syntax are not included.
 

@@ -8,6 +8,8 @@ For Mermaid, insert a code block with the language `mermaid`. Use its preview co
 
 Paste or insert images using the editor's image controls. Desktop and IntelliJ store inserted images in a sibling `NOTE.assets` directory; the iOS adapter uses a sibling `assets` directory. Keep images with their notes when moving them between machines. Existing image paths are preserved.
 
+HTML image tags such as `<img src="NOTE.assets/diagram.png" alt="Diagram" width="450">` are displayed as images, honoring `width` and `height`. Images wrapped in `<p>`, `<div>`, `<center>` or a link are shown too; `align="center"` centers them. Merkzeug never rewrites this HTML when saving, and moving or renaming notes updates its `src` paths like other image links. Any other HTML, such as tables or styled text, remains visible as source text.
+
 ## Callouts
 
 A quote whose first line starts with `[!type]` is shown as a colored callout. The syntax matches Obsidian callouts and therefore also covers GitHub alerts such as `[!NOTE]` or `[!WARNING]`:
