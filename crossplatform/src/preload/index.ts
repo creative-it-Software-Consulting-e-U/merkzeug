@@ -1,7 +1,7 @@
 import type { InstructionName } from '@merkzeug/core/vaultGuidance'
 import { contextBridge, ipcRenderer } from 'electron'
 import type {
-  AiChatEvent,
+  AiChatEvent, AiUndoResult,
   AiChatRequest,
   AiProviderId,
   AiSettings,
@@ -114,6 +114,8 @@ const api = {
   /** startet eine Anfrage; Fortschritt kommt über onAiEvent */
   aiChat: (request: AiChatRequest): Promise<void> => ipcRenderer.invoke('ai:chat', request),
   aiCancel: (id: string): Promise<void> => ipcRenderer.invoke('ai:cancel', id),
+  /** stellt die von einer Antwort geänderten Vault-Dateien wieder her */
+  aiUndo: (id: string): Promise<AiUndoResult> => ipcRenderer.invoke('ai:undo', id),
   onAiEvent: (handler: (event: AiChatEvent) => void): (() => void) => {
     const listener = (_e: unknown, event: AiChatEvent): void => handler(event)
     ipcRenderer.on('ai:event', listener)

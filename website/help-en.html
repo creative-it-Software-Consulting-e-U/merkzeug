@@ -547,13 +547,31 @@ leave the field empty for the default model.</li>
 <li><strong>Claude Code (local login)</strong> uses the Claude Code CLI installed on this
 computer together with its login (subscription or API key).</li>
 <li><strong>Codex / ChatGPT (local login)</strong> uses the Codex CLI – installed separately
-or bundled with the ChatGPT desktop app – with its ChatGPT login. Codex runs
-read-only in an empty folder and never sees the vault.</li>
+or bundled with the ChatGPT desktop app – with its ChatGPT login.</li>
 </ul>
+<p><strong>Vault files:</strong> with <strong>Read vault</strong> checked (saved, on by default) the
+assistant can list, search and read the text files of the open vault
+(Markdown, txt, csv, json, yaml, mmd) when your request needs them, for
+example &quot;Which notes mention the budget?&quot;. Hidden folders such as <code>.git</code>,
+ignored build folders and files outside the vault stay inaccessible, also via
+symbolic links. With <strong>Allow editing</strong> checked it may also create and change
+text files, e.g. &quot;Go through all notes in folder xy and link the terms defined
+in 99_wording.md&quot;. Editing applies to the current session only and is off
+after a restart. If a request needs editing while it is off, the assistant
+says so and the answer offers <strong>Allow editing and send again</strong>. Each answer
+lists the files it read and changed (<strong>Vault access</strong>); <strong>Undo changes</strong>
+restores the changed files, except files that were changed again since.
+Open notes reload automatically when they have no unsaved changes. The
+Claude Code and Codex CLIs work in the vault folder with their own read-only
+file tools (Codex in its read-only sandbox); with editing allowed they may
+write inside the vault only. Without vault access Codex runs in an empty
+folder.</p>
 <p><strong>Privacy:</strong> Merkzeug sends your question, the selection in the editor and – as
-long as <strong>Send note as context</strong> is checked – the open note. Nothing is
-transmitted until you ask; the hint above the input names the provider. The
-conversation lives only in the window and is not saved.</p>
+long as <strong>Send note as context</strong> is checked – the open note. With <strong>Read
+vault</strong>, every file the assistant reads is sent to the provider as well; the
+list under the answer shows which ones. Nothing is transmitted until you ask;
+the hint above the input names the provider. The conversation lives only in
+the window and is not saved.</p>
 <h2 id="appearance-tours-and-agent-guidance">Appearance, tours and agent guidance</h2>
 <p>Choose <strong>System</strong>, <strong>Light</strong> or <strong>Dark</strong> for appearance. System follows the operating system (the IDE in IntelliJ and VS Code); your choice is saved. The <strong>Guided tour</strong> starts only after you accept the first-use invitation and can be reopened at any time. Its <strong>Read and navigate</strong> step explains the read/edit switch and link navigation. Open a note before starting the tour to see its mode button highlighted.</p>
 <p>When opening a vault, Merkzeug can suggest root <code>AGENTS.md</code> / <code>CLAUDE.md</code> instructions for <code>Note.md</code> and <code>Note.assets/</code>. Review the single proposed text and the full contents of both instruction files. Select the destination files explicitly before choosing <strong>Add</strong>; none is preselected. For example, leave <code>CLAUDE.md</code> unchanged when it only redirects to <code>AGENTS.md</code>. Missing files are created only when selected. <strong>Later</strong> postpones it for the current session; <strong>Do not suggest again for this vault</strong> suppresses future prompts for that vault. Contradictory or unclear attachment rules require manual review. Concurrent external changes are preserved and require a refreshed preview. Existing shared <code>assets/</code> references remain readable.</p>

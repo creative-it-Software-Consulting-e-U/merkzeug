@@ -1,8 +1,9 @@
 /**
  * OpenAI Codex CLI (`codex exec`): uses the ChatGPT login of the Codex CLI or
  * of the ChatGPT desktop app, which bundles the CLI – Merkzeug never sees it.
- * Codex is an agent with tools; it runs read-only in an empty temp folder so
- * it can neither read the vault nor change anything.
+ * Codex is an agent with tools. Without vault access it runs read-only in an
+ * empty temp folder; with access the vault is its working directory, and the
+ * sandbox allows writes there only when editing is allowed.
  */
 import { mkdirSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -21,7 +22,7 @@ export function findCodexCli(): string | null {
 
 interface JsonLine {
   type?: string
-  item?: { type?: string; text?: string }
+  item?: { type?: string; text?: string; command?: string; changes?: { path?: string; kind?: string }[] }
   error?: { message?: string } | string
   message?: string
 }
@@ -30,15 +31,20 @@ export const codexCliProvider: AiProvider = {
   async chat(request: ProviderRequest, signal: AbortSignal, onDelta): Promise<ProviderResult> {
     const file = findCodexCli()
     if (!file) throw new Error('Codex CLI not found.')
-    const cwd = join(tmpdir(), 'merkzeug-ai-codex')
-    mkdirSync(cwd, { recursive: true })
-    const args = ['exec', '--json', '--skip-git-repo-check', '--sandbox', 'read-only', '--ephemeral', '--color', 'never', '-C', cwd]
+    const vault = request.vault
+    let cwd = vault?.session.root
+    if (!cwd) {
+      cwd = join(tmpdir(), 'merkzeug-ai-codex')
+      mkdirSync(cwd, { recursive: true })
+    }
+    const sandbox = vault?.session.access === 'write' ? 'workspace-write' : 'read-only'
+    const args = ['exec', '--json', '--skip-git-repo-check', '--sandbox', sandbox, '--ephemeral', '--color', 'never', '-C', cwd]
     if (request.model) args.push('-m', request.model)
     args.push('-')
     const answers: string[] = []
     let errorText: string | null = null
     const { code, stderr } = await runLines(file, args, {
-      stdin: foldedPrompt(request.messages, request.context, true),
+      stdin: foldedPrompt(request.messages, request.context, true, vault?.cliInstructions),
       cwd,
       signal,
       onLine: (line) => {
@@ -51,6 +57,12 @@ export const codexCliProvider: AiProvider = {
         if (data.type === 'item.completed' && data.item?.type === 'agent_message' && data.item.text) {
           answers.push(data.item.text)
           onDelta((answers.length > 1 ? '\n\n' : '') + data.item.text)
+        } else if (data.type === 'item.completed' && vault && data.item?.type === 'command_execution' && data.item.command) {
+          vault.report({ kind: 'search', path: '/', detail: data.item.command.slice(0, 200) })
+        } else if (data.type === 'item.completed' && vault && data.item?.type === 'file_change') {
+          for (const change of data.item.changes ?? []) {
+            if (change.path) vault.report({ kind: 'write', path: vault.session.relativePath(change.path), detail: change.kind })
+          }
         } else if (data.type === 'turn.failed' || data.type === 'error') {
           const err = data.error
           errorText = (typeof err === 'string' ? err : err?.message) || data.message || 'Codex reported an error.'
@@ -61,6 +73,7 @@ export const codexCliProvider: AiProvider = {
     if (answers.length === 0) {
       throw new Error(stderrExcerpt(stderr) || `Codex exited with code ${code ?? '?'} without an answer.`)
     }
-    return { text: answers.join('\n\n'), model: request.model || undefined }
+    // the last message is the answer; earlier ones are progress notes
+    return { text: answers[answers.length - 1], model: request.model || undefined }
   }
 }

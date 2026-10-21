@@ -96,10 +96,10 @@ export function markReleaseNotesSeen(version: string): void {
 
 export function getAiSettings(): AiSettings {
   const ai = loadSettings().ai
-  return { provider: ai?.provider ?? null, models: { ...(ai?.models ?? {}) } }
+  return { provider: ai?.provider ?? null, models: { ...(ai?.models ?? {}) }, vaultRead: ai?.vaultRead ?? true }
 }
 
 export function setAiSettings(ai: AiSettings): void {
-  loadSettings().ai = { provider: ai.provider, models: { ...ai.models } }
+  loadSettings().ai = { provider: ai.provider, models: { ...ai.models }, vaultRead: ai.vaultRead !== false }
   saveSettings()
 }

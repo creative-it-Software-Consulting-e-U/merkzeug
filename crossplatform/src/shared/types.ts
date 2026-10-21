@@ -97,6 +97,8 @@ export interface AiSettings {
   provider: AiProviderId | null
   /** Model per provider; empty string = provider default */
   models: Partial<Record<AiProviderId, string>>
+  /** assistant may list, search and read vault files (editing is allowed per session only) */
+  vaultRead: boolean
 }
 
 export interface AiProviderStatus {
@@ -133,9 +135,39 @@ export interface AiChatRequest {
   context: AiContext
   /** UI language (answers follow the user's text; headings of generated sections use this) */
   locale: string
+  /** files of the window's vault: none, read, or read and edit */
+  vaultAccess: 'none' | 'read' | 'write'
+}
+
+/** A file the assistant listed, searched, read or changed (paths relative to the vault) */
+export type AiActivity =
+  | { kind: 'list' | 'search' | 'read' | 'write' | 'denied'; path: string; detail?: string }
+  | { kind: 'needsWrite'; path: ''; detail: string }
+
+export interface AiFileChange {
+  path: string
+  kind: 'created' | 'modified' | 'deleted'
 }
 
 export type AiChatEvent =
   | { id: string; type: 'delta'; text: string }
-  | { id: string; type: 'done'; text: string; model?: string }
-  | { id: string; type: 'error'; message: string }
+  | { id: string; type: 'activity'; activity: AiActivity }
+  | {
+      id: string
+      type: 'done'
+      text: string
+      model?: string
+      /** files changed by this answer; undo restores them */
+      changes?: AiFileChange[]
+      /** false when a CLI changed files Merkzeug could not snapshot */
+      undoComplete?: boolean
+      /** the request needs editing, which was not allowed */
+      needsWrite?: string
+    }
+  | { id: string; type: 'error'; message: string; changes?: AiFileChange[] }
+
+export interface AiUndoResult {
+  restored: string[]
+  /** changed again since the answer – left as they are */
+  skipped: string[]
+}

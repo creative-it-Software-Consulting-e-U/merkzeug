@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { renderMermaid, validateMermaid } from '@merkzeug/editor/mermaid'
 import { translate } from '../translate'
-import type { AiChatEvent, AiChatRequest, AiContext, AiProviderId, AiStatus } from '../../../shared/types'
+import type { AiActivity, AiChatEvent, AiChatRequest, AiContext, AiFileChange, AiProviderId, AiStatus, AiUndoResult } from '../../../shared/types'
 import { fencedBlock, renderInline, splitAnswer } from '../util/assistant'
 import { IconClose, IconSend, IconStop } from './icons'
 
@@ -33,7 +33,37 @@ interface ChatEntry {
   model?: string
   /** parse errors of Mermaid blocks, by block index */
   mermaidErrors?: Record<number, string>
+  /** files listed, searched, read or changed while answering */
+  activities?: AiActivity[]
+  changes?: AiFileChange[]
+  undoComplete?: boolean
+  undo?: AiUndoResult
+  /** editing was needed but not allowed: the reason, and the request to resend */
+  needsWrite?: { reason: string; request: string }
 }
+
+type VaultAccess = AiChatRequest['vaultAccess']
+
+function activityLabel(activity: AiActivity): string {
+  const path = activity.path || '/'
+  switch (activity.kind) {
+    case 'list':
+      return `${translate("Listed")} ${path}`
+    case 'search':
+      return activity.detail ? `${translate("Searched")} „${activity.detail}“ ${translate("in")} ${path}` : `${translate("Searched")} ${path}`
+    case 'read':
+      return `${translate("Read")} ${path}`
+    case 'write':
+      return `${translate("Changed")} ${path}`
+    case 'denied':
+      return `${translate("Denied")} ${activity.path}${activity.detail ? ` – ${activity.detail}` : ''}`
+    case 'needsWrite':
+      return translate("Editing is needed")
+  }
+}
+
+const changeLabel = (change: AiFileChange): string =>
+  ({ created: translate("created"), modified: translate("changed"), deleted: translate("deleted") })[change.kind]
 
 const providerLabel = (id: AiProviderId): string =>
   ({
@@ -70,6 +100,8 @@ export function AssistantPanel(props: AssistantPanelProps): React.JSX.Element {
   const [entries, setEntries] = useState<ChatEntry[]>([])
   const [input, setInput] = useState('')
   const [includeNote, setIncludeNote] = useState(true)
+  // editing is never stored: it applies to this panel session only
+  const [allowWrite, setAllowWrite] = useState(false)
   const [activeId, setActiveId] = useState<string | null>(null)
   const [hasSelection, setHasSelection] = useState(false)
   const autoFixesRef = useRef(0)
@@ -94,11 +126,13 @@ export function AssistantPanel(props: AssistantPanelProps): React.JSX.Element {
   }, [entries])
 
   const provider = status?.settings.provider ?? null
+  const vaultRead = Boolean(props.vaultName) && status?.settings.vaultRead !== false
+  const access: VaultAccess = !vaultRead ? 'none' : allowWrite ? 'write' : 'read'
   const providerStatus = status?.providers.find((p) => p.id === provider) ?? null
   const ready = Boolean(providerStatus?.ready)
 
   const send = useCallback(
-    (text: string, auto = false) => {
+    (text: string, auto = false, accessOverride?: VaultAccess) => {
       if (!text.trim() || !provider) return
       const context = getContext()
       const requestContext: AiContext = {
@@ -116,11 +150,12 @@ export function AssistantPanel(props: AssistantPanelProps): React.JSX.Element {
         id: answerId,
         messages: history.map((e) => ({ role: e.role, content: e.content })),
         context: requestContext,
-        locale: navigator.language
+        locale: navigator.language,
+        vaultAccess: accessOverride ?? access
       }
       void window.merkzeug.aiChat(request)
     },
-    [getContext, includeNote, props.vaultName, provider]
+    [access, getContext, includeNote, props.vaultName, provider]
   )
 
   const update = useCallback((id: string, patch: (entry: ChatEntry) => ChatEntry) => {
@@ -132,13 +167,26 @@ export function AssistantPanel(props: AssistantPanelProps): React.JSX.Element {
     return window.merkzeug.onAiEvent((event: AiChatEvent) => {
       if (event.type === 'delta') {
         update(event.id, (e) => ({ ...e, content: e.content + event.text }))
+      } else if (event.type === 'activity') {
+        update(event.id, (e) => ({ ...e, activities: [...(e.activities ?? []), event.activity] }))
       } else if (event.type === 'error') {
-        update(event.id, (e) => ({ ...e, streaming: false, error: event.message }))
+        update(event.id, (e) => ({ ...e, streaming: false, error: event.message, changes: event.changes, undoComplete: true }))
         setActiveId((current) => (current === event.id ? null : current))
       } else {
-        const entry = entriesRef.current.find((e) => e.id === event.id)
+        const entries = entriesRef.current
+        const index = entries.findIndex((e) => e.id === event.id)
+        const entry = entries[index]
         const text = event.text || entry?.content || ''
-        update(event.id, (e) => ({ ...e, content: text, streaming: false, model: event.model }))
+        const request = entries.slice(0, Math.max(index, 0)).reverse().find((e) => e.role === 'user')?.content ?? ''
+        update(event.id, (e) => ({
+          ...e,
+          content: text,
+          streaming: false,
+          model: event.model,
+          changes: event.changes,
+          undoComplete: event.undoComplete,
+          needsWrite: event.needsWrite !== undefined ? { reason: event.needsWrite, request } : undefined
+        }))
         setActiveId((current) => (current === event.id ? null : current))
         void checkMermaid(event.id, text)
       }
@@ -179,6 +227,27 @@ export function AssistantPanel(props: AssistantPanelProps): React.JSX.Element {
 
   const cancel = (): void => {
     if (activeId) void window.merkzeug.aiCancel(activeId)
+  }
+
+  const undo = (id: string): void => {
+    void window.merkzeug.aiUndo(id).then((result) => update(id, (e) => ({ ...e, undo: result })))
+  }
+
+  /**
+   * Allows editing for this session and sends the request again. The refused
+   * attempt (request and answer) leaves the conversation, so the model does
+   * not argue with its own earlier refusal.
+   */
+  const allowAndResend = (answerId: string, request: string): void => {
+    setAllowWrite(true)
+    autoFixesRef.current = 0
+    const current = entriesRef.current
+    const index = current.findIndex((e) => e.id === answerId)
+    const userIndex = current.slice(0, Math.max(index, 0)).map((e) => e.role).lastIndexOf('user')
+    const kept = current.filter((_, i) => i !== index && i !== userIndex)
+    entriesRef.current = kept
+    setEntries(kept)
+    send(request, false, 'write')
   }
 
   const copy = (text: string): void => {
@@ -235,7 +304,60 @@ export function AssistantPanel(props: AssistantPanelProps): React.JSX.Element {
                 </div>
               )
             )}
+            {entry.activities && entry.activities.length > 0 && (
+              <details className="assistant-activity" open={entry.streaming}>
+                <summary>
+                  {translate("Vault access")} ({entry.activities.length})
+                </summary>
+                <ul>
+                  {entry.activities.map((activity, i) => (
+                    <li key={i} className={activity.kind}>
+                      {activityLabel(activity)}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            )}
             {entry.error && <div className="assistant-error">{entry.error}</div>}
+            {entry.needsWrite && !entry.streaming && (
+              <div className="assistant-needs-write">
+                <p>
+                  {translate("This request needs to change vault files, but editing is not allowed.")}
+                  {entry.needsWrite.reason ? ` ${entry.needsWrite.reason}` : ''}
+                </p>
+                <button disabled={Boolean(activeId) || !entry.needsWrite.request} onClick={() => allowAndResend(entry.id, entry.needsWrite!.request)}>
+                  {translate("Allow editing and send again")}
+                </button>
+              </div>
+            )}
+            {entry.changes && entry.changes.length > 0 && !entry.streaming && (
+              <div className="assistant-changes">
+                <div className="assistant-changes-head">
+                  {translate("Changed files")} ({entry.changes.length})
+                </div>
+                <ul>
+                  {entry.changes.map((change) => (
+                    <li key={change.path}>
+                      {change.path} <span>– {changeLabel(change)}</span>
+                    </li>
+                  ))}
+                </ul>
+                {entry.undo ? (
+                  <div className="assistant-hint">
+                    {translate("Restored:")} {entry.undo.restored.length}
+                    {entry.undo.skipped.length > 0 &&
+                      ` · ${translate("Changed again since, left as they are:")} ${entry.undo.skipped.join(', ')}`}
+                  </div>
+                ) : (
+                  <>
+                    <button onClick={() => undo(entry.id)}>{translate("Undo changes")}</button>
+                    {entry.undoComplete === false && (
+                      <div className="assistant-hint">{translate("The vault was too large to back up completely; some changes may not be undoable.")}</div>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
             {entry.streaming && !entry.content && <div className="assistant-thinking">…</div>}
             {!entry.streaming && entry.content && (
               <div className="assistant-actions message">
@@ -254,7 +376,8 @@ export function AssistantPanel(props: AssistantPanelProps): React.JSX.Element {
           </div>
         )
       }),
-    [entries, canInsert, hasSelection, onInsert]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [entries, canInsert, hasSelection, onInsert, activeId]
   )
 
   const currentLabel = provider ? providerLabel(provider) : null
@@ -299,6 +422,13 @@ export function AssistantPanel(props: AssistantPanelProps): React.JSX.Element {
                     : translate("Only your question and the selection are sent to")}{' '}
                   {currentLabel}.
                 </p>
+                {vaultRead && (
+                  <p className="assistant-hint">
+                    {allowWrite
+                      ? translate("The assistant may read and change text files in this vault. Changes can be undone per answer.")
+                      : translate("The assistant may read text files in this vault when your request needs them; each file it reads is sent to the provider.")}
+                  </p>
+                )}
               </>
             ) : (
               <>
@@ -330,6 +460,27 @@ export function AssistantPanel(props: AssistantPanelProps): React.JSX.Element {
             <input type="checkbox" checked={includeNote} onChange={(e) => setIncludeNote(e.target.checked)} />
             {translate("Send note as context")}
           </label>
+          {props.vaultName && (
+            <>
+              <label className="assistant-check" title={translate("List, search and read text files of the vault when needed")}>
+                <input
+                  type="checkbox"
+                  checked={vaultRead}
+                  disabled={!status}
+                  onChange={(e) => {
+                    if (!status) return
+                    if (!e.target.checked) setAllowWrite(false)
+                    void window.merkzeug.aiSaveSettings({ ...status.settings, vaultRead: e.target.checked }).then(setStatus)
+                  }}
+                />
+                {translate("Read vault")}
+              </label>
+              <label className={`assistant-check${allowWrite ? ' warn' : ''}`} title={translate("Create and change text files of the vault (this session only)")}>
+                <input type="checkbox" checked={allowWrite} disabled={!vaultRead} onChange={(e) => setAllowWrite(e.target.checked)} />
+                {translate("Allow editing")}
+              </label>
+            </>
+          )}
           <div className="toolbar-spacer" />
           {activeId ? (
             <button className="assistant-send" onClick={cancel} data-tip={translate("Stop")}>

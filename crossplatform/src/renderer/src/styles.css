@@ -1392,8 +1392,9 @@ button.primary:disabled {
 
 .assistant-input-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
+  gap: 4px 10px;
 }
 
 .assistant-check {
@@ -1407,6 +1408,77 @@ button.primary:disabled {
 .assistant-check input {
   margin: 0;
   accent-color: var(--accent);
+}
+
+.assistant-check.warn {
+  color: var(--danger);
+}
+
+/* Vault access of an answer: files read, searched and changed */
+.assistant-activity {
+  margin-top: 6px;
+  font-size: 11.5px;
+  color: var(--text-dim);
+  white-space: normal;
+}
+
+.assistant-activity summary {
+  cursor: pointer;
+  user-select: none;
+}
+
+.assistant-activity ul,
+.assistant-changes ul {
+  margin: 4px 0 0;
+  padding-left: 16px;
+}
+
+.assistant-activity li.write {
+  color: var(--text);
+}
+
+.assistant-activity li.denied {
+  color: var(--danger);
+}
+
+.assistant-needs-write,
+.assistant-changes {
+  margin-top: 8px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  font-size: 12px;
+  white-space: normal;
+}
+
+.assistant-needs-write p {
+  margin: 0 0 6px;
+}
+
+.assistant-changes-head {
+  font-weight: 600;
+}
+
+.assistant-changes li span {
+  color: var(--text-dim);
+}
+
+.assistant-needs-write button,
+.assistant-changes button {
+  margin-top: 6px;
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.assistant-needs-write button:hover:not(:disabled),
+.assistant-changes button:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .assistant-send {

@@ -3,6 +3,7 @@
 ## 1.4.0
 
 - Desktop: **AI assistant** panel (⇧⌘A) for Mermaid diagrams, summaries, rewrites and tables with one-click insertion into the note. Backends: Anthropic API and OpenAI API with your own key, or the locally installed Claude Code and Codex CLIs with their existing login. Mermaid answers are validated and repaired automatically before they are offered.
+- Desktop: the AI assistant can list, search and read the vault's text files (**Read vault**, on by default) and, with **Allow editing** for the current session, create and change them. Requests that need editing while it is off offer **Allow editing and send again**. Paths are confined to the vault (no `..`, hidden or ignored folders, or escaping symbolic links); the hosted APIs use Merkzeug's own tools, the Claude Code and Codex CLIs work in the vault folder with read-only tools or, with editing, write inside the vault only. Every read and changed file is listed per answer, and **Undo changes** restores them.
 - Desktop: **Settings → Calendars** shows the system calendar (macOS Calendar access and accounts, classic Outlook on Windows) with buttons to allow access or open System Settings; the meeting dialog links to System Settings when access is off.
 - Desktop: the file tree context menu offers **Copy path** (vault-relative or absolute) and, on folders, **New meeting note…** for that folder.
 - iOS: press and hold an entry to copy its vault-relative path; folders offer **New meeting note…** for that folder.

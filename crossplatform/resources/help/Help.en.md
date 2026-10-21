@@ -432,13 +432,32 @@ panel header:
 - **Claude Code (local login)** uses the Claude Code CLI installed on this
   computer together with its login (subscription or API key).
 - **Codex / ChatGPT (local login)** uses the Codex CLI – installed separately
-  or bundled with the ChatGPT desktop app – with its ChatGPT login. Codex runs
-  read-only in an empty folder and never sees the vault.
+  or bundled with the ChatGPT desktop app – with its ChatGPT login.
+
+**Vault files:** with **Read vault** checked (saved, on by default) the
+assistant can list, search and read the text files of the open vault
+(Markdown, txt, csv, json, yaml, mmd) when your request needs them, for
+example "Which notes mention the budget?". Hidden folders such as `.git`,
+ignored build folders and files outside the vault stay inaccessible, also via
+symbolic links. With **Allow editing** checked it may also create and change
+text files, e.g. "Go through all notes in folder xy and link the terms defined
+in 99_wording.md". Editing applies to the current session only and is off
+after a restart. If a request needs editing while it is off, the assistant
+says so and the answer offers **Allow editing and send again**. Each answer
+lists the files it read and changed (**Vault access**); **Undo changes**
+restores the changed files, except files that were changed again since.
+Open notes reload automatically when they have no unsaved changes. The
+Claude Code and Codex CLIs work in the vault folder with their own read-only
+file tools (Codex in its read-only sandbox); with editing allowed they may
+write inside the vault only. Without vault access Codex runs in an empty
+folder.
 
 **Privacy:** Merkzeug sends your question, the selection in the editor and – as
-long as **Send note as context** is checked – the open note. Nothing is
-transmitted until you ask; the hint above the input names the provider. The
-conversation lives only in the window and is not saved.
+long as **Send note as context** is checked – the open note. With **Read
+vault**, every file the assistant reads is sent to the provider as well; the
+list under the answer shows which ones. Nothing is transmitted until you ask;
+the hint above the input names the provider. The conversation lives only in
+the window and is not saved.
 
 ## Appearance, tours and agent guidance
 

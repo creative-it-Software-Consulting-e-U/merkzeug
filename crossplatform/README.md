@@ -22,7 +22,7 @@ Existing workspace scripts `package:mac`, `package:mac:dmg`, `package:win` and `
 ## Layout
 
 - `src/main`: windows, menus, filesystem operations, watchers, Git, calendar and PDF adapters.
-- `src/main/ai`: AI assistant backends – Anthropic/OpenAI SDK clients, Claude Code and Codex CLI wrappers (`claude -p --output-format stream-json`, `codex exec --json`), encrypted key storage. Prompt and answer parsing live in `@merkzeug/core/assistant`.
+- `src/main/ai`: AI assistant backends – Anthropic/OpenAI SDK clients, Claude Code and Codex CLI wrappers (`claude -p --output-format stream-json`, `codex exec --json`), encrypted key storage, and `vaultTools.ts`, the vault-confined file access (list/search/read/edit, change tracking and undo) behind the assistant's tools. Prompt and answer parsing live in `@merkzeug/core/assistant`; tool definitions, input validation and access instructions in `@merkzeug/core/assistantTools`.
 - `src/preload`: typed IPC bridge.
 - `src/renderer`: React shell, navigation, file tree, panes and dialogs.
 - `src/shared`: desktop IPC data contracts; shared document types are imported from core.

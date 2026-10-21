@@ -563,14 +563,33 @@ listet die verfügbaren Modelle; leer lässt das Standardmodell gelten.</li>
 Claude-Code-CLI samt deren Anmeldung (Abo oder API-Schlüssel).</li>
 <li><strong>Codex / ChatGPT (lokale Anmeldung)</strong> nutzt die Codex-CLI – separat
 installiert oder in der ChatGPT-Desktop-App enthalten – mit deren
-ChatGPT-Anmeldung. Codex läuft dabei nur lesend in einem leeren Ordner und
-sieht den Vault nicht.</li>
+ChatGPT-Anmeldung.</li>
 </ul>
+<p><strong>Vault-Dateien:</strong> Mit <strong>Vault lesen</strong> (wird gespeichert, standardmäßig an)
+kann der Assistent die Textdateien des geöffneten Vaults (Markdown, txt, csv,
+json, yaml, mmd) auflisten, durchsuchen und lesen, wenn deine Anfrage sie
+braucht, etwa „Welche Notizen erwähnen das Budget?“. Versteckte Ordner wie
+<code>.git</code>, ignorierte Build-Ordner und Dateien außerhalb des Vaults bleiben
+unzugänglich, auch über symbolische Links. Mit <strong>Bearbeiten erlauben</strong> darf er
+außerdem Textdateien anlegen und ändern, z. B. „Gehe durch alle Notizen im
+Ordner xy und verlinke die Begriffe aus 99_wording.md“. Bearbeiten gilt nur
+für die laufende Sitzung und ist nach einem Neustart wieder aus. Braucht eine
+Anfrage Schreibzugriff, obwohl er aus ist, sagt der Assistent das, und die
+Antwort bietet <strong>Bearbeiten erlauben und erneut senden</strong> an. Jede Antwort
+listet die gelesenen und geänderten Dateien (<strong>Vault-Zugriff</strong>);
+<strong>Änderungen rückgängig machen</strong> stellt die geänderten Dateien wieder her,
+außer solchen, die seitdem erneut geändert wurden. Offene Notizen ohne
+ungespeicherte Änderungen werden automatisch neu geladen. Die CLIs von Claude
+Code und Codex arbeiten im Vault-Ordner mit ihren eigenen lesenden
+Dateiwerkzeugen (Codex in seiner Nur-Lesen-Sandbox); mit erlaubtem Bearbeiten
+dürfen sie nur innerhalb des Vaults schreiben. Ohne Vault-Zugriff läuft Codex
+in einem leeren Ordner.</p>
 <p><strong>Datenschutz:</strong> Gesendet werden deine Frage, die Auswahl im Editor und – solange
 die Checkbox <strong>Notiz als Kontext mitschicken</strong> aktiv ist – die offene Notiz.
-Ohne deine Anfrage wird nichts übertragen; der Hinweis über dem Eingabefeld
-nennt den Anbieter. Die Unterhaltung lebt nur im Fenster und wird nicht
-gespeichert.</p>
+Mit <strong>Vault lesen</strong> geht außerdem jede Datei, die der Assistent liest, an den
+Anbieter; die Liste unter der Antwort zeigt, welche. Ohne deine Anfrage wird
+nichts übertragen; der Hinweis über dem Eingabefeld nennt den Anbieter. Die
+Unterhaltung lebt nur im Fenster und wird nicht gespeichert.</p>
 <h2 id="darstellung-tour-und-agentenhinweise">Darstellung, Tour und Agentenhinweise</h2>
 <p>Wähle <strong>System</strong>, <strong>Hell</strong> oder <strong>Dunkel</strong> für die Darstellung. System folgt dem Betriebssystem (in IntelliJ und VS Code der IDE); deine Auswahl wird gespeichert. Die <strong>Geführte Tour</strong> startet erst nach deiner Zustimmung zur Einladung beim ersten Start und lässt sich jederzeit wieder öffnen. Der Tour-Schritt <strong>Lesen und navigieren</strong> erklärt den Wechsel zwischen Lesen und Bearbeiten sowie die Link-Navigation. Öffne vor dem Tourstart eine Notiz, damit der Modus-Schalter hervorgehoben werden kann.</p>
 <p>Beim Öffnen eines Vaults kann Merkzeug Hinweise in den Stammdateien <code>AGENTS.md</code> / <code>CLAUDE.md</code> für <code>Notiz.md</code> und <code>Notiz.assets/</code> vorschlagen. Prüfe den einmal angezeigten Ergänzungstext und die vollständigen Inhalte beider Hinweisdateien. Wähle vor <strong>Hinzufügen</strong> ausdrücklich die Zieldateien aus; keine ist vorausgewählt. Verweist <code>CLAUDE.md</code> nur auf <code>AGENTS.md</code>, kannst du sie unverändert lassen. Fehlende Dateien werden nur bei Auswahl angelegt. <strong>Später</strong> verschiebt den Hinweis für diese Sitzung; <strong>Für diesen Vault nicht mehr vorschlagen</strong> unterdrückt weitere Hinweise für diesen Vault. Widersprüchliche oder unklare Bilderordner-Regeln müssen manuell geprüft werden. Gleichzeitige externe Änderungen bleiben erhalten und erfordern eine neue Vorschau. Bestehende gemeinsame <code>assets/</code>-Verweise bleiben lesbar.</p>

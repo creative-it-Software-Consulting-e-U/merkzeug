@@ -58,7 +58,7 @@ When opening a vault, Merkzeug can suggest root `AGENTS.md` / `CLAUDE.md` instru
 
 ## AI assistant
 
-**View → AI Assistant** (⇧⌘A / Ctrl+Shift+A) opens a panel beside the editor for Mermaid diagrams, summaries, rewrites and tables; answers are inserted into the note with one click and Mermaid blocks are validated first. Providers are the Anthropic and OpenAI APIs with your own key (stored in the system keyring) or the locally installed Claude Code and Codex CLIs with their own login, so no credentials pass through Merkzeug. The open note is only sent while **Send note as context** is checked. Details are in the bundled help under **AI assistant**.
+**View → AI Assistant** (⇧⌘A / Ctrl+Shift+A) opens a panel beside the editor for Mermaid diagrams, summaries, rewrites and tables; answers are inserted into the note with one click and Mermaid blocks are validated first. Providers are the Anthropic and OpenAI APIs with your own key (stored in the system keyring) or the locally installed Claude Code and Codex CLIs with their own login, so no credentials pass through Merkzeug. The open note is only sent while **Send note as context** is checked. With **Read vault** the assistant can also list, search and read the vault's text files when a request needs them; **Allow editing** (this session only) lets it create and change them, with every read and changed file listed under the answer and **Undo changes** per answer. If a request needs editing while it is off, the answer offers **Allow editing and send again**. Details are in the bundled help under **AI assistant**.
 
 ## Calendar sources
 
