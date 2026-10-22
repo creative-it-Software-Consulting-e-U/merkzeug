@@ -15,7 +15,9 @@ import type {
   PdfDoc,
   PdfExportProgress,
   PdfTemplate,
+  ImageSettings,
   TemplateState, CalendarEvent } from '../shared/types'
+import type { ImageInsertMode } from '@merkzeug/core/imageInsert'
 
 const api = {
   claimReleaseNotes: (version: string): Promise<boolean> => ipcRenderer.invoke('release:claim', version),
@@ -98,6 +100,10 @@ const api = {
   assignTemplate: (name: string | null): Promise<TemplateState> =>
     ipcRenderer.invoke('tpl:assign', name),
   showTemplatesRoot: (): Promise<void> => ipcRenderer.invoke('tpl:showRoot'),
+  getImageSettings: (): Promise<ImageSettings> => ipcRenderer.invoke('images:settings'),
+  setImagesAsHtml: (value: boolean): Promise<ImageSettings> => ipcRenderer.invoke('images:setApp', value),
+  setVaultImageInsert: (mode: ImageInsertMode | null): Promise<ImageSettings> => ipcRenderer.invoke('images:setVault', mode),
+  imageInsertMode: (): Promise<ImageInsertMode> => ipcRenderer.invoke('images:mode'),
   showTemplate: (name: string): Promise<void> => ipcRenderer.invoke('tpl:showTemplate', name),
   onSettingsRefresh: (handler: () => void): (() => void) => {
     const listener = (): void => handler()

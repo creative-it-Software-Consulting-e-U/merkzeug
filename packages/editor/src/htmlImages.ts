@@ -29,13 +29,15 @@ function htmlNodeView(node: Node, resolve: ImageResolver): NodeView {
   const block = parseHtmlImages(node.attrs.value)
   if (!block) return rawHtmlView(node)
   const dom = document.createElement('span')
-  dom.className = block.centered ? 'html-images html-images-centered' : 'html-images'
+  dom.className = block.align === 'left' ? 'html-images' : `html-images html-images-${block.align}`
   // data-type/-value wie beim Standard-Knoten, damit Kopieren & Einfügen das HTML erhält
   dom.dataset.type = 'html'
   dom.dataset.value = node.attrs.value
   dom.contentEditable = 'false'
-  for (const image of block.images) {
+  for (const [index, image] of block.images.entries()) {
     const img = document.createElement('img')
+    // welches Bild angeklickt wurde, braucht das Bild-Overlay
+    img.dataset.index = String(index)
     if (image.alt !== undefined) img.alt = image.alt
     if (image.title !== undefined) img.title = image.title
     if (image.width !== undefined) img.setAttribute('width', image.width)

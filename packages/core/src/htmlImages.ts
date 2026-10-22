@@ -12,9 +12,13 @@ export interface HtmlImage {
   height?: string
 }
 
+export type ImageAlign = 'left' | 'center' | 'right'
+
 export interface HtmlImageBlock {
   images: HtmlImage[]
-  centered: boolean
+  align: ImageAlign
+  /** in einen Link gehüllt – als Markdown-Bild nicht ohne Verlust darstellbar */
+  linked: boolean
 }
 
 const IMG = /<img\b((?:[^>"']|"[^"]*"|'[^']*')*)\/?>/gi
@@ -60,8 +64,71 @@ export function parseHtmlImages(html: string): HtmlImageBlock | null {
   if (images.length === 0) return null
   const rest = html.replace(COMMENT, '').replace(IMG, '').replace(WRAPPER, '')
   if (rest.trim() !== '') return null
-  const centered = /<center\b/i.test(html) || /<(?:p|div)\b[^>]*\balign\s*=\s*["']?center/i.test(html)
-  return { images, centered }
+  const aligned = /<(?:p|div)\b[^>]*\balign\s*=\s*["']?(center|right|left)/i.exec(html)?.[1].toLowerCase()
+  const align: ImageAlign = /<center\b/i.test(html) ? 'center' : aligned === 'center' || aligned === 'right' ? aligned : 'left'
+  return { images, align, linked: /<a\b/i.test(html) }
+}
+
+function escapeAttribute(value: string): string {
+  return value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+
+/** Zulässige Größenangabe für `width`/`height`: Pixel oder Prozent. */
+export function isImageSize(value: string): boolean {
+  return /^\d{1,5}%?$/.test(value)
+}
+
+/** `<img>`-Tag für ein Bild; leere Angaben entfallen. */
+export function htmlImageTag(image: HtmlImage): string {
+  let tag = `<img src="${escapeAttribute(image.src)}"`
+  for (const key of ['alt', 'title', 'width', 'height'] as const) {
+    const value = image[key]
+    if (value !== undefined && (value !== '' || key === 'alt')) tag += ` ${key}="${escapeAttribute(value)}"`
+  }
+  return tag + '>'
+}
+
+/** Breite/Höhe des `index`-ten Bildes setzen (leer: entfernen); übrige Attribute und Hüllen bleiben unverändert. */
+export function resizeHtmlImage(html: string, index: number, size: { width?: string; height?: string }): string {
+  let count = 0
+  return html.replace(IMG, (tag, source: string) => {
+    if (count++ !== index) return tag
+    const pending = new Map(Object.entries(size).filter(([, value]) => value !== undefined) as [string, string][])
+    const parts: string[] = []
+    for (const match of source.matchAll(ATTRIBUTE)) {
+      const name = match[1].toLowerCase()
+      if (!pending.has(name)) { parts.push(match[0]); continue }
+      const value = pending.get(name)!
+      pending.delete(name)
+      if (value) parts.push(`${name}="${escapeAttribute(value)}"`)
+    }
+    for (const [name, value] of pending) if (value) parts.push(`${name}="${escapeAttribute(value)}"`)
+    const closing = /\/\s*$/.test(source) ? ' />' : '>'
+    return `${tag.slice(0, 4)}${parts.map(part => ' ' + part).join('')}${closing}`
+  })
+}
+
+const ALIGN_WRAPPER = /^\s*<(p|div)\b((?:[^>"']|"[^"]*"|'[^']*')*)>([\s\S]*)<\/\1>\s*$/i
+const CENTER_WRAPPER = /^\s*<center>([\s\S]*)<\/center>\s*$/i
+
+/** Schnipsel links (ohne Hülle), zentriert oder rechts (`<p align="…">`) ausrichten. */
+export function alignHtmlImages(html: string, align: ImageAlign): string {
+  const center = CENTER_WRAPPER.exec(html)
+  let wrapper = center ? null : ALIGN_WRAPPER.exec(html)
+  // `<p>…</p><p>…</p>` ist keine einzelne Hülle
+  if (wrapper && new RegExp(`<${wrapper[1]}\\b`, 'i').test(wrapper[3])) wrapper = null
+  if (wrapper) {
+    const [, tag, source, inner] = wrapper
+    const others = [...source.matchAll(ATTRIBUTE)].filter(match => match[1].toLowerCase() !== 'align').map(match => match[0])
+    // Eigene Attribute der Hülle (class, style …) behalten; nur `align` ändern
+    if (others.length > 0 || align !== 'left') return `<${tag}${[...others, ...(align === 'left' ? [] : [`align="${align}"`])].map(part => ' ' + part).join('')}>${inner}</${tag}>`
+    return inner.trim()
+  }
+  const inner = center ? center[1].trim() : html.trim()
+  if (align === 'left') return inner
+  // Absätze dürfen keine Absätze enthalten
+  const tag = /<(?:p|div)\b/i.test(inner) ? 'div' : 'p'
+  return `<${tag} align="${align}">${inner}</${tag}>`
 }
 
 /** Positionen der `src`-Werte (ohne Anführungszeichen) aller `<img>`-Tags – für das Umschreiben beim Verschieben. */

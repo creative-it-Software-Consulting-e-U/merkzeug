@@ -5,9 +5,10 @@ import { AiSettings } from './components/AiSettings'
 import { SystemCalendar } from './components/SystemCalendar'
 import { calendarSourceHost } from './util/calendarSources'
 import { ThemeSelect } from '@merkzeug/editor/ThemeSelect'
+import { ImageInsertSettings } from '@merkzeug/editor/ImageInsertSettings'
 import { t as translate, getLocale } from '@merkzeug/core/i18n'
 import { useCallback, useEffect, useState } from 'react'
-import type { TemplateState } from '../../shared/types'
+import type { ImageSettings, TemplateState } from '../../shared/types'
 
 /** IPC-Fehlermeldungen von ihrem "Error invoking remote method"-Präfix befreien */
 function cleanError(err: unknown): string {
@@ -17,12 +18,14 @@ function cleanError(err: unknown): string {
 /** Einstellungs-Fenster (#settings): PDF-Vorlagen verwalten und dem Vault zuweisen. */
 export function SettingsApp(): React.JSX.Element {
   const [state, setState] = useState<TemplateState | null>(null)
+  const [images, setImages] = useState<ImageSettings | null>(null)
   const [migrating, setMigrating] = useState(false)
   const [newName, setNewName] = useState('')
   const [error, setError] = useState<string | null>(null)
 
   const refresh = useCallback(() => {
     void window.merkzeug.getTemplateState().then(setState)
+    void window.merkzeug.getImageSettings().then(setImages)
   }, [])
 
   useEffect(() => {
@@ -68,6 +71,18 @@ export function SettingsApp(): React.JSX.Element {
         <SystemCalendar />
         <CalendarSources host={calendarSourceHost} />
       </section>
+      {images && (
+        <section className="settings-section">
+          <h2>{translate("Images")}</h2>
+          <ImageInsertSettings
+            appHtml={images.appHtml}
+            vault={images.vault}
+            hasVault={!!state.vault}
+            onAppChange={value => { setError(null); window.merkzeug.setImagesAsHtml(value).then(setImages, err => setError(cleanError(err))) }}
+            onVaultChange={value => { setError(null); window.merkzeug.setVaultImageInsert(value).then(setImages, err => setError(cleanError(err))) }}
+          />
+        </section>
+      )}
       <AiSettings />
       <h2>{translate("PDF templates")}</h2>
 

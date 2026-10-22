@@ -40,6 +40,10 @@ import { searchPlugin, searchPluginKey, type SearchMeta } from './searchPlugin'
 import { renderMermaid } from './mermaid'
 import { calloutMenuIcon, insertCallout, enableCallouts } from './callouts'
 import { enableHtmlImages } from './htmlImages'
+import { embedBlockImage, enableImageOverlay, insertImage, type ImageTarget } from './imageTools'
+import { ImageOverlay } from './ImageOverlay'
+import type { EditorView } from '@milkdown/kit/prose/view'
+import type { ImageInsertMode } from '@merkzeug/core/imageInsert'
 import { jumpToFragment } from './anchors'
 import { isExternalLink } from '@merkzeug/core/paths'
 import type { EditorHost, JumpTarget } from './host'
@@ -210,6 +214,8 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   searchOpenRef.current = searchOpen
   // Trefferzähler nach Dokumentänderungen aktualisieren (aus markdownUpdated)
   const searchSyncRef = useRef<() => void>(() => {})
+  // ausgewähltes Bild für das Bild-Overlay
+  const [imageTarget, setImageTarget] = useState<{ view: EditorView; target: ImageTarget } | null>(null)
 
   // Pfadwechsel ohne Neuladen (Umbenennen/Verschieben): nur Speicherziel anpassen
   filePathRef.current = filePath
@@ -374,6 +380,30 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
     const ext = (file.name.split('.').pop() || 'png').toLowerCase()
     return host.saveImage(filePathRef.current, btoa(binary), ext)
   }, [])
+
+  const imageInsertMode = useCallback((): Promise<ImageInsertMode> =>
+    Promise.resolve<ImageInsertMode>(host.imageInsertMode?.(filePathRef.current) ?? 'markdown')
+      .catch((): ImageInsertMode => 'markdown'), [host])
+
+  /** Bilddatei speichern und als Markdown-Bild oder `<img>` (laut Einstellung) einfügen. */
+  const insertImageFile = useCallback(async (file: File): Promise<void> => {
+    const src = await uploadImage(file)
+    const mode = await imageInsertMode()
+    crepeRef.current?.editor.action((ctx) => {
+      const view = ctx.get(editorViewCtx)
+      insertImage(view, src, mode)
+      view.focus()
+    })
+  }, [imageInsertMode, uploadImage])
+
+  /** Bild aus dem Platzhalter des Slash-Menüs: nach dem Übernehmen der Quelle ggf. zu `<img>` machen. */
+  const uploadBlockImage = useCallback(async (file: File): Promise<string> => {
+    const src = await uploadImage(file)
+    if (await imageInsertMode() === 'html') {
+      setTimeout(() => crepeRef.current?.editor.action((ctx) => embedBlockImage(ctx.get(editorViewCtx), src)), 0)
+    }
+    return src
+  }, [imageInsertMode, uploadImage])
 
   /** Zum Anker springen; probiert begrenzt oft nach, bis das Ziel im DOM steht. */
   const jumpWhenAvailable = useCallback((fragment: string): void => {
@@ -620,7 +650,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
           [Crepe.Feature.ImageBlock]: {
             proxyDomURL: displayUrl,
             onUpload: uploadImage,
-            blockOnUpload: uploadImage,
+            blockOnUpload: uploadBlockImage,
             inlineOnUpload: uploadImage,
             blockUploadButton: translate("Choose image"),
             blockUploadPlaceholderText: translate("or paste an image URL"),
@@ -681,6 +711,12 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       })
       enableCallouts(crepe.editor, { interactive: true })
       enableHtmlImages(crepe.editor, displayUrl)
+      enableImageOverlay(crepe.editor, (view, target) => setImageTarget((previous) => {
+        if (!target) return null
+        const same = previous && previous.view === view && previous.target.pos === target.pos &&
+          previous.target.kind === target.kind && previous.target.index === target.index && previous.target.html === target.html
+        return same ? previous : { view, target }
+      }))
       crepe.editor.use(arrowInputRule)
       crepe.editor.use(searchPlugin)
 
@@ -905,21 +941,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
           view.focus()
         })
       },
-      insertImageFile: async (file) => {
-        const crepe = crepeRef.current
-        if (!crepe) return
-        const src = await uploadImage(file)
-        crepe.editor.action((ctx) => {
-          const view = ctx.get(editorViewCtx)
-          const { state } = view
-          const nodeType = state.schema.nodes['image-block'] ?? state.schema.nodes.image
-          if (!nodeType) return
-          const node = nodeType.createAndFill({ src })
-          if (!node) return
-          view.dispatch(state.tr.replaceSelectionWith(node))
-          view.focus()
-        })
-      },
+      insertImageFile,
       openImagePicker: () => fileInputRef.current?.click(),
       flush: doSave,
       flushSync,
@@ -982,7 +1004,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       },
       openSearch: openSearchBar
     }),
-    [doSave, flushSync, openSearchBar, runCommand, uploadImage]
+    [doSave, flushSync, insertImageFile, openSearchBar, runCommand]
   )
 
   const handleClickCapture = useCallback(
@@ -1017,23 +1039,11 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       if (images.length === 0) return
       e.preventDefault()
       e.stopPropagation()
-      const crepe = crepeRef.current
-      if (!crepe) return
       void (async () => {
-        for (const file of images) {
-          const src = await uploadImage(file)
-          crepe.editor.action((ctx) => {
-            const view = ctx.get(editorViewCtx)
-            const { state } = view
-            const nodeType = state.schema.nodes['image-block'] ?? state.schema.nodes.image
-            if (!nodeType) return
-            const node = nodeType.createAndFill({ src })
-            if (node) view.dispatch(state.tr.replaceSelectionWith(node))
-          })
-        }
+        for (const file of images) await insertImageFile(file)
       })()
     },
-    [uploadImage]
+    [insertImageFile]
   )
 
   const handleDrop = useCallback(
@@ -1043,23 +1053,11 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       if (images.length === 0) return
       e.preventDefault()
       e.stopPropagation()
-      const crepe = crepeRef.current
-      if (!crepe) return
       void (async () => {
-        for (const file of images) {
-          const src = await uploadImage(file)
-          crepe.editor.action((ctx) => {
-            const view = ctx.get(editorViewCtx)
-            const { state } = view
-            const nodeType = state.schema.nodes['image-block'] ?? state.schema.nodes.image
-            if (!nodeType) return
-            const node = nodeType.createAndFill({ src })
-            if (node) view.dispatch(state.tr.replaceSelectionWith(node))
-          })
-        }
+        for (const file of images) await insertImageFile(file)
       })()
     },
-    [uploadImage]
+    [insertImageFile]
   )
 
   const handleFileInput = useCallback(
@@ -1067,21 +1065,9 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       const file = e.target.files?.[0]
       e.target.value = ''
       if (!file) return
-      void (async () => {
-        const crepe = crepeRef.current
-        if (!crepe) return
-        const src = await uploadImage(file)
-        crepe.editor.action((ctx) => {
-          const view = ctx.get(editorViewCtx)
-          const { state } = view
-          const nodeType = state.schema.nodes['image-block'] ?? state.schema.nodes.image
-          if (!nodeType) return
-          const node = nodeType.createAndFill({ src })
-          if (node) view.dispatch(state.tr.replaceSelectionWith(node))
-        })
-      })()
+      void insertImageFile(file)
     },
-    [uploadImage]
+    [insertImageFile]
   )
 
   if (loadError) {
@@ -1271,6 +1257,14 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
         )}
       </div>
       <div ref={rootRef} className="editor-root" />
+      {imageTarget && !readonly && (
+        <ImageOverlay
+          key={`${imageTarget.target.pos}:${imageTarget.target.kind}:${imageTarget.target.index}:${imageTarget.target.html ?? ''}`}
+          view={imageTarget.view}
+          target={imageTarget.target}
+          scroller={hostRef.current}
+        />
+      )}
       <input
         ref={fileInputRef}
         type="file"

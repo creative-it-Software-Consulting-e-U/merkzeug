@@ -76,9 +76,16 @@ Tabellen, Bilder, Codeblöcke …).</li>
 <li>Bilder aus der Foto-Mediathek werden beim Einfügen automatisch im
 Ordner <code>Notizname.assets/</code> neben <code>Notizname.md</code> abgelegt.</li>
 <li>Mermaid-Codeblöcke zeigen eine Diagramm-Vorschau.</li>
-<li>HTML-Bild-Tags wie <code>&lt;img src=&quot;Notiz.assets/bild.png&quot; width=&quot;450&quot;&gt;</code>
-erscheinen als Bild in der angegebenen Größe; das HTML bleibt unverändert.
-Anderes HTML wird als Quelltext angezeigt.</li>
+<li>Tippe auf ein Bild, um seine Leiste zu zeigen: <strong>HTML-&lt;img&gt;</strong> wechselt
+zwischen Markdown-Bild und HTML-<code>&lt;img&gt;</code>-Tag. Nur HTML-Bilder speichern
+Breite (<strong>B</strong>), Höhe (<strong>H</strong>) und Ausrichtung (links, zentriert, rechts); mit
+dem Schloss bleibt das Seitenverhältnis erhalten. Unter <strong>Bilder</strong> (über der
+Notiz) legst du fest, ob neue Bilder als HTML-<code>&lt;img&gt;</code>-Tag eingefügt werden –
+für die App und abweichend für diesen Vault (<code>&quot;imageInsert&quot;</code> in
+<code>.merkzeug/settings.json</code>).</li>
+<li>Vorhandene HTML-Bild-Tags wie <code>&lt;img src=&quot;Notiz.assets/bild.png&quot; width=&quot;450&quot;&gt;</code>
+erscheinen in ihrer Größe; ihr HTML ändert sich nur, wenn du die Leiste
+benutzt. Anderes HTML wird als Quelltext angezeigt.</li>
 <li>Callouts wie in Obsidian und GitHub: Ein Zitat, das mit <code>[!typ]</code> beginnt
 (z. B. <code>&gt; [!warning] Titel</code>), wird zu einem farbigen Kasten. <code>[!typ]-</code>
 startet eingeklappt, <code>[!typ]+</code> ausgeklappt; der Pfeil klappt ihn nur in der

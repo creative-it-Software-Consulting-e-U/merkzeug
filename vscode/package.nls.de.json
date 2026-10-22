@@ -14,6 +14,7 @@
   "command.contactSupport": "Support kontaktieren…",
   "config.templateFolder": "PDF-Vorlagenordner (mit `stil.css`, `vorlage.json`, …). Leer lassen, um ohne Vorlage zu exportieren. Eine Vault-Zuweisung in `.merkzeug/settings.json` hat Vorrang. Mit dem Befehl **Merkzeug: PDF-Vorlageneinstellungen…** wählst du einen Ordner, die mitgelieferte Vorlage oder eine Desktop-Vorlage.",
   "config.pdfTemplatePreview": "Inhaltsstile der zugewiesenen PDF-Vorlage beim Bearbeiten anwenden. Werkzeugleiste, Dialoge und VS-Code-Bedienelemente behalten das VS-Code-Design.",
+  "config.insertImagesAsHtml": "Neue Bilder als HTML-`<img>`-Tag statt als Markdown-Bild einfügen; Größe und Ausrichtung lassen sich dann per Klick auf das Bild einstellen. Ein Vault kann das in `.merkzeug/settings.json` überschreiben (`\"imageInsert\": \"html\"` oder `\"markdown\"`).",
   "config.browserPath": "Chromium-basierter Browser für PDF-Export und Drucken (Google Chrome, Microsoft Edge, Chromium oder Brave). Leer lassen, um einen installierten Browser automatisch zu erkennen.",
   "config.companionFolders": "Wenn eine Markdown-Notiz in VS Code umbenannt oder verschoben wird, auch ihren Begleitordner `Notiz.assets/` verschieben und Markdown-Links im Arbeitsbereich aktualisieren."
 }

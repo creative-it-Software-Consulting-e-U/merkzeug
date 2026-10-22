@@ -144,7 +144,7 @@ export function createTemplate(name: string): string {
 
 // ---- Zuweisung pro Vault (.merkzeug/settings.json im Vault, wandert per Git mit) ----
 
-function vaultSettingsPath(vault: string): string {
+export function vaultSettingsPath(vault: string): string {
   const root = realpathSync(vault)
   const dir = join(root, '.merkzeug')
   const file = join(dir, 'settings.json')

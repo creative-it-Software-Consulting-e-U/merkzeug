@@ -1,4 +1,6 @@
-import { claimReleaseNotes, markReleaseNotesSeen } from './settings'
+import { claimReleaseNotes, markReleaseNotesSeen, setImagesAsHtml } from './settings'
+import { getImageSettings, imageInsertMode, setVaultImageInsert } from './imageSettings'
+import type { ImageInsertMode } from '@merkzeug/core/imageInsert'
 import { refreshTemplateCloud, templateCloudState, migrateTemplatesToCloud } from './templateCloud'
 import { writeFileSync as writeMeetingFile, readdirSync, readFileSync as readMeetingFile } from 'node:fs'
 import { ensureMeetingFile } from '@merkzeug/core/meetingFiles'
@@ -286,6 +288,18 @@ function registerIpc(): void {
     for (const window of BrowserWindow.getAllWindows()) window.webContents.send('settings:refresh')
     return templateState(vault)
   })
+  ipcMain.handle('images:settings', event => getImageSettings(getWindowVault(winFromEvent(event)?.id ?? -1) ?? getSettingsVault()))
+  ipcMain.handle('images:setApp', (event, value: boolean) => {
+    setImagesAsHtml(value === true)
+    return getImageSettings(getWindowVault(winFromEvent(event)?.id ?? -1) ?? getSettingsVault())
+  })
+  ipcMain.handle('images:setVault', (event, mode: ImageInsertMode | null) => {
+    const vault = getWindowVault(winFromEvent(event)?.id ?? -1) ?? getSettingsVault()
+    if (!vault) throw new Error('No vault is open')
+    setVaultImageInsert(vault, mode === 'html' || mode === 'markdown' ? mode : null)
+    return getImageSettings(vault)
+  })
+  ipcMain.handle('images:mode', event => imageInsertMode(getWindowVault(winFromEvent(event)?.id ?? -1)))
   ipcMain.handle('tpl:showRoot', () => {
     const root = templatesRoot()
     mkdirSync(root, { recursive: true })

@@ -170,6 +170,12 @@
           "scope": "resource",
           "markdownDescription": "%config.pdfTemplatePreview%"
         },
+        "merkzeug.editor.insertImagesAsHtml": {
+          "type": "boolean",
+          "default": false,
+          "scope": "application",
+          "markdownDescription": "%config.insertImagesAsHtml%"
+        },
         "merkzeug.pdf.browserPath": {
           "type": "string",
           "default": "",

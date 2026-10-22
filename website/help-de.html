@@ -169,10 +169,20 @@ drucken Callouts immer ausgeklappt.</li>
 von Zelle zu Zelle springen; Zeilen/Spalten über die Tabellen-Steuerung direkt
 an der Tabelle oder das Menü <strong>Tabelle</strong> einfügen und löschen.</li>
 <li><strong>Bilder:</strong> per Einfügen aus der Zwischenablage, Drag &amp; Drop, Slash-Menü oder
-Menü „Bearbeiten → Bild einfügen…“. HTML-Bild-Tags wie
-<code>&lt;img src=&quot;Notiz.assets/bild.png&quot; alt=&quot;…&quot; width=&quot;450&quot;&gt;</code> erscheinen als Bild in
-der angegebenen Größe, auch innerhalb von <code>&lt;p align=&quot;center&quot;&gt;</code> oder eines
-Links; das HTML bleibt in der Datei unverändert. Anderes HTML wird als
+Menü „Bearbeiten → Bild einfügen…“. Ein Klick auf ein Bild zeigt darüber eine
+Leiste: <strong>HTML-&lt;img&gt;</strong> wechselt zwischen Markdown-Bild und HTML-<code>&lt;img&gt;</code>-Tag.
+Nur HTML-Bilder speichern Größe und Ausrichtung: Breite (<strong>B</strong>) oder Höhe
+(<strong>H</strong>) in Pixeln oder Prozent eingeben und mit ↩ / Enter bestätigen; mit dem
+Schloss bleibt das Seitenverhältnis erhalten und nur eine Seite wird
+gespeichert. <strong>Original</strong> entfernt die Größe; die Pfeile richten das Bild
+links, zentriert oder rechts aus (<code>&lt;p align=&quot;…&quot;&gt;</code>), sofern es allein in
+seinem Absatz steht. Unter <strong>Einstellungen → Bilder</strong> legst du fest, ob neue
+Bilder als HTML-<code>&lt;img&gt;</code>-Tag eingefügt werden; jeder Vault kann das
+überschreiben (gespeichert als <code>&quot;imageInsert&quot;</code> in <code>.merkzeug/settings.json</code>).
+Vorhandene Tags wie <code>&lt;img src=&quot;Notiz.assets/bild.png&quot; alt=&quot;…&quot; width=&quot;450&quot;&gt;</code>
+erscheinen in ihrer Größe, auch innerhalb von <code>&lt;p align=&quot;center&quot;&gt;</code> oder
+eines Links; Merkzeug ändert ihr HTML nur, wenn du die Leiste benutzt.
+Verlinkte oder gruppierte Bilder bleiben HTML. Anderes HTML wird als
 Quelltext angezeigt.</li>
 <li><strong>Undo/Redo</strong> wie gewohnt (⌘Z / Strg+Z / ⇧⌘Z / Strg+Shift+Z).</li>
 <li><strong>Suchen &amp; Ersetzen:</strong> <strong>⌘F / Strg+F</strong> öffnet die Suchleiste rechts oben im Editor,

@@ -139,10 +139,20 @@ Der Editor zeigt die Notiz formatiert an; gespeichert wird Markdown.
   von Zelle zu Zelle springen; Zeilen/Spalten über die Tabellen-Steuerung direkt
   an der Tabelle oder das Menü **Tabelle** einfügen und löschen.
 - **Bilder:** per Einfügen aus der Zwischenablage, Drag & Drop, Slash-Menü oder
-  Menü „Bearbeiten → Bild einfügen…“. HTML-Bild-Tags wie
-  `<img src="Notiz.assets/bild.png" alt="…" width="450">` erscheinen als Bild in
-  der angegebenen Größe, auch innerhalb von `<p align="center">` oder eines
-  Links; das HTML bleibt in der Datei unverändert. Anderes HTML wird als
+  Menü „Bearbeiten → Bild einfügen…“. Ein Klick auf ein Bild zeigt darüber eine
+  Leiste: **HTML-&lt;img&gt;** wechselt zwischen Markdown-Bild und HTML-`<img>`-Tag.
+  Nur HTML-Bilder speichern Größe und Ausrichtung: Breite (**B**) oder Höhe
+  (**H**) in Pixeln oder Prozent eingeben und mit ↩ / Enter bestätigen; mit dem
+  Schloss bleibt das Seitenverhältnis erhalten und nur eine Seite wird
+  gespeichert. **Original** entfernt die Größe; die Pfeile richten das Bild
+  links, zentriert oder rechts aus (`<p align="…">`), sofern es allein in
+  seinem Absatz steht. Unter **Einstellungen → Bilder** legst du fest, ob neue
+  Bilder als HTML-`<img>`-Tag eingefügt werden; jeder Vault kann das
+  überschreiben (gespeichert als `"imageInsert"` in `.merkzeug/settings.json`).
+  Vorhandene Tags wie `<img src="Notiz.assets/bild.png" alt="…" width="450">`
+  erscheinen in ihrer Größe, auch innerhalb von `<p align="center">` oder
+  eines Links; Merkzeug ändert ihr HTML nur, wenn du die Leiste benutzt.
+  Verlinkte oder gruppierte Bilder bleiben HTML. Anderes HTML wird als
   Quelltext angezeigt.
 - **Undo/Redo** wie gewohnt (⌘Z / Strg+Z / ⇧⌘Z / Strg+Shift+Z).
 - **Suchen & Ersetzen:** **⌘F / Strg+F** öffnet die Suchleiste rechts oben im Editor,

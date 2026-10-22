@@ -74,9 +74,15 @@ lists, tables, images, code blocks …).</li>
 <li>Images from your photo library are stored automatically in the
 <code>NoteName.assets/</code> folder next to <code>NoteName.md</code> when inserted.</li>
 <li>Mermaid code blocks show a diagram preview.</li>
-<li>HTML image tags such as <code>&lt;img src=&quot;Note.assets/image.png&quot; width=&quot;450&quot;&gt;</code>
-are shown as images with their size; the HTML stays unchanged. Other HTML
-is shown as source text.</li>
+<li>Tap an image to show its toolbar: <strong>HTML &lt;img&gt;</strong> switches between a
+Markdown image and an HTML <code>&lt;img&gt;</code> tag. Only HTML images keep a width
+(<strong>W</strong>), height (<strong>H</strong>) and alignment (left, centered, right); with the lock,
+the aspect ratio is kept. Under <strong>Images</strong> (above the note) you choose
+whether new images are inserted as HTML <code>&lt;img&gt;</code> tags, for the app and
+differently for this vault (<code>&quot;imageInsert&quot;</code> in <code>.merkzeug/settings.json</code>).</li>
+<li>Existing HTML image tags such as <code>&lt;img src=&quot;Note.assets/image.png&quot; width=&quot;450&quot;&gt;</code>
+are shown with their size; their HTML only changes when you use the toolbar.
+Other HTML is shown as source text.</li>
 <li>Callouts as in Obsidian and GitHub: a quote starting with <code>[!type]</code>
 (e.g. <code>&gt; [!warning] Title</code>) becomes a colored box. <code>[!type]-</code> starts
 collapsed, <code>[!type]+</code> expanded; tap the arrow to fold it in the view only.

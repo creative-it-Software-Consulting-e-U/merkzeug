@@ -1,3 +1,5 @@
+import type { ImageInsertMode } from '@merkzeug/core/imageInsert'
+
 /** The shell owns persistence. IDE adapters update their Document, never the file. */
 export interface EditorHost {
   readFile(path: string, options?: { peek?: boolean }): Promise<string>
@@ -8,6 +10,8 @@ export interface EditorHost {
   saveDelayMs?: number
   saveImage(path: string, base64: string, extension: string): Promise<string>
   resolveImage(path: string, url: string): string | Promise<string>
+  /** How new images are written (app setting, overridden by the vault); Markdown without it. */
+  imageInsertMode?(path: string): Promise<ImageInsertMode>
   openMermaidZoom(svg: string): Promise<void>
   onVaultChanged?(listener: (vault: string, paths: string[]) => void): () => void
 }

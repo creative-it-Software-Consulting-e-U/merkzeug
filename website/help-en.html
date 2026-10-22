@@ -162,10 +162,20 @@ PDF exports always print callouts expanded.</li>
 cell with Tab; add and delete rows/columns via the table controls right at the
 table or the <strong>Table</strong> menu.</li>
 <li><strong>Images:</strong> paste from the clipboard, drag &amp; drop, slash menu or
-<strong>Edit → Insert Image…</strong>. HTML image tags such as
-<code>&lt;img src=&quot;Note.assets/image.png&quot; alt=&quot;…&quot; width=&quot;450&quot;&gt;</code> are shown as images
-with their size, also when wrapped in <code>&lt;p align=&quot;center&quot;&gt;</code> or a link; the
-HTML itself stays unchanged in the file. Other HTML is shown as source text.</li>
+<strong>Edit → Insert Image…</strong>. Click an image to show its toolbar above it:
+<strong>HTML &lt;img&gt;</strong> switches between a Markdown image and an HTML <code>&lt;img&gt;</code> tag.
+Only HTML images keep a size and alignment: enter the width (<strong>W</strong>) or height
+(<strong>H</strong>) in pixels or percent and confirm with ↩ / Enter; with the lock, the
+aspect ratio is kept and only one side is saved. <strong>Original</strong> removes the
+size; the arrows align the image left, centered or right
+(<code>&lt;p align=&quot;…&quot;&gt;</code>), which requires the image to stand in its own paragraph.
+Under <strong>Settings → Images</strong> you choose whether new images are inserted as
+HTML <code>&lt;img&gt;</code> tags; each vault can override this (saved as <code>&quot;imageInsert&quot;</code> in
+<code>.merkzeug/settings.json</code>). Existing tags such as
+<code>&lt;img src=&quot;Note.assets/image.png&quot; alt=&quot;…&quot; width=&quot;450&quot;&gt;</code> are shown with their
+size, also inside <code>&lt;p align=&quot;center&quot;&gt;</code> or a link; Merkzeug only changes their
+HTML when you use the toolbar. Linked or grouped images stay HTML. Other HTML
+is shown as source text.</li>
 <li><strong>Undo/redo</strong> as usual (⌘Z / Ctrl+Z / ⇧⌘Z / Ctrl+Shift+Z).</li>
 <li><strong>Find &amp; replace:</strong> <strong>⌘F / Ctrl+F</strong> opens the search bar at the top right of the
 editor, <strong>⌥⌘F / Ctrl+Alt+F</strong> additionally shows the replace row (also via

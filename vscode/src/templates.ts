@@ -1,3 +1,4 @@
+import { effectiveImageInsert, vaultImageInsert, withVaultImageInsert, type ImageInsertMode } from '@merkzeug/core/imageInsert'
 import * as vscode from 'vscode'
 import { promises as fs } from 'node:fs'
 import * as os from 'node:os'
@@ -102,7 +103,31 @@ export async function resolveTemplate(root: string, scope: vscode.Uri, selected:
 export async function templateState(root: string, scope: vscode.Uri) {
   return { assigned: await selection(root, scope), templates: [...new Set((await central(scope)).map(p => path.basename(p)))] }
 }
+/** App setting (VS Code configuration) and the vault's own choice for newly inserted images. */
+export async function imageSettings(root: string) {
+  const appHtml = vscode.workspace.getConfiguration('merkzeug').get('editor.insertImagesAsHtml', false)
+  let vault: ImageInsertMode | null = null
+  try { vault = vaultImageInsert(await readVault(root)) } catch { /* unreadable settings follow the app setting */ }
+  return { appHtml, vault }
+}
+export async function imageInsertMode(root: string): Promise<ImageInsertMode> {
+  const { appHtml, vault } = await imageSettings(root)
+  return effectiveImageInsert(appHtml, vault)
+}
 let assigning = Promise.resolve()
+export function setVaultImageInsert(root: string, mode: ImageInsertMode | null): Promise<void> {
+  const run = assigning.then(async () => {
+    const config = await readVault(root)
+    if (!config || typeof config !== 'object' || Array.isArray(config)) throw new Error('Invalid vault settings')
+    const target = await settingsFile(root)
+    const open = vscode.workspace.textDocuments.find(d => d.uri.scheme === 'file' && path.resolve(d.uri.fsPath) === path.resolve(target))
+    if (open?.isDirty) throw new Error('Save vault settings before changing the image setting')
+    await fs.mkdir(path.dirname(target), { recursive: true })
+    await fs.writeFile(target, JSON.stringify(withVaultImageInsert(config, mode), null, 2) + '\n')
+  })
+  assigning = run.catch(() => {})
+  return run
+}
 export function assignTemplate(root: string, scope: vscode.Uri, selected: string): Promise<void> {
   const run = assigning.then(async () => {
     await resolveTemplate(root, scope, selected || null)

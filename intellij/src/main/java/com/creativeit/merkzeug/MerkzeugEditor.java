@@ -137,6 +137,12 @@ public final class MerkzeugEditor extends UserDataHolderBase implements FileEdit
                     yield preferences.getBoolean("merkzeug.templatePreview", false);
                 }
                 case "template" -> loadTemplate();
+                case "imageInsertMode" -> VaultTemplates.imageInsertMode(root());
+                case "imageSettings" -> {
+                    if (m.has("appHtml")) PropertiesComponent.getInstance().setValue(VaultTemplates.IMAGES_AS_HTML, m.get("appHtml").getAsBoolean());
+                    if (m.has("vault")) VaultTemplates.setVaultImageInsert(root(), arg(m, "vault"));
+                    yield VaultTemplates.imageSettings(root());
+                }
                 case "releaseClaim" -> ReleaseNotes.claim(arg(m, "version"));
                 case "releaseSeen" -> { PropertiesComponent.getInstance().setValue("merkzeug.releaseNotesSeen", arg(m, "version")); yield true; }
                 case "templateState" -> VaultTemplates.state(root(), project);

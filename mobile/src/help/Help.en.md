@@ -42,9 +42,15 @@ accidental changes. The pencil **✎** switches to edit mode:
 - Images from your photo library are stored automatically in the
   `NoteName.assets/` folder next to `NoteName.md` when inserted.
 - Mermaid code blocks show a diagram preview.
-- HTML image tags such as `<img src="Note.assets/image.png" width="450">`
-  are shown as images with their size; the HTML stays unchanged. Other HTML
-  is shown as source text.
+- Tap an image to show its toolbar: **HTML &lt;img&gt;** switches between a
+  Markdown image and an HTML `<img>` tag. Only HTML images keep a width
+  (**W**), height (**H**) and alignment (left, centered, right); with the lock,
+  the aspect ratio is kept. Under **Images** (above the note) you choose
+  whether new images are inserted as HTML `<img>` tags, for the app and
+  differently for this vault (`"imageInsert"` in `.merkzeug/settings.json`).
+- Existing HTML image tags such as `<img src="Note.assets/image.png" width="450">`
+  are shown with their size; their HTML only changes when you use the toolbar.
+  Other HTML is shown as source text.
 - Callouts as in Obsidian and GitHub: a quote starting with `[!type]`
   (e.g. `> [!warning] Title`) becomes a colored box. `[!type]-` starts
   collapsed, `[!type]+` expanded; tap the arrow to fold it in the view only.
