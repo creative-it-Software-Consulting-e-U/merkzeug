@@ -17,6 +17,7 @@
 - Clicking an image shows a toolbar to switch between a Markdown image and an HTML `<img>` tag and, for HTML images, to set width, height (with aspect-ratio lock) and left/center/right alignment. A new setting inserts new images as `<img>` tags: per app on every edition and per vault via `"imageInsert"` in `.merkzeug/settings.json` (VS Code: `merkzeug.editor.insertImagesAsHtml`).
 - Mermaid 12, Electron 44.9, Capacitor 8.5.3 and current Milkdown/React releases.
 - Security updates for bundled and build dependencies, including DOMPurify 3.4.17 (Mermaid) and KaTeX 0.18.10 (Markdown math parsing), plus fast-uri, xmldom, js-yaml, undici, uuid, brace-expansion and Vite in the build tools.
+- Desktop: the PDF export dialog counts only the added documents (“Include linked documents (+4)”), and its English text no longer contains German words.
 - PDF export no longer fails with “The source image cannot be decoded” when a document contains inline HTML such as `<details>`; a broken image no longer aborts the whole export.
 
 ## 1.3.0

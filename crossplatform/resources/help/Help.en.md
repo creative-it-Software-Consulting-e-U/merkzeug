@@ -226,8 +226,9 @@ For browsing linked notes there is a per-tab **navigation mode** – toggled wit
 - **File → Export as PDF…** exports the active note as a PDF;
   alternatively right-click a note in the file tree.
 - If the note links to other Markdown files **in the same hierarchy** (its own
-  folder or below), the app asks: **"Only this file"** or **"With linked
-  documents"**. The latter is meant for index files such as a `README` with a
+  folder or below), the app asks: **"This file only"** or **"Include linked
+  documents (+n)"**, where n is the number of linked documents added after
+  the note. The latter is meant for index files such as a `README` with a
   table of contents: the index file comes first, followed by all directly
   linked documents in alphabetical order – each starting on a new page.
 - **Exporting several notes individually:** after a multi-selection in the

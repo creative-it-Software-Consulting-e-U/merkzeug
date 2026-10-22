@@ -240,7 +240,8 @@ in der Toolbar.
   alternativ per Rechtsklick auf eine Notiz im Dateibaum.
 - Verlinkt die Notiz weitere Markdown-Dateien **in derselben Hierarchie** (im
   eigenen Ordner oder darunter), fragt die App: **„Nur diese Datei“** oder
-  **„Mit verlinkten Dokumenten“**. Letzteres ist für Index-Dateien wie eine
+  **„Mit verlinkten Dokumenten (+n)“** – n ist die Zahl der verlinkten
+  Dokumente, die nach der Notiz angehängt werden. Letzteres ist für Index-Dateien wie eine
   `README` mit Inhaltsverzeichnis gedacht: Zuerst kommt die Index-Datei,
   danach alle direkt verlinkten Dokumente in alphabetischer Reihenfolge –
   jedes beginnt auf einer neuen Seite.
