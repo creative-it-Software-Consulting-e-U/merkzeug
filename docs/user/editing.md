@@ -8,7 +8,11 @@ For Mermaid, insert a code block with the language `mermaid`. Use its preview co
 
 Paste or insert images using the editor's image controls. Desktop, IntelliJ and VS Code store inserted images in a sibling `NOTE.assets` directory; the iOS adapter uses a sibling `assets` directory. Keep images with their notes when moving them between machines. Existing image paths are preserved.
 
-HTML image tags such as `<img src="NOTE.assets/diagram.png" alt="Diagram" width="450">` are displayed as images, honoring `width` and `height`. Images wrapped in `<p>`, `<div>`, `<center>` or a link are shown too; `align="center"` centers them. Merkzeug never rewrites this HTML when saving, and moving or renaming notes updates its `src` paths like other image links. Any other HTML, such as tables or styled text, remains visible as source text.
+HTML image tags such as `<img src="NOTE.assets/diagram.png" alt="Diagram" width="450">` are displayed as images, honoring `width` and `height`. Images wrapped in `<p>`, `<div>`, `<center>` or a link are shown too; `align="center"` or `align="right"` aligns them. Merkzeug never rewrites this HTML when saving, and moving or renaming notes updates its `src` paths like other image links. Any other HTML, such as tables or styled text, remains visible as source text.
+
+Click an image to show its toolbar above it. **HTML &lt;img&gt;** converts between a Markdown image and an HTML `<img>` tag; a Markdown image has no size or alignment, so those controls only work for HTML images. Enter the width (**W**) or height (**H**) in pixels or percent and confirm with Enter. With the lock, the aspect ratio is kept and only one side is written; **Original** removes the size. The alignment buttons write `<p align="center">` or `<p align="right">` around the image (left removes the wrapper) and are available when the image is alone in its paragraph. The toolbar changes only the size and alignment attributes and keeps other attributes. Linked images and several images in one HTML block stay HTML.
+
+New images are inserted as Markdown images by default. Each edition has an app setting to insert them as HTML `<img>` tags instead (desktop: **Settings → Images**; iOS: **Images** above the note; IntelliJ and VS Code: the **⋯** panel of the Merkzeug editor, in VS Code also `merkzeug.editor.insertImagesAsHtml`). A vault can override it for everyone who opens it with `"imageInsert": "html"` or `"imageInsert": "markdown"` in `.merkzeug/settings.json`; without that entry the app setting applies.
 
 ## Callouts
 

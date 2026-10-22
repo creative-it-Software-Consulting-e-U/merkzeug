@@ -20,6 +20,8 @@ interface Settings {
   templatesRoot?: string
   /** KI-Assistent: gewählter Anbieter und Modelle (Schlüssel liegen verschlüsselt daneben) */
   ai?: AiSettings
+  /** neue Bilder als HTML-`<img>` statt als Markdown-Bild einfügen (Vaults können abweichen) */
+  imagesAsHtml?: boolean
 }
 
 let cache: Settings | null = null
@@ -67,6 +69,15 @@ export function getStoredTemplatesRoot(): string | undefined {
 
 export function setStoredTemplatesRoot(path: string): void {
   loadSettings().templatesRoot = path
+  saveSettings()
+}
+
+export function getImagesAsHtml(): boolean {
+  return loadSettings().imagesAsHtml === true
+}
+
+export function setImagesAsHtml(value: boolean): void {
+  loadSettings().imagesAsHtml = value
   saveSettings()
 }
 

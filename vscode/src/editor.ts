@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto'
 import * as path from 'node:path'
 import type { PdfPayload } from '@merkzeug/core/pdf'
 import { allowed, exists, getLocaleTag, minimalEdit, rootOf, slash, stem, t, withEol } from './files'
-import { assignTemplate, loadTemplate, templateState } from './templates'
+import { assignTemplate, imageInsertMode, imageSettings, loadTemplate, setVaultImageInsert, templateState } from './templates'
 import { cleanPrintFiles, findBrowser, printFile, renderPdf } from './pdf'
 
 type Message = { id: number; method: string; [key: string]: any }
@@ -97,6 +97,12 @@ export class EditorSession implements vscode.Disposable {
         return vscode.workspace.getConfiguration('merkzeug', this.document.uri).get('editor.pdfTemplatePreview', false)
       }
       case 'template': return loadTemplate(this.root, this.document.uri)
+      case 'imageInsertMode': return imageInsertMode(this.root)
+      case 'imageSettings': {
+        if (typeof m.appHtml === 'boolean') await vscode.workspace.getConfiguration('merkzeug').update('editor.insertImagesAsHtml', m.appHtml, vscode.ConfigurationTarget.Global)
+        if (m.vault === 'html' || m.vault === 'markdown' || m.vault === '') await setVaultImageInsert(this.root, m.vault || null)
+        return imageSettings(this.root)
+      }
       case 'releaseClaim': {
         const version = String(m.version)
         if (this.state.get('merkzeug.releaseNotesSeen') === version || releaseClaims.has(version)) return false

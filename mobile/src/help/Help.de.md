@@ -44,9 +44,16 @@ Bearbeitungsmodus:
 - Bilder aus der Foto-Mediathek werden beim Einfügen automatisch im
   Ordner `Notizname.assets/` neben `Notizname.md` abgelegt.
 - Mermaid-Codeblöcke zeigen eine Diagramm-Vorschau.
-- HTML-Bild-Tags wie `<img src="Notiz.assets/bild.png" width="450">`
-  erscheinen als Bild in der angegebenen Größe; das HTML bleibt unverändert.
-  Anderes HTML wird als Quelltext angezeigt.
+- Tippe auf ein Bild, um seine Leiste zu zeigen: **HTML-&lt;img&gt;** wechselt
+  zwischen Markdown-Bild und HTML-`<img>`-Tag. Nur HTML-Bilder speichern
+  Breite (**B**), Höhe (**H**) und Ausrichtung (links, zentriert, rechts); mit
+  dem Schloss bleibt das Seitenverhältnis erhalten. Unter **Bilder** (über der
+  Notiz) legst du fest, ob neue Bilder als HTML-`<img>`-Tag eingefügt werden –
+  für die App und abweichend für diesen Vault (`"imageInsert"` in
+  `.merkzeug/settings.json`).
+- Vorhandene HTML-Bild-Tags wie `<img src="Notiz.assets/bild.png" width="450">`
+  erscheinen in ihrer Größe; ihr HTML ändert sich nur, wenn du die Leiste
+  benutzt. Anderes HTML wird als Quelltext angezeigt.
 - Callouts wie in Obsidian und GitHub: Ein Zitat, das mit `[!typ]` beginnt
   (z. B. `> [!warning] Titel`), wird zu einem farbigen Kasten. `[!typ]-`
   startet eingeklappt, `[!typ]+` ausgeklappt; der Pfeil klappt ihn nur in der

@@ -75,6 +75,12 @@ export interface TemplateState {
   assigned: string | null
 }
 
+/** Wie neue Bilder eingefügt werden: App-Einstellung und Festlegung des Vaults */
+export interface ImageSettings {
+  appHtml: boolean
+  vault: import('@merkzeug/core/imageInsert').ImageInsertMode | null
+}
+
 /** Fortschritt des PDF-Exports, gesendet an das auslösende Fenster */
 export interface PdfExportProgress {
   phase: 'start' | 'render' | 'print' | 'done' | 'error'

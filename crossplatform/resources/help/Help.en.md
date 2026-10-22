@@ -132,10 +132,20 @@ The editor shows the note formatted; what is saved is Markdown.
   cell with Tab; add and delete rows/columns via the table controls right at the
   table or the **Table** menu.
 - **Images:** paste from the clipboard, drag & drop, slash menu or
-  **Edit → Insert Image…**. HTML image tags such as
-  `<img src="Note.assets/image.png" alt="…" width="450">` are shown as images
-  with their size, also when wrapped in `<p align="center">` or a link; the
-  HTML itself stays unchanged in the file. Other HTML is shown as source text.
+  **Edit → Insert Image…**. Click an image to show its toolbar above it:
+  **HTML &lt;img&gt;** switches between a Markdown image and an HTML `<img>` tag.
+  Only HTML images keep a size and alignment: enter the width (**W**) or height
+  (**H**) in pixels or percent and confirm with ↩ / Enter; with the lock, the
+  aspect ratio is kept and only one side is saved. **Original** removes the
+  size; the arrows align the image left, centered or right
+  (`<p align="…">`), which requires the image to stand in its own paragraph.
+  Under **Settings → Images** you choose whether new images are inserted as
+  HTML `<img>` tags; each vault can override this (saved as `"imageInsert"` in
+  `.merkzeug/settings.json`). Existing tags such as
+  `<img src="Note.assets/image.png" alt="…" width="450">` are shown with their
+  size, also inside `<p align="center">` or a link; Merkzeug only changes their
+  HTML when you use the toolbar. Linked or grouped images stay HTML. Other HTML
+  is shown as source text.
 - **Undo/redo** as usual (⌘Z / Ctrl+Z / ⇧⌘Z / Ctrl+Shift+Z).
 - **Find & replace:** **⌘F / Ctrl+F** opens the search bar at the top right of the
   editor, **⌥⌘F / Ctrl+Alt+F** additionally shows the replace row (also via

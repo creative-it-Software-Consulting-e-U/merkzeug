@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import { Editor as SharedEditor, type EditorHandle, type EditorProps } from '@merkzeug/editor'
 import type { EditorHost } from '@merkzeug/editor/host'
 import { vault } from '../vault'
+import { imageInsertMode } from '../imageSettings'
 import { dirname, joinPath, normalizePath, extname } from '../util/paths'
 import '@merkzeug/editor/editor.css'
 
@@ -27,6 +28,7 @@ export function Editor(props: Omit<EditorProps, 'host'>) {
       readFile: async (path, options) => { const result = await vault.readFile(path); if (!options?.peek) versions.set(path, result.mtime); return result.content },
       writeFile: async (path, text) => { versions.set(path, await vault.writeFile(path, text, versions.get(path))) },
       saveImage: (path, data, extension) => vault.saveImage(path, data, extension),
+      imageInsertMode: () => imageInsertMode(),
       resolveImage: async (path, url) => {
         if (!url || /^(https?:|data:)/i.test(url)) return url
         const decoded = decodeURI(url)

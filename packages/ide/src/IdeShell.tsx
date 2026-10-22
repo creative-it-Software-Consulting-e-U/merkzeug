@@ -5,6 +5,8 @@ import { liveTemplateCss } from '@merkzeug/editor/templateStyle'
 import { IconHeading, IconBold, IconItalic, IconStrike, IconInlineCode, IconBulletList, IconOrderedList, IconQuote, IconCodeBlock, IconHr, IconLink, IconImage, IconTable } from '@merkzeug/editor/icons'
 import { GuidedTour } from '@merkzeug/editor/GuidedTour'
 import { VaultGuidance, type GuidanceHost } from '@merkzeug/editor/VaultGuidance'
+import { ImageInsertSettings } from '@merkzeug/editor/ImageInsertSettings'
+import type { ImageInsertMode } from '@merkzeug/core/imageInsert'
 import { initializeTheme, setHostTheme, setTheme, type HostTheme } from '@merkzeug/editor/theme'
 import { t as translate, setLocale } from '@merkzeug/core/i18n'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -49,6 +51,10 @@ function App({ options }: { options: IdeOptions }) {
   const [previewCss, setPreviewCss] = useState('')
   const [templateState, setTemplateState] = useState<{ assigned: string | null; templates: string[] }>({ assigned: null, templates: [] })
   useEffect(() => { if (info) void request('templateState').then(setTemplateState).catch(e => setError(String(e))) }, [info, extras])
+  const [imageSettings, setImageSettings] = useState<{ appHtml: boolean; vault: ImageInsertMode | null }>()
+  useEffect(() => { if (info && extras) void request('imageSettings').then(setImageSettings).catch(e => setError(String(e))) }, [info, extras])
+  const changeImageSettings = (change: { appHtml?: boolean; vault?: ImageInsertMode | '' }) =>
+    void request<{ appHtml: boolean; vault: ImageInsertMode | null }>('imageSettings', change).then(setImageSettings).catch(e => setError(String(e)))
   const [busy, setBusy] = useState(false)
   const ref = useRef<EditorHandle>(null)
   const listeners = useRef(new Set<(vault: string, paths: string[]) => void>())
@@ -70,6 +76,7 @@ function App({ options }: { options: IdeOptions }) {
       return operation
     },
     saveImage: (path, base64, extension) => request('image', { path, base64, extension }),
+    imageInsertMode: () => request<ImageInsertMode>('imageInsertMode'),
     resolveImage: (path, url) => imageUrl(path, url),
     openMermaidZoom: async (svg) => {
       const dialog = document.createElement('dialog')
@@ -180,7 +187,7 @@ function App({ options }: { options: IdeOptions }) {
       <button disabled={busy} onClick={() => void exportPdf()}>{busy ? translate("Exporting …") : translate("Export PDF")}</button>
       <button title="Merkzeug" aria-label="Merkzeug" aria-expanded={extras} onClick={() => setExtras(!extras)}>⋯</button>
     </header>
-    {extras && <aside className="editor-extras"><TemplateLocation value={templateState.assigned} templates={templateState.templates} onChange={async name => { setTemplateState(await request('templateAssign', { name: name ?? '' })); await refreshTemplatePreview() }} /><div className="editor-extra-actions"><AboutButton openUrl={url => { void request("open", { href: url }).catch(e => setError(String(e))) }} /><ReleaseNotesButton /><button onClick={() => void request('settings').then(refreshTemplatePreview).catch(e => setError(String(e)))}>{translate("PDF template …")}</button><label className="template-preview-toggle"><input type="checkbox" checked={previewEnabled} onChange={e => void toggleTemplatePreview(e.target.checked)} /> {translate('Use PDF template while editing')}</label>{info && import.meta.env.VITE_MERKZEUG_TOURS !== 'disabled' && <><GuidedTour edition={options.edition} seen={true} onSeen={() => void request('tourSeen')} /></>}</div>{previewEnabled && !previewCss && <p>{translate('Assign a PDF template in Settings to preview its content styles.')}</p>}{info && <VaultGuidance vaultId={info.vault} host={guidanceHost} />}</aside>}
+    {extras && <aside className="editor-extras"><TemplateLocation value={templateState.assigned} templates={templateState.templates} onChange={async name => { setTemplateState(await request('templateAssign', { name: name ?? '' })); await refreshTemplatePreview() }} /><div className="editor-extra-actions"><AboutButton openUrl={url => { void request("open", { href: url }).catch(e => setError(String(e))) }} /><ReleaseNotesButton /><button onClick={() => void request('settings').then(refreshTemplatePreview).catch(e => setError(String(e)))}>{translate("PDF template …")}</button><label className="template-preview-toggle"><input type="checkbox" checked={previewEnabled} onChange={e => void toggleTemplatePreview(e.target.checked)} /> {translate('Use PDF template while editing')}</label>{info && import.meta.env.VITE_MERKZEUG_TOURS !== 'disabled' && <><GuidedTour edition={options.edition} seen={true} onSeen={() => void request('tourSeen')} /></>}</div>{imageSettings && <ImageInsertSettings appHtml={imageSettings.appHtml} vault={imageSettings.vault} hasVault onAppChange={appHtml => changeImageSettings({ appHtml })} onVaultChange={vault => changeImageSettings({ vault: vault ?? '' })} />}{previewEnabled && !previewCss && <p>{translate('Assign a PDF template in Settings to preview its content styles.')}</p>}{info && <VaultGuidance vaultId={info.vault} host={guidanceHost} />}</aside>}
     {error && <div role="alert" className="error">{error}</div>}
     {info && <Editor ref={ref} host={host} filePath={info.path} loadToken={0} readonly={info.readonly}
       onLinkClick={href => href.startsWith('#') ? ref.current?.jumpToHeading(decodeURIComponent(href.slice(1))) : void request('open', { href }).catch(e => setError(String(e)))}

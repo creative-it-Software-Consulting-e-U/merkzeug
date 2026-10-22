@@ -16,7 +16,8 @@
     "./TemplateStylingPrompt": "./src/TemplateStylingPrompt.tsx",
     "./TemplateLocation": "./src/TemplateLocation.tsx",
     "./ReleaseNotes": "./src/ReleaseNotes.tsx",
-    "./About": "./src/About.tsx"
+    "./About": "./src/About.tsx",
+    "./ImageInsertSettings": "./src/ImageInsertSettings.tsx"
   },
   "dependencies": {
     "@merkzeug/core": "1.4.0"

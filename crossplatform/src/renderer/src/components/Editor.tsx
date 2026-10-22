@@ -10,7 +10,8 @@ const host: EditorHost = {
   saveImage: (path, data, ext) => window.merkzeug.saveImage(path, data, ext),
   onVaultChanged: (listener) => window.merkzeug.onVaultChanged(listener),
   openMermaidZoom: (svg) => window.merkzeug.openMermaidZoom(svg),
-  resolveImage: vaultFileUrl
+  resolveImage: vaultFileUrl,
+  imageInsertMode: () => window.merkzeug.imageInsertMode()
 }
 export const Editor = forwardRef<EditorHandle, Omit<EditorProps, 'host'>>((props, ref) =>
   <SharedEditor {...props} host={host} ref={ref} />)

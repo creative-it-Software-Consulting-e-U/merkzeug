@@ -2,6 +2,7 @@ import { collectLinkedDocs } from '@merkzeug/core/exportPlan'
 import type { PdfDoc } from '@merkzeug/core/pdf'
 import { meetingIdentity, firstHeading, headingFileBase } from '@merkzeug/core/meetingFiles'
 import { assignedTemplate, loadTemplate } from './templates'
+import { ImageSettings } from './components/ImageSettings'
 import { TemplateSettings } from './components/TemplateSettings'
 import type { PdfTemplate } from '@merkzeug/core/pdf'
 import { lazy, Suspense } from 'react'
@@ -494,6 +495,7 @@ export default function App(): React.JSX.Element {
       <div className="appearance-bar">{isNote && <button disabled={preparingPrint} onClick={() => void preparePrint()}>{translate("PDF / Print…")}</button>}<button onClick={() => setMeetingFolder(isNote ? dirname(current) : current)}>{translate('New meeting note')}</button><ThemeSelect /></div>
       {meetingFolder !== null && <MeetingNotes folder={meetingFolder} onClose={() => setMeetingFolder(null)} onOpen={path => { setMeetingFolder(null); void reloadTree(); navigateTo(path) }} />}
       <TemplateSettings key={`templates:${vaultInfo.id ?? vaultInfo.name}`} vaultId={vaultInfo.id ?? vaultInfo.name} onChange={setPdfTemplate} />
+      <ImageSettings key={`images:${vaultInfo.id ?? vaultInfo.name}`} />
       <main className="content" ref={contentRef}>
         {isNote ? (
           <Editor

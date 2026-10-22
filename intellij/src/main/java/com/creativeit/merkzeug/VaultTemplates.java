@@ -58,6 +58,42 @@ final class VaultTemplates {
         state.put("templates", central(project).stream().map(p -> p.getFileName().toString()).distinct().toList());
         return state;
     }
+    /** Images: application setting, overridden by "imageInsert" ("html"/"markdown") in the vault settings. */
+    static final String IMAGES_AS_HTML = "merkzeug.imagesAsHtml";
+    static String vaultImageInsert(Path root) {
+        try {
+            JsonElement value = read(root).get("imageInsert");
+            if (value != null && value.isJsonPrimitive() && ("html".equals(value.getAsString()) || "markdown".equals(value.getAsString()))) return value.getAsString();
+        } catch (IOException | RuntimeException ignored) { /* unreadable settings follow the application setting */ }
+        return null;
+    }
+    static String imageInsertMode(Path root) {
+        String vault = vaultImageInsert(root);
+        return vault != null ? vault : PropertiesComponent.getInstance().getBoolean(IMAGES_AS_HTML, false) ? "html" : "markdown";
+    }
+    static Map<String, Object> imageSettings(Path root) {
+        Map<String, Object> state = new HashMap<>();
+        state.put("appHtml", PropertiesComponent.getInstance().getBoolean(IMAGES_AS_HTML, false));
+        state.put("vault", vaultImageInsert(root));
+        return state;
+    }
+    static synchronized void setVaultImageInsert(Path root, String mode) throws IOException {
+        JsonObject config = read(root);
+        if ("html".equals(mode) || "markdown".equals(mode)) config.addProperty("imageInsert", mode);
+        else config.remove("imageInsert");
+        writeSettings(root, config, "Save vault settings before changing the image setting");
+    }
+    private static void writeSettings(Path root, JsonObject config, String unsavedMessage) throws IOException {
+        Path target = settings(root);
+        var virtual = com.intellij.openapi.vfs.LocalFileSystem.getInstance().findFileByPath(target.toString());
+        if (virtual != null) {
+            var document = com.intellij.openapi.fileEditor.FileDocumentManager.getInstance().getCachedDocument(virtual);
+            if (document != null && com.intellij.openapi.fileEditor.FileDocumentManager.getInstance().isDocumentUnsaved(document)) throw new IOException(unsavedMessage);
+        }
+        Files.createDirectories(target.getParent());
+        Files.writeString(target, new GsonBuilder().setPrettyPrinting().create().toJson(config) + "\n");
+        com.intellij.openapi.vfs.LocalFileSystem.getInstance().refreshAndFindFileByPath(target.toString());
+    }
     static synchronized void assign(Path root, Project project, String selected) throws IOException {
         resolve(root, project, selected);
         JsonObject config = read(root);
@@ -65,14 +101,6 @@ final class VaultTemplates {
         else if (selected.startsWith("vault:")) {
             JsonObject value = new JsonObject(); value.addProperty("source", "vault"); value.addProperty("path", selected.substring(6)); config.add("pdfTemplate", value);
         } else config.addProperty("pdfTemplate", selected);
-        Path target = settings(root);
-        var virtual = com.intellij.openapi.vfs.LocalFileSystem.getInstance().findFileByPath(target.toString());
-        if (virtual != null) {
-            var document = com.intellij.openapi.fileEditor.FileDocumentManager.getInstance().getCachedDocument(virtual);
-            if (document != null && com.intellij.openapi.fileEditor.FileDocumentManager.getInstance().isDocumentUnsaved(document)) throw new IOException("Save vault settings before changing the template");
-        }
-        Files.createDirectories(target.getParent());
-        Files.writeString(target, new GsonBuilder().setPrettyPrinting().create().toJson(config) + "\n");
-        com.intellij.openapi.vfs.LocalFileSystem.getInstance().refreshAndFindFileByPath(target.toString());
+        writeSettings(root, config, "Save vault settings before changing the template");
     }
 }

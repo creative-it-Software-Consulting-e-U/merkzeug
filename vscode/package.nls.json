@@ -14,6 +14,7 @@
   "command.contactSupport": "Contact Support…",
   "config.templateFolder": "PDF template folder (containing `stil.css`, `vorlage.json`, …). Leave empty to export without a template. A vault assignment in `.merkzeug/settings.json` takes precedence. Use the **Merkzeug: PDF Template Settings…** command to pick a folder, the bundled starter or a desktop template.",
   "config.pdfTemplatePreview": "Apply the content styles of the assigned PDF template while editing. Toolbar, dialogs and VS Code controls keep the VS Code theme.",
+  "config.insertImagesAsHtml": "Insert new images as HTML `<img>` tags instead of Markdown images, so their size and alignment can be set by clicking the image. A vault can override this in `.merkzeug/settings.json` (`\"imageInsert\": \"html\"` or `\"markdown\"`).",
   "config.browserPath": "Chromium-based browser used for PDF export and printing (Google Chrome, Microsoft Edge, Chromium or Brave). Leave empty to detect an installed browser automatically.",
   "config.companionFolders": "When a Markdown note is renamed or moved in VS Code, also move its `Note.assets/` companion folder and update Markdown links in the workspace."
 }

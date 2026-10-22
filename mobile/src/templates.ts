@@ -16,7 +16,7 @@ const native = registerPlugin<{
 export const templateFolder = () => Capacitor.isNativePlatform() ? native.templateFolder() : Promise.resolve({ name: 'Demo templates', templates: [] })
 export const useCloudTemplateFolder = () => native.useCloudTemplateFolder()
 export const pickTemplateFolder = () => Capacitor.isNativePlatform() ? native.pickTemplateFolder() : templateFolder()
-const settingsPath = '/.merkzeug/settings.json'
+export const settingsPath = '/.merkzeug/settings.json'
 export async function assignedTemplate(): Promise<string | null> {
   if (!await vault.exists(settingsPath)) return null
   const settings = JSON.parse((await vault.readFile(settingsPath)).content)
