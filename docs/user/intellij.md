@@ -34,6 +34,8 @@ Click an image to show its toolbar: **HTML &lt;img&gt;** switches between a Mark
 
 Selecting a whole table cell highlights the cell; click inside its text to place the caret and edit. Text and links retain their colors while the cell is selected, including when using PDF-template styles.
 
+While the caret is in a table, a **table bar** appears above the note: insert a row above/below or a column left/right, align the current column left, centered or right, and delete the row, the column or the whole table. The header row and the last remaining data row cannot be deleted. Tab moves to the next cell and adds a new row after the last cell; Enter moves to the cell below and adds a new row in the last row, and Enter in an empty last row removes it and continues below the table. ⇧Enter breaks the line inside a cell, ⌘Enter / Ctrl+Enter leaves the table. The table menu in the toolbar offers the same row and column actions. To edit the Markdown source, switch to IntelliJ's Markdown editor tab.
+
 If another editor changes the document, Merkzeug reloads it when there are no local edits. Otherwise a conflict banner lets you reload the other version or deliberately keep your own version.
 
 ## Meeting notes

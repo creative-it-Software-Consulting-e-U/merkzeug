@@ -39,6 +39,16 @@ accidental changes. The pencil **✎** switches to edit mode:
   the title indicates unsaved changes.
 - Typing "/" at the start of a line opens the insert menu (headings,
   lists, tables, images, code blocks …).
+- Tables: while the cursor is in a table, a **table bar** appears above the
+  note to insert rows above/below and columns left/right, align the current
+  column left, centered or right, and delete the row, the column or the whole
+  table. Return moves to the cell below and adds a new row in the last row;
+  Return in an empty last row removes it and continues below the table. With
+  an external keyboard, Tab moves to the next cell and adds a row after the
+  last cell.
+- **&lt;/&gt;** in the title bar shows the note as Markdown source, including
+  the frontmatter. In edit mode you can change the text directly; it is saved
+  automatically. Tap **&lt;/&gt;** again to return to the formatted view.
 - Images from your photo library are stored automatically in the
   `NoteName.assets/` folder next to `NoteName.md` when inserted.
 - Mermaid code blocks show a diagram preview.

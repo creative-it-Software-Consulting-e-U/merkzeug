@@ -829,6 +829,11 @@ export function App(): React.JSX.Element {
           if (tab) updateTab(tab.id, (t) => ({ ...t, navMode: !t.navMode }))
           break
         }
+        case 'toggleSource': {
+          const tab = activeTab()
+          if (tab?.kind === 'note') updateTab(tab.id, (t) => ({ ...t, sourceMode: !t.sourceMode }))
+          break
+        }
         case 'navBack': {
           const tab = activeTab()
           if (tab) stepHistory(tab.id, -1)
@@ -1009,6 +1014,8 @@ export function App(): React.JSX.Element {
     },
     onToggleNavMode: (tabId: string) =>
       updateTab(tabId, (t) => ({ ...t, navMode: !t.navMode })),
+    onToggleSource: (tabId: string) =>
+      updateTab(tabId, (t) => ({ ...t, sourceMode: !t.sourceMode })),
     onNavBack: (tabId: string) => stepHistory(tabId, -1),
     onNavForward: (tabId: string) => stepHistory(tabId, 1),
     onInsertLink: () => setLinkDialogOpen(true),

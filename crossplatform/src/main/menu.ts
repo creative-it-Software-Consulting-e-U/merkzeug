@@ -137,6 +137,7 @@ export function buildMenu(hooks: MenuHooks): void {
       label: translate("View"),
       submenu: [
         item(translate("Navigation mode"), 'toggleNavMode', 'CmdOrCtrl+R'),
+        item(translate("Markdown Source"), 'toggleSource', 'CmdOrCtrl+/'),
         item(translate("Back"), 'navBack', 'CmdOrCtrl+['),
         item(translate("Forward"), 'navForward', 'CmdOrCtrl+]'),
         { type: 'separator' },

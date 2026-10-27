@@ -92,6 +92,12 @@ body {
   color: #fff;
 }
 
+.bar-btn-source {
+  font-size: 15px;
+  font-weight: 600;
+  font-family: ui-monospace, Menlo, monospace;
+}
+
 .bar-btn:active:not(:disabled) {
   background: var(--row-active);
 }

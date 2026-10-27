@@ -582,4 +582,13 @@ export const de: Readonly<Record<string, string>> = {
   "Markdown image": "Markdown-Bild",
   "Images": "Bilder",
   "HTML <img> tags keep a size and alignment, which you set by clicking the image. The vault choice is stored in .merkzeug/settings.json, travels with Git and overrides the app setting.": "HTML-<img>-Tags speichern Größe und Ausrichtung; beides stellst du per Klick auf das Bild ein. Die Vault-Auswahl liegt in .merkzeug/settings.json, reist mit Git und hat Vorrang vor der App-Einstellung.",
+  "Align column left": "Spalte linksbündig",
+  "Center column": "Spalte zentrieren",
+  "Align column right": "Spalte rechtsbündig",
+  "Delete table": "Tabelle löschen",
+  "Markdown source": "Markdown-Quelltext",
+  "Markdown Source": "Markdown-Quelltext",
+  "Markdown source (⌘/)": "Markdown-Quelltext (⌘/)",
+  "Back to the visual editor (⌘/)": "Zurück zur visuellen Ansicht (⌘/)",
+  "Back to the visual editor": "Zurück zur visuellen Ansicht",
 }

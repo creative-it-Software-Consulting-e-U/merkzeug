@@ -104,8 +104,9 @@ Der Editor zeigt die Notiz formatiert an; gespeichert wird Markdown.
 
 - **Toolbar:** Die Leiste über dem Editor bietet Absatzformat, fett/kursiv/
   durchgestrichen/Inline-Code, Listen, Zitat, Codeblock, Link, Bild, Tabelle
-  und Trennlinie — plus Zurück/Vorwärts sowie rechts den Hilfe-Button
-  (Fragezeichen, öffnet diese Hilfe) und den Navigationsmodus (Buch-Symbol).
+  und Trennlinie — plus Zurück/Vorwärts sowie rechts die Markdown-Quelltext-
+  Ansicht (`</>`), den Hilfe-Button (Fragezeichen, öffnet diese Hilfe) und den
+  Navigationsmodus (Buch-Symbol).
 - **Inhaltsverzeichnis-Dropdown:** Der Listen-Button links in der Toolbar
   zeigt alle Überschriften der Notiz (eingerückt nach Ebene); ein Klick
   springt direkt zur jeweiligen Überschrift. Funktioniert auch im
@@ -135,9 +136,24 @@ Der Editor zeigt die Notiz formatiert an; gespeichert wird Markdown.
   ein, die Datei bleibt unverändert. Zum Bearbeiten des Markers in die
   Titelzeile klicken. Einfügen über das Slash-Menü (**Callout**). PDF-Exporte
   drucken Callouts immer ausgeklappt.
-- **Tabellen:** Einfügen über ⌥⌘T / Strg+Alt+T, das Slash-Menü oder Menü „Bearbeiten“. Mit Tab
-  von Zelle zu Zelle springen; Zeilen/Spalten über die Tabellen-Steuerung direkt
-  an der Tabelle oder das Menü **Tabelle** einfügen und löschen.
+- **Tabellen:** Einfügen über ⌥⌘T / Strg+Alt+T, das Slash-Menü oder Menü „Bearbeiten“. Steht der
+  Cursor in einer Tabelle, erscheint unter der Toolbar eine **Tabellen-Leiste**:
+  Zeile darüber/darunter oder Spalte links/rechts einfügen, die aktuelle Spalte
+  links, zentriert oder rechts ausrichten sowie Zeile, Spalte oder die ganze
+  Tabelle löschen. Kopfzeile und letzte verbliebene Datenzeile lassen sich nicht
+  löschen. Tab springt in die nächste Zelle und legt nach der letzten Zelle eine
+  neue Zeile an; ⇧Tab springt zurück. Enter wechselt in die Zelle darunter und
+  legt in der letzten Zeile eine neue Zeile an; Enter in einer leeren letzten
+  Zeile entfernt sie und schreibt unter der Tabelle weiter. ⇧Enter bricht die
+  Zeile innerhalb einer Zelle um, ⌘Enter / Strg+Enter verlässt die Tabelle. Das
+  Menü **Tabelle** und die Steuerelemente am Tabellenrand bieten dieselben
+  Aktionen.
+- **Markdown-Quelltext:** Der `</>`-Button, **Ansicht → Markdown-Quelltext** oder ⌘/ /
+  Strg+/ schalten den Tab auf den reinen Markdown-Text samt Frontmatter um.
+  Änderungen werden wie im visuellen Editor automatisch gesichert; zurück in
+  der visuellen Ansicht erscheinen sie formatiert. Das Umschalten allein
+  formatiert die Datei nie um. Suche und Formatierungs-Buttons gibt es nur in
+  der visuellen Ansicht.
 - **Bilder:** per Einfügen aus der Zwischenablage, Drag & Drop, Slash-Menü oder
   Menü „Bearbeiten → Bild einfügen…“. Ein Klick auf ein Bild zeigt darüber eine
   Leiste: **HTML-&lt;img&gt;** wechselt zwischen Markdown-Bild und HTML-`<img>`-Tag.
@@ -395,6 +411,7 @@ Ist der Vault ein **Git-Repository**, erscheint unten in der Sidebar eine Status
 | Tabelle einfügen | ⌥⌘T | Strg+Alt+T |
 | Suchen / Suchen und Ersetzen | ⌘F / ⌥⌘F | Strg+F / Strg+Alt+F |
 | Navigationsmodus ein/aus | ⌘R | Strg+R |
+| Markdown-Quelltext / visuelle Ansicht | ⌘/ | Strg+/ |
 | Zurück / Vorwärts | ⌘[ / ⌘] | Strg+[ / Strg+] |
 | Zweite Sektion ein-/ausblenden | ⌘\ | Strg+\ |
 | Tab in andere Sektion verschieben | ⇧⌘\ | Strg+Shift+\ |

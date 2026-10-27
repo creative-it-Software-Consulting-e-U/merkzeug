@@ -13,6 +13,117 @@
   width: 100%;
 }
 
+.editor-host [hidden] {
+  display: none !important;
+}
+
+/* ---- Tabellen-Leiste: erscheint unter der Werkzeugleiste, solange der Cursor in einer Tabelle steht ---- */
+
+.table-toolbar-anchor {
+  position: sticky;
+  top: 0;
+  height: 0;
+  z-index: 30;
+  flex: 0 0 auto;
+}
+
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 3px 8px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.table-toolbar-label {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-right: 6px;
+}
+
+.table-toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 24px;
+  padding: 3px 5px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-dim);
+  cursor: default;
+}
+
+.table-toolbar-btn svg {
+  display: block;
+}
+
+.table-toolbar-btn:hover:not(:disabled) {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+
+.table-toolbar-btn.toggled {
+  background: var(--bg-active);
+  color: var(--accent);
+}
+
+.table-toolbar-btn:disabled {
+  opacity: 0.35;
+}
+
+.table-toolbar-divider {
+  width: 1px;
+  height: 16px;
+  margin: 0 4px;
+  background: var(--border);
+}
+
+@media (pointer: coarse) {
+  .table-toolbar {
+    gap: 4px;
+    padding: 4px 8px;
+  }
+
+  .table-toolbar-btn {
+    min-width: 36px;
+    height: 34px;
+  }
+}
+
+/* ---- Quelltext-Ansicht ---- */
+
+.source-input {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  margin: 0;
+  padding: 24px 28px 80px;
+  border: none;
+  outline: none;
+  resize: none;
+  background: transparent;
+  color: var(--text);
+  font-family: 'SF Mono', ui-monospace, Menlo, Monaco, 'Cascadia Mono', monospace;
+  font-size: 13.5px;
+  line-height: 1.55;
+  tab-size: 4;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+@media (pointer: coarse) {
+  /* iOS zoomt bei Schriften unter 16px in Eingabefelder hinein */
+  .source-input {
+    font-size: 16px;
+    padding: 16px 16px 80px;
+  }
+}
+
 /* ---- Frontmatter-Balken über dem Text ---- */
 
 .frontmatter-bar {

@@ -53,6 +53,7 @@ export default function App(): React.JSX.Element {
   const [stackIndex, setStackIndex] = useState(0)
   const [loadToken, setLoadToken] = useState(0)
   const [editMode, setEditMode] = useState(false)
+  const [sourceMode, setSourceMode] = useState(false)
   const [dirty, setDirty] = useState(false)
   const [sheet, setSheet] = useState<SheetState | null>(null)
   const [searching, setSearching] = useState(false)
@@ -458,6 +459,16 @@ export default function App(): React.JSX.Element {
           {title}
           {dirty ? ' •' : ''}
         </div>
+        {isNote && (
+          <button
+            className={`bar-btn bar-btn-source${sourceMode ? ' active' : ''}`}
+            onClick={() => setSourceMode((v) => !v)}
+            title={sourceMode ? translate("Back to the visual editor") : translate("Markdown source")}
+            aria-pressed={sourceMode}
+          >
+            {'</>'}
+          </button>
+        )}
         {isNote ? (
           <button
             className={`bar-btn${editMode ? ' active' : ''}`}
@@ -503,6 +514,7 @@ export default function App(): React.JSX.Element {
             filePath={current}
             loadToken={loadToken}
             readonly={!editMode}
+            sourceMode={sourceMode}
             onLinkClick={handleLinkClick}
             onDirtyChange={setDirty}
             onSaved={markdown => { void renameSavedMeeting(current, markdown) }}

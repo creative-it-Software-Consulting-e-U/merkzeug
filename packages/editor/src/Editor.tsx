@@ -4,6 +4,7 @@ import {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useLayoutEffect,
   useRef,
   useState
 } from 'react'
@@ -26,15 +27,7 @@ import {
   wrapInHeadingCommand,
   wrapInOrderedListCommand
 } from '@milkdown/kit/preset/commonmark'
-import {
-  addColAfterCommand,
-  addColBeforeCommand,
-  addRowAfterCommand,
-  addRowBeforeCommand,
-  deleteSelectedCellsCommand,
-  insertTableCommand,
-  toggleStrikethroughCommand
-} from '@milkdown/kit/preset/gfm'
+import { insertTableCommand, toggleStrikethroughCommand } from '@milkdown/kit/preset/gfm'
 import { splitFrontmatter } from '@merkzeug/core/docTitle'
 import { searchPlugin, searchPluginKey, type SearchMeta } from './searchPlugin'
 import { renderMermaid } from './mermaid'
@@ -42,13 +35,25 @@ import { calloutMenuIcon, insertCallout, enableCallouts } from './callouts'
 import { enableHtmlImages } from './htmlImages'
 import { embedBlockImage, enableImageOverlay, insertImage, type ImageTarget } from './imageTools'
 import { ImageOverlay } from './ImageOverlay'
+import { canRunTableAction, enableTableTools, sameTableInfo, tableActionCommand, type TableAction, type TableInfo } from './tableTools'
+import {
+  IconAlign,
+  IconColDelete,
+  IconColInsert,
+  IconRowDelete,
+  IconRowInsert,
+  IconTableDelete
+} from './icons'
 import type { EditorView } from '@milkdown/kit/prose/view'
 import type { ImageInsertMode } from '@merkzeug/core/imageInsert'
 import { jumpToFragment } from './anchors'
 import { isExternalLink } from '@merkzeug/core/paths'
+import { htmlImageTag } from '@merkzeug/core/htmlImages'
 import type { EditorHost, JumpTarget } from './host'
 import '@milkdown/crepe/theme/common/style.css'
 import '@milkdown/crepe/theme/frame.css'
+
+export type { TableAction } from './tableTools'
 
 export type FormatAction =
   | 'text'
@@ -70,9 +75,7 @@ export interface EditorHandle {
   redo: () => void
   format: (action: FormatAction) => void
   insertTable: (rows?: number, cols?: number) => void
-  tableCommand: (
-    kind: 'rowAbove' | 'rowBelow' | 'colBefore' | 'colAfter' | 'deleteRow' | 'deleteCol'
-  ) => void
+  tableCommand: (kind: TableAction) => void
   insertLink: (text: string, href: string) => void
   insertImageFile: (file: File) => Promise<void>
   openImagePicker: () => void
@@ -109,6 +112,8 @@ export interface EditorProps {
   onDirtyChange?: (dirty: boolean) => void
   /** aufgerufen nach jedem Speichern mit dem gespeicherten Markdown */
   onSaved?: (markdown: string) => void
+  /** Markdown-Quelltext (inkl. Frontmatter) statt der visuellen Ansicht bearbeiten */
+  sourceMode?: boolean
 }
 
 const AUTOSAVE_MS = 1000
@@ -163,7 +168,7 @@ const FRONTMATTER_FIELDS: { key: string; insert: string; hint: string }[] = [
 ]
 
 export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
-  { host, filePath, loadToken, readonly, onLinkClick, jump, onDirtyChange, onSaved },
+  { host, filePath, loadToken, readonly, onLinkClick, jump, onDirtyChange, onSaved, sourceMode = false },
   ref
 ): React.JSX.Element {
   const rootRef = useRef<HTMLDivElement | null>(null)
@@ -216,12 +221,26 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   const searchSyncRef = useRef<() => void>(() => {})
   // ausgewähltes Bild für das Bild-Overlay
   const [imageTarget, setImageTarget] = useState<{ view: EditorView; target: ImageTarget } | null>(null)
+  // Cursor in einer Tabelle: zeigt die Tabellen-Leiste
+  const [tableInfo, setTableInfo] = useState<TableInfo | null>(null)
+  const tableBarRef = useRef<HTMLDivElement | null>(null)
+  // Quelltext-Ansicht: vollständiger Dateitext (Frontmatter + Markdown)
+  const sourceModeRef = useRef(sourceMode)
+  const [sourceText, setSourceText] = useState('')
+  const sourceTextRef = useRef('')
+  // Text beim Umschalten in die Quelltext-Ansicht: unverändert → visuelle Ansicht nicht neu aufbauen
+  const sourceEnteredRef = useRef<string | null>(null)
+  const sourceInputRef = useRef<HTMLTextAreaElement | null>(null)
+  const wantedSourceRef = useRef(sourceMode)
+  wantedSourceRef.current = sourceMode
 
   // Pfadwechsel ohne Neuladen (Umbenennen/Verschieben): nur Speicherziel anpassen
   filePathRef.current = filePath
 
   // Explicit save/print must not wait for Milkdown's debounced markdown listener.
   const captureCurrentMarkdown = useCallback(() => {
+    // in der Quelltext-Ansicht ist das Textfeld maßgeblich, nicht der (verdeckte) Editor
+    if (sourceModeRef.current) return
     if (!crepeRef.current || baselineMarkdownRef.current === null) return
     const current = crepeRef.current.getMarkdown()
     latestMarkdownRef.current = current
@@ -302,6 +321,50 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   const handleFrontmatterChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>): void => applyFmText(e.target.value),
     [applyFmText]
+  )
+
+  /** Dateitext in die Quelltext-Ansicht übernehmen (beim Umschalten oder Neuladen). */
+  const showSourceText = useCallback((text: string): void => {
+    sourceTextRef.current = text
+    sourceEnteredRef.current = text
+    setSourceText(text)
+  }, [])
+
+  /** Bearbeiteter Quelltext: Frontmatter und Markdown trennen und wie Editor-Änderungen speichern. */
+  const applySourceText = useCallback(
+    (text: string): void => {
+      sourceTextRef.current = text
+      setSourceText(text)
+      const { frontmatter, body } = splitFrontmatter(text)
+      frontmatterRef.current = frontmatter
+      latestMarkdownRef.current = body
+      if (!dirtyRef.current) {
+        dirtyRef.current = true
+        onDirtyChange?.(true)
+        setReloadInfo(null)
+      }
+      scheduleSave()
+    },
+    [onDirtyChange, scheduleSave]
+  )
+
+  /** Text an der Cursorposition des Quelltext-Felds einfügen bzw. die Auswahl ersetzen. */
+  const insertSourceText = useCallback(
+    (text: string, mode: 'insert' | 'replace'): void => {
+      const area = sourceInputRef.current
+      const current = sourceTextRef.current
+      const start = area?.selectionStart ?? current.length
+      const end = area?.selectionEnd ?? current.length
+      const from = mode === 'replace' ? start : end
+      if (area && !area.readOnly) {
+        // über execCommand bleibt die Einfügung Teil der Undo-Historie des Textfelds
+        area.focus()
+        area.setSelectionRange(from, end)
+        if (document.execCommand('insertText', false, text)) return
+      }
+      applySourceText(current.slice(0, from) + text + current.slice(end))
+    },
+    [applySourceText]
   )
 
   /** Vorlagen-Zeile aus dem „+ Feld“-Menü ans Ende des Frontmatters anfügen. */
@@ -389,12 +452,16 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   const insertImageFile = useCallback(async (file: File): Promise<void> => {
     const src = await uploadImage(file)
     const mode = await imageInsertMode()
+    if (sourceModeRef.current) {
+      insertSourceText(mode === 'html' ? htmlImageTag({ src }) : `![](${src})`, 'replace')
+      return
+    }
     crepeRef.current?.editor.action((ctx) => {
       const view = ctx.get(editorViewCtx)
       insertImage(view, src, mode)
       view.focus()
     })
-  }, [imageInsertMode, uploadImage])
+  }, [imageInsertMode, insertSourceText, uploadImage])
 
   /** Bild aus dem Platzhalter des Slash-Menüs: nach dem Übernehmen der Quelle ggf. zu `<img>` machen. */
   const uploadBlockImage = useCallback(async (file: File): Promise<string> => {
@@ -551,6 +618,57 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
     [dispatchSearch, searchQuery]
   )
 
+  /**
+   * Zurück in die visuelle Ansicht: geänderten Quelltext in den Editor laden.
+   * Die Serialisierung des neuen Stands gilt als gespeichert, damit das bloße
+   * Umschalten die Datei nicht umformatiert.
+   */
+  const applySourceToEditor = useCallback((): void => {
+    const crepe = crepeRef.current
+    const text = sourceTextRef.current
+    if (!crepe || text === sourceEnteredRef.current) return
+    const { frontmatter, body } = splitFrontmatter(text)
+    frontmatterRef.current = frontmatter
+    setFmText(frontmatterInner(frontmatter))
+    crepe.editor.action((ctx) => {
+      const view = ctx.get(editorViewCtx)
+      const doc = ctx.get(parserCtx)(body)
+      if (!doc) return
+      const tr = view.state.tr.replaceWith(0, view.state.doc.content.size, doc.content)
+      view.dispatch(tr.setSelection(TextSelection.atStart(tr.doc)))
+    })
+    const serialized = crepe.getMarkdown()
+    latestMarkdownRef.current = serialized
+    if (!dirtyRef.current) lastSavedRef.current = serialized
+  }, [])
+
+  useEffect(() => {
+    if (sourceMode === sourceModeRef.current) return
+    if (sourceMode) {
+      captureCurrentMarkdown()
+      sourceModeRef.current = true
+      // ohne eigene Änderungen den Dateitext zeigen, nicht die Serialisierung des Editors
+      const unchanged = !dirtyRef.current && lastDiskRef.current !== null
+      showSourceText(unchanged ? lastDiskRef.current! : frontmatterRef.current + (latestMarkdownRef.current ?? ''))
+      requestAnimationFrame(() => {
+        const area = sourceInputRef.current
+        if (!area || readonly) return
+        area.focus()
+        area.setSelectionRange(0, 0)
+        area.scrollTop = 0
+      })
+      return
+    }
+    // ungespeicherten Quelltext erst schreiben, sonst landet beim Umschalten die normalisierte Fassung auf der Platte
+    void (async () => {
+      if (dirtyRef.current && !conflictRef.current) await doSave().catch(() => {})
+      if (wantedSourceRef.current) return
+      sourceModeRef.current = false
+      applySourceToEditor()
+    })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sourceMode])
+
   useEffect(() => {
     let cancelled = false
     let crepe: Crepe | null = null
@@ -585,6 +703,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       baselineMarkdownRef.current = null
       if (cancelled || !rootRef.current) return
       setFmText(frontmatterInner(frontmatter))
+      if (sourceModeRef.current) showSourceText(content)
       rootRef.current.innerHTML = ''
       mermaidSourcesRef.current.clear()
 
@@ -717,6 +836,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
           previous.target.kind === target.kind && previous.target.index === target.index && previous.target.html === target.html
         return same ? previous : { view, target }
       }))
+      enableTableTools(crepe.editor, (info) => setTableInfo((previous) => sameTableInfo(previous, info) ? previous : info))
       crepe.editor.use(arrowInputRule)
       crepe.editor.use(searchPlugin)
 
@@ -852,7 +972,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
 
   const runCommand = useCallback((cmd: { key: never } | unknown, payload?: unknown): void => {
     const crepe = crepeRef.current
-    if (!crepe) return
+    if (!crepe || sourceModeRef.current) return
     try {
       crepe.editor.action(
         callCommand((cmd as { key: Parameters<typeof callCommand>[0] }).key, payload as never)
@@ -862,14 +982,26 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
     }
   }, [])
 
+  /** Tabellen-Aktion an der Cursorposition ausführen (Leiste, Menü, Kontextmenü). */
+  const runTableAction = useCallback((action: TableAction): void => {
+    const crepe = crepeRef.current
+    if (!crepe || sourceModeRef.current || readonly) return
+    crepe.editor.action((ctx) => {
+      const view = ctx.get(editorViewCtx)
+      tableActionCommand(action)(view.state, view.dispatch, view)
+      view.focus()
+    })
+  }, [readonly])
+
   useImperativeHandle(
     ref,
     (): EditorHandle => ({
-      undo: () => runCommand(undoCommand),
-      redo: () => runCommand(redoCommand),
+      // im Textfeld der Quelltext-Ansicht gilt dessen eigene Undo-Historie
+      undo: () => sourceModeRef.current ? document.execCommand('undo') : runCommand(undoCommand),
+      redo: () => sourceModeRef.current ? document.execCommand('redo') : runCommand(redoCommand),
       format: (action) => {
         const crepe = crepeRef.current
-        if (!crepe) return
+        if (!crepe || sourceModeRef.current) return
         switch (action) {
           case 'text':
             runCommand(turnIntoTextCommand)
@@ -910,18 +1042,12 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
         crepe.editor.action((ctx) => ctx.get(editorViewCtx).focus())
       },
       insertTable: (rows = 3, cols = 3) => runCommand(insertTableCommand, { row: rows, col: cols }),
-      tableCommand: (kind) => {
-        const map = {
-          rowAbove: addRowBeforeCommand,
-          rowBelow: addRowAfterCommand,
-          colBefore: addColBeforeCommand,
-          colAfter: addColAfterCommand,
-          deleteRow: deleteSelectedCellsCommand,
-          deleteCol: deleteSelectedCellsCommand
-        } as const
-        runCommand(map[kind])
-      },
+      tableCommand: runTableAction,
       insertLink: (text, href) => {
+        if (sourceModeRef.current) {
+          insertSourceText(`[${text || href}](${href})`, 'replace')
+          return
+        }
         const crepe = crepeRef.current
         if (!crepe) return
         crepe.editor.action((ctx) => {
@@ -948,7 +1074,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       getScrollTop: () => hostRef.current?.scrollTop ?? 0,
       getHeadings: () => {
         const root = rootRef.current
-        if (!root) return []
+        if (!root || sourceModeRef.current) return []
         return [
           ...root.querySelectorAll<HTMLElement>('.ProseMirror :is(h1, h2, h3, h4, h5, h6)')
         ]
@@ -964,6 +1090,10 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       },
       getMarkdown: () => latestMarkdownRef.current ?? '',
       insertMarkdown: (markdown, mode) => {
+        if (sourceModeRef.current) {
+          insertSourceText(markdown, mode)
+          return
+        }
         const crepe = crepeRef.current
         if (!crepe) return
         crepe.editor.action((ctx) => {
@@ -992,6 +1122,10 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
         })
       },
       getSelectedText: () => {
+        if (sourceModeRef.current) {
+          const area = sourceInputRef.current
+          return area ? sourceTextRef.current.slice(area.selectionStart, area.selectionEnd) : ''
+        }
         const crepe = crepeRef.current
         if (!crepe) return ''
         let text = ''
@@ -1002,9 +1136,9 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
         })
         return text
       },
-      openSearch: openSearchBar
+      openSearch: (withReplace) => { if (!sourceModeRef.current) openSearchBar(withReplace) }
     }),
-    [doSave, flushSync, insertImageFile, openSearchBar, runCommand]
+    [doSave, flushSync, insertImageFile, insertSourceText, openSearchBar, runCommand, runTableAction]
   )
 
   const handleClickCapture = useCallback(
@@ -1070,6 +1204,35 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
     [insertImageFile]
   )
 
+  const showTableBar = !!tableInfo && !readonly && !sourceMode
+
+  // Die Tabellen-Leiste liegt über dem Textanfang: verdeckt sie die Cursorzeile, Text darunter schieben
+  useLayoutEffect(() => {
+    const bar = tableBarRef.current
+    const scroller = hostRef.current
+    const crepe = crepeRef.current
+    if (!showTableBar || !bar || !scroller || !crepe) return
+    crepe.editor.action((ctx) => {
+      const view = ctx.get(editorViewCtx)
+      const covered = bar.getBoundingClientRect().bottom + 6 - view.coordsAtPos(view.state.selection.head).top
+      if (covered > 0) scroller.scrollTop -= covered
+    })
+  }, [showTableBar, tableInfo?.row])
+
+  const tableBtn = (action: TableAction, label: string, icon: React.JSX.Element, toggled = false): React.JSX.Element => (
+    <button
+      className={`table-toolbar-btn${toggled ? ' toggled' : ''}`}
+      data-tip={label}
+      aria-label={label}
+      aria-pressed={toggled || undefined}
+      disabled={!canRunTableAction(tableInfo, action)}
+      onMouseDown={(e) => e.preventDefault()}
+      onClick={() => runTableAction(action)}
+    >
+      {icon}
+    </button>
+  )
+
   if (loadError) {
     return <div className="editor-error">{translate("Could not load file:")} {loadError}</div>
   }
@@ -1082,8 +1245,27 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
       onPasteCapture={handlePaste}
       onDropCapture={handleDrop}
     >
+      {showTableBar && tableInfo && (
+        <div className="table-toolbar-anchor">
+          <div ref={tableBarRef} className="table-toolbar" role="toolbar" aria-label={translate("Table")}>
+            <span className="table-toolbar-label">{translate("Table")}</span>
+            {tableBtn('rowAbove', translate("Insert Row Above"), <IconRowInsert below={false} />)}
+            {tableBtn('rowBelow', translate("Insert Row Below"), <IconRowInsert below />)}
+            {tableBtn('colBefore', translate("Insert column to the left"), <IconColInsert after={false} />)}
+            {tableBtn('colAfter', translate("Insert column to the right"), <IconColInsert after />)}
+            <div className="table-toolbar-divider" />
+            {tableBtn('alignLeft', translate("Align column left"), <IconAlign align="left" />, tableInfo.align === 'left')}
+            {tableBtn('alignCenter', translate("Center column"), <IconAlign align="center" />, tableInfo.align === 'center')}
+            {tableBtn('alignRight', translate("Align column right"), <IconAlign align="right" />, tableInfo.align === 'right')}
+            <div className="table-toolbar-divider" />
+            {tableBtn('deleteRow', translate("Delete Row"), <IconRowDelete />)}
+            {tableBtn('deleteCol', translate("Delete Column"), <IconColDelete />)}
+            {tableBtn('deleteTable', translate("Delete table"), <IconTableDelete />)}
+          </div>
+        </div>
+      )}
       {saveError && !conflict && <div role="alert" className="editor-conflict"><span>{translate("Save failed:")} {saveError}</span><button onClick={() => void doSave().catch(() => {})}>{translate("Try again")}</button></div>}
-      {searchOpen && (
+      {searchOpen && !sourceMode && (
         <div className="search-anchor">
           <div className="search-bar">
             <div className="search-row">
@@ -1198,7 +1380,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
           <button onClick={resolveConflictKeep}>{translate("Keep my version")}</button>
         </div>
       )}
-      <div className="frontmatter-bar">
+      <div className="frontmatter-bar" hidden={sourceMode}>
         <div className="frontmatter-head">
           <button
             className="frontmatter-toggle"
@@ -1256,8 +1438,21 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
           />
         )}
       </div>
-      <div ref={rootRef} className="editor-root" />
-      {imageTarget && !readonly && (
+      <div ref={rootRef} className="editor-root" hidden={sourceMode} />
+      {sourceMode && (
+        <textarea
+          ref={sourceInputRef}
+          className="source-input"
+          value={sourceText}
+          onChange={(e) => applySourceText(e.target.value)}
+          readOnly={readonly}
+          spellCheck={false}
+          autoCapitalize="off"
+          autoCorrect="off"
+          aria-label={translate("Markdown source")}
+        />
+      )}
+      {imageTarget && !readonly && !sourceMode && (
         <ImageOverlay
           key={`${imageTarget.target.pos}:${imageTarget.target.kind}:${imageTarget.target.index}:${imageTarget.target.html ?? ''}`}
           view={imageTarget.view}

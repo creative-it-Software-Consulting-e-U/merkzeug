@@ -41,6 +41,18 @@ Bearbeitungsmodus:
   neben dem Titel zeigt ungespeicherte Änderungen.
 - „/" am Zeilenanfang öffnet das Einfüge-Menü (Überschriften, Listen,
   Tabellen, Bilder, Codeblöcke …).
+- Tabellen: Steht der Cursor in einer Tabelle, erscheint über der Notiz eine
+  **Tabellen-Leiste** zum Einfügen von Zeilen darüber/darunter und Spalten
+  links/rechts, zum Ausrichten der aktuellen Spalte (links, zentriert, rechts)
+  und zum Löschen von Zeile, Spalte oder ganzer Tabelle. Der Zeilenumbruch
+  wechselt in die Zelle darunter und legt in der letzten Zeile eine neue Zeile
+  an; in einer leeren letzten Zeile entfernt er sie und schreibt unter der
+  Tabelle weiter. Mit externer Tastatur springt Tab in die nächste Zelle und
+  legt nach der letzten Zelle eine neue Zeile an.
+- **&lt;/&gt;** in der Titelleiste zeigt die Notiz als Markdown-Quelltext samt
+  Frontmatter. Im Bearbeitungsmodus änderst du den Text direkt; gesichert wird
+  automatisch. Ein erneutes Tippen auf **&lt;/&gt;** führt zur formatierten
+  Ansicht zurück.
 - Bilder aus der Foto-Mediathek werden beim Einfügen automatisch im
   Ordner `Notizname.assets/` neben `Notizname.md` abgelegt.
 - Mermaid-Codeblöcke zeigen eine Diagramm-Vorschau.

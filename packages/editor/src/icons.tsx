@@ -281,3 +281,81 @@ export function IconStop(): React.JSX.Element {
     </svg>
   )
 }
+
+/** Tabellen-Leiste: Zeile über/unter der aktuellen einfügen */
+export function IconRowInsert({ below }: { below: boolean }): React.JSX.Element {
+  const y = below ? 2.5 : 8.5
+  return (
+    <svg {...base}>
+      <rect x="2.5" y={y} width="11" height="5" rx="1" />
+      <line x1="8" y1={below ? 10 : 2} x2="8" y2={below ? 14.5 : 6.5} />
+      <line x1="5.75" y1={below ? 12.25 : 4.25} x2="10.25" y2={below ? 12.25 : 4.25} />
+    </svg>
+  )
+}
+
+/** Tabellen-Leiste: Spalte links/rechts der aktuellen einfügen */
+export function IconColInsert({ after }: { after: boolean }): React.JSX.Element {
+  const x = after ? 2.5 : 8.5
+  return (
+    <svg {...base}>
+      <rect x={x} y="2.5" width="5" height="11" rx="1" />
+      <line x1={after ? 10 : 2} y1="8" x2={after ? 14.5 : 6.5} y2="8" />
+      <line x1={after ? 12.25 : 4.25} y1="5.75" x2={after ? 12.25 : 4.25} y2="10.25" />
+    </svg>
+  )
+}
+
+export function IconRowDelete(): React.JSX.Element {
+  return (
+    <svg {...base}>
+      <rect x="2.5" y="5.5" width="11" height="5" rx="1" />
+      <line x1="6" y1="6.5" x2="10" y2="9.5" />
+      <line x1="10" y1="6.5" x2="6" y2="9.5" />
+    </svg>
+  )
+}
+
+export function IconColDelete(): React.JSX.Element {
+  return (
+    <svg {...base}>
+      <rect x="5.5" y="2.5" width="5" height="11" rx="1" />
+      <line x1="6.5" y1="6" x2="9.5" y2="10" />
+      <line x1="9.5" y1="6" x2="6.5" y2="10" />
+    </svg>
+  )
+}
+
+export function IconTableDelete(): React.JSX.Element {
+  return (
+    <svg {...base}>
+      <rect x="2.5" y="3" width="11" height="10" rx="1" />
+      <line x1="2.5" y1="6.3" x2="13.5" y2="6.3" />
+      <line x1="6.3" y1="8" x2="9.7" y2="11.4" />
+      <line x1="9.7" y1="8" x2="6.3" y2="11.4" />
+    </svg>
+  )
+}
+
+export function IconAlign({ align }: { align: 'left' | 'center' | 'right' }): React.JSX.Element {
+  const short = align === 'left' ? [2.5, 9.5] : align === 'center' ? [4.5, 11.5] : [6.5, 13.5]
+  return (
+    <svg {...base}>
+      <line x1="2.5" y1="4" x2="13.5" y2="4" />
+      <line x1={short[0]} y1="7" x2={short[1]} y2="7" />
+      <line x1="2.5" y1="10" x2="13.5" y2="10" />
+      <line x1={short[0]} y1="13" x2={short[1]} y2="13" />
+    </svg>
+  )
+}
+
+/** Markdown-Quelltext-Ansicht */
+export function IconSource(): React.JSX.Element {
+  return (
+    <svg {...base}>
+      <polyline points="5.5 4.5 2 8 5.5 11.5" />
+      <polyline points="10.5 4.5 14 8 10.5 11.5" />
+      <line x1="9" y1="3" x2="7" y2="13" />
+    </svg>
+  )
+}
