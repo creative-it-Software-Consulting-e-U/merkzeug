@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Tables: while the caret is in a table, a table bar below the toolbar inserts rows above/below and columns left/right, aligns the current column and deletes the row, column or table — on desktop, iOS, IntelliJ and VS Code. **Delete Row** and **Delete Column** in the Table menus now work at the caret instead of requiring selected cells; the header row and the last data row are protected.
+- Tables: Tab in the last cell and Enter in the last row add a new row; Enter moves to the cell below instead of leaving the table, and Enter in an empty last row removes it and continues below the table.
+- Desktop and iOS: **Markdown source** view (desktop: `</>` button, **View → Markdown Source**, ⌘/ / Ctrl+/; iOS: `</>` in the title bar) to read and edit the note's Markdown including frontmatter. Switching views never reformats the file.
+
 ## 1.4.0
 
 - Desktop: **AI assistant** panel (⇧⌘A) for Mermaid diagrams, summaries, rewrites and tables with one-click insertion into the note. Backends: Anthropic API and OpenAI API with your own key, or the locally installed Claude Code and Codex CLIs with their existing login. Mermaid answers are validated and repaired automatically before they are offered.

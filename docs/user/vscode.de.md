@@ -32,6 +32,8 @@ Du nutzt den gemeinsamen visuellen Editor mit Slash-Menü, Formatierungswerkzeug
 
 Wenn eine ganze Tabellenzelle markiert ist, wird sie hervorgehoben; klicke in den Text, um den Cursor zu setzen und zu bearbeiten.
 
+Steht der Cursor in einer Tabelle, erscheint über der Notiz eine **Tabellen-Leiste**: Zeile darüber/darunter oder Spalte links/rechts einfügen, die aktuelle Spalte links, zentriert oder rechts ausrichten sowie Zeile, Spalte oder die ganze Tabelle löschen. Kopfzeile und letzte verbliebene Datenzeile lassen sich nicht löschen. Tab springt in die nächste Zelle und legt nach der letzten Zelle eine neue Zeile an; Enter wechselt in die Zelle darunter und legt in der letzten Zeile eine neue Zeile an, Enter in einer leeren letzten Zeile entfernt sie und schreibt unter der Tabelle weiter. ⇧Enter bricht die Zeile innerhalb einer Zelle um, ⌘Enter / Strg+Enter verlässt die Tabelle. Das Tabellenmenü in der Werkzeugleiste bietet dieselben Zeilen- und Spaltenaktionen. Den Markdown-Quelltext bearbeitest du im Texteditor von VS Code.
+
 Ändert ein anderer Editor das Dokument, lädt Merkzeug es neu, sofern keine lokalen Änderungen vorliegen. Andernfalls kannst du im Konflikt-Hinweis die andere Fassung laden oder bewusst deine eigene behalten.
 
 Merkzeug beachtet die Schreibrechte der Datei. Links auf andere Markdown-Dateien öffnen diese in einem eigenen Merkzeug-Tab oder aktivieren einen bereits geöffneten Tab; Web-Links öffnen sich im Browser. Die Navigation zu Überschriften in anderen Dokumenten ist wie in IntelliJ noch unvollständig.

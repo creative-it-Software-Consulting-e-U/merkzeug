@@ -52,6 +52,7 @@ export type MenuAction =
   | 'tableDeleteRow'
   | 'tableDeleteCol'
   | 'toggleNavMode'
+  | 'toggleSource'
   | 'navBack'
   | 'navForward'
   | 'toggleSplit'

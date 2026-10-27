@@ -26,6 +26,8 @@ export interface Tab {
   kind: TabKind
   path: string
   navMode: boolean
+  /** Markdown-Quelltext statt der visuellen Ansicht */
+  sourceMode?: boolean
   history: HistoryEntry[]
   historyIndex: number
   /** erzwingt Neuladen des Editors bei Navigation im selben Tab */

@@ -23,6 +23,7 @@ import {
   IconLink,
   IconOrderedList,
   IconQuote,
+  IconSource,
   IconSparkle,
   IconStrike,
   IconTable,
@@ -44,6 +45,7 @@ interface PaneProps {
   onOverviewOpenNote: (tab: Tab, path: string) => void
   onOverviewOpenFolder: (tab: Tab, path: string) => void
   onToggleNavMode: (tabId: string) => void
+  onToggleSource: (tabId: string) => void
   onNavBack: (tabId: string) => void
   onNavForward: (tabId: string) => void
   onInsertLink: () => void
@@ -114,7 +116,7 @@ export function PaneView(props: PaneProps): React.JSX.Element {
     <button
       className={`toolbar-btn icon${extraClass ? ` ${extraClass}` : ''}`}
       data-tip={title}
-      disabled={activeTab?.navMode}
+      disabled={activeTab?.navMode || activeTab?.sourceMode}
       onMouseDown={(e) => e.preventDefault()}
       onClick={onClick}
     >
@@ -160,6 +162,7 @@ export function PaneView(props: PaneProps): React.JSX.Element {
               <button
                 className="toolbar-btn icon"
                 data-tip={translate("Table of contents: jump to a heading")}
+                disabled={activeTab.sourceMode}
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={(e) => openMenu('toc', e)}
               >
@@ -200,6 +203,20 @@ export function PaneView(props: PaneProps): React.JSX.Element {
             </>
           )}
           <div className="toolbar-spacer" />
+          {activeTab.kind === 'note' && (
+            <button
+              className={`toolbar-btn icon${activeTab.sourceMode ? ' toggled' : ''}`}
+              data-tip={
+                activeTab.sourceMode
+                  ? translate("Back to the visual editor (⌘/)")
+                  : translate("Markdown source (⌘/)")
+              }
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => props.onToggleSource(activeTab.id)}
+            >
+              <IconSource />
+            </button>
+          )}
           <button
             className={`toolbar-btn icon${props.assistantOpen ? ' toggled' : ''}`}
             data-tip={translate("AI Assistant (⇧⌘A)")}
@@ -261,6 +278,7 @@ export function PaneView(props: PaneProps): React.JSX.Element {
                   filePath={tab.path}
                   loadToken={tab.loadToken}
                   readonly={tab.navMode}
+                  sourceMode={tab.sourceMode}
                   jump={tab.pendingJump}
                   onLinkClick={(href) => props.onLinkClick(tab, href)}
                   onDirtyChange={(dirty) => props.onDirtyChange(tab.id, dirty)}

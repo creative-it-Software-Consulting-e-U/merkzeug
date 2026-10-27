@@ -100,8 +100,9 @@ The editor shows the note formatted; what is saved is Markdown.
 
 - **Toolbar:** the bar above the editor offers paragraph format, bold/italic/
   strikethrough/inline code, lists, quote, code block, link, image, table and
-  divider — plus back/forward as well as, on the right, the help button
-  (question mark, opens this help) and navigation mode (book icon).
+  divider — plus back/forward as well as, on the right, the Markdown source
+  view (`</>`), the help button (question mark, opens this help) and
+  navigation mode (book icon).
 - **Table-of-contents dropdown:** the list button on the left of the toolbar
   shows all headings of the note (indented by level); clicking one jumps
   straight to that heading. Also works in navigation mode.
@@ -128,9 +129,21 @@ The editor shows the note formatted; what is saved is Markdown.
   title folds the box in the view only, without changing the file. Click into
   the title line to edit the marker. Insert via the slash menu (**Callout**).
   PDF exports always print callouts expanded.
-- **Tables:** insert via ⌥⌘T / Ctrl+Alt+T, the slash menu or the Edit menu. Jump from cell to
-  cell with Tab; add and delete rows/columns via the table controls right at the
-  table or the **Table** menu.
+- **Tables:** insert via ⌥⌘T / Ctrl+Alt+T, the slash menu or the Edit menu. While the
+  caret is in a table, a **table bar** appears below the toolbar: insert a row
+  above/below or a column left/right, align the current column left, centered
+  or right, and delete the row, the column or the whole table. The header row
+  and the last remaining data row cannot be deleted. Tab jumps to the next cell
+  and adds a new row after the last cell; ⇧Tab goes back. Enter moves to the
+  cell below and adds a new row in the last row; Enter in an empty last row
+  removes it and continues below the table. ⇧Enter breaks the line inside a
+  cell, ⌘Enter / Ctrl+Enter leaves the table. The **Table** menu and the
+  controls at the table edge offer the same actions.
+- **Markdown source:** the `</>` button, **View → Markdown Source** or ⌘/ /
+  Ctrl+/ switch the tab to the plain Markdown text, including the frontmatter.
+  Edits are saved automatically like in the visual editor; switching back shows
+  them formatted. Switching alone never reformats the file. Search and the
+  formatting buttons are available in the visual view only.
 - **Images:** paste from the clipboard, drag & drop, slash menu or
   **Edit → Insert Image…**. Click an image to show its toolbar above it:
   **HTML &lt;img&gt;** switches between a Markdown image and an HTML `<img>` tag.
@@ -381,6 +394,7 @@ the sidebar:
 | Insert table | ⌥⌘T | Ctrl+Alt+T |
 | Find / Find and replace | ⌘F / ⌥⌘F | Ctrl+F / Ctrl+Alt+F |
 | Toggle navigation mode | ⌘R | Ctrl+R |
+| Markdown source / visual editor | ⌘/ | Ctrl+/ |
 | Back / Forward | ⌘[ / ⌘] | Ctrl+[ / Ctrl+] |
 | Toggle second section | ⌘\ | Ctrl+\ |
 | Move tab to other section | ⇧⌘\ | Ctrl+Shift+\ |
