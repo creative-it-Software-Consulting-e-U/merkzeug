@@ -90,6 +90,13 @@ export function AiSettings(): React.JSX.Element {
               <span className="settings-ai-title">{info[p.id].title}</span>
               <span className={`settings-ai-detail${p.ready ? ' ready' : ''}`}>{translate(p.detail)}</span>
               <span className="settings-ai-detail">{info[p.id].hint}</span>
+              {p.bridge && p.bridge !== 'ready' && (
+                <div className="settings-ai-row">
+                  <button disabled={busy !== null} onClick={() => run('allowCli', () => window.merkzeug.aiAllowCli())}>
+                    {p.bridge === 'outdated' ? translate("Renew approval…") : translate("Allow…")}
+                  </button>
+                </div>
+              )}
               {info[p.id].keyed && status.keyStorage && (
                 <div className="settings-ai-row">
                   <input

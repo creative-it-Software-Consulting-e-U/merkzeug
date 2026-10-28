@@ -114,6 +114,8 @@ export interface AiProviderStatus {
   ready: boolean
   /** key stored, CLI path, or why it is not ready */
   detail: string
+  /** App Store builds: state of the user's approval for the CLI launcher */
+  bridge?: 'missing' | 'outdated' | 'ready'
 }
 
 export interface AiStatus {

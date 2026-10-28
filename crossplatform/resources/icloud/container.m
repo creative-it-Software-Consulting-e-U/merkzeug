@@ -34,7 +34,9 @@ static napi_value container(napi_env env, napi_callback_info info) {
     napi_queue_async_work(env, request->work);
     return promise;
 }
+void registerScripts(napi_env env, napi_value exports);
 NAPI_MODULE_INIT() {
+    registerScripts(env, exports);
     napi_value fn;
     napi_create_function(env, "container", NAPI_AUTO_LENGTH, container, NULL, &fn);
     napi_set_named_property(env, exports, "container", fn);

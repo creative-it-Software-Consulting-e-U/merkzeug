@@ -4,6 +4,7 @@ import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { migrateDefaultTemplates, windowsCloudTemplates } from './templateCloudPaths.mjs'
 import { execFile } from 'node:child_process'
+import { foundationAddon } from './foundation'
 import { getStoredTemplatesRoot, setStoredTemplatesRoot } from './settings'
 import { migrateTemplateFiles } from './templateMigration.mjs'
 
@@ -28,9 +29,8 @@ export function refreshTemplateCloud(): Promise<void> {
     cloudRoot = null; problem = null
     if (process.env.MERKZEUG_TEMPLATES_ROOT) return // isolated test profiles must never migrate user templates
     if (process.platform === 'darwin') {
-      const addonPath = app.isPackaged ? join(process.resourcesPath, 'icloud/merkzeug-icloud.node') : join(__dirname, '../../resources/icloud/merkzeug-icloud.node')
-      if (!existsSync(addonPath)) return
-      const native = require(addonPath) as { container(): Promise<string | null> }
+      const native = foundationAddon()
+      if (!native) return
       const container = await native.container()
       cloudRoot = container ? join(container, 'Documents', 'Templates') : null
     } else if (process.platform === 'win32') cloudRoot = await windowsRoot()

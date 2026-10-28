@@ -7,7 +7,7 @@
  */
 import { isAbsolute, relative } from 'node:path'
 import { foldedPrompt, STABLE_INSTRUCTIONS, contextBlock } from './prompt'
-import { findExecutable, runLines, stderrExcerpt } from './cli'
+import { cliCommand, findExecutable, runLines, stderrExcerpt } from './cli'
 import type { AiProvider, ProviderRequest, ProviderResult } from './provider'
 import type { VaultActivity } from './vaultTools'
 
@@ -37,8 +37,8 @@ const ACTIVITY: Record<string, VaultActivity['kind']> = { Read: 'read', Glob: 'l
 
 export const claudeCliProvider: AiProvider = {
   async chat(request: ProviderRequest, signal: AbortSignal, onDelta): Promise<ProviderResult> {
-    const file = findClaudeCli()
-    if (!file) throw new Error('Claude Code CLI not found.')
+    const command = cliCommand('claude', findClaudeCli)
+    if (!command) throw new Error('Claude Code CLI not found.')
     const vault = request.vault
     const system = [STABLE_INSTRUCTIONS, vault?.cliInstructions, contextBlock(request.context)].filter(Boolean).join('\n\n')
     const write = vault?.session.access === 'write'
@@ -69,7 +69,7 @@ export const claudeCliProvider: AiProvider = {
     let result: string | null = null
     let errorText: string | null = null
     let model: string | undefined
-    const { code, stderr } = await runLines(file, args, {
+    const { code, stderr } = await runLines(command, args, {
       stdin: foldedPrompt(request.messages, request.context, false),
       cwd: root,
       env,

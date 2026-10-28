@@ -477,6 +477,17 @@ direkt im Kopf der Leiste:
   installiert oder in der ChatGPT-Desktop-App enthalten – mit deren
   ChatGPT-Anmeldung.
 
+**Version aus dem Mac App Store:** macOS erlaubt App-Store-Apps nicht, Programme
+aus deinem Benutzerordner zu starten. Claude Code und Codex brauchen deshalb
+einmal deine Freigabe: Klicke in **Einstellungen → KI-Assistent** bei Claude
+Code oder Codex auf **Erlauben…** und sichere die vorgeschlagene Datei
+`merkzeug-cli`, ohne Namen oder Ordner zu ändern (`~/Library/Application
+Scripts/` gefolgt von der App-ID von Merkzeug). Dieses kleine Startskript
+startet nur Claude Code oder Codex mit deren eigener Anmeldung und verweigert
+Optionen, die deren Sicherheitsabfragen abschalten. Lösche die Datei, um die
+Freigabe zu widerrufen. Die Version von der Website braucht diesen Schritt
+nicht.
+
 **Vault-Dateien:** Mit **Vault lesen** (wird gespeichert, standardmäßig an)
 kann der Assistent die Textdateien des geöffneten Vaults (Markdown, txt, csv,
 json, yaml, mmd) auflisten, durchsuchen und lesen, wenn deine Anfrage sie
