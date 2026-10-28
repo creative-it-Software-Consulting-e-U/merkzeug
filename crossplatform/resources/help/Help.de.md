@@ -479,8 +479,8 @@ direkt im Kopf der Leiste:
 
 **Version aus dem Mac App Store:** macOS erlaubt App-Store-Apps nicht, Programme
 aus deinem Benutzerordner zu starten. Claude Code und Codex brauchen deshalb
-einmal deine Freigabe: Klicke in **Einstellungen → KI-Assistent** bei Claude
-Code oder Codex auf **Erlauben…** und sichere die vorgeschlagene Datei
+einmal deine Freigabe: Wähle Claude Code oder Codex im Assistenten-Panel (oder
+öffne **Einstellungen → KI-Assistent**), klicke auf **Erlauben…** und sichere die vorgeschlagene Datei
 `merkzeug-cli`, ohne Namen oder Ordner zu ändern (`~/Library/Application
 Scripts/` gefolgt von der App-ID von Merkzeug). Dieses kleine Startskript
 startet nur Claude Code oder Codex mit deren eigener Anmeldung und verweigert

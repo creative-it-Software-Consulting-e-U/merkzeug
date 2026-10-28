@@ -459,8 +459,8 @@ panel header:
   or bundled with the ChatGPT desktop app – with its ChatGPT login.
 
 **Mac App Store version:** macOS does not let App Store apps start programs
-from your home folder, so Claude Code and Codex first need your approval. In
-**Settings → AI assistant** click **Allow…** next to Claude Code or Codex and
+from your home folder, so Claude Code and Codex first need your approval. Choose Claude Code or Codex in the assistant panel (or open
+**Settings → AI assistant**), click **Allow…** and
 save the suggested file `merkzeug-cli` without changing its name or folder
 (`~/Library/Application Scripts/` followed by Merkzeug's app ID). This small
 launcher starts only Claude Code or Codex, with their own login, and refuses

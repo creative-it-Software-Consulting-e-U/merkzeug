@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { renderMermaid, validateMermaid } from '@merkzeug/editor/mermaid'
 import { translate } from '../translate'
-import type { AiActivity, AiChatEvent, AiChatRequest, AiContext, AiFileChange, AiProviderId, AiStatus, AiUndoResult } from '../../../shared/types'
+import type { AiActivity, AiChatEvent, AiChatRequest, AiContext, AiFileChange, AiProviderId, AiProviderStatus, AiStatus, AiUndoResult } from '../../../shared/types'
 import { fencedBlock, renderInline, splitAnswer } from '../util/assistant'
 import { IconClose, IconSend, IconStop } from './icons'
 
@@ -130,6 +130,13 @@ export function AssistantPanel(props: AssistantPanelProps): React.JSX.Element {
   const access: VaultAccess = !vaultRead ? 'none' : allowWrite ? 'write' : 'read'
   const providerStatus = status?.providers.find((p) => p.id === provider) ?? null
   const ready = Boolean(providerStatus?.ready)
+  // App Store: Claude Code/Codex wait for the one-time launcher approval
+  const needsApproval = (p: AiProviderStatus | null): boolean => Boolean(p?.bridge && p.bridge !== 'ready')
+  const [approvalError, setApprovalError] = useState<string | null>(null)
+  const allowCli = (): void => {
+    setApprovalError(null)
+    window.merkzeug.aiAllowCli().then(setStatus, (err) => setApprovalError(String(err).replace(/^Error: Error invoking remote method '[^']*': (Error: )?/, '')))
+  }
 
   const send = useCallback(
     (text: string, auto = false, accessOverride?: VaultAccess) => {
@@ -394,9 +401,9 @@ export function AssistantPanel(props: AssistantPanelProps): React.JSX.Element {
         >
           {!provider && <option value="">{translate("Choose provider…")}</option>}
           {status?.providers.map((p) => (
-            <option key={p.id} value={p.id} disabled={!p.ready}>
+            <option key={p.id} value={p.id} disabled={!p.ready && !needsApproval(p)}>
               {providerLabel(p.id)}
-              {p.ready ? '' : ` – ${translate("not set up")}`}
+              {p.ready ? '' : ` – ${needsApproval(p) ? translate("approval needed") : translate("not set up")}`}
             </option>
           ))}
         </select>
@@ -429,6 +436,14 @@ export function AssistantPanel(props: AssistantPanelProps): React.JSX.Element {
                       : translate("The assistant may read text files in this vault when your request needs them; each file it reads is sent to the provider.")}
                   </p>
                 )}
+              </>
+            ) : needsApproval(providerStatus) ? (
+              <>
+                <p>
+                  {translate("The App Store version of Merkzeug needs your approval once to start Claude Code and Codex with their own login.")}
+                </p>
+                <button onClick={allowCli}>{providerStatus?.bridge === 'outdated' ? translate("Renew approval…") : translate("Allow…")}</button>
+                {approvalError && <p className="assistant-hint">{approvalError}</p>}
               </>
             ) : (
               <>

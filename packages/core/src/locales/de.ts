@@ -563,6 +563,8 @@ export const de: Readonly<Record<string, string>> = {
   "Please keep the suggested name and folder.": "Bitte behalte den vorgeschlagenen Namen und Ordner.",
   "Renew approval…": "Freigabe erneuern…",
   "Allow…": "Erlauben…",
+  "approval needed": "Freigabe nötig",
+  "The App Store version of Merkzeug needs your approval once to start Claude Code and Codex with their own login.": "Die App-Store-Version von Merkzeug braucht einmalig deine Freigabe, um Claude Code und Codex mit deren eigener Anmeldung zu starten.",
   "Allow": "Erlauben",
   "API key": "API-Schlüssel",
   "Replace stored API key…": "Gespeicherten API-Schlüssel ersetzen…",
