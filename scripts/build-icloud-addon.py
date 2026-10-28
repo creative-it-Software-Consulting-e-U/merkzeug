@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the Foundation iCloud bridge using stable Node-API, without downloading SDKs."""
+"""Build the Foundation bridge (iCloud container, Application Scripts) using stable Node-API, without downloading SDKs."""
 import argparse
 import platform
 import subprocess
@@ -20,7 +20,7 @@ with tempfile.TemporaryDirectory(prefix='merkzeug-icloud-build-') as folder:
     slices = []
     for arch in arches:
         target = str(Path(folder) / arch)
-        subprocess.run(['xcrun', 'clang', '-arch', arch, '-mmacosx-version-min=12.0', '-fobjc-arc', '-bundle', '-undefined', 'dynamic_lookup', '-framework', 'Foundation', '-DNAPI_VERSION=8', '-I', str(headers), str(output.with_name('container.m')), '-o', target], check=True)
+        subprocess.run(['xcrun', 'clang', '-arch', arch, '-mmacosx-version-min=12.0', '-fobjc-arc', '-bundle', '-undefined', 'dynamic_lookup', '-framework', 'Foundation', '-DNAPI_VERSION=8', '-I', str(headers), str(output.with_name('container.m')), str(output.with_name('scripts.m')), '-o', target], check=True)
         slices.append(target)
     subprocess.run(['xcrun', 'lipo', '-create', *slices, '-output', str(output)], check=True)
 print(output)

@@ -9,7 +9,7 @@ import { mkdirSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { foldedPrompt } from './prompt'
-import { findExecutable, runLines, stderrExcerpt } from './cli'
+import { cliCommand, findExecutable, runLines, stderrExcerpt } from './cli'
 import type { AiProvider, ProviderRequest, ProviderResult } from './provider'
 
 export function findCodexCli(): string | null {
@@ -29,8 +29,8 @@ interface JsonLine {
 
 export const codexCliProvider: AiProvider = {
   async chat(request: ProviderRequest, signal: AbortSignal, onDelta): Promise<ProviderResult> {
-    const file = findCodexCli()
-    if (!file) throw new Error('Codex CLI not found.')
+    const command = cliCommand('codex', findCodexCli)
+    if (!command) throw new Error('Codex CLI not found.')
     const vault = request.vault
     let cwd = vault?.session.root
     if (!cwd) {
@@ -43,7 +43,7 @@ export const codexCliProvider: AiProvider = {
     args.push('-')
     const answers: string[] = []
     let errorText: string | null = null
-    const { code, stderr } = await runLines(file, args, {
+    const { code, stderr } = await runLines(command, args, {
       stdin: foldedPrompt(request.messages, request.context, true, vault?.cliInstructions),
       cwd,
       signal,

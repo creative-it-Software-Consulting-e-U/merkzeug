@@ -8,6 +8,7 @@ import { existsSync, statSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { delimiter, join } from 'node:path'
 import { AbortedError } from './provider'
+import { bridgeRequired, bridgeState, startBridged, type BridgeTool, type CliProcess } from './scriptBridge'
 
 let loginPath: string[] | null = null
 
@@ -52,6 +53,16 @@ export function findExecutable(name: string, candidates: string[]): string | nul
   return null
 }
 
+/** A CLI to run: its path, or in App Store builds a tool started by the Application Scripts launcher. */
+export type CliCommand = { path: string } | { bridged: BridgeTool }
+
+/** The command for `tool`, or null when it is not available (not found, or the launcher is not allowed yet). */
+export function cliCommand(tool: BridgeTool, find: () => string | null): CliCommand | null {
+  if (bridgeRequired()) return bridgeState() === 'ready' ? { bridged: tool } : null
+  const path = find()
+  return path ? { path } : null
+}
+
 export interface RunOptions {
   stdin: string
   cwd?: string
@@ -62,14 +73,23 @@ export interface RunOptions {
 }
 
 /** Runs the executable, feeds stdin, streams stdout lines; rejects on abort or non-zero exit without `tolerated`. */
-export function runLines(file: string, args: string[], options: RunOptions): Promise<{ code: number | null; stderr: string }> {
+export function runLines(command: CliCommand, args: string[], options: RunOptions): Promise<{ code: number | null; stderr: string }> {
   return new Promise((resolve, reject) => {
-    const child = spawn(file, args, {
-      cwd: options.cwd,
-      env: options.env ?? process.env,
-      windowsHide: true,
-      shell: process.platform === 'win32' && /\.cmd$/i.test(file)
-    })
+    let child: CliProcess
+    try {
+      child =
+        'bridged' in command
+          ? startBridged(command.bridged, options.cwd ?? '', args)
+          : spawn(command.path, args, {
+              cwd: options.cwd,
+              env: options.env ?? process.env,
+              windowsHide: true,
+              shell: process.platform === 'win32' && /\.cmd$/i.test(command.path)
+            })
+    } catch (err) {
+      reject(err)
+      return
+    }
     let buffer = ''
     let stderr = ''
     let settled = false

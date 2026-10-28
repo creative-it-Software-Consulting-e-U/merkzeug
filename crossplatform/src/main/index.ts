@@ -17,7 +17,7 @@ import { existsSync, mkdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import type { TemplateState, CalendarEvent, AiChatRequest, AiProviderId, AiSettings } from '../shared/types'
-import { aiStatus, cancelAiChat, listAiModels, saveAiKey, saveAiSettings, startAiChat, undoAiChanges } from './ai'
+import { aiStatus, allowCliBridge, cancelAiChat, listAiModels, saveAiKey, saveAiSettings, startAiChat, undoAiChanges } from './ai'
 import {
   createFolder,
   autoRenameNote,
@@ -317,13 +317,18 @@ function registerIpc(): void {
     for (const win of BrowserWindow.getAllWindows()) win.webContents.send('ai:settingsChanged')
   }
   ipcMain.handle('ai:status', () => aiStatus())
-  ipcMain.handle('ai:saveSettings', (_e, settings: AiSettings) => {
-    const status = saveAiSettings(settings)
+  ipcMain.handle('ai:saveSettings', async (_e, settings: AiSettings) => {
+    const status = await saveAiSettings(settings)
     aiSettingsChanged()
     return status
   })
-  ipcMain.handle('ai:saveKey', (_e, provider: 'anthropic' | 'openai', key: string) => {
-    const status = saveAiKey(provider, key)
+  ipcMain.handle('ai:saveKey', async (_e, provider: 'anthropic' | 'openai', key: string) => {
+    const status = await saveAiKey(provider, key)
+    aiSettingsChanged()
+    return status
+  })
+  ipcMain.handle('ai:allowCli', async (event) => {
+    const status = await allowCliBridge(winFromEvent(event))
     aiSettingsChanged()
     return status
   })

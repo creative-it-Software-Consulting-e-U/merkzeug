@@ -2,7 +2,7 @@
  * AI assistant: dispatches chat requests from the panel to the configured
  * backend and streams the answer back to the requesting window.
  */
-import type { WebContents } from 'electron'
+import type { BrowserWindow, WebContents } from 'electron'
 import { existsSync } from 'node:fs'
 import { parseToolCall, stripNeedsWrite, vaultInstructions, vaultToolSpecs, type VaultAccess } from '@merkzeug/core/assistantTools'
 import type { AiChatEvent, AiChatRequest, AiProviderId, AiProviderStatus, AiSettings, AiStatus, AiUndoResult } from '../../shared/types'
@@ -13,6 +13,7 @@ import { openaiProvider, listOpenAiModels } from './openai'
 import { claudeCliProvider, findClaudeCli } from './claudeCli'
 import { codexCliProvider, findCodexCli } from './codexCli'
 import { hasApiKey, keyStorageAvailable, setApiKey } from './keys'
+import { bridgedToolPath, bridgeRequired, bridgeState, installBridge, type BridgeTool } from './scriptBridge'
 import { AbortedError, type AiProvider, type VaultHost } from './provider'
 import { VaultSession, type FileChange } from './vaultTools'
 
@@ -28,25 +29,40 @@ const running = new Map<string, AbortController>()
 const undoable = new Map<string, VaultSession>()
 const MAX_UNDOABLE = 20
 
-export function aiStatus(): AiStatus {
-  const claude = findClaudeCli()
-  const codex = findCodexCli()
+async function cliStatus(id: 'claude-cli' | 'codex-cli', tool: BridgeTool, find: () => string | null): Promise<AiProviderStatus> {
+  if (!bridgeRequired()) {
+    const path = find()
+    return { id, ready: Boolean(path), detail: path ?? 'Not found' }
+  }
+  const bridge = bridgeState()
+  if (bridge === 'missing') return { id, ready: false, detail: 'Needs your approval once (App Store version)', bridge }
+  if (bridge === 'outdated') return { id, ready: false, detail: 'The approval is outdated; please renew it', bridge }
+  const path = await bridgedToolPath(tool)
+  return { id, ready: Boolean(path), detail: path ?? 'Not found', bridge }
+}
+
+export async function aiStatus(): Promise<AiStatus> {
   const list: AiProviderStatus[] = [
     { id: 'anthropic', ready: hasApiKey('anthropic'), detail: hasApiKey('anthropic') ? 'API key stored' : 'No API key stored' },
     { id: 'openai', ready: hasApiKey('openai'), detail: hasApiKey('openai') ? 'API key stored' : 'No API key stored' },
-    { id: 'claude-cli', ready: Boolean(claude), detail: claude ?? 'Not found' },
-    { id: 'codex-cli', ready: Boolean(codex), detail: codex ?? 'Not found' }
+    ...(await Promise.all([cliStatus('claude-cli', 'claude', findClaudeCli), cliStatus('codex-cli', 'codex', findCodexCli)]))
   ]
   return { settings: getAiSettings(), providers: list, keyStorage: keyStorageAvailable() }
 }
 
-export function saveAiSettings(settings: AiSettings): AiStatus {
+export function saveAiSettings(settings: AiSettings): Promise<AiStatus> {
   setAiSettings(settings)
   return aiStatus()
 }
 
-export function saveAiKey(provider: 'anthropic' | 'openai', key: string): AiStatus {
+export function saveAiKey(provider: 'anthropic' | 'openai', key: string): Promise<AiStatus> {
   setApiKey(provider, key)
+  return aiStatus()
+}
+
+/** App Store builds: lets the user save the launcher that starts Claude Code and Codex. */
+export async function allowCliBridge(win: BrowserWindow | null): Promise<AiStatus> {
+  await installBridge(win)
   return aiStatus()
 }
 

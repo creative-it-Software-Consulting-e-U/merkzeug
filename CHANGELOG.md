@@ -5,6 +5,7 @@
 - Tables: while the caret is in a table, a table bar below the toolbar inserts rows above/below and columns left/right, aligns the current column and deletes the row, column or table — on desktop, iOS, IntelliJ and VS Code. **Delete Row** and **Delete Column** in the Table menus now work at the caret instead of requiring selected cells; the header row and the last data row are protected.
 - Tables: Tab in the last cell and Enter in the last row add a new row; Enter moves to the cell below instead of leaving the table, and Enter in an empty last row removes it and continues below the table.
 - Desktop and iOS: **Markdown source** view (desktop: `</>` button, **View → Markdown Source**, ⌘/ / Ctrl+/; iOS: `</>` in the title bar) to read and edit the note's Markdown including frontmatter. Switching views never reformats the file.
+- Mac App Store: the AI assistant can use Claude Code and Codex with their own login after a one-time approval in the assistant panel or **Settings → AI assistant** (**Allow…** saves a small launcher in Merkzeug's Application Scripts folder); before, the sandbox hid these CLIs or blocked their login.
 
 ## 1.4.0
 

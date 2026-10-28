@@ -117,6 +117,8 @@ const api = {
   aiSaveKey: (provider: 'anthropic' | 'openai', key: string): Promise<AiStatus> =>
     ipcRenderer.invoke('ai:saveKey', provider, key),
   aiListModels: (provider: AiProviderId): Promise<string[]> => ipcRenderer.invoke('ai:listModels', provider),
+  /** App Store: Freigabe für Claude Code/Codex über den Application-Scripts-Ordner */
+  aiAllowCli: (): Promise<AiStatus> => ipcRenderer.invoke('ai:allowCli'),
   /** startet eine Anfrage; Fortschritt kommt über onAiEvent */
   aiChat: (request: AiChatRequest): Promise<void> => ipcRenderer.invoke('ai:chat', request),
   aiCancel: (id: string): Promise<void> => ipcRenderer.invoke('ai:cancel', id),

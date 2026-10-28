@@ -458,6 +458,15 @@ panel header:
 - **Codex / ChatGPT (local login)** uses the Codex CLI – installed separately
   or bundled with the ChatGPT desktop app – with its ChatGPT login.
 
+**Mac App Store version:** macOS does not let App Store apps start programs
+from your home folder, so Claude Code and Codex first need your approval. Choose Claude Code or Codex in the assistant panel (or open
+**Settings → AI assistant**), click **Allow…** and
+save the suggested file `merkzeug-cli` without changing its name or folder
+(`~/Library/Application Scripts/` followed by Merkzeug's app ID). This small
+launcher starts only Claude Code or Codex, with their own login, and refuses
+options that switch off their safety checks. Delete the file to revoke the
+approval. The version from the website does not need this step.
+
 **Vault files:** with **Read vault** checked (saved, on by default) the
 assistant can list, search and read the text files of the open vault
 (Markdown, txt, csv, json, yaml, mmd) when your request needs them, for
