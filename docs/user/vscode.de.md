@@ -28,7 +28,7 @@ Merkzeug ist ein zusätzlicher Editor für `.md`-Dateien; der Texteditor von VS 
 
 ## Bearbeiten und Speichern
 
-Du nutzt den gemeinsamen visuellen Editor mit Slash-Menü, Formatierungswerkzeugen, Frontmatter-Bereich und Mermaid-Diagrammen. Die kompakte Werkzeugleiste bietet Absatzformate, Fett, Kursiv, Durchgestrichen, Inline-Code, Listen, Zitate, Codeblöcke, Links, Bilder, Tabellen und Trennlinien. Suche (⌘F / Strg+F), Rückgängig und Wiederholen erreichst du über Tastenkürzel. Änderungen landen im VS-Code-Dokument; VS Code verwaltet Speichern, Änderungsanzeige, Git-Integration, Hot Exit und den Rückgängig-Verlauf. **⌘S / Strg+S** speichert. Dieselbe Notiz kann gleichzeitig in Merkzeug und im Texteditor nebeneinander geöffnet sein.
+Du nutzt den gemeinsamen visuellen Editor mit Slash-Menü, Formatierungswerkzeugen, Frontmatter-Bereich, Mermaid-Diagrammen und Obsidian-kompatiblen Callouts (`> [!typ] Titel`, inklusive GitHub-Alerts wie `> [!NOTE]`). Die kompakte Werkzeugleiste bietet Absatzformate, Fett, Kursiv, Durchgestrichen, Inline-Code, Listen, Zitate, Codeblöcke, Links, Bilder, Tabellen, Callouts (zuerst die GitHub-Typen, die übrigen Obsidian-Typen unter **Weitere (nur Obsidian)**; in einem Callout ändert sich der Typ) und Trennlinien. Suche (⌘F / Strg+F), Rückgängig und Wiederholen erreichst du über Tastenkürzel. Änderungen landen im VS-Code-Dokument; VS Code verwaltet Speichern, Änderungsanzeige, Git-Integration, Hot Exit und den Rückgängig-Verlauf. **⌘S / Strg+S** speichert. Dieselbe Notiz kann gleichzeitig in Merkzeug und im Texteditor nebeneinander geöffnet sein.
 
 Wenn eine ganze Tabellenzelle markiert ist, wird sie hervorgehoben; klicke in den Text, um den Cursor zu setzen und zu bearbeiten.
 

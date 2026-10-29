@@ -127,8 +127,11 @@ The editor shows the note formatted; what is saved is Markdown.
   or `faq`; unknown types look like note. Without a title the type is shown.
   `[!faq]-` starts collapsed and `[!faq]+` expanded; the arrow next to the
   title folds the box in the view only, without changing the file. Click into
-  the title line to edit the marker. Insert via the slash menu (**Callout**).
-  PDF exports always print callouts expanded.
+  the title line to edit the marker. Insert via the toolbar button **Callout**
+  or the slash menu: the toolbar menu lists GitHub's five types first and the
+  other Obsidian types under **More (Obsidian only)**; the selected paragraphs
+  become the callout's content, and with the cursor in a callout it changes the
+  type. PDF exports always print callouts expanded.
 - **Tables:** insert via ⌥⌘T / Ctrl+Alt+T, the slash menu or the Edit menu. While the
   caret is in a table, a **table bar** appears below the toolbar: insert a row
   above/below or a column left/right, align the current column left, centered

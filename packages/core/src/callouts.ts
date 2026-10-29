@@ -63,6 +63,21 @@ const KINDS: Record<string, CalloutKind> = {
   cite: 'quote'
 }
 
+/** Typen für Einfügemenüs: GitHub kennt nur die ersten fünf, Obsidian alle. */
+export const GITHUB_CALLOUT_TYPES = ['note', 'tip', 'important', 'warning', 'caution'] as const
+export const OBSIDIAN_CALLOUT_TYPES = [
+  'info',
+  'question',
+  'example',
+  'success',
+  'danger',
+  'abstract',
+  'todo',
+  'failure',
+  'bug',
+  'quote'
+] as const
+
 const MARKER = /^\[!([^\]\s]+)\]([+-]?)[ \t]*/
 
 /** Marker am Anfang der ersten Zitatzeile erkennen. */

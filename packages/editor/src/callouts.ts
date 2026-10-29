@@ -16,6 +16,7 @@ import {
   wrapInBlockTypeCommand
 } from '@milkdown/kit/preset/commonmark'
 import { Plugin, PluginKey, TextSelection, type EditorState } from '@milkdown/kit/prose/state'
+import { findWrapping } from '@milkdown/kit/prose/transform'
 import { Decoration, DecorationSet, type EditorView } from '@milkdown/kit/prose/view'
 import type { Node } from '@milkdown/kit/prose/model'
 import { $prose } from '@milkdown/kit/utils'
@@ -289,6 +290,28 @@ export function enableCallouts(editor: Editor, options: CalloutOptions): void {
   editor.use($prose(() => calloutPlugin(options)))
 }
 
+/** Menübeschriftung eines Typs mit Marker, z. B. „Warnung  [!warning]“. */
+export function calloutLabel(type: string): string {
+  const labels: Record<string, string> = {
+    note: translate('Note'),
+    tip: translate('Tip'),
+    important: translate('Important'),
+    warning: translate('Warning'),
+    caution: translate('Caution'),
+    info: translate('Info'),
+    question: translate('Question'),
+    example: translate('Example'),
+    success: translate('Success'),
+    danger: translate('Danger'),
+    abstract: translate('Summary'),
+    todo: translate('To-do'),
+    failure: translate('Failure'),
+    bug: translate('Bug'),
+    quote: translate('Quote')
+  }
+  return `${labels[type] ?? calloutDefaultTitle(type)}  [!${type}]`
+}
+
 /** Symbol für das Slash-Menü (gefüllt wie die übrigen Crepe-Symbole). */
 export const calloutMenuIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 3a9 9 0 1 0 0 18 9 9 0 1 0 0-18zm0 1.8a7.2 7.2 0 1 1 0 14.4 7.2 7.2 0 1 1 0-14.4zM11.1 10.5h1.8v6h-1.8zM11.1 7.5h1.8v1.8h-1.8z"/></svg>`
 
@@ -301,5 +324,39 @@ export function insertCallout(ctx: Ctx): void {
   const start = view.state.selection.from
   const tr = view.state.tr.insertText('[!note] ', start)
   view.dispatch(tr.setSelection(TextSelection.create(tr.doc, start + 2, start + 6)))
+  view.focus()
+}
+
+/**
+ * Toolbar: die markierten Blöcke in einen Callout `type` packen, dessen Inhalt
+ * sie werden (`> [!type]` + Zeilenumbruch wie bei GitHub). Steht der Cursor
+ * schon in einem Callout, wird nur dessen Typ geändert.
+ */
+export function wrapInCallout(view: EditorView, type: string): void {
+  const { state } = view
+  const { $from, $to, from } = state.selection
+  const current = findCallouts(state.doc)
+    .filter((c) => c.pos < from && from < c.pos + c.node.nodeSize)
+    .pop()
+  if (current) {
+    const typeFrom = current.markerFrom + 2
+    view.dispatch(state.tr.insertText(type, typeFrom, typeFrom + current.marker.type.length))
+    view.focus()
+    return
+  }
+  const blockquote = state.schema.nodes.blockquote
+  const range = $from.blockRange($to)
+  const wrapping = range && findWrapping(range, blockquote)
+  if (!range || !wrapping) return
+  const tr = state.tr.wrap(range, wrapping)
+  const first = tr.doc.nodeAt(range.start + 1)
+  const marker = state.schema.text(`[!${type}]`)
+  if (first?.type.name === 'paragraph') {
+    // weicher Zeilenumbruch: wird als `\n` gespeichert, der Text darunter ist der Inhalt
+    tr.insert(range.start + 2, [marker, state.schema.nodes.hardbreak.create({ isInline: true })])
+  } else {
+    tr.insert(range.start + 1, state.schema.nodes.paragraph.create(null, marker))
+  }
+  view.dispatch(tr.scrollIntoView())
   view.focus()
 }

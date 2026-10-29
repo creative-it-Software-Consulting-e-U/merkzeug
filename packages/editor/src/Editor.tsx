@@ -31,7 +31,7 @@ import { insertTableCommand, toggleStrikethroughCommand } from '@milkdown/kit/pr
 import { splitFrontmatter } from '@merkzeug/core/docTitle'
 import { searchPlugin, searchPluginKey, type SearchMeta } from './searchPlugin'
 import { renderMermaid } from './mermaid'
-import { calloutMenuIcon, insertCallout, enableCallouts } from './callouts'
+import { calloutMenuIcon, insertCallout, enableCallouts, wrapInCallout } from './callouts'
 import { enableHtmlImages } from './htmlImages'
 import { embedBlockImage, enableImageOverlay, insertImage, type ImageTarget } from './imageTools'
 import { ImageOverlay } from './ImageOverlay'
@@ -75,6 +75,8 @@ export interface EditorHandle {
   redo: () => void
   format: (action: FormatAction) => void
   insertTable: (rows?: number, cols?: number) => void
+  /** markierte Blöcke in einen Callout `> [!type]` packen bzw. dessen Typ ändern */
+  insertCallout: (type: string) => void
   tableCommand: (kind: TableAction) => void
   insertLink: (text: string, href: string) => void
   insertImageFile: (file: File) => Promise<void>
@@ -1042,6 +1044,11 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
         crepe.editor.action((ctx) => ctx.get(editorViewCtx).focus())
       },
       insertTable: (rows = 3, cols = 3) => runCommand(insertTableCommand, { row: rows, col: cols }),
+      insertCallout: (type) => {
+        const crepe = crepeRef.current
+        if (!crepe || sourceModeRef.current) return
+        crepe.editor.action((ctx) => wrapInCallout(ctx.get(editorViewCtx), type))
+      },
       tableCommand: runTableAction,
       insertLink: (text, href) => {
         if (sourceModeRef.current) {

@@ -134,8 +134,11 @@ Der Editor zeigt die Notiz formatiert an; gespeichert wird Markdown.
   Ohne Titel wird der Typ angezeigt. `[!faq]-` startet eingeklappt, `[!faq]+`
   ausgeklappt; der Pfeil neben dem Titel klappt den Kasten nur in der Ansicht
   ein, die Datei bleibt unverändert. Zum Bearbeiten des Markers in die
-  Titelzeile klicken. Einfügen über das Slash-Menü (**Callout**). PDF-Exporte
-  drucken Callouts immer ausgeklappt.
+  Titelzeile klicken. Einfügen über den Toolbar-Button **Callout** oder das
+  Slash-Menü: Das Toolbar-Menü zeigt zuerst die fünf GitHub-Typen, die übrigen
+  Obsidian-Typen unter **Weitere (nur Obsidian)**; die markierten Absätze werden
+  zum Inhalt des Callouts, steht der Cursor schon in einem Callout, ändert sich
+  sein Typ. PDF-Exporte drucken Callouts immer ausgeklappt.
 - **Tabellen:** Einfügen über ⌥⌘T / Strg+Alt+T, das Slash-Menü oder Menü „Bearbeiten“. Steht der
   Cursor in einer Tabelle, erscheint unter der Toolbar eine **Tabellen-Leiste**:
   Zeile darüber/darunter oder Spalte links/rechts einfügen, die aktuelle Spalte

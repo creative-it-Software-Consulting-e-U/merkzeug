@@ -6,6 +6,7 @@
 - Tables: Tab in the last cell and Enter in the last row add a new row; Enter moves to the cell below instead of leaving the table, and Enter in an empty last row removes it and continues below the table.
 - Desktop and iOS: **Markdown source** view (desktop: `</>` button, **View → Markdown Source**, ⌘/ / Ctrl+/; iOS: `</>` in the title bar) to read and edit the note's Markdown including frontmatter. Switching views never reformats the file.
 - Mac App Store: the AI assistant can use Claude Code and Codex with their own login after a one-time approval in the assistant panel or **Settings → AI assistant** (**Allow…** saves a small launcher in Merkzeug's Application Scripts folder); before, the sandbox hid these CLIs or blocked their login.
+- Callouts: a **Callout** toolbar menu on desktop, IntelliJ and VS Code inserts GitHub alerts (note, tip, important, warning, caution) and the other Obsidian callout types. The selected paragraphs become the content (`> [!type]` followed by the content lines); with the cursor in a callout it changes the type.
 
 ## 1.4.0
 
