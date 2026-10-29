@@ -28,7 +28,7 @@ Merkzeug is an additional editor for `.md` files; VS Code's text editor stays th
 
 ## Editing
 
-Use the shared visual editor, slash menu, formatting tools, frontmatter panel and Mermaid diagrams. The compact toolbar provides paragraph styles, bold, italic, strikethrough, inline code, lists, quotes, code blocks, links, images, tables and dividers. Search (⌘F / Ctrl+F), undo and redo remain available through keyboard shortcuts. Changes update VS Code's document; VS Code owns disk saving, the dirty indicator, Git integration, hot exit and undo history. **⌘S / Ctrl+S** saves. You can show the same note in Merkzeug and in the text editor side by side.
+Use the shared visual editor, slash menu, formatting tools, frontmatter panel, Mermaid diagrams and Obsidian-compatible callouts (`> [!type] Title`, including GitHub alerts such as `> [!NOTE]`). The compact toolbar provides paragraph styles, bold, italic, strikethrough, inline code, lists, quotes, code blocks, links, images, tables, callouts (GitHub types first, the other Obsidian types under **More (Obsidian only)**; in a callout it changes the type) and dividers. Search (⌘F / Ctrl+F), undo and redo remain available through keyboard shortcuts. Changes update VS Code's document; VS Code owns disk saving, the dirty indicator, Git integration, hot exit and undo history. **⌘S / Ctrl+S** saves. You can show the same note in Merkzeug and in the text editor side by side.
 
 Selecting a whole table cell highlights the cell; click inside its text to place the caret and edit.
 

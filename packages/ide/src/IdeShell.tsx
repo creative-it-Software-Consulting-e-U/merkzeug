@@ -2,7 +2,9 @@ import { AboutButton } from '@merkzeug/editor/About'
 import { ReleaseNotes, ReleaseNotesButton } from '@merkzeug/editor/ReleaseNotes'
 import { TemplateLocation } from '@merkzeug/editor/TemplateLocation'
 import { liveTemplateCss } from '@merkzeug/editor/templateStyle'
-import { IconHeading, IconBold, IconItalic, IconStrike, IconInlineCode, IconBulletList, IconOrderedList, IconQuote, IconCodeBlock, IconHr, IconLink, IconImage, IconTable } from '@merkzeug/editor/icons'
+import { IconHeading, IconBold, IconItalic, IconStrike, IconInlineCode, IconBulletList, IconOrderedList, IconQuote, IconCodeBlock, IconHr, IconLink, IconImage, IconTable, IconCallout } from '@merkzeug/editor/icons'
+import { calloutLabel } from '@merkzeug/editor/callouts'
+import { GITHUB_CALLOUT_TYPES, OBSIDIAN_CALLOUT_TYPES } from '@merkzeug/core/callouts'
 import { GuidedTour } from '@merkzeug/editor/GuidedTour'
 import { VaultGuidance, type GuidanceHost } from '@merkzeug/editor/VaultGuidance'
 import { ImageInsertSettings } from '@merkzeug/editor/ImageInsertSettings'
@@ -181,6 +183,9 @@ function App({ options }: { options: IdeOptions }) {
       <details className="format-menu"><summary onMouseDown={e => e.preventDefault()} title={translate("Table")} aria-label={translate("Table")}><IconTable /></summary><div>
         <button disabled={!info || info.readonly} onMouseDown={e => e.preventDefault()} onClick={e => { ref.current?.insertTable(3, 3); e.currentTarget.closest('details')?.removeAttribute('open') }}>{translate("Insert table (3×3)")}</button>
         {([['rowAbove', 'Insert Row Above'], ['rowBelow', 'Insert Row Below'], ['colBefore', 'Insert column to the left'], ['colAfter', 'Insert column to the right'], ['deleteRow', 'Delete Row'], ['deleteCol', 'Delete Column']] as const).map(([value, label]) => <button key={value} disabled={!info || info.readonly} onMouseDown={e => e.preventDefault()} onClick={e => { ref.current?.tableCommand(value); e.currentTarget.closest('details')?.removeAttribute('open') }}>{translate(label)}</button>)}
+      </div></details>
+      <details className="format-menu"><summary onMouseDown={e => e.preventDefault()} title={translate("Callout")} aria-label={translate("Callout")}><IconCallout /></summary><div>
+        {[...GITHUB_CALLOUT_TYPES, '', ...OBSIDIAN_CALLOUT_TYPES].map(type => type ? <button key={type} disabled={!info || info.readonly} onMouseDown={e => e.preventDefault()} onClick={e => { ref.current?.insertCallout(type); e.currentTarget.closest('details')?.removeAttribute('open') }}>{calloutLabel(type)}</button> : <div key="obsidian" className="format-menu-section">{translate("More (Obsidian only)")}</div>)}
       </div></details>
       <span className="status" title={status} aria-label={status} role="status"><span className="status-text">{status}</span></span>
       <button disabled={busy} onClick={() => void exportPdf(true)}>{translate("Print…")}</button>

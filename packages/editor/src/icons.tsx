@@ -170,6 +170,16 @@ export function IconTable(): React.JSX.Element {
   )
 }
 
+export function IconCallout(): React.JSX.Element {
+  return (
+    <svg {...base}>
+      <rect x="2.5" y="3" width="11" height="10" rx="1.5" />
+      <line x1="8" y1="7.5" x2="8" y2="10.5" />
+      <line x1="8" y1="5.5" x2="8" y2="5.51" />
+    </svg>
+  )
+}
+
 export function IconHr(): React.JSX.Element {
   return (
     <svg {...base}>

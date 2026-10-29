@@ -1,4 +1,6 @@
 import { translate } from '../translate'
+import { GITHUB_CALLOUT_TYPES, OBSIDIAN_CALLOUT_TYPES } from '@merkzeug/core/callouts'
+import { calloutLabel } from '@merkzeug/editor/callouts'
 import { useState, type RefObject } from 'react'
 import type { FileNode } from '../../../shared/types'
 import type { Pane as PaneState, Tab } from '../types'
@@ -12,6 +14,7 @@ import {
   IconBook,
   IconHelp,
   IconBulletList,
+  IconCallout,
   IconCaret,
   IconCodeBlock,
   IconForward,
@@ -56,7 +59,7 @@ interface PaneProps {
 }
 
 interface ToolbarMenu {
-  kind: 'heading' | 'table' | 'toc'
+  kind: 'heading' | 'table' | 'callout' | 'toc'
   x: number
   y: number
 }
@@ -105,6 +108,22 @@ export function PaneView(props: PaneProps): React.JSX.Element {
     { label: '', separator: true },
     { label: translate("Delete Row"), onClick: () => editor()?.tableCommand('deleteRow') },
     { label: translate("Delete Column"), onClick: () => editor()?.tableCommand('deleteCol') }
+  ]
+
+  // GitHub kennt nur die ersten fünf Typen, die übrigen liegen im Untermenü
+  const calloutEntries: MenuEntry[] = [
+    ...GITHUB_CALLOUT_TYPES.map((type) => ({
+      label: calloutLabel(type),
+      onClick: () => editor()?.insertCallout(type)
+    })),
+    { label: '', separator: true },
+    {
+      label: translate("More (Obsidian only)"),
+      submenu: OBSIDIAN_CALLOUT_TYPES.map((type) => ({
+        label: calloutLabel(type),
+        onClick: () => editor()?.insertCallout(type)
+      }))
+    }
   ]
 
   const fmtBtn = (
@@ -199,6 +218,14 @@ export function PaneView(props: PaneProps): React.JSX.Element {
                 </>,
                 (e) => openMenu('table', e)
               )}
+              {fmtBtn(
+                translate("Callout"),
+                <>
+                  <IconCallout />
+                  <IconCaret />
+                </>,
+                (e) => openMenu('callout', e)
+              )}
               {fmtBtn(translate("Divider"), <IconHr />, () => format('hr'))}
             </>
           )}
@@ -252,7 +279,9 @@ export function PaneView(props: PaneProps): React.JSX.Element {
                   ? headingEntries
                   : menu.kind === 'table'
                     ? tableEntries
-                    : tocEntries()
+                    : menu.kind === 'callout'
+                      ? calloutEntries
+                      : tocEntries()
               }
               onClose={() => setMenu(null)}
             />

@@ -31,7 +31,7 @@ Merkzeug ergänzt einen eigenen Editor-Tab. Der mitgelieferte Markdown-Editor ka
 
 ## Bearbeiten und Speichern
 
-Die Werkzeugleiste bietet Absatzformate, Fett, Kursiv, Durchstreichen, Inline-Code, Listen, Zitate, Codeblöcke, Links, Bilder, Tabellen und Trennlinien. Außerdem stehen Slash-Menü, Frontmatter, Mermaid-Diagramme und Obsidian-kompatible Callouts (`> [!typ] Titel`, inklusive GitHub-Alerts wie `> [!NOTE]`) zur Verfügung. HTML-`<img>`-Tags erscheinen als Bild mit ihrer `width`/`height`; ihr HTML ändert sich nur über die Bildleiste. Mermaid-Code lässt sich direkt am Diagramm bearbeiten.
+Die Werkzeugleiste bietet Absatzformate, Fett, Kursiv, Durchstreichen, Inline-Code, Listen, Zitate, Codeblöcke, Links, Bilder, Tabellen, Callouts (zuerst die GitHub-Typen, die übrigen Obsidian-Typen unter **Weitere (nur Obsidian)**; in einem Callout ändert sich der Typ) und Trennlinien. Außerdem stehen Slash-Menü, Frontmatter, Mermaid-Diagramme und Obsidian-kompatible Callouts (`> [!typ] Titel`, inklusive GitHub-Alerts wie `> [!NOTE]`) zur Verfügung. HTML-`<img>`-Tags erscheinen als Bild mit ihrer `width`/`height`; ihr HTML ändert sich nur über die Bildleiste. Mermaid-Code lässt sich direkt am Diagramm bearbeiten.
 
 Ein Klick auf ein Bild zeigt seine Leiste: **HTML-&lt;img&gt;** wechselt zwischen Markdown-Bild und HTML-`<img>`-Tag; nur HTML-Bilder speichern Breite (**B**), Höhe (**H**, mit Schloss für das Seitenverhältnis) und Ausrichtung (links, zentriert, rechts). Im **⋯**-Bereich des Merkzeug-Editors legst du mit **Bilder als HTML-&lt;img&gt;-Tag einfügen** die Vorgabe der IDE fest und mit **In diesem Vault** eine abweichende Vorgabe für das Projekt (gespeichert als `"imageInsert"` in `.merkzeug/settings.json`, gemeinsam mit Desktop- und iOS-Edition).
 

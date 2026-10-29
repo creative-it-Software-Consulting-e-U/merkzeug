@@ -28,7 +28,7 @@ A quote whose first line starts with `[!type]` is shown as a colored callout. Th
 
 Supported types are `note`, `abstract`, `info`, `todo`, `tip`, `success`, `question`, `warning`, `failure`, `danger`, `bug`, `example` and `quote`, including Obsidian's aliases (for example `summary`, `important`, `check`, `faq`, `caution`, `error` or `cite`). Types are case-insensitive; unknown types look like `note`. Without a title, the type name is shown.
 
-A `-` after the marker starts the callout collapsed and a `+` starts it expanded; both show an arrow next to the title. Folding only changes the view, never the file. Click into the title line to see and edit the marker. Use **Callout** in the slash menu to insert one. PDF exports always print callouts expanded.
+A `-` after the marker starts the callout collapsed and a `+` starts it expanded; both show an arrow next to the title. Folding only changes the view, never the file. Click into the title line to see and edit the marker. Insert one with the **Callout** toolbar button (desktop, IntelliJ and VS Code) or **Callout** in the slash menu. The toolbar menu lists GitHub's five types first (note, tip, important, warning, caution) and the other Obsidian types under **More (Obsidian only)**; the selected paragraphs become the callout's content, saved as `> [!type]` followed by the content lines. With the cursor in a callout, the menu changes its type. PDF exports always print callouts expanded.
 
 ## Links and frontmatter
 
