@@ -135,7 +135,7 @@ jobs:
         if: always() && matrix.platform == 'mac'
         shell: bash
         run: rm -f "$RUNNER_TEMP/merkzeug-notarization.p8" "$RUNNER_TEMP/merkzeug-developer-id.provisionprofile"
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: desktop-${{ matrix.platform }}-${{ matrix.arch }}
           if-no-files-found: error
@@ -168,7 +168,7 @@ jobs:
       - name: Build plugin
         shell: bash
         run: IDEA_HOME="$RUNNER_TEMP/merkzeug-sdk" npm run build:intellij
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: intellij
           path: intellij/dist/*.zip
