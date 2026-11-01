@@ -14,7 +14,7 @@
   "author": "creative-it Software & Consulting e.U. <guenther.wieser@creative-it.com>",
   "license": "MIT",
   "dependencies": {
-    "@capacitor/core": "^8.5.3",
+    "@capacitor/core": "^8.6.0",
     "@milkdown/crepe": "^7.22.3",
     "@milkdown/kit": "^7.22.3",
     "mermaid": "^12.2.0",
