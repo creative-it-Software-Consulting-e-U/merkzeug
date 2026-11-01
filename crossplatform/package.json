@@ -50,7 +50,7 @@
     "@anthropic-ai/sdk": "^0.137.0",
     "@electron-toolkit/utils": "^4.0.0",
     "chokidar": "^5.0.0",
-    "openai": "^7.39.0"
+    "openai": "^7.45.1"
   },
   "allowScripts": {
     "electron@44.9.0": true,
