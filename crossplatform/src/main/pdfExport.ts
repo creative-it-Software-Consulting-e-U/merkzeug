@@ -161,10 +161,11 @@ async function exportPdf(win: BrowserWindow, notePath: string, print = false): P
         type: 'question',
         title: translate("Export as PDF"),
         message: translate("What should the PDF include?"),
-        detail: `„${basename(notePath, '.md')}${translate("” links to")} ${linked.length} weitere ${
-          linked.length === 1 ? translate("Document") : translate("documents")
+        detail: `${translate("“")}${basename(notePath, '.md')}${translate("” links to")} ${linked.length} ${
+          linked.length === 1 ? translate("other document") : translate("other documents")
         } ${translate("in the same hierarchy. Linked documents are appended alphabetically.")}`,
-        buttons: [translate("This file only"), `${translate("Include linked documents (")}${linked.length + 1})`, translate("Cancel")],
+        // „+n“ wie im Text darüber: die Zahl zählt nur die zusätzlichen Dokumente
+        buttons: [translate("This file only"), `${translate("Include linked documents (")}+${linked.length})`, translate("Cancel")],
         defaultId: 1,
         cancelId: 2
       })
